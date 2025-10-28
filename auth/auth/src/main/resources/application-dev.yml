@@ -1,0 +1,26 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:2345/canhtv05
+    username: canhtv05
+    password: canhtv05
+    driver-class-name: org.postgresql.Driver
+
+  output:
+    ansi:
+      enabled: always
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+
+application:
+  security:
+    base64-secret: ASyTTcIvfHA8QsI2c1Fvc8vZUcaeUgRlHH1VhsElDSYHsJ0CS5N0y5/yvKte+WDvYS3lL0oBzPK+1E83ACSdvA==
+    token-validity-in-seconds: 86400

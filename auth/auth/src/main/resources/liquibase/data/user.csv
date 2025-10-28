@@ -1,0 +1,2 @@
+id;username;password;full_name;email;image_url;activated;created_by;modified_by;is_global
+1;admin;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Super Admin;admin@localhost;;true;system;system;true

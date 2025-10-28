@@ -1,0 +1,19 @@
+version: '1.0'
+
+services:
+  postgres_new:
+    image: postgres:latest
+    container_name: postgres_canhtv05
+    restart: always
+    environment:
+      POSTGRES_USER: canhtv05
+      POSTGRES_PASSWORD: canhtv05
+      POSTGRES_DB: canhtv05
+    ports:
+      - "2345:5432"
+    volumes:
+      - postgres_canhtv05:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+volumes:
+  postgres_canhtv05:
