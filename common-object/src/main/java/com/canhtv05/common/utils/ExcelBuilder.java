@@ -83,7 +83,7 @@ public class ExcelBuilder {
         }
     }
 
-    public static ReadExcelResult readFileExcel(MultipartFile file, List<RowHeader> headers, String tenantId) {
+    public static ReadExcelResult readFileExcel(MultipartFile file, List<RowHeader> headers) {
         ReadExcelResult result = ReadExcelResult.builder().build();
 
         try (InputStream in = file.getInputStream(); Workbook wb = WorkbookFactory.create(in)) {
@@ -109,15 +109,6 @@ public class ExcelBuilder {
                 throw new ApiException(ErrorMessage.IMPORT_EXCEL_ERROR, "File không có dữ liệu.");
             }
 
-            if (StringUtils.isNotBlank(tenantId)) {
-                Sheet sheetConfig = wb.getSheetAt(wb.getSheetIndex("__config"));
-                Row rTenantId = sheetConfig.getRow(0);
-                result.setTenantId(ExcelBuilder.readString(rTenantId, 1));
-
-                if (!tenantId.equalsIgnoreCase(result.getTenantId())) {
-                    throw new ApiException(ErrorMessage.FILE_EXCEL_INVALID_TENANT);
-                }
-            }
         } catch (Exception e) {
             if (e instanceof ApiException ex) {
                 throw ex;

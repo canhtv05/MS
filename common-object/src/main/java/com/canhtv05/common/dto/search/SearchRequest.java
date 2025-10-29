@@ -7,7 +7,6 @@ import org.springframework.util.StringUtils;
 
 public record SearchRequest(
         String searchText,
-        String tenantId,
         Integer page,
         Integer size,
         String sortOrder,

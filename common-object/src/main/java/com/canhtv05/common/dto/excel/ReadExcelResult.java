@@ -14,7 +14,5 @@ import java.util.Map;
 @NoArgsConstructor
 public class ReadExcelResult {
 
-    private String tenantId;
     private List<Map<String, String>> data;
-
 }
