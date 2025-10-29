@@ -30,7 +30,12 @@ public class ImportUserDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
+    @NotBlank(message = "Trường thông tin không được để trống")
     private String username;
+
+    @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
+    @NotBlank(message = "Trường thông tin không được để trống")
+    private String email;
 
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     @NotBlank(message = "Trường thông tin không được để trống")

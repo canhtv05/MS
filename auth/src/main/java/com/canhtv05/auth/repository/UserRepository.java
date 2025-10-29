@@ -19,8 +19,13 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Boolean existsUserByUsername(String username);
 
+    Boolean existsUserByEmail(String email);
+
     Optional<User> findByUsername(String username);
 
     @Query(nativeQuery = true, value = "select t.username from users t where t.username in (:usernames)")
     List<String> findUserExitsUsername(List<String> usernames);
+
+    @Query(nativeQuery = true, value = "select t.email from users t where t.email in (:emails)")
+    List<String> findUserExitsEmail(List<String> emails);
 }

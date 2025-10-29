@@ -73,10 +73,16 @@ public class UserService {
         if (userRepository.existsUserByUsername(request.getUsername())) {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
+
+        if (userRepository.existsUserByEmail(request.getEmail())) {
+            throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .activated(request.isActivated())
                 .isGlobal(request.getIsGlobal())
+                .email(request.getEmail())
                 .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -153,10 +159,8 @@ public class UserService {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(criteria.searchText())) {
                 predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%")
-                // ,cb.like(cb.lower(root.get("phone")), "%" +
-                // criteria.searchText().toLowerCase() + "%")
-                ));
+                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%"),
+                        cb.like(cb.lower(root.get("email")), "%" + criteria.searchText().toLowerCase() + "%")));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
@@ -167,7 +171,7 @@ public class UserService {
         Specification<User> spec = createSpecification(request);
         List<User> data = userRepository.findAll(spec, Sort.by(Sort.Direction.ASC,
                 "id"));
-        List<String> headers = List.of("#", "Tên đăng nhập", "Trạng thái", "Ngày tạo");
+        List<String> headers = List.of("#", "Tên đăng nhập", "Email", "Trạng thái", "Ngày tạo");
         try (XSSFWorkbook wb = new XSSFWorkbook();
                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = wb.createSheet("Data");
@@ -181,8 +185,9 @@ public class UserService {
                 stt.setCellStyle(headerStyle);
 
                 row.createCell(1).setCellValue(item.getUsername());
-                row.createCell(5).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
-                row.createCell(7).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
+                row.createCell(2).setCellValue(item.getEmail());
+                row.createCell(3).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
+                row.createCell(4).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
                 r++;
             }
             IntStream.range(1, headers.size()).forEach(sheet::autoSizeColumn);
@@ -199,14 +204,14 @@ public class UserService {
                 .filter(t -> !AuthoritiesConstants.SUPER_ADMIN.equalsIgnoreCase(t))
                 .collect(Collectors.toList());
         ExcelTemplateConfig config = ExcelTemplateConfig.builder()
-                .headers(List.of("Tên đăng nhập", "Vai trò"))
-                .fieldRequired(List.of(1, 2))
+                .headers(List.of("Tên đăng nhập", "Email", "Vai trò"))
+                .fieldRequired(List.of(1, 2, 3))
                 .autoNumber(true)
                 .listValidations(new ArrayList<>())
                 .build();
         config.getListValidations().add(ExcelTemplateConfig.ExcelValidation.builder()
                 .rangeName("_ROLE")
-                .rowIndex(5)
+                .rowIndex(3)
                 .data(roleCodes)
                 .build());
         return ExcelBuilder.buildFileTemplate(config);
@@ -216,7 +221,8 @@ public class UserService {
         ImportExcelResult<ImportUserDTO> result = new ImportExcelResult<>();
         List<RowHeader> rowHeaders = List.of(
                 new RowHeader("Tên đăng nhập", "username", 1),
-                new RowHeader("Vai trò", "role", 2));
+                new RowHeader("Email", "email", 2),
+                new RowHeader("Vai trò", "role", 3));
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
         List<ImportUserDTO> fileData = mapData.getData().stream()
                 .map(item -> ImportUserDTO.fromExcelData(item))
@@ -225,7 +231,11 @@ public class UserService {
         List<String> usernames = fileData.stream()
                 .map(ImportUserDTO::getUsername)
                 .filter(StringUtils::isNotBlank).toList();
+        List<String> emails = fileData.stream()
+                .map(ImportUserDTO::getEmail)
+                .filter(StringUtils::isNotBlank).toList();
         List<String> existingData = userRepository.findUserExitsUsername(usernames);
+        List<String> existingEmail = userRepository.findUserExitsEmail(emails);
         IntStream.range(0, fileData.size()).forEach(i -> {
             ImportUserDTO dto = fileData.get(i);
             RowData<ImportUserDTO> rowError = new RowData<>(dto);
@@ -236,6 +246,10 @@ public class UserService {
             if (StringUtils.isNotBlank(dto.getUsername()) &&
                     existingData.contains(dto.getUsername())) {
                 rowError.addFieldError("username", "Tên đăng nhập đã tồn tại.");
+            }
+            if (StringUtils.isNotBlank(dto.getEmail()) &&
+                    existingEmail.contains(dto.getEmail())) {
+                rowError.addFieldError("email", "Email đã tồn tại.");
             }
             if (rowError.hasErrors()) {
                 result.getRows().add(rowError);
