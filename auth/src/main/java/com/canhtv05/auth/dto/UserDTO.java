@@ -32,14 +32,14 @@ public class UserDTO implements Serializable {
     private Long id;
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     private String username;
+
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
-    private String login;
-    private String fullName;
+    private String password;
+
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     private String email;
-    private String phone;
+
     private boolean activated;
-    private String imageUrl;
     private Boolean isGlobal;
     private List<String> roles;
     private List<String> roleLabels;
@@ -49,17 +49,12 @@ public class UserDTO implements Serializable {
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant modifiedDate;
 
-    private String employeeCode;
-
     public UserDTO(User entity) {
         this.id = entity.getId();
         this.username = entity.getUsername();
-        this.fullName = entity.getFullName();
-        this.email = entity.getEmail();
-        this.phone = entity.getPhone();
         this.activated = entity.isActivated();
-        this.imageUrl = entity.getImageUrl();
         this.isGlobal = entity.getIsGlobal();
+        this.password = entity.getPassword();
     }
 
     public static UserDTO fromEntity(User entity) {

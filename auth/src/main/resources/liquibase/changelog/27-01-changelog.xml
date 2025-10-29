@@ -111,15 +111,9 @@
             <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="full_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="email" type="VARCHAR(255)"/>
-            <column name="phone" type="VARCHAR(255)"/>
             <column name="activated" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
-            <column name="image_url" type="VARCHAR(255)"/>
             <column name="is_global" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>

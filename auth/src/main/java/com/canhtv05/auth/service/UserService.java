@@ -75,15 +75,11 @@ public class UserService {
         }
         User user = User.builder()
                 .username(request.getUsername())
-                .fullName(request.getFullName())
-                .email(request.getEmail())
-                .phone(request.getPhone())
-                .imageUrl(request.getImageUrl())
                 .activated(request.isActivated())
                 .isGlobal(request.getIsGlobal())
                 .build();
 
-        String encryptedPassword = passwordEncoder.encode(request.getLogin());
+        String encryptedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(encryptedPassword);
         if (ObjectUtils.isNotEmpty(request.getRoles())) {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(request.getRoles())));
@@ -98,10 +94,6 @@ public class UserService {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
         }
         User user = optionalUser.get();
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
-        user.setImageUrl(request.getImageUrl());
         user.setActivated(request.isActivated());
         if (SecurityUtils.isGlobalUser()) {
             user.setIsGlobal(request.getIsGlobal());
@@ -144,17 +136,7 @@ public class UserService {
         if (optionalUser.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
         }
-        User user = optionalUser.get();
-        if (StringUtils.isNotBlank(request.getFullName())) {
-            user.setFullName(request.getFullName());
-        }
-        if (StringUtils.isNotBlank(request.getPhone())) {
-            user.setPhone(request.getPhone());
-        }
-        if (StringUtils.isNotBlank(request.getEmail())) {
-            user.setEmail(request.getEmail());
-        }
-        userRepository.save(user);
+        userRepository.save(optionalUser.get());
     }
 
     @Transactional(readOnly = true)
@@ -171,14 +153,10 @@ public class UserService {
             List<Predicate> predicates = new ArrayList<>();
             if (StringUtils.isNotBlank(criteria.searchText())) {
                 predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("username")), "%" +
-                                criteria.searchText().toLowerCase() + "%"),
-                        cb.like(cb.lower(root.get("fullName")), "%" +
-                                criteria.searchText().toLowerCase() + "%"),
-                        cb.like(cb.lower(root.get("email")), "%" +
-                                criteria.searchText().toLowerCase() + "%"),
-                        cb.like(cb.lower(root.get("phone")), "%" +
-                                criteria.searchText().toLowerCase() + "%")));
+                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%")
+                // ,cb.like(cb.lower(root.get("phone")), "%" +
+                // criteria.searchText().toLowerCase() + "%")
+                ));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
@@ -189,8 +167,7 @@ public class UserService {
         Specification<User> spec = createSpecification(request);
         List<User> data = userRepository.findAll(spec, Sort.by(Sort.Direction.ASC,
                 "id"));
-        List<String> headers = List.of("#", "Tên đăng nhập", "Tên", "Email", "Phone",
-                "Trạng thái", "Tenant", "Ngày tạo");
+        List<String> headers = List.of("#", "Tên đăng nhập", "Trạng thái", "Ngày tạo");
         try (XSSFWorkbook wb = new XSSFWorkbook();
                 ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = wb.createSheet("Data");
@@ -204,9 +181,6 @@ public class UserService {
                 stt.setCellStyle(headerStyle);
 
                 row.createCell(1).setCellValue(item.getUsername());
-                row.createCell(2).setCellValue(item.getFullName());
-                row.createCell(3).setCellValue(item.getEmail());
-                row.createCell(4).setCellValue(item.getPhone());
                 row.createCell(5).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
                 row.createCell(7).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
                 r++;
@@ -225,8 +199,8 @@ public class UserService {
                 .filter(t -> !AuthoritiesConstants.SUPER_ADMIN.equalsIgnoreCase(t))
                 .collect(Collectors.toList());
         ExcelTemplateConfig config = ExcelTemplateConfig.builder()
-                .headers(List.of("Tên đăng nhập", "Tên", "Email", "Số điện thoại", "Vai trò"))
-                .fieldRequired(List.of(1, 2, 3))
+                .headers(List.of("Tên đăng nhập", "Vai trò"))
+                .fieldRequired(List.of(1, 2))
                 .autoNumber(true)
                 .listValidations(new ArrayList<>())
                 .build();
@@ -241,11 +215,8 @@ public class UserService {
     public ImportExcelResult<ImportUserDTO> importUser(MultipartFile file) {
         ImportExcelResult<ImportUserDTO> result = new ImportExcelResult<>();
         List<RowHeader> rowHeaders = List.of(
-                new RowHeader("Tên đăng nhập", "login", 1),
-                new RowHeader("Tên", "fullName", 2),
-                new RowHeader("Email", "email", 3),
-                new RowHeader("Số điện thoại", "phone", 4),
-                new RowHeader("Vai trò", "role", 5));
+                new RowHeader("Tên đăng nhập", "username", 1),
+                new RowHeader("Vai trò", "role", 2));
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
         List<ImportUserDTO> fileData = mapData.getData().stream()
                 .map(item -> ImportUserDTO.fromExcelData(item))
@@ -264,7 +235,7 @@ public class UserService {
             }
             if (StringUtils.isNotBlank(dto.getUsername()) &&
                     existingData.contains(dto.getUsername())) {
-                rowError.addFieldError("login", "Tên đăng nhập đã tồn tại.");
+                rowError.addFieldError("username", "Tên đăng nhập đã tồn tại.");
             }
             if (rowError.hasErrors()) {
                 result.getRows().add(rowError);
@@ -275,7 +246,7 @@ public class UserService {
             List<Role> roleList = roleRepository.findAllByCodeIn(roleCodes);
             List<User> users = fileData.stream()
                     .map(dto -> dto.toEntity(
-                            passwordEncoder.encode(dto.getLogin()),
+                            passwordEncoder.encode(dto.getPassword()),
                             roleList.stream()
                                     .filter(r -> r.getCode().equals(dto.getRole()))
                                     .collect(Collectors.toSet())))

@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
+    // auto join query, avoid n+1 query
     @EntityGraph(attributePaths = { "roles", "roles.permissions" })
     Optional<User> findOneWithAuthoritiesByUsername(String userName);
 

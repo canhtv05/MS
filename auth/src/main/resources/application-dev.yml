@@ -5,7 +5,7 @@ logging:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:2345/canhtv05
+    url: jdbc:postgresql://localhost:5432/canhtv05
     username: canhtv05
     password: canhtv05
     driver-class-name: org.postgresql.Driver
@@ -16,9 +16,8 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
-      username: default
 
 application:
   security:

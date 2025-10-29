@@ -35,12 +35,8 @@ public class ImportUserDTO implements Serializable {
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     @NotBlank(message = "Trường thông tin không được để trống")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Chỉ cho phép chữ và số")
-    private String login;
-    @NotBlank(message = "Trường thông tin không được để trống")
-    private String fullName;
-    @NotBlank(message = "Trường thông tin không được để trống")
-    private String email;
-    private String phone;
+    private String password;
+
     private String role;
 
     public static ImportUserDTO fromExcelData(Map<String, String> item) {
@@ -52,9 +48,6 @@ public class ImportUserDTO implements Serializable {
         return User.builder()
                 .username(username.toLowerCase())
                 .password(password)
-                .fullName(fullName)
-                .email(email)
-                .phone(phone)
                 .roles(roles)
                 .activated(true)
                 .isGlobal(false)

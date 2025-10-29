@@ -1,2 +1,3 @@
 code;name;description;created_by
 ROLE_SUPER_ADMIN;ROLE_SUPER_ADMIN;Role cho super admin;system
+ROLE_USER;ROLE_USER;Role cho user;system

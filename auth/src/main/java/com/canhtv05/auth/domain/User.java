@@ -32,21 +32,9 @@ public class User extends AbstractAuditingEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "phone")
-    private String phone;
-
     @Column(name = "activated", nullable = false)
     @Builder.Default
     private boolean activated = false;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 
     @Column(name = "is_global", nullable = false)
     @Builder.Default
@@ -54,11 +42,9 @@ public class User extends AbstractAuditingEntity {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_code", referencedColumnName = "code")}
-    )
+    @JoinTable(name = "user_roles", joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "role_code", referencedColumnName = "code") })
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 }
