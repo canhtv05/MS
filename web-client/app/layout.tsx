@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono, Roboto_Slab, Roboto_Flex, Roboto_Serif, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -53,7 +54,9 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${robotoMono.variable} ${robotoSlab.variable} ${robotoFlex.variable} ${robotoSerif.variable} ${robotoCondensed.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="light">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

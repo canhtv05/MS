@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export interface GitHubRepo {
+  full_name: string;
   stargazers_count: number;
   owner: {
     avatar_url: string;

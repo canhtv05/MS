@@ -6,11 +6,22 @@ import { GalleryVerticalEnd } from "@/components/animate-ui/icons/gallery-horizo
 import { AnimateIcon } from "@/components/animate-ui/icons/icon";
 import { Layers } from "@/components/animate-ui/icons/layers";
 import { Star } from "@/components/animate-ui/icons/star";
-import { cn, formatStars, getInfoRepo, GitHubRepo } from "@/lib/utils";
-import { Github, LucideIcon } from "lucide-react";
+import { cn, formatStars } from "@/lib/utils";
+import { ChevronDown, Github, LucideIcon, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/animate-ui/components/radix/sheet";
+import { ReposProvider, useHeaderHomeRepo } from "./HeaderHomeRepoProvider";
+import { useTheme } from "next-themes";
 
 interface ResourceCardProps {
   content: string;
@@ -45,10 +56,10 @@ const ResourceCard = (props: ResourceCardProps) => {
         </div>
         <div className="flex flex-col flex-1 justify-start">
           <h4 className={cn("text-foreground", hasStar && "flex items-center gap-1")}>
-            {title}
+            <span className="line-clamp-1">{title}</span>
             {hasStar && <Star className={"fill-yellow-400 stroke-yellow-400 size-4"} />}
           </h4>
-          <p className="text-foreground/40 line-clamp-3">{content}</p>
+          <p className="text-foreground/40 lg:line-clamp-3 line-clamp-1">{content}</p>
         </div>
       </Link>
     </AnimateIcon>
@@ -56,49 +67,28 @@ const ResourceCard = (props: ResourceCardProps) => {
 };
 
 const Resources = () => {
-  const [repos, setRepos] = useState<{ lib: GitHubRepo | null; me: GitHubRepo | null }>({
-    lib: null,
-    me: null,
-  });
-
-  useEffect(() => {
-    async function fetchRepos() {
-      try {
-        const [libData, meData] = await Promise.all([
-          getInfoRepo("imskyleen", "animate-ui"),
-          getInfoRepo("canhtv05", "MS"),
-        ]);
-
-        setRepos({
-          lib: libData ?? null,
-          me: meData ?? null,
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    fetchRepos();
-  }, []);
+  const [open, setOpen] = useState(false);
+  const { repos } = useHeaderHomeRepo();
 
   return (
-    <HoverCard openDelay={0} closeDelay={100}>
-      <HoverCardTrigger>
-        <span className="font-normal cursor-pointer">Tài nguyên</span>
+    <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
+      <HoverCardTrigger className="cursor-pointer font-normal flex items-center gap-2">
+        Tài nguyên
+        <ChevronDown className={cn("size-3 text-foreground transition-transform duration-200", open && "rotate-180")} />
       </HoverCardTrigger>
-      <HoverCardContent className="border-0 w-lg" sideOffset={20} transition={{ type: "tween", duration: 0.1 }}>
+      <HoverCardContent className="border-0 w-lg" sideOffset={20} transition={{ type: "tween", duration: 0.25 }}>
         <div className="flex justify-between gap-10">
           <div className="flex flex-col flex-1">
             <AnimateIcon animateOnHover>
               <div className="flex justify-start items-center gap-2">
                 <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
-                <h3 className="text-foreground/40 leading-0">Component repo</h3>
+                <h3 className="text-foreground/40 leading-0">Component repository</h3>
               </div>
             </AnimateIcon>
-            <div className="mt-2 flex flex-col">
+            <div className="mt-2">
               <ResourceCard
                 hasStar
-                title={`Github • ${formatStars(Number(repos.lib?.stargazers_count))}`}
+                title={`${repos.lib?.full_name} • ${formatStars(Number(repos.lib?.stargazers_count))}`}
                 content={repos.lib?.description ?? "Xem mã nguồn animate.ui"}
                 icon={Github}
                 url="https://github.com/imskyleen/animate-ui"
@@ -109,13 +99,13 @@ const Resources = () => {
             <AnimateIcon animateOnHover>
               <div className="flex justify-start items-center gap-2">
                 <Layers className={"size-4 text-foreground/40"} />
-                <h3 className="text-foreground/40 leading-0">Github repo</h3>
+                <h3 className="text-foreground/40 leading-0">My source</h3>
               </div>
             </AnimateIcon>
             <div className="mt-2 flex flex-col">
               <ResourceCard
                 hasStar
-                title={`Github • ${formatStars(Number(repos.me?.stargazers_count))}`}
+                title={`${repos.me?.full_name} • ${formatStars(Number(repos.me?.stargazers_count))}`}
                 content={repos.me?.description ?? "Xem mã nguồn của tôi"}
                 icon={Github}
                 imageURL={repos.me?.owner.avatar_url}
@@ -129,31 +119,158 @@ const Resources = () => {
   );
 };
 
-const HeaderHomeLayout = () => {
+const HeaderLG = () => {
+  const [showSignup, setShowSignup] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowSignup(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-8">
-      <div className="flex justify-center">
-        <div className="p-2 max-w-2xl bg-white w-full rounded-2xl shadow-xl">
-          <div className="flex justify-start items-center">
-            <div className="flex justify-start items-center gap-3">
-              <Image width={35} height={35} src={"/imgs/logo.png"} alt="Leaf Logo" />
-              <h1 className="font-bold text-lg text-green-700">LEAF</h1>
-            </div>
-            <span className="block mx-5 h-6 w-[0.3px] bg-foreground/10"></span>
-            <div className="flex flex-1 justify-between items-center w-full">
-              <div className="flex justify-center items-center gap-10">
-                <Resources />
-                <span className="font-normal cursor-pointer">Github</span>
-              </div>
-              <div className="">
-                <Button variant={"outline"} className="shadow-lg">
-                  <span className="font-medium">Login</span>
-                </Button>
-              </div>
-            </div>
+    <div className="p-2 max-w-2xl bg-background w-full rounded-xl shadow-xl">
+      <div className="flex justify-start items-center">
+        <div className="flex justify-start items-center gap-2">
+          <Image width={35} height={35} src={"/imgs/logo.png"} alt="Leaf Logo" loading="eager" />
+          <h1 className="font-bold text-lg text-green-700 tracking-wide">LEAF</h1>
+        </div>
+
+        <span className="block mx-5 h-6 w-[0.3px] bg-foreground/10"></span>
+        <div className="flex flex-1 justify-between items-center">
+          <div className="flex justify-center items-center gap-10">
+            <Resources />
+            <span className="font-normal cursor-pointer">Github</span>
+          </div>
+          <div className="flex items-center">
+            <motion.div
+              layout
+              animate={{
+                x: showSignup ? -10 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            >
+              <Button
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                variant={"outline"}
+                className={cn(!showSignup ? "shadow-lg" : "bg-transparent shadow-none border-none")}
+              >
+                <span className="font-medium text-foreground">Login</span>
+              </Button>
+            </motion.div>
+            <motion.div layout className="flex items-center">
+              <AnimatePresence mode="popLayout">
+                {showSignup && (
+                  <motion.div
+                    key="signup"
+                    layout
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 30, mass: 0.7 }}
+                  >
+                    <Button variant="default" className="shadow-lg">
+                      <span className="font-medium">Sign up</span>
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const HeaderMD = () => {
+  const { repos } = useHeaderHomeRepo();
+
+  return (
+    <div className="p-2 bg-background w-full rounded-xl shadow-xl relative z-50">
+      <div className="flex justify-between items-center px-2">
+        <div className="flex justify-start items-center gap-2">
+          <Image width={35} height={35} src={"/imgs/logo.png"} alt="Leaf Logo" />
+        </div>
+        <div className="flex gap-10 items-center mr-5">
+          <div>Login</div>
+          <Sheet>
+            <SheetTrigger>
+              <Menu className={"stroke-1"} />
+            </SheetTrigger>
+            <SheetContent side="left" className="h-full">
+              <SheetDescription className="hidden"></SheetDescription>
+              <div className="p-5">
+                <SheetTitle className="text-foreground">Tài nguyên</SheetTitle>
+                <div className="flex flex-1 justify-between items-center my-2">
+                  <div className="flex justify-center items-center flex-col">
+                    <div className="flex flex-col flex-1 gap-2">
+                      <div className="flex flex-col">
+                        <AnimateIcon animateOnHover>
+                          <div className="flex justify-start items-center gap-2">
+                            <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
+                            <h3 className="text-foreground/40 leading-0">Component repository</h3>
+                          </div>
+                        </AnimateIcon>
+                        <div className="mt-2">
+                          <ResourceCard
+                            hasStar
+                            title={`${repos.lib?.full_name} • ${formatStars(Number(repos.lib?.stargazers_count))}`}
+                            content={repos.lib?.description ?? "Xem mã nguồn animate.ui"}
+                            icon={Github}
+                            url="https://github.com/imskyleen/animate-ui"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <AnimateIcon animateOnHover>
+                          <div className="flex justify-start items-center gap-2">
+                            <Layers className={"size-4 text-foreground/40"} />
+                            <h3 className="text-foreground/40 leading-0">My source</h3>
+                          </div>
+                        </AnimateIcon>
+                        <div className="mt-2 flex flex-col">
+                          <ResourceCard
+                            hasStar
+                            title={`${repos.me?.full_name} • ${formatStars(Number(repos.me?.stargazers_count))}`}
+                            content={repos.me?.description ?? "Xem mã nguồn của tôi"}
+                            icon={Github}
+                            imageURL={repos.me?.owner.avatar_url}
+                            url="https://github.com/canhtv05/MS"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <SheetTitle className="text-foreground">Github</SheetTitle>
+              </div>
+              <SheetFooter>
+                <Button>Create account</Button>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const HeaderHomeLayout = () => {
+  return (
+    <header className="sticky top-4">
+      <ReposProvider>
+        <div className="hidden justify-center lg:flex">
+          <HeaderLG />
+        </div>
+        <div className="flex justify-center lg:hidden">
+          <HeaderMD />
+        </div>
+      </ReposProvider>
     </header>
   );
 };
