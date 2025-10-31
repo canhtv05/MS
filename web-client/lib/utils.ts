@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export interface GitHubRepo {
+export interface IGitHubRepo {
   full_name: string;
   stargazers_count: number;
   owner: {
@@ -14,14 +14,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function getInfoRepo(owner: string, repo: string): Promise<GitHubRepo | null> {
+export async function getInfoRepo(owner: string, repo: string): Promise<IGitHubRepo | null> {
   const url = `https://api.github.com/repos/${owner}/${repo}`;
 
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
-    const data: GitHubRepo = await res.json();
+    const data: IGitHubRepo = await res.json();
     return data;
   } catch (err) {
     console.error(err);

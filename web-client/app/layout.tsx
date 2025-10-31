@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono, Roboto_Slab, Roboto_Flex, Roboto_Serif, Roboto_Condensed } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
+import AppLayout from "@/views/layouts/AppLayout";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -50,13 +50,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${roboto.variable} ${robotoMono.variable} ${robotoSlab.variable} ${robotoFlex.variable} ${robotoSerif.variable} ${robotoCondensed.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
-          {children}
-        </ThemeProvider>
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );

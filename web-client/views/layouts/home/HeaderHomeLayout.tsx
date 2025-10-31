@@ -8,9 +8,8 @@ import { Layers } from "@/components/animate-ui/icons/layers";
 import { Star } from "@/components/animate-ui/icons/star";
 import { cn, formatStars } from "@/lib/utils";
 import { ChevronDown, Github, LucideIcon, Menu } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   Sheet,
@@ -21,9 +20,10 @@ import {
   SheetTrigger,
 } from "@/components/animate-ui/components/radix/sheet";
 import { ReposProvider, useHeaderHomeRepo } from "./HeaderHomeRepoProvider";
-import { useTheme } from "next-themes";
+import CustomImage from "@/components/customs/CustomImage";
+import { useRouter } from "next/navigation";
 
-interface ResourceCardProps {
+interface IResourceCardProps {
   content: string;
   url: string;
   icon: LucideIcon;
@@ -32,7 +32,7 @@ interface ResourceCardProps {
   imageURL?: string;
 }
 
-const ResourceCard = (props: ResourceCardProps) => {
+const ResourceCard = (props: IResourceCardProps) => {
   const { content, icon: Icon, url, title, hasStar, imageURL } = props;
 
   return (
@@ -49,13 +49,13 @@ const ResourceCard = (props: ResourceCardProps) => {
           )}
         >
           {imageURL ? (
-            <Image src={imageURL} className="rounded-sm" width={40} height={40} alt="image resource" />
+            <CustomImage src={imageURL} className="rounded-sm" width={40} height={40} alt="image resource" />
           ) : (
             <Icon />
           )}
         </div>
         <div className="flex flex-col flex-1 justify-start">
-          <h4 className={cn("text-foreground", hasStar && "flex items-center gap-1")}>
+          <h4 className={cn("text-foreground", hasStar && "flex items-center gap-2")}>
             <span className="line-clamp-1">{title}</span>
             {hasStar && <Star className={"fill-yellow-400 stroke-yellow-400 size-4"} />}
           </h4>
@@ -73,7 +73,7 @@ const Resources = () => {
   return (
     <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
       <HoverCardTrigger className="cursor-pointer font-normal flex items-center gap-2">
-        Tài nguyên
+        Resource
         <ChevronDown className={cn("size-3 text-foreground transition-transform duration-200", open && "rotate-180")} />
       </HoverCardTrigger>
       <HoverCardContent className="border-0 w-lg" sideOffset={20} transition={{ type: "tween", duration: 0.25 }}>
@@ -120,31 +120,22 @@ const Resources = () => {
 };
 
 const HeaderLG = () => {
-  const [showSignup, setShowSignup] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowSignup(window.scrollY > 100);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { showSignup } = useHeaderHomeRepo();
+  const router = useRouter();
 
   return (
-    <div className="p-2 max-w-2xl bg-background w-full rounded-xl shadow-xl">
+    <div className="p-2 max-w-2xl bg-background w-full rounded-xl shadow-xl dark:border border-border">
       <div className="flex justify-start items-center">
-        <div className="flex justify-start items-center gap-2">
-          <Image width={35} height={35} src={"/imgs/logo.png"} alt="Leaf Logo" loading="eager" />
-          <h1 className="font-bold text-lg text-green-700 tracking-wide">LEAF</h1>
-        </div>
+        <Link href={"/"} className="flex justify-start items-center gap-2">
+          <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
+          <h1 className="font-bold text-lg text-green-700 tracking-wide">LeafHub</h1>
+        </Link>
 
         <span className="block mx-5 h-6 w-[0.3px] bg-foreground/10"></span>
         <div className="flex flex-1 justify-between items-center">
           <div className="flex justify-center items-center gap-10">
             <Resources />
-            <span className="font-normal cursor-pointer">Github</span>
+            <span className="font-normal cursor-pointer">Blog</span>
           </div>
           <div className="flex items-center">
             <motion.div
@@ -155,7 +146,7 @@ const HeaderLG = () => {
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
             >
               <Button
-                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                onClick={() => router.push("/login")}
                 variant={"outline"}
                 className={cn(!showSignup ? "shadow-lg" : "bg-transparent shadow-none border-none")}
               >
@@ -188,72 +179,111 @@ const HeaderLG = () => {
 };
 
 const HeaderMD = () => {
-  const { repos } = useHeaderHomeRepo();
+  const { showSignup, repos } = useHeaderHomeRepo();
+  const router = useRouter();
 
   return (
-    <div className="p-2 bg-background w-full rounded-xl shadow-xl relative z-50">
+    <div className="p-2 bg-background w-full rounded-xl shadow-xl dark:border border-border">
       <div className="flex justify-between items-center px-2">
-        <div className="flex justify-start items-center gap-2">
-          <Image width={35} height={35} src={"/imgs/logo.png"} alt="Leaf Logo" />
-        </div>
-        <div className="flex gap-10 items-center mr-5">
-          <div>Login</div>
-          <Sheet>
-            <SheetTrigger>
-              <Menu className={"stroke-1"} />
-            </SheetTrigger>
-            <SheetContent side="left" className="h-full">
-              <SheetDescription className="hidden"></SheetDescription>
-              <div className="p-5">
-                <SheetTitle className="text-foreground">Tài nguyên</SheetTitle>
-                <div className="flex flex-1 justify-between items-center my-2">
-                  <div className="flex justify-center items-center flex-col">
-                    <div className="flex flex-col flex-1 gap-2">
-                      <div className="flex flex-col">
-                        <AnimateIcon animateOnHover>
-                          <div className="flex justify-start items-center gap-2">
-                            <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
-                            <h3 className="text-foreground/40 leading-0">Component repository</h3>
+        <Link href={"/"} className="flex justify-start items-center gap-2">
+          <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
+          <h1 className="font-bold text-lg text-green-700 tracking-wide">LeafHub</h1>
+        </Link>
+        <div className={cn("flex gap-10 items-center", showSignup && "mr-5")}>
+          <div className="flex items-center">
+            <motion.div
+              layout
+              animate={{
+                x: showSignup ? -10 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            >
+              <Button
+                onClick={() => router.push("/login")}
+                variant={"outline"}
+                className={cn(
+                  "bg-transparent shadow-none border-none hover:bg-transparent dark:hover:bg-transparent dark:bg-transparent"
+                )}
+              >
+                <span className="font-medium text-foreground">Login</span>
+              </Button>
+            </motion.div>
+            <motion.div layout className="flex items-center">
+              <AnimatePresence mode="popLayout">
+                {showSignup && (
+                  <motion.div
+                    key="signup"
+                    layout
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 30, mass: 0.7 }}
+                  >
+                    <Sheet>
+                      <SheetTrigger className="flex items-center justify-center cursor-pointer">
+                        <Menu className={"stroke-1"} />
+                      </SheetTrigger>
+                      <SheetContent side="left" className="h-full">
+                        <SheetDescription className="hidden"></SheetDescription>
+                        <div className="p-5">
+                          <SheetTitle className="text-foreground">Resource</SheetTitle>
+                          <div className="flex flex-1 justify-between items-center my-2">
+                            <div className="flex justify-center items-center flex-col">
+                              <div className="flex flex-col flex-1 gap-2">
+                                <div className="flex flex-col">
+                                  <AnimateIcon animateOnHover>
+                                    <div className="flex justify-start items-center gap-2">
+                                      <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
+                                      <h3 className="text-foreground/40 leading-0">Component repository</h3>
+                                    </div>
+                                  </AnimateIcon>
+                                  <div className="mt-2">
+                                    <ResourceCard
+                                      hasStar
+                                      title={`${repos.lib?.full_name} • ${formatStars(
+                                        Number(repos.lib?.stargazers_count)
+                                      )}`}
+                                      content={repos.lib?.description ?? "Xem mã nguồn animate.ui"}
+                                      icon={Github}
+                                      url="https://github.com/imskyleen/animate-ui"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex flex-col">
+                                  <AnimateIcon animateOnHover>
+                                    <div className="flex justify-start items-center gap-2">
+                                      <Layers className={"size-4 text-foreground/40"} />
+                                      <h3 className="text-foreground/40 leading-0">My source</h3>
+                                    </div>
+                                  </AnimateIcon>
+                                  <div className="mt-2 flex flex-col">
+                                    <ResourceCard
+                                      hasStar
+                                      title={`${repos.me?.full_name} • ${formatStars(
+                                        Number(repos.me?.stargazers_count)
+                                      )}`}
+                                      content={repos.me?.description ?? "Xem mã nguồn của tôi"}
+                                      icon={Github}
+                                      imageURL={repos.me?.owner.avatar_url}
+                                      url="https://github.com/canhtv05/MS"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        </AnimateIcon>
-                        <div className="mt-2">
-                          <ResourceCard
-                            hasStar
-                            title={`${repos.lib?.full_name} • ${formatStars(Number(repos.lib?.stargazers_count))}`}
-                            content={repos.lib?.description ?? "Xem mã nguồn animate.ui"}
-                            icon={Github}
-                            url="https://github.com/imskyleen/animate-ui"
-                          />
+                          <SheetTitle className="text-foreground">Blog</SheetTitle>
                         </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <AnimateIcon animateOnHover>
-                          <div className="flex justify-start items-center gap-2">
-                            <Layers className={"size-4 text-foreground/40"} />
-                            <h3 className="text-foreground/40 leading-0">My source</h3>
-                          </div>
-                        </AnimateIcon>
-                        <div className="mt-2 flex flex-col">
-                          <ResourceCard
-                            hasStar
-                            title={`${repos.me?.full_name} • ${formatStars(Number(repos.me?.stargazers_count))}`}
-                            content={repos.me?.description ?? "Xem mã nguồn của tôi"}
-                            icon={Github}
-                            imageURL={repos.me?.owner.avatar_url}
-                            url="https://github.com/canhtv05/MS"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <SheetTitle className="text-foreground">Github</SheetTitle>
-              </div>
-              <SheetFooter>
-                <Button>Create account</Button>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
+                        <SheetFooter>
+                          <Button>Create account</Button>
+                        </SheetFooter>
+                      </SheetContent>
+                    </Sheet>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>
@@ -262,12 +292,12 @@ const HeaderMD = () => {
 
 const HeaderHomeLayout = () => {
   return (
-    <header className="sticky top-4">
+    <header className="sticky top-4 z-50">
       <ReposProvider>
         <div className="hidden justify-center lg:flex">
           <HeaderLG />
         </div>
-        <div className="flex justify-center lg:hidden">
+        <div className="flex justify-center lg:hidden px-5">
           <HeaderMD />
         </div>
       </ReposProvider>

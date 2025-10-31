@@ -1,18 +1,30 @@
-import { getInfoRepo, GitHubRepo } from "@/lib/utils";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { getInfoRepo, IGitHubRepo } from "@/lib/utils";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface ReposContextType {
-  repos: { lib: GitHubRepo | null; me: GitHubRepo | null };
-  setRepos: React.Dispatch<React.SetStateAction<{ lib: GitHubRepo | null; me: GitHubRepo | null }>>;
+  repos: { lib: IGitHubRepo | null; me: IGitHubRepo | null };
+  setRepos: React.Dispatch<React.SetStateAction<{ lib: IGitHubRepo | null; me: IGitHubRepo | null }>>;
+  showSignup: boolean;
+  setShowSignup: Dispatch<SetStateAction<boolean>>;
 }
 
 const ReposContext = createContext<ReposContextType | undefined>(undefined);
 
 export const ReposProvider = ({ children }: { children: ReactNode }) => {
-  const [repos, setRepos] = useState<{ lib: GitHubRepo | null; me: GitHubRepo | null }>({
+  const [showSignup, setShowSignup] = useState(false);
+  const [repos, setRepos] = useState<{ lib: IGitHubRepo | null; me: IGitHubRepo | null }>({
     lib: null,
     me: null,
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowSignup(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     async function fetchRepos() {
@@ -34,7 +46,9 @@ export const ReposProvider = ({ children }: { children: ReactNode }) => {
     fetchRepos();
   }, []);
 
-  return <ReposContext.Provider value={{ repos, setRepos }}>{children}</ReposContext.Provider>;
+  return (
+    <ReposContext.Provider value={{ repos, setRepos, setShowSignup, showSignup }}>{children}</ReposContext.Provider>
+  );
 };
 
 export const useHeaderHomeRepo = () => {
