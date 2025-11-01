@@ -38,7 +38,7 @@ public class UserJWTController {
         return new ResponseEntity<>(new TokenResponse(jwt), HttpStatus.OK);
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
             @CookieValue(name = "auth") String cookieValue,
             HttpServletRequest httpServletRequest, HttpServletResponse response) {

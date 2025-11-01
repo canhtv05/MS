@@ -71,7 +71,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
-                        .requestMatchers("/api/verify").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated())
                 .apply(securityConfigurerAdapter());

@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-
+import com.canhtv05.auth.config.ApplicationProperties;
 import com.canhtv05.auth.domain.User;
 import com.canhtv05.auth.dto.NotificationPayload;
 import com.canhtv05.auth.dto.res.RefreshTokenResponse;
@@ -67,7 +67,8 @@ public class TokenProvider {
     private final Long refreshTokenValidityDuration;
 
     public TokenProvider(SimpMessagingTemplate messagingTemplate,
-            RedisService redisService, UserRepository userRepository, CookieUtil cookieUtil) {
+            RedisService redisService, UserRepository userRepository, CookieUtil cookieUtil,
+            ApplicationProperties applicationProperties) {
         this.messagingTemplate = messagingTemplate;
         this.redisService = redisService;
         this.userRepository = userRepository;
@@ -114,7 +115,6 @@ public class TokenProvider {
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
-
         return token;
     }
 
@@ -138,15 +138,15 @@ public class TokenProvider {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
 
-        if (!this.validateToken(refreshToken))
-            throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
-
         String newToken = this.generateToken(authentication, this.tokenValidityDuration, request);
         String newRefreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration,
                 request);
 
-        // revoke old token
-        redisService.deleteToken(newToken);
+        redisService.saveToken(username, newToken, this.tokenValidityDuration);
+
+        // save new refresh token
+        user.setRefreshToken(newRefreshToken);
+        userRepository.save(user);
 
         Cookie cookie = cookieUtil.setCookie(newToken, newRefreshToken);
         response.addCookie(cookie);

@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
@@ -51,6 +50,7 @@ public class AuthService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
 
+    @Transactional
     public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -63,6 +63,7 @@ public class AuthService {
         return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse);
     }
 
+    @Transactional
     public RefreshTokenResponse refreshToken(String cookieValue, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
 
@@ -70,6 +71,7 @@ public class AuthService {
         return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse);
     }
 
+    @Transactional(readOnly = true)
     public VerifyTokenResponse verifyToken(String cookieValue) {
         String accessToken = getAccessToken(cookieValue);
         if (StringUtils.isBlank(accessToken)) {
@@ -83,6 +85,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public void logout(String cookieValue, HttpServletResponse response) {
         String accessToken = getAccessToken(cookieValue);
         tokenProvider.revokeToken(accessToken);
@@ -90,10 +93,12 @@ public class AuthService {
         SecurityUtils.clear();
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findOneWithAuthoritiesByUsername(String username) {
         return userRepository.findOneWithAuthoritiesByUsername(username);
     }
 
+    @Transactional(readOnly = true)
     public UserProfileDTO getProfile() {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
@@ -106,6 +111,7 @@ public class AuthService {
         return userProfileDTO;
     }
 
+    @Transactional(readOnly = true)
     public void mappingUserPermissions(UserProfileDTO userProfileDTO, User user) {
         Set<String> permissions = user.getRoles().stream()
                 .filter(role -> !ObjectUtils.isEmpty(role.getPermissions()))
@@ -127,6 +133,7 @@ public class AuthService {
         userProfileDTO.setPermissions(new ArrayList<>(permissions));
     }
 
+    @Transactional(readOnly = true)
     private String getAccessToken(String cookieValue) {
         Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
         String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
