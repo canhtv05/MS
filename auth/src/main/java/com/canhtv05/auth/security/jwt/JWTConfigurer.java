@@ -5,8 +5,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-public record JWTConfigurer(TokenProvider tokenProvider)
+public record JWTConfigurer(TokenProvider tokenProvider, String nameApplication)
         implements SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {
 
     @Override
@@ -16,7 +15,7 @@ public record JWTConfigurer(TokenProvider tokenProvider)
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
-        JWTFilter customFilter = new JWTFilter(tokenProvider);
+        JWTFilter customFilter = new JWTFilter(tokenProvider, nameApplication);
         builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

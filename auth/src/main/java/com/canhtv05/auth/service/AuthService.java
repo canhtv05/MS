@@ -3,18 +3,25 @@ package com.canhtv05.auth.service;
 import com.canhtv05.auth.domain.Permission;
 import com.canhtv05.auth.domain.User;
 import com.canhtv05.auth.domain.UserPermission;
-import com.canhtv05.auth.dto.LoginRequest;
 import com.canhtv05.auth.dto.UserProfileDTO;
+import com.canhtv05.auth.dto.req.LoginRequest;
+import com.canhtv05.auth.dto.res.RefreshTokenResponse;
+import com.canhtv05.auth.dto.res.VerifyTokenResponse;
+import com.canhtv05.auth.enums.AuthKey;
 import com.canhtv05.auth.enums.PermissionAction;
 import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.repository.UserPermissionRepository;
 import com.canhtv05.auth.repository.UserRepository;
 import com.canhtv05.auth.security.jwt.TokenProvider;
-
+import com.canhtv05.auth.util.CookieUtil;
 import com.canhtv05.common.exceptions.ApiException;
 import com.canhtv05.common.exceptions.ErrorMessage;
 import com.canhtv05.common.security.SecurityUtils;
+import com.canhtv05.common.utils.JsonF;
+
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,13 +44,15 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
+    CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
 
-    public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+    public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
                 loginRequest.getPassword());
@@ -51,14 +60,34 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return tokenProvider.createToken(authentication, loginRequest.isRememberMe(), httpServletRequest);
+        return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse);
     }
 
-    public void logout(String bearerToken) {
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            String token = bearerToken.substring(7);
-            tokenProvider.revokeToken(token);
+    public RefreshTokenResponse refreshToken(String cookieValue, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse);
+    }
+
+    public VerifyTokenResponse verifyToken(String cookieValue) {
+        String accessToken = getAccessToken(cookieValue);
+        if (StringUtils.isBlank(accessToken)) {
+            throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
+
+        boolean valid = this.tokenProvider.validateToken(accessToken);
+
+        return VerifyTokenResponse.builder()
+                .valid(valid)
+                .build();
+    }
+
+    public void logout(String cookieValue, HttpServletResponse response) {
+        String accessToken = getAccessToken(cookieValue);
+        tokenProvider.revokeToken(accessToken);
+        cookieUtil.deleteCookie(response);
+        SecurityUtils.clear();
     }
 
     public Optional<User> findOneWithAuthoritiesByUsername(String username) {
@@ -96,5 +125,14 @@ public class AuthService {
                     .collect(Collectors.toSet()));
         }
         userProfileDTO.setPermissions(new ArrayList<>(permissions));
+    }
+
+    private String getAccessToken(String cookieValue) {
+        Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
+        String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
+        if (StringUtils.isBlank(accessToken)) {
+            throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
+        }
+        return accessToken;
     }
 }

@@ -42,4 +42,8 @@ public final class SecurityUtils {
                 authentication.getPrincipal() instanceof UserPrincipal &&
                 ((UserPrincipal) authentication.getPrincipal()).isGlobal());
     }
+
+    public static void clear() {
+        SecurityContextHolder.clearContext();
+    }
 }

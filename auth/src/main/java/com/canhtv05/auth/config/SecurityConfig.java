@@ -34,12 +34,15 @@ import java.util.Objects;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
+    private String applicationName;
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
 
-    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter) {
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter,
+            ApplicationProperties applicationProperties) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
+        this.applicationName = applicationProperties.getName();
     }
 
     @Bean
@@ -68,6 +71,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/authenticate").permitAll()
+                        .requestMatchers("/api/verify").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated())
                 .apply(securityConfigurerAdapter());
@@ -75,7 +79,7 @@ public class SecurityConfig {
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider);
+        return new JWTConfigurer(tokenProvider, applicationName);
     }
 
     @Bean

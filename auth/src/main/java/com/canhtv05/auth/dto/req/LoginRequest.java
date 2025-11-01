@@ -1,4 +1,4 @@
-package com.canhtv05.auth.dto;
+package com.canhtv05.auth.dto.req;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -16,5 +16,4 @@ public class LoginRequest {
 
     @NotBlank(message = "Password is not blank")
     String password;
-    boolean rememberMe;
 }

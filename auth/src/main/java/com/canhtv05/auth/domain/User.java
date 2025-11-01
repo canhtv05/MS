@@ -44,6 +44,10 @@ public class User extends AbstractAuditingEntity {
     private Boolean isGlobal = false;
 
     @JsonIgnore
+    @Column(name = "refresh_token", columnDefinition = "TEXT")
+    String refreshToken;
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {

@@ -6,9 +6,19 @@
       "description": "A description for 'application.security.base64-secret'"
     },
     {
-      "name": "application.security.token-validity-in-seconds",
+      "name": "application.name",
       "type": "java.lang.String",
-      "description": "A description for 'application.security.token-validity-in-seconds'"
+      "description": "A description for 'application.name'"
+    },
+    {
+      "name": "application.security.valid-duration-in-seconds",
+      "type": "java.lang.String",
+      "description": "A description for 'application.security.valid-duration-in-seconds'"
+    },
+    {
+      "name": "application.security.refresh-duration-in-seconds",
+      "type": "java.lang.String",
+      "description": "A description for 'application.security.refresh-duration-in-seconds'"
     }
   ]
 }

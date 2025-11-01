@@ -1,4 +1,4 @@
-package com.canhtv05.auth.dto;
+package com.canhtv05.auth.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
