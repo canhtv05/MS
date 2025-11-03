@@ -10,7 +10,7 @@ interface AppLayoutProps {
 const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <>
-      <ThemeProvider attribute="class" defaultTheme="light" enableColorScheme>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableColorScheme>
         {children}
       </ThemeProvider>
     </>

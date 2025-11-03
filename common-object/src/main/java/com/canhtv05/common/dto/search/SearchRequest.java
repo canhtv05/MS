@@ -3,13 +3,14 @@ package com.canhtv05.common.dto.search;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
 public record SearchRequest(
         String searchText,
         Integer page,
         Integer size,
-        String sortOrder,
+        @NonNull String sortOrder,
         String sortField) {
     public Pageable toPageable() {
         int safePage = (page == null || page < 1) ? 0 : page - 1;

@@ -40,26 +40,21 @@ const ResourceCard = (props: IResourceCardProps) => {
       <Link
         target="_blank"
         href={url}
-        className="flex gap-2 justify-between hover:bg-muted transition-colors duration-200 ease-in p-2 rounded-sm cursor-pointer"
+        className="flex gap-2 justify-between hover:bg-muted-foreground/10 transition-colors duration-200 ease-in p-2 rounded-sm cursor-pointer"
       >
-        <div
-          className={cn(
-            "p-2 leading-none rounded-sm border border-card-foreground/30 h-full",
-            imageURL && "p-0! border-none"
-          )}
-        >
+        <div className={cn("p-2 leading-none rounded-sm border border-card/30 h-full", imageURL && "p-0! border-none")}>
           {imageURL ? (
             <CustomImage src={imageURL} className="rounded-sm" width={40} height={40} alt="image resource" />
           ) : (
-            <Icon />
+            <Icon className="text-black" />
           )}
         </div>
         <div className="flex flex-col flex-1 justify-start">
-          <h4 className={cn("text-foreground", hasStar && "flex items-center gap-2")}>
+          <h4 className={cn("text-black", hasStar && "flex items-center gap-2")}>
             <span className="line-clamp-1">{title}</span>
             {hasStar && <Star className={"fill-yellow-400 stroke-yellow-400 size-4"} />}
           </h4>
-          <p className="text-foreground/40 lg:line-clamp-3 line-clamp-1">{content}</p>
+          <p className="text-black/40 lg:line-clamp-3 line-clamp-1">{content}</p>
         </div>
       </Link>
     </AnimateIcon>
@@ -73,16 +68,20 @@ const Resources = () => {
   return (
     <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
       <HoverCardTrigger className="cursor-pointer font-normal flex items-center gap-2">
-        Resource
-        <ChevronDown className={cn("size-3 text-foreground transition-transform duration-200", open && "rotate-180")} />
+        <span className="text-black">Resource</span>
+        <ChevronDown className={cn("size-3 text-black transition-transform duration-200", open && "rotate-180")} />
       </HoverCardTrigger>
-      <HoverCardContent className="border-0 w-lg" sideOffset={20} transition={{ type: "tween", duration: 0.25 }}>
+      <HoverCardContent
+        className="border-0 w-lg bg-white"
+        sideOffset={20}
+        transition={{ type: "tween", duration: 0.25 }}
+      >
         <div className="flex justify-between gap-10">
           <div className="flex flex-col flex-1">
             <AnimateIcon animateOnHover>
               <div className="flex justify-start items-center gap-2">
-                <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
-                <h3 className="text-foreground/40 leading-0">Component repository</h3>
+                <GalleryVerticalEnd className={"size-4 text-black/40"} />
+                <h3 className="text-black/40 leading-0">Component repository</h3>
               </div>
             </AnimateIcon>
             <div className="mt-2">
@@ -98,8 +97,8 @@ const Resources = () => {
           <div className="flex flex-col flex-1">
             <AnimateIcon animateOnHover>
               <div className="flex justify-start items-center gap-2">
-                <Layers className={"size-4 text-foreground/40"} />
-                <h3 className="text-foreground/40 leading-0">My source</h3>
+                <Layers className={"size-4 text-black/40"} />
+                <h3 className="text-black/40 leading-0">My source</h3>
               </div>
             </AnimateIcon>
             <div className="mt-2 flex flex-col">
@@ -124,7 +123,7 @@ const HeaderLG = () => {
   const router = useRouter();
 
   return (
-    <div className="p-2 max-w-2xl bg-background w-full rounded-xl shadow-xl dark:border border-border">
+    <div className="p-2 max-w-2xl bg-white w-full rounded-xl shadow-xl border border-card/10">
       <div className="flex justify-start items-center">
         <Link href={"/"} className="flex justify-start items-center gap-2">
           <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
@@ -135,7 +134,7 @@ const HeaderLG = () => {
         <div className="flex flex-1 justify-between items-center">
           <div className="flex justify-center items-center gap-10">
             <Resources />
-            <span className="font-normal cursor-pointer">Blog</span>
+            <span className="font-normal cursor-pointer text-black">Blog</span>
           </div>
           <div className="flex items-center">
             <motion.div
@@ -148,9 +147,11 @@ const HeaderLG = () => {
               <Button
                 onClick={() => router.push("/login")}
                 variant={"outline"}
-                className={cn(!showSignup ? "shadow-lg" : "bg-transparent shadow-none border-none")}
+                className={cn(
+                  !showSignup ? "shadow-lg border border-card/20!" : "bg-transparent shadow-none border-none"
+                )}
               >
-                <span className="font-medium text-foreground">Login</span>
+                <span className="font-medium text-black">Login</span>
               </Button>
             </motion.div>
             <motion.div layout className="flex items-center">
@@ -183,7 +184,7 @@ const HeaderMD = () => {
   const router = useRouter();
 
   return (
-    <div className="p-2 bg-background w-full rounded-xl shadow-xl dark:border border-border">
+    <div className="p-2 bg-white w-full rounded-xl shadow-xl border border-card/10">
       <div className="flex justify-between items-center px-2">
         <Link href={"/"} className="flex justify-start items-center gap-2">
           <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
@@ -205,7 +206,7 @@ const HeaderMD = () => {
                   "bg-transparent shadow-none border-none hover:bg-transparent dark:hover:bg-transparent dark:bg-transparent"
                 )}
               >
-                <span className="font-medium text-foreground">Login</span>
+                <span className="font-medium text-black">Login</span>
               </Button>
             </motion.div>
             <motion.div layout className="flex items-center">
@@ -221,20 +222,20 @@ const HeaderMD = () => {
                   >
                     <Sheet>
                       <SheetTrigger className="flex items-center justify-center cursor-pointer">
-                        <Menu className={"stroke-1"} />
+                        <Menu className={"stroke-1 stroke-black"} />
                       </SheetTrigger>
-                      <SheetContent side="left" className="h-full">
+                      <SheetContent side="left" className="h-full bg-white">
                         <SheetDescription className="hidden"></SheetDescription>
                         <div className="p-5">
-                          <SheetTitle className="text-foreground">Resource</SheetTitle>
+                          <SheetTitle className="text-black">Resource</SheetTitle>
                           <div className="flex flex-1 justify-between items-center my-2">
                             <div className="flex justify-center items-center flex-col">
                               <div className="flex flex-col flex-1 gap-2">
                                 <div className="flex flex-col">
                                   <AnimateIcon animateOnHover>
                                     <div className="flex justify-start items-center gap-2">
-                                      <GalleryVerticalEnd className={"size-4 text-foreground/40"} />
-                                      <h3 className="text-foreground/40 leading-0">Component repository</h3>
+                                      <GalleryVerticalEnd className={"size-4 text-black/40"} />
+                                      <h3 className="text-black/40 leading-0">Component repository</h3>
                                     </div>
                                   </AnimateIcon>
                                   <div className="mt-2">
@@ -252,8 +253,8 @@ const HeaderMD = () => {
                                 <div className="flex flex-col">
                                   <AnimateIcon animateOnHover>
                                     <div className="flex justify-start items-center gap-2">
-                                      <Layers className={"size-4 text-foreground/40"} />
-                                      <h3 className="text-foreground/40 leading-0">My source</h3>
+                                      <Layers className={"size-4 text-black/40"} />
+                                      <h3 className="text-black/40 leading-0">My source</h3>
                                     </div>
                                   </AnimateIcon>
                                   <div className="mt-2 flex flex-col">
@@ -272,7 +273,7 @@ const HeaderMD = () => {
                               </div>
                             </div>
                           </div>
-                          <SheetTitle className="text-foreground">Blog</SheetTitle>
+                          <SheetTitle className="text-black">Blog</SheetTitle>
                         </div>
                         <SheetFooter>
                           <Button>Create account</Button>
