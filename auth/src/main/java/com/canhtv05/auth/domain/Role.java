@@ -1,6 +1,5 @@
 package com.canhtv05.auth.domain;
 
-import com.canhtv05.common.domain.AbstractAuditingEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -35,11 +34,9 @@ public class Role extends AbstractAuditingEntity {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-            name = "role_permissions",
-            joinColumns = {@JoinColumn(name = "role_code", referencedColumnName = "code")},
-            inverseJoinColumns = {@JoinColumn(name = "permission_code", referencedColumnName = "code")}
-    )
+    @JoinTable(name = "role_permissions", joinColumns = {
+            @JoinColumn(name = "role_code", referencedColumnName = "code") }, inverseJoinColumns = {
+                    @JoinColumn(name = "permission_code", referencedColumnName = "code") })
     @Builder.Default
     private Set<Permission> permissions = new HashSet<>();
 }

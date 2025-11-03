@@ -1,6 +1,5 @@
 package com.canhtv05.auth.domain;
 
-import com.canhtv05.common.domain.AbstractAuditingEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;

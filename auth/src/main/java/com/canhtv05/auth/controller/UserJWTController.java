@@ -8,6 +8,7 @@ import com.canhtv05.auth.dto.res.TokenResponse;
 import com.canhtv05.auth.dto.res.VerifyTokenResponse;
 import com.canhtv05.auth.service.AuthService;
 import com.canhtv05.auth.service.UserService;
+import com.canhtv05.common.constant.ConstantCookie;
 import com.canhtv05.common.exceptions.ResponseObject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,11 +21,9 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserJWTController {
 
@@ -40,7 +39,7 @@ public class UserJWTController {
 
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
-            @CookieValue(name = "auth") String cookieValue,
+            @CookieValue(name = ConstantCookie.COOKIE_NAME) String cookieValue,
             HttpServletRequest httpServletRequest, HttpServletResponse response) {
         return ResponseEntity
                 .ok(ResponseObject.success(authService.refreshToken(cookieValue, httpServletRequest, response)));
@@ -48,7 +47,7 @@ public class UserJWTController {
 
     @PostMapping("/internal/verify")
     public ResponseEntity<ResponseObject<VerifyTokenResponse>> verifyToken(
-            @CookieValue(name = "auth") String cookieValue) {
+            @CookieValue(name = ConstantCookie.COOKIE_NAME) String cookieValue) {
         return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue)));
     }
 
@@ -70,7 +69,7 @@ public class UserJWTController {
     }
 
     @PostMapping("/p/logout")
-    public ResponseEntity<ResponseObject<?>> logout(@CookieValue(name = "auth") String cookieValue,
+    public ResponseEntity<ResponseObject<?>> logout(@CookieValue(name = ConstantCookie.COOKIE_NAME) String cookieValue,
             HttpServletResponse response) {
         authService.logout(cookieValue, response);
         return ResponseEntity.ok(ResponseObject.success());

@@ -1,6 +1,7 @@
 package com.canhtv05.auth.domain;
+
 import com.canhtv05.auth.enums.PermissionAction;
-import com.canhtv05.common.domain.AbstractAuditingEntity;
+
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

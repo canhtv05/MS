@@ -20,7 +20,6 @@ spring:
       port: 6379
 
 application:
-  name: ${spring.application.name}
   security:
     base64-secret: ASyTTcIvfHA8QsI2c1Fvc8vZUcaeUgRlHH1VhsElDSYHsJ0CS5N0y5/yvKte+WDvYS3lL0oBzPK+1E83ACSdvA==
     valid-duration-in-seconds: 86400

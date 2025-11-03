@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
@@ -14,19 +13,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.canhtv05.auth.enums.AuthKey;
-import com.canhtv05.common.utils.JsonF;
+import com.canhtv05.auth.util.CookieUtil;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Objects;
 
 public class JWTFilter extends GenericFilterBean {
 
-    private final String name;
     private final TokenProvider tokenProvider;
+    private final CookieUtil cookieUtil;
 
-    public JWTFilter(TokenProvider tokenProvider, String name) {
+    public JWTFilter(TokenProvider tokenProvider, CookieUtil cookieUtil) {
         this.tokenProvider = tokenProvider;
-        this.name = name;
+        this.cookieUtil = cookieUtil;
     }
 
     @Override
@@ -57,22 +56,10 @@ public class JWTFilter extends GenericFilterBean {
         if (StringUtils.hasText(jwt)) {
             return jwt;
         }
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals(this.name))
-                    try {
-                        String decoded = java.net.URLDecoder.decode(c.getValue(),
-                                java.nio.charset.StandardCharsets.UTF_8);
+        var res = cookieUtil.getTokenCookie(request);
+        if (Objects.isNull(res))
+            return null;
 
-                        Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
-
-                        return tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-            }
-        }
-        return null;
+        return res.getAccessToken();
     }
 }

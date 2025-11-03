@@ -26,6 +26,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import org.springframework.boot.json.JsonParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
@@ -72,8 +74,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public VerifyTokenResponse verifyToken(String cookieValue) {
-        String accessToken = getAccessToken(cookieValue);
+    public VerifyTokenResponse verifyToken(String cookieValueOrTokenString) {
+        String accessToken = getAccessToken(cookieValueOrTokenString);
         if (StringUtils.isBlank(accessToken)) {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
@@ -134,12 +136,19 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    private String getAccessToken(String cookieValue) {
-        Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
-        String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-        if (StringUtils.isBlank(accessToken)) {
-            throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
+    protected String getAccessToken(String cookieValueOrTokenString) {
+        try {
+            Map<String, String> tokenData = JsonF.jsonToObject(cookieValueOrTokenString, Map.class);
+            if (CollectionUtils.isEmpty(tokenData)) {
+                return cookieValueOrTokenString;
+            }
+            String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
+            if (StringUtils.isBlank(accessToken)) {
+                throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
+            }
+            return accessToken;
+        } catch (JsonParseException e) {
+            return cookieValueOrTokenString;
         }
-        return accessToken;
     }
 }

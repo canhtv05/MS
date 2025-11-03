@@ -1,6 +1,5 @@
 package com.canhtv05.auth.domain;
 
-import com.canhtv05.common.domain.AbstractAuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

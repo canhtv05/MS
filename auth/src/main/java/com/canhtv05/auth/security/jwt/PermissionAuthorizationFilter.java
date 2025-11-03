@@ -87,7 +87,7 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/api/authenticate") || path.startsWith("/ws/");
+        return path.startsWith("/auth/authenticate") || path.startsWith("/ws/");
     }
 
     /**

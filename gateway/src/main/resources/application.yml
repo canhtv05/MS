@@ -1,0 +1,26 @@
+server:
+  port: 1000
+
+app:
+  api-prefix: /api/v1
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: lb://auth
+              predicates:
+                - Path=${app.api-prefix}/auth/**
+              filters:
+                - StripPrefix=2
+grpc:
+  client:
+    auth-service:
+      address: static://localhost:9001
+      negotiationType: plaintext

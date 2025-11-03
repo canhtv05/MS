@@ -108,7 +108,7 @@ public class TokenProvider {
 
         redisService.saveToken(jwtName, token, this.tokenValidityDuration);
 
-        Cookie cookie = cookieUtil.setCookie(token, refreshToken);
+        Cookie cookie = cookieUtil.setTokenCookie(token, refreshToken);
         response.addCookie(cookie);
 
         User user = userRepository.findByUsername(jwtName)
@@ -148,7 +148,7 @@ public class TokenProvider {
         user.setRefreshToken(newRefreshToken);
         userRepository.save(user);
 
-        Cookie cookie = cookieUtil.setCookie(newToken, newRefreshToken);
+        Cookie cookie = cookieUtil.setTokenCookie(newToken, newRefreshToken);
         response.addCookie(cookie);
 
         return RefreshTokenResponse.builder()

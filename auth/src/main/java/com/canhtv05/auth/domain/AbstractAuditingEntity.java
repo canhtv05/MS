@@ -1,4 +1,4 @@
-package com.canhtv05.common.domain;
+package com.canhtv05.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
@@ -25,7 +25,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"createdBy", "createdDate", "modifiedBy", "modifiedDate"}, allowGetters = true)
+@JsonIgnoreProperties(value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" }, allowGetters = true)
 public abstract class AbstractAuditingEntity implements Serializable {
 
     @Serial

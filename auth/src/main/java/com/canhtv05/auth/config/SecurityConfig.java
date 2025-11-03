@@ -4,7 +4,7 @@ import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.security.CustomAuthenticationProvider;
 import com.canhtv05.auth.security.jwt.JWTConfigurer;
 import com.canhtv05.auth.security.jwt.TokenProvider;
-
+import com.canhtv05.auth.util.CookieUtil;
 import com.canhtv05.common.exceptions.ResponseObject;
 import com.canhtv05.common.utils.JsonF;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,15 +34,15 @@ import java.util.Objects;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
 
-    private String applicationName;
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
+    private final CookieUtil cookieUtil;
 
     public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter,
-            ApplicationProperties applicationProperties) {
+            ApplicationProperties applicationProperties, CookieUtil cookieUtil) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
-        this.applicationName = applicationProperties.getName();
+        this.cookieUtil = cookieUtil;
     }
 
     @Bean
@@ -70,7 +70,7 @@ public class SecurityConfig {
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/authenticate").permitAll()
+                        .requestMatchers("/authenticate").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated())
                 .apply(securityConfigurerAdapter());
@@ -78,7 +78,7 @@ public class SecurityConfig {
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider, applicationName);
+        return new JWTConfigurer(tokenProvider, cookieUtil);
     }
 
     @Bean
