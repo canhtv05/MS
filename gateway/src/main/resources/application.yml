@@ -19,6 +19,13 @@ spring:
                 - Path=${app.api-prefix}/auth/**
               filters:
                 - StripPrefix=2
+
+            - id: file-service
+              uri: lb://file
+              predicates:
+                - Path=${app.api-prefix}/files/**
+              filters:
+                - StripPrefix=2
 grpc:
   client:
     auth-service:

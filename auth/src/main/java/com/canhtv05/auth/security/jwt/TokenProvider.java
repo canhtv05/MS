@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.repository.UserRepository;
 import com.canhtv05.auth.security.CustomUserDetails;
 import com.canhtv05.auth.service.RedisService;
-import com.canhtv05.auth.util.CookieUtil;
+import com.canhtv05.auth.utils.CookieUtil;
 import com.canhtv05.common.exceptions.ApiException;
 import com.canhtv05.common.exceptions.ErrorMessage;
 import com.canhtv05.common.security.SecurityUtils;
@@ -115,6 +116,7 @@ public class TokenProvider {
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
+        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return token;
     }
 

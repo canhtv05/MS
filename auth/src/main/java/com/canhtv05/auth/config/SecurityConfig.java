@@ -4,7 +4,7 @@ import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.security.CustomAuthenticationProvider;
 import com.canhtv05.auth.security.jwt.JWTConfigurer;
 import com.canhtv05.auth.security.jwt.TokenProvider;
-import com.canhtv05.auth.util.CookieUtil;
+import com.canhtv05.auth.utils.CookieUtil;
 import com.canhtv05.common.exceptions.ResponseObject;
 import com.canhtv05.common.utils.JsonF;
 import jakarta.servlet.http.HttpServletResponse;

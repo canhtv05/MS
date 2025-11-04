@@ -1,4 +1,4 @@
-package com.canhtv05.common.dto.search;
+package com.canhtv05.auth.dto.search;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

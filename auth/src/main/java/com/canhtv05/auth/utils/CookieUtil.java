@@ -1,4 +1,4 @@
-package com.canhtv05.auth.util;
+package com.canhtv05.auth.utils;
 
 import com.canhtv05.auth.config.ApplicationProperties;
 import com.canhtv05.auth.dto.CookieValue;

@@ -5,7 +5,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.canhtv05.auth.util.CookieUtil;
+import com.canhtv05.auth.utils.CookieUtil;
 
 public record JWTConfigurer(TokenProvider tokenProvider, CookieUtil cookieUtil)
         implements SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {

@@ -13,7 +13,7 @@ import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.repository.UserPermissionRepository;
 import com.canhtv05.auth.repository.UserRepository;
 import com.canhtv05.auth.security.jwt.TokenProvider;
-import com.canhtv05.auth.util.CookieUtil;
+import com.canhtv05.auth.utils.CookieUtil;
 import com.canhtv05.common.exceptions.ApiException;
 import com.canhtv05.common.exceptions.ErrorMessage;
 import com.canhtv05.common.security.SecurityUtils;

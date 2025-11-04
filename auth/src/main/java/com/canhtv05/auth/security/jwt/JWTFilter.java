@@ -12,8 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.canhtv05.auth.utils.CookieUtil;
 import com.canhtv05.common.enums.AuthKey;
-import com.canhtv05.auth.util.CookieUtil;
 
 import java.io.IOException;
 import java.util.Objects;

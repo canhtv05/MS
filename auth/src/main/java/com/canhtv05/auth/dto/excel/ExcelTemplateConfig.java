@@ -1,4 +1,4 @@
-package com.canhtv05.common.dto.excel;
+package com.canhtv05.auth.dto.excel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
