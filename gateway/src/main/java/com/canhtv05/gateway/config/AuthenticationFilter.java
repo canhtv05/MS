@@ -1,13 +1,18 @@
 package com.canhtv05.gateway.config;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,11 +22,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 
+import com.canhtv05.common.constant.ConstantCookie;
+import com.canhtv05.common.enums.AuthKey;
 import com.canhtv05.common.exceptions.ErrorMessage;
 import com.canhtv05.common.exceptions.ResponseObject;
 import com.canhtv05.common.utils.JsonF;
 import com.canhtv05.gateway.grpc.GrpcAuthClient;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
@@ -32,7 +40,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
 	private final GrpcAuthClient grpcAuthClient;
 
-	String[] PUBLIC_ENDPOINTS = { "/auth/authenticate" };
+	public String[] PUBLIC_ENDPOINTS = { "/auth/authenticate" };
 
 	@Value("${app.api-prefix}")
 	private String API_PREFIX;
@@ -49,19 +57,23 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 		}
 
 		List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
-		if (CollectionUtils.isEmpty(authHeader)) {
-			return unauthenticated(exchange.getResponse());
+		String token = null;
+		if (CollectionUtils.isEmpty(authHeader) || Objects.isNull(authHeader)) {
+			HttpCookie cookie = exchange.getRequest().getCookies().getFirst(ConstantCookie.COOKIE_NAME);
+			if (Objects.nonNull(cookie)) {
+				String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+				Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
+				if (!CollectionUtils.isEmpty(tokenData)) {
+					token = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
+				}
+			}
+		} else {
+			token = authHeader.getFirst().replace("Bearer ", "");
 		}
 
-		String token = authHeader.get(0).replace("Bearer ", "");
-		// if (StringUtils.isBlank(token)) {
-		// HttpCookie cookie =
-		// exchange.getRequest().getCookies().getFirst(ConstantCookie.COOKIE_NAME);
-		// // if (cookie != null) {
-		// // token = cookie.getValue();
-		// // }
-		// System.out.println(cookie);
-		// }
+		if (StringUtils.isBlank(token)) {
+			return unauthenticated(exchange.getResponse());
+		}
 
 		return grpcAuthClient.verifyToken(token).flatMap(verifyTokenResponseApiResponse -> {
 			if (Boolean.TRUE.equals(verifyTokenResponseApiResponse.getValid())) {
@@ -74,9 +86,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 		});
 	}
 
-	private boolean isPublicEndpoint(ServerHttpRequest endpoint) {
+	private boolean isPublicEndpoint(ServerHttpRequest request) {
+		String path = request.getURI().getPath();
 		return Arrays.stream(PUBLIC_ENDPOINTS)
-				.anyMatch(s -> endpoint.getURI().getPath().matches(API_PREFIX + s));
+				.anyMatch(s -> path.matches(API_PREFIX + s));
 	}
 
 	Mono<Void> unauthenticated(ServerHttpResponse response) {

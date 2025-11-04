@@ -7,7 +7,7 @@ import com.canhtv05.auth.dto.UserProfileDTO;
 import com.canhtv05.auth.dto.req.LoginRequest;
 import com.canhtv05.auth.dto.res.RefreshTokenResponse;
 import com.canhtv05.auth.dto.res.VerifyTokenResponse;
-import com.canhtv05.auth.enums.AuthKey;
+import com.canhtv05.common.enums.AuthKey;
 import com.canhtv05.auth.enums.PermissionAction;
 import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.repository.UserPermissionRepository;

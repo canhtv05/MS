@@ -31,7 +31,7 @@ public class WebClientConfig {
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
 
-    org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
     urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
 
     return new CorsWebFilter(urlBasedCorsConfigurationSource);

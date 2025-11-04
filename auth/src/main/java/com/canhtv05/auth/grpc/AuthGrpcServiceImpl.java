@@ -1,6 +1,9 @@
 package com.canhtv05.auth.grpc;
 
 import com.canhtv05.auth.service.AuthService;
+import com.canhtv05.common.grpc.AuthGrpcServiceGrpc;
+import com.canhtv05.common.grpc.VerifyTokenRequest;
+import com.canhtv05.common.grpc.VerifyTokenResponse;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.canhtv05.auth.enums;
+package com.canhtv05.common.enums;
 
 import lombok.Getter;
 

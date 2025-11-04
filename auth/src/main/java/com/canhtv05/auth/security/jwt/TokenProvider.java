@@ -20,7 +20,7 @@ import com.canhtv05.auth.config.ApplicationProperties;
 import com.canhtv05.auth.domain.User;
 import com.canhtv05.auth.dto.NotificationPayload;
 import com.canhtv05.auth.dto.res.RefreshTokenResponse;
-import com.canhtv05.auth.enums.AuthKey;
+import com.canhtv05.common.enums.AuthKey;
 import com.canhtv05.auth.enums.NotificationType;
 import com.canhtv05.auth.exceptions.CustomAuthenticationException;
 import com.canhtv05.auth.repository.UserRepository;

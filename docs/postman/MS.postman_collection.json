@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "7f184eda-b0f2-434b-9d38-53706365365b",
+		"name": "MS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "35183932"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Lấy JSON từ response\r",
+									"let response = pm.response.json();\r",
+									"\r",
+									"// Kiểm tra xem có token không\r",
+									"if (response.token) {\r",
+									"    // Lưu vào biến môi trường\r",
+									"    pm.environment.set(\"access_token\", response.token);\r",
+									"    console.log(\"✅ Đã lưu token vào biến môi trường: access_token\");\r",
+									"} else {\r",
+									"    console.warn(\"⚠️ Không tìm thấy 'token' trong response!\");\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/auth/authenticate"
+					},
+					"response": []
+				},
+				{
+					"name": "verify",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{baseURL}}/auth/internal/verify"
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:1000/api/p/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "{{baseURL}}/auth/p/refresh-token"
+					},
+					"response": []
+				},
+				{
+					"name": "user profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/auth/user-profile"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

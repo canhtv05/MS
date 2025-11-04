@@ -2,6 +2,10 @@ package com.canhtv05.gateway.grpc;
 
 import org.springframework.stereotype.Service;
 
+import com.canhtv05.common.grpc.AuthGrpcServiceGrpc;
+import com.canhtv05.common.grpc.VerifyTokenRequest;
+import com.canhtv05.common.grpc.VerifyTokenResponse;
+
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import reactor.core.publisher.Mono;
