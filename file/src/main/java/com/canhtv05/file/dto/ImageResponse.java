@@ -1,9 +1,13 @@
-package com.canhtv05.file.dto.res;
+package com.canhtv05.file.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+
+import org.springframework.beans.BeanUtils;
+
+import com.canhtv05.file.domain.Image;
 
 @Data
 @Builder
@@ -17,4 +21,10 @@ public class ImageResponse implements Serializable {
     Long fileSize;
     String originFileName;
     String publicId;
+
+    public static ImageResponse toEmImageResponse(Image file) {
+        ImageResponse imageResponse = new ImageResponse();
+        BeanUtils.copyProperties(file, imageResponse);
+        return imageResponse;
+    }
 }

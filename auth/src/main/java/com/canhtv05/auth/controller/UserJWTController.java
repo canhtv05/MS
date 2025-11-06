@@ -9,7 +9,7 @@ import com.canhtv05.auth.dto.res.VerifyTokenResponse;
 import com.canhtv05.auth.service.AuthService;
 import com.canhtv05.auth.service.UserService;
 import com.canhtv05.common.constant.ConstantCookie;
-import com.canhtv05.common.exceptions.ResponseObject;
+import com.canhtv05.common.dto.ResponseObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

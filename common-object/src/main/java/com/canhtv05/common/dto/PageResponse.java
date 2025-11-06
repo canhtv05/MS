@@ -1,4 +1,4 @@
-package com.canhtv05.file.dto;
+package com.canhtv05.common.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

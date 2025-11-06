@@ -1,9 +1,13 @@
-package com.canhtv05.file.dto.res;
+package com.canhtv05.file.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+
+import org.springframework.beans.BeanUtils;
+
+import com.canhtv05.file.domain.Video;
 
 @Data
 @Builder
@@ -20,4 +24,10 @@ public class VideoResponse implements Serializable {
     Long fileSize;
     String originFileName;
     String publicId;
+
+    public static VideoResponse tVideoResponse(Video file) {
+        VideoResponse videoResponse = new VideoResponse();
+        BeanUtils.copyProperties(file, videoResponse);
+        return videoResponse;
+    }
 }

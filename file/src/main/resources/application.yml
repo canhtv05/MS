@@ -9,7 +9,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://root:root@localhost:27017/file_service?authSource=admin
+      uri: mongodb://canhtv05:canhtv05@mongo:27017/file_service?authSource=admin
 
   servlet:
     multipart:

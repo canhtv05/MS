@@ -1,4 +1,10 @@
-package com.canhtv05.common.exceptions;
+package com.canhtv05.common.dto;
+
+import java.io.Serializable;
+
+import com.canhtv05.common.exceptions.ErrorMessage;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +17,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseObject<T> {
+@JsonInclude(value = Include.NON_NULL)
+public class ResponseObject<T> implements Serializable {
 
     private String code;
     private String message;
     private T data;
+    private PageResponse pagination;
 
     public static <T> ResponseObject<T> success() {
         return ResponseObject.<T>builder()
@@ -29,6 +37,15 @@ public class ResponseObject<T> {
                 .code(ErrorMessage.SUCCESS.getCode())
                 .message(ErrorMessage.SUCCESS.getMessage())
                 .data(data)
+                .build();
+    }
+
+    public static <T> ResponseObject<T> success(T data, PageResponse pageResponse) {
+        return ResponseObject.<T>builder()
+                .code(ErrorMessage.SUCCESS.getCode())
+                .message(ErrorMessage.SUCCESS.getMessage())
+                .data(data)
+                .pagination(pageResponse)
                 .build();
     }
 

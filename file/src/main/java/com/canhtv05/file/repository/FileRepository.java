@@ -1,7 +1,7 @@
 package com.canhtv05.file.repository;
 
 import com.canhtv05.file.domain.File;
-import com.canhtv05.file.dto.res.FileResponse;
+import com.canhtv05.file.dto.FileResponse;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
