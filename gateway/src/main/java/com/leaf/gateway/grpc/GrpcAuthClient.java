@@ -1,10 +1,10 @@
-package com.canhtv05.leaf.grpc;
+package com.leaf.gateway.grpc;
 
 import org.springframework.stereotype.Service;
 
-import com.canhtv05.common.grpc.AuthGrpcServiceGrpc;
-import com.canhtv05.common.grpc.VerifyTokenRequest;
-import com.canhtv05.common.grpc.VerifyTokenResponse;
+import com.leaf.common.grpc.AuthGrpcServiceGrpc;
+import com.leaf.common.grpc.VerifyTokenRequest;
+import com.leaf.common.grpc.VerifyTokenResponse;
 
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;

@@ -1,4 +1,4 @@
-package com.canhtv05.leaf.config;
+package com.canhtv05.gateway.config;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.canhtv05.leaf.grpc.GrpcAuthClient;
+import com.canhtv05.gateway.grpc.GrpcAuthClient;
 import com.leaf.common.constant.ConstantCookie;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;

@@ -1,8 +1,8 @@
 package com.leaf.auth.grpc;
 
-import com.canhtv05.common.grpc.AuthGrpcServiceGrpc;
-import com.canhtv05.common.grpc.VerifyTokenRequest;
-import com.canhtv05.common.grpc.VerifyTokenResponse;
+import com.leaf.common.grpc.AuthGrpcServiceGrpc;
+import com.leaf.common.grpc.VerifyTokenRequest;
+import com.leaf.common.grpc.VerifyTokenResponse;
 import com.leaf.auth.service.AuthService;
 
 import io.grpc.stub.StreamObserver;

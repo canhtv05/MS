@@ -1,4 +1,4 @@
-package com.canhtv05.leaf;
+package com.canhtv05.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
