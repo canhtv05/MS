@@ -3,21 +3,22 @@ server:
     context-path: /files
   port: 1002
 
+grpc:
+  server:
+    port: 9002
+
 spring:
   application:
     name: file
 
-  data:
-    mongodb:
-      uri: mongodb://canhtv05:canhtv05@mongo:27017/file_service?authSource=admin
+  output:
+    ansi:
+      enabled: always
 
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
-
-cloudinary:
-  url: cloudinary://564311218395733:ucE1Gknj-f02QPlmB0jvd04-N10@dnummyvqk
 
 eureka:
   client:
@@ -33,10 +34,3 @@ management:
     web:
       exposure:
         include: health,info
-
-grpc:
-  server:
-    enabled: false
-  client:
-    global:
-      enabled: false

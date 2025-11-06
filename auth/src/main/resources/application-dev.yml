@@ -5,14 +5,10 @@ logging:
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/canhtv05
-    username: canhtv05
-    password: canhtv05
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
-
-  output:
-    ansi:
-      enabled: always
 
   data:
     redis:
@@ -21,6 +17,6 @@ spring:
 
 application:
   security:
-    base64-secret: ASyTTcIvfHA8QsI2c1Fvc8vZUcaeUgRlHH1VhsElDSYHsJ0CS5N0y5/yvKte+WDvYS3lL0oBzPK+1E83ACSdvA==
-    valid-duration-in-seconds: 86400
-    refresh-duration-in-seconds: 1209600
+    base64-secret: ${BASE_64_SECRET}
+    valid-duration-in-seconds: ${VALID_DURATION}
+    refresh-duration-in-seconds: ${REFRESH_DURATION}

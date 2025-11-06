@@ -12,6 +12,10 @@ spring:
   application:
     name: auth
 
+  output:
+    ansi:
+      enabled: always
+
   datasource:
     hikari:
       maximum-pool-size: 20

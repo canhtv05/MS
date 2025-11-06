@@ -48,6 +48,13 @@
 			<groupId>com.canhtv05</groupId>
 			<artifactId>common-object</artifactId>
 			<version>0.0.1</version>
+			<!-- khong dung web -->
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-web</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

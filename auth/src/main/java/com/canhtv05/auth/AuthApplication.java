@@ -9,6 +9,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 public class AuthApplication {
 	public static void main(String[] args) {
+		io.github.cdimascio.dotenv.Dotenv dotenv = io.github.cdimascio.dotenv.Dotenv.configure()
+				.filename(".env.dev")
+				.ignoreIfMissing()
+				.load();
+
+		dotenv.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
+
 		SpringApplication.run(AuthApplication.class, args);
 	}
 }
