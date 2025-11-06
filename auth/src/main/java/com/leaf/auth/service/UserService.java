@@ -16,6 +16,7 @@ import com.leaf.auth.dto.req.ChangePasswordReq;
 import com.leaf.auth.dto.search.SearchRequest;
 import com.leaf.auth.dto.search.SearchResponse;
 import com.leaf.auth.enums.PermissionAction;
+import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
@@ -63,6 +64,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserPermissionRepository userPermissionRepository;
+    private final GrpcUserProfileClient userProfileClient;
 
     public UserDTO findById(Long id) {
         return userRepository.findById(id).map(UserDTO::new)
@@ -90,8 +92,14 @@ public class UserService {
         if (ObjectUtils.isNotEmpty(request.getRoles())) {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(request.getRoles())));
         }
-        userRepository.save(user);
-        return UserDTO.fromEntity(user);
+        User res = userRepository.save(user);
+        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                .setEmail(res.getEmail())
+                .setUsername(res.getUsername())
+                .setUserId(res.getId())
+                .build();
+        userProfileClient.createUserProfile(userProfileDTO);
+        return UserDTO.fromEntity(res);
     }
 
     public UserDTO updateUser(UserDTO request) {

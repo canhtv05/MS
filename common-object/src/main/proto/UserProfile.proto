@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.leaf.common.grpc";
+option java_outer_classname = "UserProfile";
+
+service UserProfileGrpcService {
+    rpc createUserProfile(UserProfileDTO) returns (UserProfileDTO);
+}
+
+message UserProfileDTO {
+    int64 userId = 1;
+    string username = 2;
+    string email = 3;
+}

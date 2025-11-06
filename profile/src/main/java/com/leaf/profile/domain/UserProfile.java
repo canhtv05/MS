@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -32,8 +33,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 public class UserProfile extends AbstractAuditingEntity {
 
+    @Id
     @Property("user_id")
-    String userId;
+    Long userId;
     String username;
     String email;
     LocalDate dob;
@@ -72,15 +74,11 @@ public class UserProfile extends AbstractAuditingEntity {
     Long followingCount = 0L;
 
     @Builder.Default
-    @Relationship(type = "FRIEND_REQUEST", direction = Relationship.Direction.OUTGOING)
-    Set<FriendRequest> friendRequests = new HashSet<>();
+    @Relationship(type = "SENDER", direction = Relationship.Direction.OUTGOING)
+    Set<FriendRequest> sentFriendRequests = new HashSet<>();
 
     @Builder.Default
-    @Relationship(type = "FRIEND_REQUEST", direction = Relationship.Direction.INCOMING)
-    Set<FriendRequest> receivedFriendRequests = new HashSet<>();
-
-    @Builder.Default
-    @Relationship(type = "FRIENDS_WITH")
+    @Relationship(type = "FRIENDS_WITH", direction = Relationship.Direction.OUTGOING)
     Set<UserProfile> friends = new HashSet<>();
 
     @Builder.Default

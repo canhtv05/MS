@@ -1,20 +1,16 @@
 server:
-  port: 1001
+  port: 1003
 
   servlet:
-    context-path: /auth
+    context-path: /user-profile
 
 grpc:
   server:
-    port: 9001
-  client:
-    profile-service:
-      address: static://localhost:9003
-      negotiationType: plaintext
+    port: 9003
 
 spring:
   application:
-    name: auth
+    name: user-profile
 
   output:
     ansi:
@@ -36,11 +32,6 @@ spring:
       ddl-auto: none
     properties:
       "[hibernate.format_sql]": true
-
-  liquibase:
-    enabled: true
-    change-log: liquibase/changelog-master.xml
-
 eureka:
   client:
     service-url:
