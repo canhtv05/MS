@@ -1,4 +1,4 @@
-package com.canhtv05.gateway;
+package com.leaf.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
