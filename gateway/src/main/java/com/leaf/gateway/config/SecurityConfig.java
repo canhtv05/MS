@@ -1,4 +1,4 @@
-package com.canhtv05.gateway.config;
+package com.leaf.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
