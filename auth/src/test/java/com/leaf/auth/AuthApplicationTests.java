@@ -1,10 +1,10 @@
-package com.cantv05.discovery_server;
+package com.leaf.auth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DiscoveryServerApplicationTests {
+class AuthApplicationTests {
 
 	@Test
 	void contextLoads() {
