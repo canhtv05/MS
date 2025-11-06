@@ -17,7 +17,7 @@ import com.leaf.auth.enums.PermissionAction;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_permission")
-public class UserPermission extends AbstractAuditingEntity {
+public class UserPermission extends com.leaf.common.domain.AbstractAuditingEntity {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)

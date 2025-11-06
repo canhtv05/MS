@@ -9,11 +9,11 @@
 		<version>3.5.7</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.canhtv05</groupId>
+	<groupId>com.leaf</groupId>
 	<artifactId>file</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>file</name>
-	<description>Demo project for Spring Boot</description>
+	<description>File service for Spring Boot</description>
 	<url />
 	<licenses>
 		<license />
@@ -58,7 +58,7 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.canhtv05</groupId>
+			<groupId>com.leaf</groupId>
 			<artifactId>common-object</artifactId>
 			<version>0.0.1</version>
 		</dependency>

@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 @Table(name = "permissions")
-public class Permission extends AbstractAuditingEntity {
+public class Permission extends com.leaf.common.domain.AbstractAuditingEntity {
 
     @Id
     @Column(name = "code", length = 50, unique = true, nullable = false)

@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractAuditingEntity {
+public class Role extends com.leaf.common.domain.AbstractAuditingEntity {
 
     @Id
     @Column(name = "code", length = 50, unique = true, nullable = false)

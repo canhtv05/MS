@@ -9,11 +9,11 @@
 		<version>3.5.7</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.canhtv05</groupId>
+	<groupId>com.leaf</groupId>
 	<artifactId>common-object</artifactId>
 	<version>0.0.1</version>
 	<name>common-object</name>
-	<description>Authen</description>
+	<description>Common object for Spring Boot</description>
 	<url />
 	<licenses>
 		<license />
@@ -39,7 +39,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
