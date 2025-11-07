@@ -2,7 +2,7 @@ package com.leaf.common.constant;
 
 import java.util.Arrays;
 
-public class Constants {
+public class CommonConstants {
 
     public static final String[] PUBLIC_ENDPOINTS = { "/me/p/authenticate", "/me/c/create" };
 

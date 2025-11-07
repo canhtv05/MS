@@ -1,4 +1,4 @@
-package com.leaf.auth.service;
+package com.leaf.common.service;
 
 import lombok.RequiredArgsConstructor;
 

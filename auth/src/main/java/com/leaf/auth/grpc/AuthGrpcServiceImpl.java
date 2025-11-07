@@ -17,7 +17,7 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
 
 	@Override
 	public void verifyToken(VerifyTokenRequest request, StreamObserver<VerifyTokenResponse> responseObserver) {
-		var valid = authService.verifyToken(request.getToken());
+		var valid = authService.verifyToken(request.getToken(), true);
 
 		VerifyTokenResponse response = VerifyTokenResponse.newBuilder().setValid(valid.getValid()).build();
 		responseObserver.onNext(response);

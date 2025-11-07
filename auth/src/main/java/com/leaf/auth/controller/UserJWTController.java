@@ -9,7 +9,7 @@ import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
-import com.leaf.common.constant.Constants;
+import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class UserJWTController {
 
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
-            @CookieValue(name = Constants.COOKIE_NAME) String cookieValue,
+            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
             HttpServletRequest httpServletRequest, HttpServletResponse response) {
         return ResponseEntity
                 .ok(ResponseObject.success(authService.refreshToken(cookieValue, httpServletRequest, response)));
@@ -50,8 +50,8 @@ public class UserJWTController {
 
     @PostMapping("/internal/verify")
     public ResponseEntity<ResponseObject<VerifyTokenResponse>> verifyToken(
-            @CookieValue(name = Constants.COOKIE_NAME) String cookieValue) {
-        return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue)));
+            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue) {
+        return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue, false)));
     }
 
     @PostMapping("/c/create")
@@ -78,7 +78,8 @@ public class UserJWTController {
     }
 
     @PostMapping("/p/logout")
-    public ResponseEntity<ResponseObject<?>> logout(@CookieValue(name = Constants.COOKIE_NAME) String cookieValue,
+    public ResponseEntity<ResponseObject<?>> logout(
+            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
             HttpServletResponse response) {
         authService.logout(cookieValue, response);
         return ResponseEntity.ok(ResponseObject.success());

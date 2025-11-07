@@ -13,6 +13,7 @@ import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.utils.CookieUtil;
+import com.leaf.common.constant.CacheConstants;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exceptions.ApiException;
 import com.leaf.common.exceptions.ErrorMessage;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import org.springframework.boot.json.JsonParseException;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -51,6 +53,7 @@ public class AuthService {
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
+    RedisCacheManager redisCacheManager;
 
     @Transactional
     public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
@@ -74,8 +77,8 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public VerifyTokenResponse verifyToken(String cookieValueOrTokenString) {
-        String accessToken = getAccessToken(cookieValueOrTokenString);
+    public VerifyTokenResponse verifyToken(String cookieValueOrTokenString, boolean isInternal) {
+        String accessToken = getAccessToken(cookieValueOrTokenString, isInternal);
         if (StringUtils.isBlank(accessToken)) {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
@@ -89,7 +92,7 @@ public class AuthService {
 
     @Transactional
     public void logout(String cookieValue, HttpServletResponse response) {
-        String accessToken = getAccessToken(cookieValue);
+        String accessToken = getAccessToken(cookieValue, false);
         tokenProvider.revokeToken(accessToken);
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();
@@ -104,12 +107,24 @@ public class AuthService {
     public UserProfileDTO getProfile() {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
+
+        var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
+
+        UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
+        if (cached != null) {
+            return cached;
+        }
+
         Optional<User> user = userRepository.findOneWithAuthoritiesByUsername(username);
         if (user.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
         }
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
+
+        if (Objects.nonNull(cache)) {
+            cache.put(username, userProfileDTO);
+        }
         return userProfileDTO;
     }
 
@@ -136,7 +151,10 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    protected String getAccessToken(String cookieValueOrTokenString) {
+    protected String getAccessToken(String cookieValueOrTokenString, boolean isInternal) {
+        if (isInternal) {
+            return cookieValueOrTokenString;
+        }
         try {
             Map<String, String> tokenData = JsonF.jsonToObject(cookieValueOrTokenString, Map.class);
             if (CollectionUtils.isEmpty(tokenData)) {

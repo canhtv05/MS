@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.leaf.common.dto.ResponseObject;
 
 @RestControllerAdvice(name = "ExceptionTranslatorAuth")
@@ -14,5 +15,10 @@ public class ExceptionTranslator {
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(CustomAuthenticationException ex) {
         return ResponseEntity.badRequest()
                 .body(ResponseObject.error(String.valueOf(HttpStatus.BAD_REQUEST.value()), ex.getMessage()));
+    }
+
+    @ExceptionHandler(JsonParseException.class)
+    public <T> ResponseEntity<T> handleParserCookie(JsonParseException ex) {
+        return ResponseEntity.badRequest().body(null);
     }
 }

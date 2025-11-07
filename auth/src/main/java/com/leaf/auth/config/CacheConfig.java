@@ -12,7 +12,7 @@ import java.util.List;
 public class CacheConfig {
 
     @Bean
-    public GenericCache<String, List<PermissionSelect>> permissionCache() {
+    GenericCache<String, List<PermissionSelect>> permissionCache() {
         return new GenericCache<>();
     }
 }

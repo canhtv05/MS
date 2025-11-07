@@ -26,12 +26,12 @@ import com.leaf.auth.enums.NotificationType;
 import com.leaf.auth.exceptions.CustomAuthenticationException;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.CustomUserDetails;
-import com.leaf.auth.service.RedisService;
 import com.leaf.auth.utils.CookieUtil;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exceptions.ApiException;
 import com.leaf.common.exceptions.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
+import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
 
 import io.jsonwebtoken.Claims;
