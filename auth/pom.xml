@@ -122,7 +122,7 @@
 
 		<dependency>
 			<groupId>com.leaf</groupId>
-			<artifactId>common-object</artifactId>
+			<artifactId>common</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 
