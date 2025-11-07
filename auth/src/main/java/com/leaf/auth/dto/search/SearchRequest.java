@@ -6,12 +6,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record SearchRequest(
-        String searchText,
-        Integer page,
-        Integer size,
-        @NonNull String sortOrder,
-        String sortField) {
+        @JsonProperty("searchText") String searchText,
+        @JsonProperty("page") Integer page,
+        @JsonProperty("size") Integer size,
+        @JsonProperty("sortOrder") @NonNull String sortOrder,
+        @JsonProperty("sortField") String sortField) {
     public Pageable toPageable() {
         int safePage = (page == null || page < 1) ? 0 : page - 1;
         int safeSize = (size == null || size < 1) ? 20 : size;

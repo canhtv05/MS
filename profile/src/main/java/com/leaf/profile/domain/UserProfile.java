@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
@@ -34,8 +35,11 @@ import lombok.experimental.FieldDefaults;
 public class UserProfile extends AbstractAuditingEntity {
 
     @Id
+    @GeneratedValue
+    Long id;
+
     @Property("user_id")
-    Long userId;
+    String userId;
     String username;
     String email;
     LocalDate dob;
@@ -52,27 +56,34 @@ public class UserProfile extends AbstractAuditingEntity {
     @Property("avatar_url")
     String avatarUrl;
 
+    @Property("social_links")
     @Builder.Default
     List<String> socialLinks = new ArrayList<>();
 
+    @Property("profile_visibility")
     @Builder.Default
     PrivacyLevel profileVisibility = PrivacyLevel.PUBLIC;
 
+    @Property("friends_visibility")
     @Builder.Default
-    PrivacyLevel friendsListVisibility = PrivacyLevel.PUBLIC;
+    PrivacyLevel friendsVisibility = PrivacyLevel.PUBLIC;
 
+    @Property("posts_visibility")
     @Builder.Default
     PrivacyLevel postsVisibility = PrivacyLevel.PUBLIC;
 
     @Property("last_online_at")
     Instant lastOnlineAt;
 
+    @Property("followers_count")
     @Builder.Default
     Long followersCount = 0L;
 
+    @Property("following_count")
     @Builder.Default
     Long followingCount = 0L;
 
+    @Property("sent_friend_requests")
     @Builder.Default
     @Relationship(type = "SENDER", direction = Relationship.Direction.OUTGOING)
     Set<FriendRequest> sentFriendRequests = new HashSet<>();

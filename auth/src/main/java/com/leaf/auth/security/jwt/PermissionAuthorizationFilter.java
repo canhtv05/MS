@@ -4,6 +4,7 @@ import com.leaf.auth.dto.PermissionSelect;
 import com.leaf.auth.exceptions.CustomAuthenticationException;
 import com.leaf.auth.security.CustomUserDetails;
 import com.leaf.auth.service.PublicApiService;
+import com.leaf.common.constant.Constants;
 import com.leaf.common.security.SecurityUtils;
 
 import jakarta.servlet.FilterChain;
@@ -22,6 +23,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,7 +67,7 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private void validatePermission(String method, String path, CustomUserDetails userDetails) {
-        if (path.startsWith("/api/user-profile") || path.startsWith("/api/p")) {
+        if (path.startsWith("/auth/me")) {
             return;
         }
         if (SecurityUtils.isGlobalSuperAdmin()) {
@@ -88,7 +90,8 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/auth/authenticate") || path.startsWith("/ws/");
+        return Arrays.asList(Constants.PREFIX_PUBLIC_ENDPOINTS).stream().anyMatch(res -> path.startsWith(res))
+                || path.startsWith("/ws");
     }
 
     /**

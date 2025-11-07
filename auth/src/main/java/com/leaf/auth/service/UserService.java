@@ -67,11 +67,11 @@ public class UserService {
     private final GrpcUserProfileClient userProfileClient;
 
     public UserDTO findById(Long id) {
-        return userRepository.findById(id).map(UserDTO::new)
+        return userRepository.findById(id).map(UserDTO::fromEntity)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
     }
 
-    public UserDTO createUser(UserDTO request) {
+    public UserDTO createUser(UserDTO request, boolean isAdmin) {
         if (userRepository.existsUserByUsername(request.getUsername())) {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
@@ -82,21 +82,22 @@ public class UserService {
 
         User user = User.builder()
                 .username(request.getUsername())
-                .activated(request.isActivated())
-                .isGlobal(request.getIsGlobal())
+                .activated(isAdmin ? request.isActivated() : true)
+                .isGlobal(isAdmin ? request.getIsGlobal() : false)
                 .email(request.getEmail())
                 .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(encryptedPassword);
-        if (ObjectUtils.isNotEmpty(request.getRoles())) {
+        if (ObjectUtils.isNotEmpty(request.getRoles()) && isAdmin) {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(request.getRoles())));
+        } else {
+            user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
         User res = userRepository.save(user);
         com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
                 .setEmail(res.getEmail())
-                .setUsername(res.getUsername())
-                .setUserId(res.getId())
+                .setUserId(res.getUsername())
                 .build();
         userProfileClient.createUserProfile(userProfileDTO);
         return UserDTO.fromEntity(res);

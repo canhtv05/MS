@@ -21,8 +21,8 @@ public class UserProfileService {
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {
         UserProfile userProfile = UserProfile.builder()
                 .userId(req.getUserId())
-                .username(req.getUsername())
                 .email(req.getEmail())
+                .username(req.getUserId())
                 .build();
 
         var UserProfile = userProfileRepository.save(userProfile);

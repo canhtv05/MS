@@ -16,13 +16,13 @@ import com.leaf.common.dto.ResponseObject;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice(name = "ExceptionTranslatorCommon")
 public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(ApiException ex) {
-        return ResponseEntity.ok(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
+        return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

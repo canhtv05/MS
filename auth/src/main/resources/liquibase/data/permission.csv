@@ -1,12 +1,12 @@
 code;type;description;module;method;path_pattern;is_global;created_by;created_date;modified_by;modified_date
-ROLE_UPDATE;UPDATE;Quyền cập nhật Role;Quản lý Role;;/api/admin/role/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-PERMISSION_UPDATE;UPDATE;Quyền cập nhật Permission;Quản lý Permission;;/api/admin/permission/c/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-ROLE_CREATE;CREATE;Quyền tạo mới Role;Quản lý Role;POST;/api/admin/role/c/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-PERMISSION_CREATE;CREATE;Quyền tạo mới Permission;Quản lý Permission;POST;/api/admin/permission/c/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-USER_READ;READ;Quyền truy vấn User;Quản lý User;;/api/admin/users/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-PERMISSION_READ;READ;Quyền truy vấn Permission;Quản lý Permission;;/api/admin/permission/r/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-ROLE_READ;READ;Quyền truy vấn Role;Quản lý Role;;/api/admin/role/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-USER_CREATE;CREATE;Quyền tạo mới User;Quản lý User;POST;/api/admin/users/c/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-USER_UPDATE;UPDATE;Quyền cập nhật User;Quản lý User;;/api/admin/users/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-USER_PERMISSION_READ;READ;Xem quyền gán cho user;Gán quyền cho user;;/api/admin/user-permission/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
-USER_PERMISSION_UPDATE;UPDATE;Gán quyền cho user;Gán quyền cho user;;/api/admin/user-permission/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+ROLE_UPDATE;UPDATE;Quyền cập nhật Role;Quản lý Role;;/auth/admin/role/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+PERMISSION_UPDATE;UPDATE;Quyền cập nhật Permission;Quản lý Permission;;/auth/admin/permission/c/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+ROLE_CREATE;CREATE;Quyền tạo mới Role;Quản lý Role;POST;/auth/admin/role/c/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+PERMISSION_CREATE;CREATE;Quyền tạo mới Permission;Quản lý Permission;POST;/auth/admin/permission/c/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+USER_READ;READ;Quyền truy vấn User;Quản lý User;;/auth/admin/users/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+PERMISSION_READ;READ;Quyền truy vấn Permission;Quản lý Permission;;/auth/admin/permission/r/**;true;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+ROLE_READ;READ;Quyền truy vấn Role;Quản lý Role;;/auth/admin/role/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+USER_CREATE;CREATE;Quyền tạo mới User;Quản lý User;POST;/auth/admin/users/c/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+USER_UPDATE;UPDATE;Quyền cập nhật User;Quản lý User;;/auth/admin/users/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+USER_PERMISSION_READ;READ;Xem quyền gán cho user;Gán quyền cho user;;/auth/admin/user-permission/r/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00
+USER_PERMISSION_UPDATE;UPDATE;Gán quyền cho user;Gán quyền cho user;;/auth/admin/user-permission/u/**;false;system;2025-01-01 00:00:00;system;2025-01-01 00:00:00

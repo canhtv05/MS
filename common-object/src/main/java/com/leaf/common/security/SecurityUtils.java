@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public final class SecurityUtils {
@@ -13,7 +14,9 @@ public final class SecurityUtils {
 
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+        return Optional.ofNullable(securityContext.getAuthentication())
+                .map(SecurityUtils::extractPrincipal)
+                .filter(Objects::nonNull);
     }
 
     private static String extractPrincipal(Authentication authentication) {

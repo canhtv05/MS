@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import com.leaf.auth.config.ApplicationProperties;
 
 @EnableConfigurationProperties({ ApplicationProperties.class })
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = { "com.leaf", "com.leaf.common" })
 public class AuthApplication {
 	public static void main(String[] args) {
 		io.github.cdimascio.dotenv.Dotenv dotenv = io.github.cdimascio.dotenv.Dotenv.configure()

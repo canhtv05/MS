@@ -2,7 +2,7 @@ package com.leaf.auth.utils;
 
 import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.dto.CookieValue;
-import com.leaf.common.constant.ConstantCookie;
+import com.leaf.common.constant.Constants;
 import com.leaf.common.utils.JsonF;
 
 import jakarta.servlet.http.Cookie;
@@ -36,7 +36,7 @@ public class CookieUtil {
         // https://www.npmjs.com/package/js-cookie
         String encode = URLEncoder.encode(jsonData, StandardCharsets.UTF_8);
 
-        Cookie cookie = new Cookie(ConstantCookie.COOKIE_NAME, encode);
+        Cookie cookie = new Cookie(Constants.COOKIE_NAME, encode);
         // cookie.setHttpOnly(true);
 
         // cho phép lấy cookie từ phía client
@@ -49,7 +49,7 @@ public class CookieUtil {
     }
 
     public void deleteCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie(ConstantCookie.COOKIE_NAME, "");
+        Cookie cookie = new Cookie(Constants.COOKIE_NAME, "");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
@@ -62,7 +62,7 @@ public class CookieUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if (c.getName().equals(ConstantCookie.COOKIE_NAME))
+                if (c.getName().equals(Constants.COOKIE_NAME))
                     try {
                         String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
 

@@ -5,6 +5,7 @@ import com.leaf.auth.security.CustomAuthenticationProvider;
 import com.leaf.auth.security.jwt.JWTConfigurer;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.utils.CookieUtil;
+import com.leaf.common.constant.Constants;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
 
@@ -71,8 +72,7 @@ public class SecurityConfig {
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/authenticate").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers(Constants.PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
                 .apply(securityConfigurerAdapter());
         return http.build();

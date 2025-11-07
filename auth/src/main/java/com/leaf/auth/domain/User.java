@@ -1,6 +1,7 @@
 package com.leaf.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leaf.common.domain.AbstractAuditingEntity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends com.leaf.common.domain.AbstractAuditingEntity {
+public class User extends AbstractAuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")

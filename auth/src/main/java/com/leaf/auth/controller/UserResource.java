@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class UserResource {
 
@@ -44,7 +44,7 @@ public class UserResource {
 
     @PostMapping("/users/c/create")
     public ResponseEntity<ResponseObject<UserDTO>> createUser(@Valid @RequestBody UserDTO userDTO) {
-        UserDTO newUserDTO = userService.createUser(userDTO);
+        UserDTO newUserDTO = userService.createUser(userDTO, true);
         return ResponseEntity.ok(ResponseObject.success(newUserDTO));
     }
 
