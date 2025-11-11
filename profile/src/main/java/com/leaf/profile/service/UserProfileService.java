@@ -1,6 +1,5 @@
 package com.leaf.profile.service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.leaf.common.exceptions.ApiException;
@@ -41,15 +40,10 @@ public class UserProfileService {
     }
 
     public SendFriendRequestDTO sendFriendRequestDTO(SendFriendRequestDTO request) {
-        // String username = SecurityUtils.getCurrentUserLogin()
-        // .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
+        String userId = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
-        var object = SecurityContextHolder.getContext().getAuthentication();
-        String username = "admin";
-
-        log.info("ob: {}", object);
-
-        Long currentUserId = userProfileRepository.findByUserId(username)
+        Long currentUserId = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
 
         return userProfileRepository.sendFriendRequest(currentUserId, request.getReceiverId());
