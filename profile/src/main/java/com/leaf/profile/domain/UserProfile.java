@@ -83,7 +83,6 @@ public class UserProfile extends AbstractAuditingEntity {
     @Builder.Default
     Long followingCount = 0L;
 
-    @Property("friend_requests")
     @Builder.Default
     @Relationship(type = "FRIEND_REQUESTS", direction = Relationship.Direction.OUTGOING)
     Set<FriendRequest> friendRequests = new HashSet<>();

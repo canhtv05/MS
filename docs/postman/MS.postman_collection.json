@@ -19,7 +19,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"]"
+											""
 										],
 										"type": "text/javascript",
 										"packages": {},
@@ -588,10 +588,7 @@
 					"name": "verify",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
@@ -683,6 +680,95 @@
 							}
 						},
 						"url": "{{baseURL}}/auth/me"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profile",
+			"item": [
+				{
+					"name": "send friend request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiverId\": \"2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/user-profile/friend-request"
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiverId\": \"2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/user-profile/me"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "file",
+			"item": [
+				{
+					"name": "upload",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{access_token}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"postman-cloud:///1f00be4d-e12a-4be0-8bbd-cd2c29e87195",
+										"postman-cloud:///1f063ef5-e7f2-45d0-813e-aaa20931fe95"
+									]
+								}
+							]
+						},
+						"url": "{{baseURL}}/files/media/upload"
 					},
 					"response": []
 				}

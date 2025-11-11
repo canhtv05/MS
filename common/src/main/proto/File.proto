@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.leaf.common.grpc";
+option java_outer_classname = "FileProto";
+
+service FileGrpcService {
+    rpc uploadFiles(UploadFilesRequest) returns (FileResponse);
+    rpc getFileByIds(GetFilesByIdsRequest) returns (GetFilesByIdsResponse);
+    rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
+}
+
+message UploadFilesRequest {
+    repeated bytes files = 1;
+}
+
+message GetFilesByIdsRequest {
+    repeated string ids = 1;
+}
+
+message GetFilesByIdsResponse {
+    repeated FileResponse files = 1;
+}
+
+message DeleteByIdRequest {
+    string fileId = 1;
+}
+
+message DeleteByIdResponse {
+    bool success = 1;
+}
+
+message VideoResponse {
+    double playtimeSeconds = 1;
+    string playtimeString = 2;
+    string contentType = 3;
+    string videoUrl = 4;
+    string thumbnailUrl = 5;
+    int64 fileSize = 6;
+    string originFileName = 7;
+    string publicId = 8;
+}
+
+message ImageResponse {
+    string contentType = 1;
+    string imageUrl = 2;
+    int64 fileSize = 3;
+    string originFileName = 4;
+    string publicId = 5;
+}
+
+message FileResponse {
+    string ownerId = 1;
+    int64 totalSize = 2;
+
+    repeated VideoResponse videos = 3;
+    repeated ImageResponse images = 4;
+}
