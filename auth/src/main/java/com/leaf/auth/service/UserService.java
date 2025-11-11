@@ -76,15 +76,10 @@ public class UserService {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
 
-        if (userRepository.existsUserByEmail(request.getEmail())) {
-            throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
-        }
-
         User user = User.builder()
                 .username(request.getUsername())
                 .activated(isAdmin ? request.isActivated() : true)
                 .isGlobal(isAdmin ? request.getIsGlobal() : false)
-                .email(request.getEmail())
                 .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -96,7 +91,7 @@ public class UserService {
         }
         User res = userRepository.save(user);
         com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                .setEmail(res.getEmail())
+                .setEmail(request.getEmail())
                 .setUserId(res.getUsername())
                 .build();
         userProfileClient.createUserProfile(userProfileDTO);
@@ -169,7 +164,7 @@ public class UserService {
             if (StringUtils.isNotBlank(criteria.searchText())) {
                 predicates.add(cb.or(
                         cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%"),
-                        cb.like(cb.lower(root.get("email")), "%" + criteria.searchText().toLowerCase() + "%")));
+                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%")));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
@@ -194,9 +189,8 @@ public class UserService {
                 stt.setCellStyle(headerStyle);
 
                 row.createCell(1).setCellValue(item.getUsername());
-                row.createCell(2).setCellValue(item.getEmail());
-                row.createCell(3).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
-                row.createCell(4).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
+                row.createCell(2).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
+                row.createCell(3).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
                 r++;
             }
             IntStream.range(1, headers.size()).forEach(sheet::autoSizeColumn);
@@ -230,8 +224,7 @@ public class UserService {
         ImportExcelResult<ImportUserDTO> result = new ImportExcelResult<>();
         List<RowHeader> rowHeaders = List.of(
                 new RowHeader("Tên đăng nhập", "username", 1),
-                new RowHeader("Email", "email", 2),
-                new RowHeader("Vai trò", "role", 3));
+                new RowHeader("Vai trò", "role", 2));
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
         List<ImportUserDTO> fileData = mapData.getData().stream()
                 .map(item -> ImportUserDTO.fromExcelData(item))
@@ -240,11 +233,7 @@ public class UserService {
         List<String> usernames = fileData.stream()
                 .map(ImportUserDTO::getUsername)
                 .filter(StringUtils::isNotBlank).toList();
-        List<String> emails = fileData.stream()
-                .map(ImportUserDTO::getEmail)
-                .filter(StringUtils::isNotBlank).toList();
         List<String> existingData = userRepository.findUserExitsUsername(usernames);
-        List<String> existingEmail = userRepository.findUserExitsEmail(emails);
         IntStream.range(0, fileData.size()).forEach(i -> {
             ImportUserDTO dto = fileData.get(i);
             RowData<ImportUserDTO> rowError = new RowData<>(dto);
@@ -255,10 +244,6 @@ public class UserService {
             if (StringUtils.isNotBlank(dto.getUsername()) &&
                     existingData.contains(dto.getUsername())) {
                 rowError.addFieldError("username", "Tên đăng nhập đã tồn tại.");
-            }
-            if (StringUtils.isNotBlank(dto.getEmail()) &&
-                    existingEmail.contains(dto.getEmail())) {
-                rowError.addFieldError("email", "Email đã tồn tại.");
             }
             if (rowError.hasErrors()) {
                 result.getRows().add(rowError);

@@ -30,10 +30,23 @@ spring:
                 - Path=${app.api-prefix}/files/**
               filters:
                 - StripPrefix=2
+
+            - id: profile-service
+              uri: lb://user-profile
+              predicates:
+                - Path=${app.api-prefix}/user-profile/**
+              filters:
+                - StripPrefix=2
 grpc:
   client:
     auth-service:
       address: static://localhost:9001
+      negotiationType: plaintext
+    file-service:
+      address: static://localhost:9002
+      negotiationType: plaintext
+    profile-service:
+      address: static://localhost:9003
       negotiationType: plaintext
 
 eureka:
