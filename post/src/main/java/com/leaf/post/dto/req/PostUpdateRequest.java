@@ -1,11 +1,12 @@
 package com.leaf.post.dto.req;
 
-import com.leaf.post.common.Visibility;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+
+import com.leaf.post.enums.Visibility;
 
 @Data
 @Builder

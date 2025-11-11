@@ -1,23 +1,43 @@
 package com.leaf.post.service;
 
-import com.leaf.post.common.ReactionType;
 import com.leaf.post.dto.req.PostCreationRequest;
-import com.leaf.post.dto.req.PostUpdateRequest;
-import com.leaf.post.dto.res.PostListResponse;
 import com.leaf.post.dto.res.PostResponse;
-import org.springframework.web.multipart.MultipartFile;
+import com.leaf.post.entity.Post;
+import com.leaf.post.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface PostService {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    PostResponse createPost(PostCreationRequest request, MultipartFile[] files);
+@Service
+public class PostService {
 
-    PostResponse updatePost(String postId, PostUpdateRequest request);
+    @Autowired
+    private PostRepository postRepository;
 
-    PostListResponse getPosts(Integer page, Integer size);
+    public PostResponse createPost(PostCreationRequest request) {
+        Post post = new Post();
+        post.setContent(request.getContent());
+        post.setReactionCounts(0L);
+        post.setHashtags(null);
 
-    PostResponse getPostById(String postId);
+        postRepository.save(post);
+        return toPostResponse(post);
+    }
 
-    void deletePost(String postId);
+    public List<PostResponse> getAllPosts() {
+        return postRepository.findAll()
+                .stream()
+                .map(this::toPostResponse)
+                .collect(Collectors.toList());
+    }
 
-    PostResponse reactToPost(String postId, ReactionType reactionType);
+    private PostResponse toPostResponse(Post post) {
+        PostResponse response = new PostResponse();
+        response.setId(post.getId());
+        response.setContent(post.getContent());
+        response.setReactionCounts(post.getReactionCounts());
+        return response;
+    }
 }

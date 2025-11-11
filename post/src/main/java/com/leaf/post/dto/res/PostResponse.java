@@ -1,13 +1,14 @@
 package com.leaf.post.dto.res;
 
-import com.leaf.post.common.ReactionType;
-import com.leaf.post.common.Visibility;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+
+import com.leaf.post.enums.ReactionType;
+import com.leaf.post.enums.Visibility;
 
 @Data
 @Builder

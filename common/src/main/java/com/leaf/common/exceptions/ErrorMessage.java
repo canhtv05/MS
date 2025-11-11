@@ -28,6 +28,10 @@ public enum ErrorMessage {
     // file
     FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file");
 
+
+    // post
+    
+
     private final String code;
     private final String message;
 

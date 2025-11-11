@@ -6,14 +6,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.leaf.post.common.ReactionType;
-import com.leaf.post.common.Visibility;
+import com.leaf.post.enums.ReactionType;
+import com.leaf.post.enums.Visibility;
 
 import lombok.*;
-// import org.springframework.data.annotation.CreatedDate;
-// import org.springframework.data.annotation.Id;
-// import org.springframework.data.annotation.LastModifiedDate;
-// import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.experimental.FieldDefaults;
 

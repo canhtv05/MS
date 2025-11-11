@@ -1,0 +1,10 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+# cloudinary:
+#   url: ${CLOUDINARY_URL}
