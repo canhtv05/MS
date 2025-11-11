@@ -35,10 +35,6 @@ public class ImportUserDTO implements Serializable {
 
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     @NotBlank(message = "Trường thông tin không được để trống")
-    private String email;
-
-    @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
-    @NotBlank(message = "Trường thông tin không được để trống")
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Chỉ cho phép chữ và số")
     private String password;
 

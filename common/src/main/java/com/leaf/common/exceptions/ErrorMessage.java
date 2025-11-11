@@ -26,7 +26,10 @@ public enum ErrorMessage {
     IMPORT_EXCEL_ERROR("IMPORT_EXCEL_ERROR", "Xử lý file lỗi"),
 
     // file
-    FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file");
+    FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file"),
+
+    // profile
+    USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng");
 
     private final String code;
     private final String message;

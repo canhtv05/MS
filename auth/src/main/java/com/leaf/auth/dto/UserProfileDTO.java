@@ -25,7 +25,6 @@ public class UserProfileDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String username;
-    private String email;
     private Boolean isGlobal;
     private List<String> roles;
     private List<String> roleLabels;
@@ -35,7 +34,6 @@ public class UserProfileDTO implements Serializable {
         return UserProfileDTO.builder()
                 .username(user.getUsername())
                 .isGlobal(user.getIsGlobal())
-                .email(user.getEmail())
                 .roles(user.getRoles().stream().map(Role::getCode).collect(Collectors.toList()))
                 .roleLabels(user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()))
                 .build();
