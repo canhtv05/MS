@@ -5,8 +5,8 @@ import com.cloudinary.EagerTransformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.file.domain.Image;
 import com.leaf.file.domain.Video;
@@ -26,8 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,11 +47,10 @@ public class FileService {
 
     Cloudinary cloudinary;
     FileRepository fileRepository;
-    // FileMapper fileMapper;
 
     public FileResponse upload(MultipartFile[] files) throws IOException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName();
+        String userId = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
         String imageString = "image";
         String videoString = "video";

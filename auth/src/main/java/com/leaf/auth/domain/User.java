@@ -1,7 +1,7 @@
 package com.leaf.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leaf.common.domain.AbstractAuditingEntity;
+import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends AbstractAuditingEntity {
+public class User extends AbstractAuditingPostgresEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")

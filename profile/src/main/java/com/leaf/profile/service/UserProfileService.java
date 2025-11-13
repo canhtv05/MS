@@ -2,8 +2,8 @@ package com.leaf.profile.service;
 
 import org.springframework.stereotype.Service;
 
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.SendFriendRequestDTO;
@@ -43,17 +43,23 @@ public class UserProfileService {
         String userId = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
-        Long currentUserId = userProfileRepository.findByUserId(userId)
+        String currentUserId = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        if (userProfileRepository.isSent(currentUserId, request.getReceiverId())) {
+            throw new ApiException(ErrorMessage.FRIEND_REQUEST_ALREADY_SENT);
+        }
 
         return userProfileRepository.sendFriendRequest(currentUserId, request.getReceiverId());
     }
 
-    public UserProfile getUserProfile() {
+    public UserProfileResponse getUserProfile() {
         String username = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
-        return userProfileRepository.findByUsername(username)
+        UserProfile userProfile = userProfileRepository.findByUsername(username)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        return UserProfileResponse.toUserProfileResponse(userProfile);
     }
 }

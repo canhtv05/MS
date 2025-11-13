@@ -1,4 +1,4 @@
-package com.leaf.common.exceptions;
+package com.leaf.common.exception;
 
 import lombok.Getter;
 
@@ -29,7 +29,8 @@ public enum ErrorMessage {
     FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file"),
 
     // profile
-    USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng");
+    USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng"),
+    FRIEND_REQUEST_ALREADY_SENT("FRIEND_REQUEST_ALREADY_SENT", "Yêu cầu kết bạn đã được gửi");
 
     private final String code;
     private final String message;

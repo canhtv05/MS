@@ -1,4 +1,4 @@
-package com.leaf.auth.exceptions;
+package com.leaf.auth.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

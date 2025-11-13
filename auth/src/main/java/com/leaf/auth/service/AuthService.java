@@ -8,15 +8,15 @@ import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.utils.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
 import com.leaf.common.enums.AuthKey;
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.common.utils.JsonF;
 

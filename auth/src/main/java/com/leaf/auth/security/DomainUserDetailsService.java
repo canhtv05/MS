@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.UserProfileDTO;
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.service.AuthService;
 
 import java.util.List;

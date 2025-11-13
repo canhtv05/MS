@@ -12,8 +12,9 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
-import com.leaf.common.domain.AbstractAuditingEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leaf.profile.enums.Gender;
 import com.leaf.profile.enums.PrivacyLevel;
 
@@ -32,11 +33,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfile extends AbstractAuditingEntity {
+public class UserProfile extends AbstractAuditingNeo4jEntity {
 
     @Id
-    @GeneratedValue
-    Long id;
+    @GeneratedValue(UUIDStringGenerator.class)
+    String id;
 
     @Property("user_id")
     String userId;
@@ -83,18 +84,22 @@ public class UserProfile extends AbstractAuditingEntity {
     @Builder.Default
     Long followingCount = 0L;
 
+    @JsonIgnore
     @Builder.Default
     @Relationship(type = "FRIEND_REQUESTS", direction = Relationship.Direction.OUTGOING)
     Set<FriendRequest> friendRequests = new HashSet<>();
 
+    @JsonIgnore
     @Builder.Default
     @Relationship(type = "FRIENDS")
     Set<UserProfile> friends = new HashSet<>();
 
+    @JsonIgnore
     @Builder.Default
     @Relationship(type = "FOLLOWING", direction = Relationship.Direction.OUTGOING)
     Set<UserProfile> following = new HashSet<>();
 
+    @JsonIgnore
     @Builder.Default
     @Relationship(type = "FOLLOWS", direction = Relationship.Direction.INCOMING)
     Set<UserProfile> followers = new HashSet<>();

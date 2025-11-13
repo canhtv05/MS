@@ -10,27 +10,40 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserProfileRepository extends Neo4jRepository<UserProfile, Long> {
+public interface UserProfileRepository extends Neo4jRepository<UserProfile, String> {
 
-    Optional<UserProfile> findByUsername(String username);
+	Optional<UserProfile> findByUsername(String username);
 
-    boolean existsByEmail(String email);
+	boolean existsByEmail(String email);
 
-    @Query("""
-            MATCH (u:user_profile {user_id: $userId})
-            RETURN u.id
-            """)
-    Optional<Long> findByUserId(@Param("userId") String userId);
+	@Query("""
+			MATCH (u:user_profile {user_id: $userId})
+			RETURN u.id as id
+			""")
+	Optional<String> findByUserId(@Param("userId") String userId);
 
-    @Query("""
-            MATCH (sender:user_profile {id: $senderId})
-            MATCH (receiver:user_profile {id: $receiverId})
-            CREATE (sender)-[fq:FRIEND_REQUESTS {status: 'PENDING', send_at: datetime()}]->(receiver)
-            RETURN sender.id AS senderId,
-                receiver.id AS receiverId,
-                fq.send_at AS sendAt,
-                fq.status AS status
-            """)
-    SendFriendRequestDTO sendFriendRequest(@Param(value = "senderId") Long senderId,
-            @Param(value = "receiverId") Long receiverId);
+	@Query("""
+			MATCH (sender:user_profile {id: $senderId})
+			MATCH (receiver:user_profile {id: $receiverId})
+			CREATE (sender)-[fq:FRIEND_REQUESTS {
+				id: randomUUID(),
+				status: 'PENDING',
+				send_at: datetime()
+			}]->(receiver)
+			RETURN
+				sender.id AS senderId,
+				receiver.id AS receiverId,
+				fq.send_at AS sendAt,
+				fq.status AS status
+			""")
+	SendFriendRequestDTO sendFriendRequest(
+			@Param("senderId") String senderId,
+			@Param("receiverId") String receiverId);
+
+	@Query("""
+			MATCH (sender:user_profile {id: $senderId})-[r:FRIEND_REQUESTS]->(receiver:user_profile {id:$receiverId})
+			return COUNT(r) > 0
+			""")
+	boolean isSent(@Param(value = "senderId") String senderId,
+			@Param("receiverId") String receiverId);
 }

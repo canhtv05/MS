@@ -1,6 +1,6 @@
 package com.leaf.auth.config;
 
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomAuthenticationProvider;
 import com.leaf.auth.security.jwt.JWTConfigurer;
 import com.leaf.auth.security.jwt.TokenProvider;

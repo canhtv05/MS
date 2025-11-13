@@ -20,8 +20,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SendFriendRequestDTO {
 
-    Long senderId;
-    Long receiverId;
+    String senderId;
+    String receiverId;
 
     @JsonSerialize(using = InstantToStringSerializer.class)
     Instant sendAt;

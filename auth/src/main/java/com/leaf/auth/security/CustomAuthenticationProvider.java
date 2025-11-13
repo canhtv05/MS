@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 
 @Component
 @RequiredArgsConstructor

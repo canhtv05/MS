@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.UUID;
 
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.common.domain.AbstractAuditingEntity;
+import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ import com.leaf.common.domain.AbstractAuditingEntity;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_permission")
-public class UserPermission extends AbstractAuditingEntity {
+public class UserPermission extends AbstractAuditingPostgresEntity {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)

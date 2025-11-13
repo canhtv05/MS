@@ -1,7 +1,7 @@
 package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.dto.PermissionSelect;
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomUserDetails;
 import com.leaf.auth.service.PublicApiService;
 import com.leaf.common.constant.CommonConstants;

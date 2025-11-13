@@ -11,7 +11,6 @@ import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.domain.AbstractAuditingEntity;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.enums.FriendRequestStatus;
 
@@ -22,10 +21,10 @@ import com.leaf.profile.enums.FriendRequestStatus;
 @RelationshipProperties
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class FriendRequest extends AbstractAuditingEntity {
+public class FriendRequest {
 
     @RelationshipId
-    Long id;
+    String id;
 
     @Builder.Default
     @Property("send_at")

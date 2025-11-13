@@ -1,4 +1,4 @@
-package com.leaf.common.exceptions;
+package com.leaf.common.exception;
 
 import lombok.Getter;
 

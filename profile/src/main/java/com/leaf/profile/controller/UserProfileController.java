@@ -3,8 +3,8 @@ package com.leaf.profile.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.SendFriendRequestDTO;
+import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.service.UserProfileService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class UserProfileController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ResponseObject<UserProfile>> getUserProfile() {
+    public ResponseEntity<ResponseObject<UserProfileResponse>> getUserProfile() {
         return ResponseEntity.ok(ResponseObject.success(userProfileService.getUserProfile()));
     }
 

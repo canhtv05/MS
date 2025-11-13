@@ -1,4 +1,4 @@
-package com.leaf.common.exceptions;
+package com.leaf.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
