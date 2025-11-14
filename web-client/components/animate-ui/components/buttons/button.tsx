@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import {
@@ -14,7 +13,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        default:
+          "bg-gradient-to-tr from-primary via-secondary hover:shadow-primary hover:shadow-lg border hover:border-white/80 to-primary text-white shadow-lg hover:opacity-90 transition-all duration-300",
         accent: "bg-accent text-accent-foreground shadow-xs hover:bg-accent/90",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",

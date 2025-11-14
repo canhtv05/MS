@@ -20,7 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/animate-ui/components/radix/sheet";
 import { ReposProvider, useHeaderHomeRepo } from "./HeaderHomeRepoProvider";
-import CustomImage from "@/components/customs/CustomImage";
+import CustomImage from "@/components/customs/custom-image";
 import { useRouter } from "next/navigation";
 
 interface IResourceCardProps {
@@ -40,7 +40,7 @@ const ResourceCard = (props: IResourceCardProps) => {
       <Link
         target="_blank"
         href={url}
-        className="flex gap-2 justify-between hover:bg-muted-foreground/10 transition-colors duration-200 ease-in p-2 rounded-sm cursor-pointer"
+        className="flex gap-2 justify-between md:items-start items-center hover:bg-muted-foreground/10 transition-colors duration-200 ease-in p-2 rounded-sm cursor-pointer"
       >
         <div className={cn("p-2 leading-none rounded-sm border border-card/30 h-full", imageURL && "p-0! border-none")}>
           {imageURL ? (
@@ -67,9 +67,11 @@ const Resources = () => {
 
   return (
     <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
-      <HoverCardTrigger className="cursor-pointer font-normal flex items-center gap-2">
+      <HoverCardTrigger className="cursor-pointer font-normal flex justify-center items-center gap-2">
         <span className="text-black">Resource</span>
-        <ChevronDown className={cn("size-3 text-black transition-transform duration-200", open && "rotate-180")} />
+        <ChevronDown
+          className={cn("size-3 text-black transition-transform duration-200 h-full block", open && "rotate-180")}
+        />
       </HoverCardTrigger>
       <HoverCardContent
         className="border-0 w-lg bg-white"
@@ -127,7 +129,9 @@ const HeaderLG = () => {
       <div className="flex justify-start items-center">
         <Link href={"/"} className="flex justify-start items-center gap-2">
           <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
-          <h1 className="font-bold text-lg text-green-700 tracking-wide">LeafHub</h1>
+          <h1 className="font-bold text-lg bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent tracking-wide">
+            LeafHub
+          </h1>
         </Link>
 
         <span className="block mx-5 h-6 w-[0.3px] bg-foreground/10"></span>
@@ -188,7 +192,9 @@ const HeaderMD = () => {
       <div className="flex justify-between items-center px-2">
         <Link href={"/"} className="flex justify-start items-center gap-2">
           <CustomImage width={35} height={35} src={"/imgs/logo.png"} alt="LeafHub Logo" loading="eager" />
-          <h1 className="font-bold text-lg text-green-700 tracking-wide">LeafHub</h1>
+          <h1 className="font-bold text-lg bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent tracking-wide">
+            LeafHub
+          </h1>
         </Link>
         <div className={cn("flex gap-10 items-center", showSignup && "mr-5")}>
           <div className="flex items-center">
@@ -293,7 +299,7 @@ const HeaderMD = () => {
 
 const HeaderHomeLayout = () => {
   return (
-    <header className="sticky top-4 z-50">
+    <header className="fixed w-full transform -translate-x-1/2 top-4 left-1/2 z-50">
       <ReposProvider>
         <div className="hidden justify-center lg:flex">
           <HeaderLG />
