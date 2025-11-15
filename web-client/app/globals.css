@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -129,22 +129,23 @@
   body {
     @apply bg-background text-foreground font-roboto;
   }
+}
 
-  .linear-1 {
-    @apply bg-linear-to-tr from-primary via-secondary to-primary 
-          shadow-lg 
-          border 
-          transition-all duration-300 
-          hover:opacity-90 
-          hover:shadow-primary hover:shadow-lg 
-        hover:border-white/80;
-  }
+@utility linear-1 {
+  @apply bg-linear-to-tr from-primary via-secondary to-primary 
+        shadow-lg border transition-all duration-300 
+        hover:opacity-90 hover:shadow-primary hover:shadow-lg 
+      hover:border-white/80;
+}
 
-  .linear-2 {
-    @apply bg-linear-to-br from-emerald-50 via-teal-50 to-green-50;
-  }
+@utility linear-2 {
+  @apply bg-linear-to-br from-emerald-50 via-teal-50 to-green-50;
+}
 
-  .linear-3 {
-    @apply bg-linear-to-br from-blue-50 via-teal-50 to-emerald-50;
-  }
+@utility linear-3 {
+  @apply bg-linear-to-br from-blue-50 via-teal-50 to-emerald-50;
+}
+
+@utility text-linear {
+  @apply bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent;
 }

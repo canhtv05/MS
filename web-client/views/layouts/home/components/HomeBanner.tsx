@@ -1,12 +1,14 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import HomeFeed from './HomeFeed';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { ArrowRight } from '@/components/animate-ui/icons/arrow-right';
 import { Play } from '@/components/animate-ui/icons/play';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
 import Ring from '@/components/customs/ring';
+import dynamic from 'next/dynamic';
+
+const ClientHomeFeed = dynamic(() => import('./HomeFeed'), { ssr: false });
 
 const HomeBanner = () => {
   return (
@@ -24,9 +26,7 @@ const HomeBanner = () => {
           </div>
           <div className="mt-5">
             <h2 className="text-black md:text-5xl text-4xl font-bold">Connect with</h2>
-            <h2 className="bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent md:text-5xl text-4xl font-bold">
-              People
-            </h2>
+            <h2 className="text-linear md:text-5xl text-4xl font-bold">People</h2>
             <h2 className="text-black md:text-5xl text-4xl font-bold">Worldwide</h2>
           </div>
           <p className="block text-black/50 mt-5 text-sm">
@@ -79,7 +79,7 @@ const HomeBanner = () => {
           </div>
         </div>
         <div className="flex-1 lg:px-5 md:px-20 px-10">
-          <HomeFeed />
+          <ClientHomeFeed />
         </div>
       </div>
     </section>
