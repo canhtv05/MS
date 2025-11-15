@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/animate-ui/components/buttons/button";
-import HomeFeed from "./HomeFeed";
-import { AnimateIcon } from "@/components/animate-ui/icons/icon";
-import { ArrowRight } from "@/components/animate-ui/icons/arrow-right";
-import { Play } from "@/components/animate-ui/icons/play";
-import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number";
-import Ring from "@/components/customs/ring";
+import { Button } from '@/components/animate-ui/components/buttons/button';
+import HomeFeed from './HomeFeed';
+import { AnimateIcon } from '@/components/animate-ui/icons/icon';
+import { ArrowRight } from '@/components/animate-ui/icons/arrow-right';
+import { Play } from '@/components/animate-ui/icons/play';
+import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
+import Ring from '@/components/customs/ring';
 
 const HomeBanner = () => {
   return (
@@ -30,12 +30,12 @@ const HomeBanner = () => {
             <h2 className="text-black md:text-5xl text-4xl font-bold">Worldwide</h2>
           </div>
           <p className="block text-black/50 mt-5 text-sm">
-            Build meaningful connections, share your story, and discover communities that inspire you. Your social
-            network reimagined.
+            Build meaningful connections, share your story, and discover communities that inspire
+            you. Your social network reimagined.
           </p>
           <div className="flex md:flex-row mt-10 flex-col gap-2">
             <AnimateIcon animateOnHover>
-              <Button className="rounded-full w-full" size={"lg"}>
+              <Button className="rounded-full w-full" size={'lg'}>
                 <div className="flex items-center justify-center w-full gap-2">
                   <span>Join the community</span>
                   <ArrowRight />
@@ -43,7 +43,10 @@ const HomeBanner = () => {
               </Button>
             </AnimateIcon>
             <AnimateIcon animateOnHover>
-              <Button className="rounded-full w-full bg-white text-black hover:shadow-black/20" size={"lg"}>
+              <Button
+                className="rounded-full w-full bg-white text-black hover:shadow-black/20"
+                size={'lg'}
+              >
                 <div className="flex items-center justify-center w-full gap-2">
                   <span>Watch demo</span>
                   <Play />
