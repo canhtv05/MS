@@ -1,0 +1,7 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-scss"],
+  "rules": {
+    "color-hex-length": "short",
+    "selector-max-id": 0
+  }
+}
