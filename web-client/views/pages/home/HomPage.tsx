@@ -1,5 +1,6 @@
 'use client';
 
+import FooterHomeLayout from '@/views/layouts/home/FooterHomeLayout';
 import HeaderHomeLayout from '@/views/layouts/home/HeaderHomeLayout';
 import HomeBanner from '@/views/layouts/home/components/HomeBanner';
 import HomeFeature from '@/views/layouts/home/components/HomeFeature';
@@ -14,6 +15,7 @@ const HomPage = () => {
       <HomeFeature />
       <HomePlatform />
       <HomeTestimonials />
+      <FooterHomeLayout />
     </div>
   );
 };

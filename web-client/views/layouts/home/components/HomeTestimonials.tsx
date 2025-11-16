@@ -2,10 +2,9 @@
 
 import { Heart } from '@/components/animate-ui/icons/heart';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
-import { Viewport } from '@/enums';
 import { StarIcon } from 'lucide-react';
-import { Autoplay } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 interface HomeTestimonialsCardProps {
   content: string;
@@ -110,6 +109,18 @@ const HomeTestimonialsCard = ({ content, avatar, fullname, role }: HomeTestimoni
 };
 
 const HomeTestimonials = () => {
+  const items = [...homeTestimonials, ...homeTestimonials];
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const totalWidth = containerRef.current.scrollWidth / 2;
+    setWidth(totalWidth);
+  }, []);
+
   return (
     <div className="md:px-20 md:py-32 px-10 py-24">
       <div className="flex flex-col items-center justify-center gap-4">
@@ -126,25 +137,27 @@ const HomeTestimonials = () => {
         </p>
       </div>
       <div className="mt-10">
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ pauseOnMouseEnter: true, delay: 2000 }}
-          spaceBetween={12}
-          className="rounded-sm h-full"
-          slidesPerView={1}
-          breakpoints={{
-            [Viewport.MD]: { slidesPerView: 2 },
-            [Viewport.LG]: { slidesPerView: 3 },
-            [Viewport.XL]: { slidesPerView: 4 },
-          }}
-          loop={true}
-        >
-          {homeTestimonials.map((card, index) => (
-            <SwiperSlide key={index} className="flex h-full">
-              <HomeTestimonialsCard {...card} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="overflow-hidden w-full">
+          <motion.div
+            ref={containerRef}
+            className="flex gap-4"
+            animate={{
+              x: [-0, -width],
+            }}
+            transition={{
+              duration: 50,
+              ease: 'linear',
+              repeat: Infinity,
+            }}
+            style={{ display: 'flex' }}
+          >
+            {items.map((card, i) => (
+              <div key={i} className="shrink-0 w-[300px]">
+                <HomeTestimonialsCard {...card} />
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </div>
   );

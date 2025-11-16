@@ -5,7 +5,6 @@ import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { MessageCircleMore } from '@/components/animate-ui/icons/message-circle-more';
 import { Send } from '@/components/animate-ui/icons/send';
 import { Star } from '@/components/animate-ui/icons/star';
-import { Card, CardContent } from '@/components/customs/card';
 import { FeatureIcon } from '@/public/icons';
 import { JSX } from 'react';
 
@@ -45,15 +44,15 @@ const homeFeatureCards: HomeFeatureCardProps[] = [
 const HomeFeatureCard = ({ description, icon, title }: HomeFeatureCardProps) => {
   return (
     <AnimateIcon animateOnHover>
-      <Card className="linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
-        <CardContent className="h-full border-none shadow-none">
+      <div className="p-5 rounded-lg linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
+        <div className="h-full border-none shadow-none">
           <div className="linear-1 inline-block p-2 rounded-md group-hover:scale-110 transition-all duration-300">
             {icon}
           </div>
           <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
           <p className="text-gray-600 leading-relaxed text-sm">{description}</p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </AnimateIcon>
   );
 };

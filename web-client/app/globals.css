@@ -146,6 +146,13 @@
   @apply bg-linear-to-br from-blue-50 via-teal-50 to-emerald-50;
 }
 
+@utility linear-4 {
+  @apply bg-linear-to-tr from-primary/30 via-secondary/30 to-primary/30 
+        shadow-lg border transition-all duration-300 
+        hover:opacity-90 hover:shadow-primary hover:shadow-lg 
+      hover:border-white/80;
+}
+
 @utility text-linear {
   @apply bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent;
 }
