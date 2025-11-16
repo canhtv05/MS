@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { ThemeProvider } from "next-themes";
-import { ReactNode } from "react";
+import { ThemeProvider } from 'next-themes';
+import { ReactNode } from 'react';
 
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
 
 interface AppLayoutProps {
   children: ReactNode;

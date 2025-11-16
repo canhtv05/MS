@@ -45,9 +45,9 @@ const homeFeatureCards: HomeFeatureCardProps[] = [
 const HomeFeatureCard = ({ description, icon, title }: HomeFeatureCardProps) => {
   return (
     <AnimateIcon animateOnHover>
-      <Card className="linear-3 h-full hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
-        <CardContent className="h-full">
-          <div className="linear-1 inline-block p-2 rounded-md group-hover:scale-110 transition-transform duration-300">
+      <Card className="linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
+        <CardContent className="h-full border-none shadow-none">
+          <div className="linear-1 inline-block p-2 rounded-md group-hover:scale-110 transition-all duration-300">
             {icon}
           </div>
           <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
@@ -74,12 +74,10 @@ const HomeFeature = () => {
           Powerful features designed to help you build authentic relationships and grow your network
         </p>
       </div>
-      <div className="flex flex-col gap-2 md:px-2 mt-10">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 cursor-pointer">
-          {homeFeatureCards.map((card, index) => (
-            <HomeFeatureCard key={index} {...card} />
-          ))}
-        </div>
+      <div className="grid lg:grid-cols-4 md:px-2 mt-10 md:grid-cols-2 grid-cols-1 gap-4 cursor-pointer">
+        {homeFeatureCards.map((card, index) => (
+          <HomeFeatureCard key={index} {...card} />
+        ))}
       </div>
     </div>
   );
