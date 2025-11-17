@@ -1,15 +1,19 @@
+'use client;';
+
+import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import Logo from '@/components/Logo';
+import { MailIcon } from 'lucide-react';
 
 const FooterHomeLayout = () => {
   return (
-    <footer className="linear-4 text-gray-300 animate-fade-in">
+    <footer className="bg-gray-900/90 text-gray-300 animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Logo />
             </div>
-            <p className="text-black/50 mb-6 max-w-sm">
+            <p className="text-gray-400 mb-6 max-w-sm">
               Connect with people, creators, and communities worldwide. Build meaningful
               relationships in the digital age.
             </p>
@@ -18,36 +22,21 @@ const FooterHomeLayout = () => {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-full bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors duration-200"
+                  className="flex-1 px-4 py-2 rounded-full bg-gray-600 border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors duration-200"
                 />
-                <button className="px-6 py-2 rounded-full bg-linear-to-r from-secondary to-primary hover:shadow-lg hover:shadow-primary/30 cursor-pointer text-white transition-all duration-300 flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-mail w-4 h-4"
-                    aria-hidden="true"
-                  >
-                    <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path>
-                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                  </svg>
-                </button>
+                <IconButton className="rounded-lg linear-1 cursor-pointer" size={'lg'}>
+                  <MailIcon className="stroke-white" />
+                </IconButton>
               </div>
             </div>
           </div>
           <div>
-            <h4 className="text-black font-bold mb-4">Product</h4>
+            <h4 className="text-white font-bold mb-4">Product</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Features
                 </a>
@@ -55,7 +44,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Pricing
                 </a>
@@ -63,7 +52,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Security
                 </a>
@@ -71,7 +60,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Enterprise
                 </a>
@@ -79,7 +68,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Mobile App
                 </a>
@@ -87,12 +76,12 @@ const FooterHomeLayout = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-black font-bold mb-4">Company</h4>
+            <h4 className="text-white font-bold mb-4">Company</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   About Us
                 </a>
@@ -100,7 +89,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Careers
                 </a>
@@ -108,7 +97,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Blog
                 </a>
@@ -116,7 +105,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Press Kit
                 </a>
@@ -124,7 +113,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Contact
                 </a>
@@ -132,12 +121,12 @@ const FooterHomeLayout = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-black font-bold mb-4">Resources</h4>
+            <h4 className="text-white font-bold mb-4">Resources</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Help Center
                 </a>
@@ -145,7 +134,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Community
                 </a>
@@ -153,7 +142,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Developers
                 </a>
@@ -161,7 +150,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   API Docs
                 </a>
@@ -169,7 +158,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Status
                 </a>
@@ -177,12 +166,12 @@ const FooterHomeLayout = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-black font-bold mb-4">Legal</h4>
+            <h4 className="text-white font-bold mb-4">Legal</h4>
             <ul className="space-y-3">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Privacy Policy
                 </a>
@@ -190,7 +179,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Terms of Service
                 </a>
@@ -198,7 +187,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Cookie Policy
                 </a>
@@ -206,7 +195,7 @@ const FooterHomeLayout = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 hover:text-white transition-colors duration-200"
+                  className="text-gray-600 hover:text-white transition-colors duration-200"
                 >
                   Licenses
                 </a>
@@ -214,14 +203,14 @@ const FooterHomeLayout = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-black/30 pt-8">
+        <div className="border-t border-gray-600 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-black/70 font-black">© 2025 LeafHub. All rights reserved.</p>
+            <p className="text-white/50 font-black">© 2025 LeafHub. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <a
                 href="#"
                 aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-white hover:bg-linear-to-br hover:from-primary hover:to-secondary flex items-center justify-center transition-all duration-300 group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +222,7 @@ const FooterHomeLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-facebook w-5 h-5 text-gray-700 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-facebook w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
                   aria-hidden="true"
                 >
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
@@ -242,7 +231,7 @@ const FooterHomeLayout = () => {
               <a
                 href="#"
                 aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-white hover:bg-linear-to-br hover:from-primary hover:to-secondary flex items-center justify-center transition-all duration-300 group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +243,7 @@ const FooterHomeLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-twitter w-5 h-5 text-gray-700 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-twitter w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
                   aria-hidden="true"
                 >
                   <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
@@ -263,7 +252,7 @@ const FooterHomeLayout = () => {
               <a
                 href="#"
                 aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-white hover:bg-linear-to-br hover:from-primary hover:to-secondary flex items-center justify-center transition-all duration-300 group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +264,7 @@ const FooterHomeLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-instagram w-5 h-5 text-gray-700 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-instagram w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
                   aria-hidden="true"
                 >
                   <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
@@ -286,7 +275,7 @@ const FooterHomeLayout = () => {
               <a
                 href="#"
                 aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full bg-white hover:bg-linear-to-br hover:from-primary hover:to-secondary flex items-center justify-center transition-all duration-300 group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -298,7 +287,7 @@ const FooterHomeLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-linkedin w-5 h-5 text-gray-700 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-linkedin w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
                   aria-hidden="true"
                 >
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
@@ -309,7 +298,7 @@ const FooterHomeLayout = () => {
               <a
                 href="#"
                 aria-label="YouTube"
-                className="w-10 h-10 rounded-full bg-white hover:bg-linear-to-br hover:from-primary hover:to-secondary flex items-center justify-center transition-all duration-300 group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -321,7 +310,7 @@ const FooterHomeLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-youtube w-5 h-5 text-gray-700 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-youtube w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
                   aria-hidden="true"
                 >
                   <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>

@@ -55,12 +55,9 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0); */
-  --primary: oklch(0.7 0.15 162.47); /* sáng hơn, tươi tắn */
-  --primary-foreground: oklch(0.985 0 0); /* chữ sáng trên nền primary */
-  /* --secondary: oklch(0.97 0 0); */
-  --secondary: oklch(0.71 0.13 215.22);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -92,12 +89,9 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  /* --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0); */
-  --primary: oklch(0.7 0.15 162.47); /* xanh lá cây đậm hơn cho dark mode */
-  --primary-foreground: oklch(0.985 0 0); /* chữ sáng */
-  /* --secondary: oklch(0.269 0 0); */
-  --secondary: oklch(0.71 0.13 215.22);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -132,27 +126,16 @@
 }
 
 @utility linear-1 {
-  @apply bg-linear-to-tr from-primary via-secondary to-primary 
-        shadow-lg border transition-all duration-300 
-        hover:opacity-90 hover:shadow-primary hover:shadow-lg 
+  @apply bg-linear-to-r from-purple-500 to-cyan-500 
+        shadow-lg border transition-all duration-300
+        hover:opacity-90 hover:shadow-primary hover:shadow-lg
       hover:border-white/80;
 }
 
 @utility linear-2 {
-  @apply bg-linear-to-br from-emerald-50 via-teal-50 to-green-50;
+  @apply bg-linear-to-r from-purple-50 via-teal-50 to-cyan-50;
 }
 
 @utility linear-3 {
   @apply bg-linear-to-br from-blue-50 via-teal-50 to-emerald-50;
-}
-
-@utility linear-4 {
-  @apply bg-linear-to-tr from-primary/30 via-secondary/30 to-primary/30 
-        shadow-lg border transition-all duration-300 
-        hover:opacity-90 hover:shadow-primary hover:shadow-lg 
-      hover:border-white/80;
-}
-
-@utility text-linear {
-  @apply bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent;
 }

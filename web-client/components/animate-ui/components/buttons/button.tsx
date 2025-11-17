@@ -14,7 +14,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'linear-1 hover:shadow-primary/40 hover:shadow-lg border hover:border-white/80 to-primary text-white shadow-lg shadow-primary/20 hover:opacity-90 transition-all duration-300',
+          'linear-1 hover:shadow-lg hover:border hover:border-white text-white border-none shadow-lg hover:shadow-purple-300 hover:opacity-90 transition-all duration-300',
         accent: 'bg-accent text-accent-foreground shadow-xs hover:bg-accent/90',
         destructive:
           'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',

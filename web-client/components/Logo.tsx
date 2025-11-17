@@ -11,7 +11,7 @@ const Logo = () => {
         alt="LeafHub Logo"
         loading="eager"
       />
-      <h1 className="font-bold text-lg bg-linear-to-tr from-primary to-secondary bg-clip-text text-transparent tracking-wide">
+      <h1 className="font-bold text-lg bg-linear-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent tracking-wide">
         LeafHub
       </h1>
     </Link>

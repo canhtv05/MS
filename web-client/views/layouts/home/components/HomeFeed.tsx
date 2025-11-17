@@ -184,14 +184,14 @@ const HomeFeed = () => {
             repeatType: 'loop',
             ease: 'easeInOut',
           }}
-          className="absolute z-40 md:p-2 md:px-4 px-3 py-1.5 md:top-0 md:-right-10 -top-10 -right-10 linear-3 rounded-full border border-secondary"
+          className="absolute z-40 md:p-2 md:px-4 px-3 py-1.5 md:top-0 md:-right-10 -top-10 -right-10 bg-green-50 rounded-full border border-emerald-400"
         >
           <AnimateIcon animateOnHover>
             <div className="flex items-center gap-2">
-              <UsersRound className={'md:block hidden text-secondary size-7 stroke-1'} />
-              <div className="flex flex-col text-black/40 text-sm items-start justify-center">
+              <UsersRound className={'md:block hidden text-emerald-400 size-7 stroke-1'} />
+              <div className="flex flex-col text-emerald-400 text-sm items-start justify-center">
                 <span className="text-[12px]">New members</span>
-                <span className="text-secondary text-[12px]">+20 today</span>
+                <span className="text-emerald-400 text-[12px]">+20 today</span>
               </div>
             </div>
           </AnimateIcon>
@@ -204,14 +204,14 @@ const HomeFeed = () => {
             repeatType: 'loop',
             ease: 'easeInOut',
           }}
-          className="absolute z-40 md:p-2 md:px-4 px-3 py-1.5 md:bottom-0 md:-left-10 -bottom-10 -left-10 linear-2 rounded-full border border-primary"
+          className="absolute z-40 md:p-2 md:px-4 px-3 py-1.5 md:bottom-0 md:-left-10 -bottom-10 -left-10 bg-blue-50 rounded-full border border-cyan-400"
         >
           <AnimateIcon animateOnHover>
             <div className="flex items-center gap-2">
-              <MessageCircle className={'md:block hidden text-primary size-7 stroke-1'} />
-              <div className="flex flex-col text-black/40 text-sm items-start justify-center">
+              <MessageCircle className={'md:block hidden text-cyan-400 size-7 stroke-1'} />
+              <div className="flex flex-col text-cyan-400 text-sm items-start justify-center">
                 <span className="text-[12px]">Messages</span>
-                <span className="text-primary text-[12px]">1K+ sent</span>
+                <span className="text-cyan-400 text-[12px]">1K+ sent</span>
               </div>
             </div>
           </AnimateIcon>

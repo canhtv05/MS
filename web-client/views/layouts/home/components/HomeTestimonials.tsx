@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar
 import { StarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 
 interface HomeTestimonialsCardProps {
   content: string;
@@ -124,13 +125,13 @@ const HomeTestimonials = () => {
   return (
     <div className="md:px-20 md:py-32 px-10 py-24">
       <div className="flex flex-col items-center justify-center gap-4">
-        <div className="bg-primary/10 flex items-center gap-2 rounded-full px-3 py-2">
-          <Heart autoAnimate className="text-primary size-4 fill-primary" />
-          <span className="text-primary text-sm font-bold">Testimonials</span>
+        <div className="bg-green-50 flex items-center gap-2 rounded-full px-3 py-2">
+          <Heart autoAnimate className="text-green-400 size-4 fill-green-400" />
+          <span className="text-green-400 text-sm font-bold">Testimonials</span>
         </div>
         <h2 className="lg:text-5xl md:text-3xl text-xl font-black text-black">
           Loved by
-          <span className="text-linear ml-2">Millions</span>
+          <GradientText className="ml-2" text="Millions" />
         </h2>
         <p className="text-sm mx-auto max-w-lg text-center text-gray-600">
           See what our community members have to say about their experience

@@ -7,6 +7,7 @@ import { Play } from '@/components/animate-ui/icons/play';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
 import Ring from '@/components/customs/ring';
 import dynamic from 'next/dynamic';
+import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 
 const ClientHomeFeed = dynamic(() => import('./HomeFeed'), { ssr: false });
 
@@ -26,7 +27,7 @@ const HomeBanner = () => {
           </div>
           <div className="mt-5">
             <h2 className="text-black md:text-5xl text-4xl font-bold">Connect with</h2>
-            <h2 className="text-linear md:text-5xl text-4xl font-bold">People</h2>
+            <GradientText text="People" className="md:text-5xl text-4xl font-bold" />
             <h2 className="text-black md:text-5xl text-4xl font-bold">Worldwide</h2>
           </div>
           <p className="block text-black/50 mt-5 text-sm">
