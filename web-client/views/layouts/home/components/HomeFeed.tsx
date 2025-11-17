@@ -129,7 +129,7 @@ const HomeFeed = () => {
               enabled: true,
               clickable: true,
               renderBullet: (index, className) => {
-                return `<span class="${className} bg-primary!"></span>`;
+                return `<span class="${className} bg-purple-500!"></span>`;
               },
             }}
             autoplay={{ pauseOnMouseEnter: true, delay: 2000 }}
