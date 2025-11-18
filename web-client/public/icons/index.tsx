@@ -154,3 +154,113 @@ export const TwitterIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
+
+export const UserIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      className={cn('svg-inline--fa fa-user', props.className)}
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="user"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+      data-fa-i2svg=""
+    >
+      <path
+        fill="currentColor"
+        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+      ></path>
+    </svg>
+  );
+};
+
+export const LockIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      className={cn('svg-inline--fa fa-lock', props.className)}
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="lock"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+      data-fa-i2svg=""
+    >
+      <path
+        fill="currentColor"
+        d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"
+      ></path>
+    </svg>
+  );
+};
+
+export const AtIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      className={cn('svg-inline--fa fa-at', props.className)}
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="at"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      data-fa-i2svg=""
+    >
+      <path
+        fill="currentColor"
+        d="M256 64C150 64 64 150 64 256s86 192 192 192c17.7 0 32 14.3 32 32s-14.3 32-32 32C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256v32c0 53-43 96-96 96c-29.3 0-55.6-13.2-73.2-33.9C320 371.1 289.5 384 256 384c-70.7 0-128-57.3-128-128s57.3-128 128-128c27.9 0 53.7 8.9 74.7 24.1c5.7-5 13.1-8.1 21.3-8.1c17.7 0 32 14.3 32 32v80 32c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-106-86-192-192-192zm64 192a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"
+      ></path>
+    </svg>
+  );
+};
+
+export const MailIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      className={cn('svg-inline--fa fa-envelop', props.className)}
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="envelope"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      data-fa-i2svg=""
+    >
+      <path
+        fill="currentColor"
+        d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"
+      ></path>
+    </svg>
+  );
+};
+
+export const LockOpenIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      {...props}
+      className={cn('svg-inline--fa fa-lock-open', props.className)}
+      aria-hidden="true"
+      focusable="false"
+      data-prefix="fas"
+      data-icon="lock-open"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 576 512"
+      data-fa-i2svg=""
+    >
+      <path
+        fill="currentColor"
+        d="M352 144c0-44.2 35.8-80 80-80s80 35.8 80 80v48c0 17.7 14.3 32 32 32s32-14.3 32-32V144C576 64.5 511.5 0 432 0S288 64.5 288 144v48H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H352V144z"
+      ></path>
+    </svg>
+  );
+};

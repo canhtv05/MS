@@ -163,7 +163,7 @@ const HeaderLG = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             >
               <Button
-                onClick={() => router.push('/login')}
+                onClick={() => router.push('/sign-in')}
                 variant={'outline'}
                 className={cn(
                   !showSignup
@@ -171,7 +171,7 @@ const HeaderLG = () => {
                     : 'bg-transparent shadow-none border-none',
                 )}
               >
-                <span className="font-medium text-black">Login</span>
+                <span className="font-medium text-black">Sign in</span>
               </Button>
             </motion.div>
             <motion.div layout className="flex items-center">
@@ -217,13 +217,13 @@ const HeaderMD = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             >
               <Button
-                onClick={() => router.push('/login')}
+                onClick={() => router.push('/sign-up')}
                 variant={'outline'}
                 className={cn(
                   'bg-transparent shadow-none border-none hover:bg-transparent dark:hover:bg-transparent dark:bg-transparent',
                 )}
               >
-                <span className="font-medium text-black">Login</span>
+                <span className="font-medium text-black">Sign in</span>
               </Button>
             </motion.div>
             <motion.div layout className="flex items-center">
