@@ -12,10 +12,12 @@ import { motion } from 'motion/react';
 import { UsersRound } from '@/components/animate-ui/icons/users-round';
 import Ring from '@/components/customs/ring';
 import { useEffect, useState } from 'react';
+import images from '@/public/imgs';
+import { StaticImageData } from 'next/image';
 
 type TItems = {
   username: string;
-  imgUrl: string;
+  imgUrl: StaticImageData;
   lastOnlineAt: string;
   isOnline?: boolean;
 };
@@ -23,29 +25,29 @@ type TItems = {
 const items: TItems[] = [
   {
     username: 'Amiran Khan',
-    imgUrl: '/imgs/avatars/avatar1.jpeg',
+    imgUrl: images.avt1,
     lastOnlineAt: 'Online',
     isOnline: true,
   },
   {
     username: 'Leo Park',
-    imgUrl: '/imgs/avatars/avatar2.jpg',
+    imgUrl: images.avt2,
     lastOnlineAt: '5m ago',
   },
   {
     username: 'Dark',
-    imgUrl: '/imgs/avatars/avatar4.jpg',
+    imgUrl: images.avt3,
     lastOnlineAt: '12 hours ago',
   },
   {
     username: 'Rain',
-    imgUrl: '/imgs/avatars/avatar3.jpg',
+    imgUrl: images.avt4,
     lastOnlineAt: 'Online',
     isOnline: true,
   },
 ];
 
-const HomeFeedCard = ({ imgUrl, lastOnlineAt, username, isOnline }: TItems) => {
+const LandingFeedCard = ({ imgUrl, lastOnlineAt, username, isOnline }: TItems) => {
   return (
     <div className="rounded-sm w-full h-full border border-black/10">
       <div className="bg-gray-100 rounded-sm p-2 h-full flex items-baseline flex-col">
@@ -53,7 +55,7 @@ const HomeFeedCard = ({ imgUrl, lastOnlineAt, username, isOnline }: TItems) => {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Avatar>
-                <AvatarImage src={imgUrl} />
+                <AvatarImage src={imgUrl.src} />
                 <AvatarFallback>{username}</AvatarFallback>
               </Avatar>
               {isOnline && <Ring className="absolute z-50 bottom-2 left-5" />}
@@ -73,7 +75,7 @@ const HomeFeedCard = ({ imgUrl, lastOnlineAt, username, isOnline }: TItems) => {
 const GRID_SIZE = 2;
 const ANIMATION_DURATION = 2000;
 
-const HomeFeed = () => {
+const LandingFeed = () => {
   const { width } = useViewport();
 
   const [positions, setPositions] = useState<TItems[]>([...items]);
@@ -144,7 +146,7 @@ const HomeFeed = () => {
           >
             {items.map((i, idx) => (
               <SwiperSlide key={idx}>
-                <HomeFeedCard {...i} />
+                <LandingFeedCard {...i} />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -161,7 +163,7 @@ const HomeFeed = () => {
             >
               {positions.map((item, idx) => (
                 <motion.div
-                  key={item.imgUrl}
+                  key={item.imgUrl.src}
                   layout // animate khi vị trí thay đổi
                   transition={{ duration: ANIMATION_DURATION / 1000 }}
                   style={{
@@ -169,7 +171,7 @@ const HomeFeed = () => {
                     zIndex: swapIndex.includes(idx) ? 10 : 1, // nổi lên khi đang swap
                   }}
                 >
-                  <HomeFeedCard {...item} />
+                  <LandingFeedCard {...item} />
                 </motion.div>
               ))}
             </div>
@@ -221,4 +223,4 @@ const HomeFeed = () => {
   );
 };
 
-export default HomeFeed;
+export default LandingFeed;

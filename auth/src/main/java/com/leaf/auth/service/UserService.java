@@ -93,6 +93,7 @@ public class UserService {
         com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
                 .setEmail(request.getEmail())
                 .setUserId(res.getUsername())
+                .setFullname(request.getFullname())
                 .build();
         userProfileClient.createUserProfile(userProfileDTO);
         return UserDTO.fromEntity(res);

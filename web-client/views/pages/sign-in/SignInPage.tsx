@@ -7,8 +7,11 @@ import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
 import { GoogleIcon, LockIcon, UserIcon } from '@/public/icons';
 import Link from 'next/link';
+import useSignIn from './use-signin';
 
 const SignInPage = () => {
+  const { handleSubmit } = useSignIn();
+
   return (
     <div
       id="sing-in-card"
@@ -22,7 +25,7 @@ const SignInPage = () => {
         <p className="text-foreground text-sm">Sign in to continue your journey</p>
       </div>
 
-      <form id="sing-in-form" className="space-y-2 section-clickable">
+      <form onSubmit={handleSubmit} id="sing-in-form" className="space-y-2 section-clickable">
         <div id="email-field" className="section-clickable">
           <Input
             id="username"

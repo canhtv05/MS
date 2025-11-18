@@ -4,7 +4,7 @@ import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import Logo from '@/components/Logo';
 import { MailIcon } from 'lucide-react';
 
-const FooterHomeLayout = () => {
+const LandingFooterLayout = () => {
   return (
     <footer className="bg-gray-900/90 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -329,4 +329,4 @@ const FooterHomeLayout = () => {
   );
 };
 
-export default FooterHomeLayout;
+export default LandingFooterLayout;

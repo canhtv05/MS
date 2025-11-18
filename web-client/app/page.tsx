@@ -1,5 +1,7 @@
-import HomPage from "@/views/pages/home/HomPage";
+import LandingPage from '@/views/pages/landing/LandingPage';
 
-export default function Home() {
-  return <HomPage />;
-}
+const Landing = () => {
+  return <LandingPage />;
+};
+
+export default Landing;

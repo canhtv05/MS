@@ -6,82 +6,89 @@ import { StarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
+import { StaticImageData } from 'next/image';
+import images from '@/public/imgs';
 
-interface HomeTestimonialsCardProps {
+interface LandingTestimonialsCardProps {
   content: string;
   fullname: string;
   role: string;
-  avatar: string;
+  avatar: StaticImageData;
 }
-const homeTestimonials: HomeTestimonialsCardProps[] = [
+const homeTestimonials: LandingTestimonialsCardProps[] = [
   {
     fullname: 'Nguyễn Minh Tuấn',
     role: 'Social Media Influencer',
-    avatar: '/imgs/avatars/avatar5.jpg',
+    avatar: images.avt5,
     content:
       'Mạng xã hội này giúp tôi kết nối với cộng đồng và chia sẻ nội dung sáng tạo mỗi ngày.',
   },
   {
     fullname: 'Trần Thị Lan',
     role: 'Marketing Specialist',
-    avatar: '/imgs/avatars/avatar6.jpg',
+    avatar: images.avt6,
     content:
       'Tôi có thể xây dựng thương hiệu cá nhân và doanh nghiệp một cách dễ dàng nhờ nền tảng này.',
   },
   {
     fullname: 'Lê Văn Hoàng',
     role: 'Content Creator',
-    avatar: '/imgs/avatars/avatar7.jpg',
+    avatar: images.avt7,
     content:
       'Khám phá các cộng đồng phù hợp với sở thích giúp tôi mở rộng mối quan hệ và tìm kiếm cơ hội hợp tác.',
   },
   {
     fullname: 'Phạm Thị Hương',
     role: 'Digital Marketer',
-    avatar: '/imgs/avatars/avatar8.jpg',
+    avatar: images.avt8,
     content: 'Các công cụ trên nền tảng này giúp tôi quản lý chiến dịch quảng cáo hiệu quả hơn.',
   },
   {
     fullname: 'Ngô Văn Nam',
     role: 'YouTuber',
-    avatar: '/imgs/avatars/avatar9.jpg',
+    avatar: images.avt9,
     content: 'Tôi dễ dàng chia sẻ video của mình và nhận phản hồi trực tiếp từ cộng đồng.',
   },
   {
     fullname: 'Trương Thị Mai',
     role: 'Community Manager',
-    avatar: '/imgs/avatars/avatar10.jpg',
+    avatar: images.avt10,
     content:
       'Nền tảng giúp tôi quản lý nhóm và kết nối thành viên một cách thuận tiện và sinh động.',
   },
   {
     fullname: 'Đặng Quang Huy',
     role: 'Photographer',
-    avatar: '/imgs/avatars/avatar11.jpg',
+    avatar: images.avt11,
     content: 'Chia sẻ hình ảnh và nhận được sự tương tác tích cực từ những người cùng đam mê.',
   },
   {
     fullname: 'Vũ Thị Nhung',
     role: 'Blogger',
-    avatar: '/imgs/avatars/avatar12.jpg',
+    avatar: images.avt12,
     content: 'Tôi dễ dàng viết và đăng bài, xây dựng lượng độc giả trung thành trên mạng xã hội.',
   },
   {
     fullname: 'Phan Văn Duy',
     role: 'Entrepreneur',
-    avatar: '/imgs/avatars/avatar13.jpg',
+    avatar: images.avt13,
     content:
       'Nền tảng này giúp tôi tiếp cận khách hàng tiềm năng và xây dựng thương hiệu doanh nghiệp.',
   },
   {
     fullname: 'Nguyễn Thị Thanh',
     role: 'Influencer',
-    avatar: '/imgs/avatars/avatar14.jpg',
+    avatar: images.avt14,
     content: 'Tôi có thể kết nối với những người cùng sở thích và mở rộng tầm ảnh hưởng của mình.',
   },
 ];
 
-const HomeTestimonialsCard = ({ content, avatar, fullname, role }: HomeTestimonialsCardProps) => {
+const LandingTestimonialsCard = ({
+  content,
+  avatar,
+  fullname,
+  role,
+}: LandingTestimonialsCardProps) => {
   return (
     <div className="linear-3 p-5 rounded-lg flex flex-col h-full min-h-[250px]">
       <div className="flex flex-col flex-1 justify-between">
@@ -95,7 +102,7 @@ const HomeTestimonialsCard = ({ content, avatar, fullname, role }: HomeTestimoni
 
         <div className="flex items-end gap-5">
           <Avatar className="size-10">
-            <AvatarImage src={avatar} />
+            <AvatarImage src={avatar.src} />
             <AvatarFallback>{fullname}</AvatarFallback>
           </Avatar>
 
@@ -109,7 +116,7 @@ const HomeTestimonialsCard = ({ content, avatar, fullname, role }: HomeTestimoni
   );
 };
 
-const HomeTestimonials = () => {
+const LandingTestimonials = () => {
   const items = [...homeTestimonials, ...homeTestimonials];
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -154,7 +161,7 @@ const HomeTestimonials = () => {
           >
             {items.map((card, i) => (
               <div key={i} className="shrink-0 w-[300px]">
-                <HomeTestimonialsCard {...card} />
+                <LandingTestimonialsCard {...card} />
               </div>
             ))}
           </motion.div>
@@ -164,4 +171,4 @@ const HomeTestimonials = () => {
   );
 };
 
-export default HomeTestimonials;
+export default LandingTestimonials;

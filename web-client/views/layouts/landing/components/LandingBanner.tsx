@@ -9,9 +9,9 @@ import Ring from '@/components/customs/ring';
 import dynamic from 'next/dynamic';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 
-const ClientHomeFeed = dynamic(() => import('./HomeFeed'), { ssr: false });
+const ClientHomeFeed = dynamic(() => import('./LandingFeed'), { ssr: false });
 
-const HomeBanner = () => {
+const LandingBanner = () => {
   return (
     <section
       className="relative flex flex-col xl:gap-10 gap-5 pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden 
@@ -97,4 +97,4 @@ const HomeBanner = () => {
   );
 };
 
-export default HomeBanner;
+export default LandingBanner;

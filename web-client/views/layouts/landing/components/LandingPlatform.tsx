@@ -3,17 +3,18 @@
 import { Card, CardContent } from '@/components/customs/card';
 import { cn } from '@/lib/utils';
 import { MobileScreenIcon } from '@/public/icons';
+import images from '@/public/imgs';
 import { LucideIcon, RefreshCcw, Smartphone, TvMinimal } from 'lucide-react';
 import Image from 'next/image';
 
-interface HomePlatformCardProps {
+interface LandingPlatformCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
   className: string;
 }
 
-const homePlatformCards: HomePlatformCardProps[] = [
+const homePlatformCards: LandingPlatformCardProps[] = [
   {
     icon: TvMinimal,
     title: 'Desktop Experience',
@@ -38,7 +39,12 @@ const homePlatformCards: HomePlatformCardProps[] = [
   },
 ];
 
-const HomeFeatureCard = ({ className, description, icon: Icon, title }: HomePlatformCardProps) => {
+const LandingFeatureCard = ({
+  className,
+  description,
+  icon: Icon,
+  title,
+}: LandingPlatformCardProps) => {
   return (
     <Card className="h-full bg-transparent! border-none shadow-none group py-2">
       <CardContent className="h-full">
@@ -57,7 +63,7 @@ const HomeFeatureCard = ({ className, description, icon: Icon, title }: HomePlat
   );
 };
 
-const HomePlatform = () => {
+const LandingPlatform = () => {
   return (
     <div className="md:px-20 md:pt-16 px-10 py-12">
       <div className="flex flex-col items-center justify-center gap-4">
@@ -78,7 +84,7 @@ const HomePlatform = () => {
         <div className="relative w-full h-[300px] md:h-auto md:flex-1">
           <Image
             fill
-            src="/imgs/platform.jpg"
+            src={images.platform}
             alt="platform"
             className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
@@ -86,7 +92,7 @@ const HomePlatform = () => {
         </div>
         <div className="flex flex-1 flex-col cursor-pointer order-2 md:order-1">
           {homePlatformCards.map((card, index) => (
-            <HomeFeatureCard key={index} {...card} />
+            <LandingFeatureCard key={index} {...card} />
           ))}
         </div>
       </div>
@@ -94,4 +100,4 @@ const HomePlatform = () => {
   );
 };
 
-export default HomePlatform;
+export default LandingPlatform;

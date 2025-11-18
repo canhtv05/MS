@@ -20,8 +20,9 @@ const AuthLayout = ({ children }: IAuthLayoutProps) => {
         <div className="relative w-full h-full rounded-lg overflow-hidden">
           <Image
             src={'/imgs/bg-login.png'}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             fill
-            alt="Sign in page image"
+            alt="login page image"
             className="object-cover"
           />
         </div>

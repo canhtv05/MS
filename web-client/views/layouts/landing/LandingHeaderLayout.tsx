@@ -24,7 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/animate-ui/components/radix/sheet';
-import { ReposProvider, useHeaderHomeRepo } from './HeaderHomeRepoProvider';
+import { ReposProvider, useHeaderHomeRepo } from './LandingHeaderRepoProvider';
 import CustomImage from '@/components/customs/custom-image';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/Logo';
@@ -313,7 +313,7 @@ const HeaderMD = () => {
   );
 };
 
-const HeaderHomeLayout = () => {
+const LandingHeaderLayout = () => {
   return (
     <header className="fixed w-full transform -translate-x-1/2 top-4 left-1/2 z-50">
       <ReposProvider>
@@ -328,4 +328,4 @@ const HeaderHomeLayout = () => {
   );
 };
 
-export default HeaderHomeLayout;
+export default LandingHeaderLayout;

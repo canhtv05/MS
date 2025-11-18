@@ -10,14 +10,14 @@ import { cn } from '@/lib/utils';
 import { FeatureIcon } from '@/public/icons';
 import { JSX } from 'react';
 
-interface HomeFeatureCardProps {
+interface LandingFeatureCardProps {
   icon: JSX.Element;
   title: string;
   description: string;
   className: string;
 }
 
-const homeFeatureCards: HomeFeatureCardProps[] = [
+const homeFeatureCards: LandingFeatureCardProps[] = [
   {
     icon: <Send className={'text-white stroke-1'} />,
     title: 'Share Posts',
@@ -51,7 +51,7 @@ const homeFeatureCards: HomeFeatureCardProps[] = [
   },
 ];
 
-const HomeFeatureCard = ({ description, icon, title, className }: HomeFeatureCardProps) => {
+const LandingFeatureCard = ({ description, icon, title, className }: LandingFeatureCardProps) => {
   return (
     <AnimateIcon animateOnHover>
       <div className="p-5 rounded-lg linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
@@ -72,7 +72,7 @@ const HomeFeatureCard = ({ description, icon, title, className }: HomeFeatureCar
   );
 };
 
-const HomeFeature = () => {
+const LandingFeature = () => {
   return (
     <div className="md:px-20 md:py-32 px-10 py-24">
       <div className="flex flex-col items-center justify-center gap-4">
@@ -90,11 +90,11 @@ const HomeFeature = () => {
       </div>
       <div className="grid lg:grid-cols-4 md:px-2 mt-10 md:grid-cols-2 grid-cols-1 gap-4 cursor-pointer">
         {homeFeatureCards.map((card, index) => (
-          <HomeFeatureCard key={index} {...card} />
+          <LandingFeatureCard key={index} {...card} />
         ))}
       </div>
     </div>
   );
 };
 
-export default HomeFeature;
+export default LandingFeature;

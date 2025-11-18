@@ -1,5 +1,6 @@
-import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import images from '@/public/imgs';
+import Image, { ImageProps } from 'next/image';
+import { useState } from 'react';
 
 interface CustomImageProps extends ImageProps {
   fallbackSrc?: string;
@@ -17,7 +18,7 @@ const CustomImage = ({ fallbackSrc, src, width, height, alt, ...props }: CustomI
       {...props}
       onError={() => {
         if (!fallbackSrc) {
-          setImgSrc("/imgs/fallback-img.png");
+          setImgSrc(images.fallBackImg);
         } else {
           setImgSrc(fallbackSrc);
         }
