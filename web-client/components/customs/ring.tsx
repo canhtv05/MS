@@ -13,7 +13,7 @@ const Ring: React.FC<RingProps> = ({
 }) => {
   return (
     <span
-      className={`relative flex items-center justify-between transition-colors duration-300 border-background border-2 rounded-full mx-1 ${className}`}
+      className={`relative flex items-center justify-between transition-colors duration-300 rounded-full mx-1 ${className}`}
     >
       <span
         className={`absolute inline-flex size-2 rounded-full ${pingColor} opacity-75 animate-ping`}

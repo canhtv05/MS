@@ -71,7 +71,7 @@ const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
         <AvatarFallback>{fallback}</AvatarFallback>
       </Avatar>
       <div className="absolute -bottom-0.5 -right-1">
-        <Ring className="border-card!" />
+        <Ring className="border-card! border-2" />
       </div>
     </>
   );
