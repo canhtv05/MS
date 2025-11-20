@@ -42,7 +42,7 @@ import useHomeHeaderLayout from './use-home-header-layout';
 import { Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
-import { forwardRef, useRef } from 'react';
+import { Dispatch, forwardRef, SetStateAction, useRef } from 'react';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -52,6 +52,7 @@ interface IHomeHeaderAvatar {
 interface IHomeHeaderSearch {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setIsShowSearch?: Dispatch<SetStateAction<boolean>>;
   isShowSearch: boolean;
   isLoading: boolean;
   debouncedValue: string;
@@ -99,13 +100,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
   );
 };
 
-const HomeHeaderSearchMD = ({
-  value,
-  onChange,
-  isShowSearch,
-  isLoading,
-  debouncedValue,
-}: IHomeHeaderSearch) => {
+const HomeHeaderSearchMD = ({ value, onChange, isLoading, debouncedValue }: IHomeHeaderSearch) => {
   return (
     <div className={cn(isLoading ? 'overflow-hidden' : 'overflow-y-auto')}>
       <div className="p-2 flex sticky top-0 z-50 bg-background items-center justify-start gap-3">
@@ -136,7 +131,7 @@ const HomeHeaderSearchMD = ({
         <div className="flex mt-2 items-center justify-center">
           <Loader2 className="animate-spin size-8 text-foreground" />
         </div>
-      ) : isShowSearch && debouncedValue.trim() !== '' && !isLoading ? (
+      ) : debouncedValue.trim() !== '' && !isLoading ? (
         <AnimatePresence>
           {Array.from({ length: 20 }).map((_, index) => (
             <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
@@ -242,6 +237,7 @@ const HomeHeaderLayout = () => {
                   value={search}
                   onChange={handleSearch}
                   debouncedValue={debouncedSearch}
+                  setIsShowSearch={setIsShowSearch}
                 />
               </SheetContent>
             </Sheet>
