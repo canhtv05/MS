@@ -169,7 +169,7 @@ const HeaderLG = () => {
                   !showSignup
                     ? 'shadow-lg border border-card/20!'
                     : 'bg-transparent shadow-none border-none',
-                  'border border-input!',
+                  'border border-gray-300!',
                 )}
               >
                 <span className="font-medium text-black">Sign in</span>
