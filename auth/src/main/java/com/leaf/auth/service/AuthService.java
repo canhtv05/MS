@@ -12,12 +12,15 @@ import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
-import com.leaf.auth.utils.CookieUtil;
+import com.leaf.auth.util.AuthUtil;
+import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
+import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
+import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
 
 import io.micrometer.common.util.StringUtils;
@@ -47,6 +50,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
+    RedisService redisService;
     CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
@@ -54,6 +58,7 @@ public class AuthService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
     RedisCacheManager redisCacheManager;
+    AuthUtil authUtil;
 
     @Transactional
     public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
@@ -65,15 +70,17 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse);
+        return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
+                loginRequest.getChannel());
     }
 
     @Transactional
-    public RefreshTokenResponse refreshToken(String cookieValue, HttpServletRequest httpServletRequest,
+    public RefreshTokenResponse refreshToken(String cookieValue, String channel, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse);
+        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse,
+                channel);
     }
 
     @Transactional(readOnly = true)
@@ -91,9 +98,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String cookieValue, HttpServletResponse response) {
+    public void logout(String cookieValue, String channel, HttpServletResponse response) {
         String accessToken = getAccessToken(cookieValue, false);
-        tokenProvider.revokeToken(accessToken);
+        tokenProvider.revokeToken(accessToken, channel);
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();
     }
@@ -104,9 +111,12 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileDTO getProfile() {
+    public UserProfileDTO getProfile(HttpServletRequest request) {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
+
+        String token = authUtil.resolveToken(request);
+        String channel = token != null ? tokenProvider.getChannelFromToken(token) : null;
 
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
 
@@ -121,6 +131,15 @@ public class AuthService {
         }
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
+
+        // Get user session from Redis using channel
+        if (channel != null) {
+            UserSessionDTO userSessionDTO = redisService.getUser(username, channel);
+            if (userSessionDTO != null) {
+                userProfileDTO.setChannel(userSessionDTO.getChannel());
+                userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
+            }
+        }
 
         if (Objects.nonNull(cache)) {
             cache.put(username, userProfileDTO);

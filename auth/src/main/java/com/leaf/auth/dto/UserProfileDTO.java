@@ -29,6 +29,8 @@ public class UserProfileDTO implements Serializable {
     private List<String> roles;
     private List<String> roleLabels;
     private List<String> permissions;
+    private String secretKey;
+    private String channel;
 
     public static UserProfileDTO fromEntity(User user) {
         return UserProfileDTO.builder()

@@ -20,7 +20,7 @@ import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
-import com.leaf.auth.utils.ExcelBuilder;
+import com.leaf.auth.util.ExcelBuilder;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.AuthoritiesConstants;

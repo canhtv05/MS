@@ -4,7 +4,7 @@ import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomAuthenticationProvider;
 import com.leaf.auth.security.jwt.JWTConfigurer;
 import com.leaf.auth.security.jwt.TokenProvider;
-import com.leaf.auth.utils.CookieUtil;
+import com.leaf.auth.util.AuthUtil;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
@@ -38,13 +38,13 @@ public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
-    private final CookieUtil cookieUtil;
+    private final AuthUtil authUtil;
 
     public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter,
-            ApplicationProperties applicationProperties, CookieUtil cookieUtil) {
+            ApplicationProperties applicationProperties, AuthUtil authUtil) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
-        this.cookieUtil = cookieUtil;
+        this.authUtil = authUtil;
     }
 
     @Bean
@@ -79,7 +79,7 @@ public class SecurityConfig {
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider, cookieUtil);
+        return new JWTConfigurer(tokenProvider, authUtil);
     }
 
     @Bean

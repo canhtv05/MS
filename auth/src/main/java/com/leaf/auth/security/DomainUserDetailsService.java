@@ -25,34 +25,34 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DomainUserDetailsService implements UserDetailsService {
 
-        private final AuthService authService;
+    private final AuthService authService;
 
-        @Override
-        @Transactional(readOnly = true)
-        public UserDetails loadUserByUsername(final String login) {
-                String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
-                return authService.findOneWithAuthoritiesByUsername(lowercaseLogin)
-                                .map(user -> createSpringSecurityUser(lowercaseLogin, user))
-                                .orElseThrow(() -> new CustomAuthenticationException(
-                                                "User " + lowercaseLogin + " was not found in the database",
-                                                HttpStatus.UNAUTHORIZED));
-        }
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(final String login) {
+        String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
+        return authService.findOneWithAuthoritiesByUsername(lowercaseLogin)
+                .map(user -> createSpringSecurityUser(lowercaseLogin, user))
+                .orElseThrow(() -> new CustomAuthenticationException(
+                        "User " + lowercaseLogin + " was not found in the database",
+                        HttpStatus.UNAUTHORIZED));
+    }
 
-        private CustomUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
-                if (!user.isActivated()) {
-                        throw new CustomAuthenticationException("User " + lowercaseLogin + " was not activated",
-                                        HttpStatus.UNAUTHORIZED);
-                }
-                UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user);
-                authService.mappingUserPermissions(userProfileDTO, user);
-                List<GrantedAuthority> grantedAuthorities = userProfileDTO.getPermissions().stream()
-                                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-                return new CustomUserDetails(
-                                user.getUsername(),
-                                user.getPassword(),
-                                grantedAuthorities,
-                                String.join(",", userProfileDTO.getRoles()),
-                                user.getIsGlobal());
+    private CustomUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
+        if (!user.isActivated()) {
+            throw new CustomAuthenticationException("User " + lowercaseLogin + " was not activated",
+                    HttpStatus.UNAUTHORIZED);
         }
+        UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user);
+        authService.mappingUserPermissions(userProfileDTO, user);
+        List<GrantedAuthority> grantedAuthorities = userProfileDTO.getPermissions().stream()
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return new CustomUserDetails(
+                user.getUsername(),
+                user.getPassword(),
+                grantedAuthorities,
+                String.join(",", userProfileDTO.getRoles()),
+                user.getIsGlobal());
+    }
 
 }

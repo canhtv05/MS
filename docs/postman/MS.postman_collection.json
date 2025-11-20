@@ -1,778 +1,733 @@
 {
-	"info": {
-		"_postman_id": "7f184eda-b0f2-434b-9d38-53706365365b",
-		"name": "MS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "35183932"
-	},
-	"item": [
-		{
-			"name": "auth",
-			"item": [
-				{
-					"name": "admin",
-					"item": [
-						{
-							"name": "create an user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"hello4\",\n    \"password\": \"hello4\",\n    \"email\": \"hello4@gmail.com\",\n    \"activated\": true,\n    \"isGlobal\": true\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/users/c/create"
-							},
-							"response": []
-						},
-						{
-							"name": "update an user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"hello3\",\n    \"activated\": false,\n    \"isGlobal\": true,\n    \"roles\": [\"ROLE_USER\"]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/users/u/update"
-							},
-							"response": []
-						},
-						{
-							"name": "deactive an user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"url": "{{baseURL}}/auth/admin/users/u/deactivate/11"
-							},
-							"response": []
-						},
-						{
-							"name": "active an user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"url": "{{baseURL}}/auth/admin/users/u/activate/11"
-							},
-							"response": []
-						},
-						{
-							"name": "export users",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"searchText\": \"hello\",\r\n    \"page\": 1,\r\n    \"size\": 10,\r\n    \"sortOrder\": \"ASC\",\r\n    \"sortField\": \"username\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/users/r/export"
-							},
-							"response": []
-						},
-						{
-							"name": "download template users",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/users/c/file-template"
-							},
-							"response": []
-						},
-						{
-							"name": "import template users",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "file",
-											"type": "file",
-											"src": []
-										}
-									]
-								},
-								"url": "{{baseURL}}/auth/admin/users/c/import"
-							},
-							"response": []
-						},
-						{
-							"name": "update permission for user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "[\n    {\n        \"permissionCode\": \"USER_CREATE\",\n        \"action\": \"GRANT\"\n    }\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/user-permission/u/4"
-							},
-							"response": []
-						},
-						{
-							"name": "get perrmission of user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"url": "{{baseURL}}/auth/admin/user-permission/r/4"
-							},
-							"response": []
-						},
-						{
-							"name": "get users",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseURL}}/auth/admin/users/r/search-datatable?searchText=hello&page=1&size=10&sortOrder=ASC&sortField=username",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"auth",
-										"admin",
-										"users",
-										"r",
-										"search-datatable"
-									],
-									"query": [
-										{
-											"key": "searchText",
-											"value": "hello"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "size",
-											"value": "10"
-										},
-										{
-											"key": "sortOrder",
-											"value": "ASC"
-										},
-										{
-											"key": "sortField",
-											"value": "username"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/admin/users/r/11"
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "user",
-					"item": [
-						{
-							"name": "create a user",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"hello3\",\n    \"password\": \"hello3\",\n    \"email\": \"hello3@gmail.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/me/c/create"
-							},
-							"response": []
-						},
-						{
-							"name": "update me",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"hello3\",\n    \"password\": \"hello3\",\n    \"email\": \"hello3@gmail.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/me/p/update"
-							},
-							"response": []
-						},
-						{
-							"name": "change pass",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": {
-										"token": "{{access_token}}"
-									}
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"currentPassword\": \"hello4\",\n    \"newPassword\": \"hello3\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "{{baseURL}}/auth/me/p/change-password"
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "refresh-token",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Lấy JSON từ response\r",
-									"let response = pm.response.json();\r",
-									"\r",
-									"// Kiểm tra xem có token không\r",
-									"if (response?.data?.accessToken) {\r",
-									"    // Lưu vào biến môi trường\r",
-									"    pm.environment.set(\"access_token\", response.data.accessToken);\r",
-									"    console.log(\"✅ Đã lưu token vào biến môi trường: access_token\");\r",
-									"} else {\r",
-									"    console.warn(\"⚠️ Không tìm thấy 'token' trong response!\");\r",
-									"}\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {},
-								"requests": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"url": "{{baseURL}}/auth/me/p/refresh-token"
-					},
-					"response": []
-				},
-				{
-					"name": "verify",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"url": "{{baseURL}}/auth/me/internal/verify"
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Lấy JSON từ response\r",
-									"let response = pm.response.json();\r",
-									"\r",
-									"// Kiểm tra xem có token không\r",
-									"if (response.token) {\r",
-									"    // Lưu vào biến môi trường\r",
-									"    pm.environment.set(\"access_token\", response.token);\r",
-									"    console.log(\"✅ Đã lưu token vào biến môi trường: access_token\");\r",
-									"} else {\r",
-									"    console.warn(\"⚠️ Không tìm thấy 'token' trong response!\");\r",
-									"}\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {},
-								"requests": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{baseURL}}/auth/me/p/authenticate"
-					},
-					"response": []
-				},
-				{
-					"name": "logout",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"url": "{{baseURL}}/auth/me/p/logout"
-					},
-					"response": []
-				},
-				{
-					"name": "user profile",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{baseURL}}/auth/me"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "profile",
-			"item": [
-				{
-					"name": "send friend request",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"receiverId\": \"2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{baseURL}}/user-profile/friend-request"
-					},
-					"response": []
-				},
-				{
-					"name": "me",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"receiverId\": \"2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{baseURL}}/user-profile/me"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "file",
-			"item": [
-				{
-					"name": "upload",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{access_token}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "files",
-									"type": "file",
-									"src": [
-										"postman-cloud:///1f00be4d-e12a-4be0-8bbd-cd2c29e87195",
-										"postman-cloud:///1f063ef5-e7f2-45d0-813e-aaa20931fe95"
-									]
-								}
-							]
-						},
-						"url": "{{baseURL}}/files/media/upload"
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "7f184eda-b0f2-434b-9d38-53706365365b",
+    "name": "MS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "35183932"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "create an user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"hello8\",\n    \"password\": \"hello8\",\n    \"email\": \"hello8@gmail.com\",\n    \"activated\": true,\n    \"isGlobal\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/users/c/create"
+              },
+              "response": []
+            },
+            {
+              "name": "update an user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"hello3\",\n    \"activated\": false,\n    \"isGlobal\": true,\n    \"roles\": [\"ROLE_USER\"]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/users/u/update"
+              },
+              "response": []
+            },
+            {
+              "name": "deactive an user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "GET",
+                "header": [],
+                "url": "{{baseURL}}/auth/admin/users/u/deactivate/11"
+              },
+              "response": []
+            },
+            {
+              "name": "active an user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "GET",
+                "header": [],
+                "url": "{{baseURL}}/auth/admin/users/u/activate/11"
+              },
+              "response": []
+            },
+            {
+              "name": "export users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"searchText\": \"hello\",\r\n    \"page\": 1,\r\n    \"size\": 10,\r\n    \"sortOrder\": \"ASC\",\r\n    \"sortField\": \"username\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/users/r/export"
+              },
+              "response": []
+            },
+            {
+              "name": "download template users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/users/c/file-template"
+              },
+              "response": []
+            },
+            {
+              "name": "import template users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": []
+                    }
+                  ]
+                },
+                "url": "{{baseURL}}/auth/admin/users/c/import"
+              },
+              "response": []
+            },
+            {
+              "name": "update permission for user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\n    {\n        \"permissionCode\": \"USER_CREATE\",\n        \"action\": \"GRANT\"\n    }\n]",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/user-permission/u/4"
+              },
+              "response": []
+            },
+            {
+              "name": "get perrmission of user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "GET",
+                "header": [],
+                "url": "{{baseURL}}/auth/admin/user-permission/r/4"
+              },
+              "response": []
+            },
+            {
+              "name": "get users",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/admin/users/r/search-datatable?searchText=hello&page=1&size=10&sortOrder=ASC&sortField=username",
+                  "host": ["{{baseURL}}"],
+                  "path": ["auth", "admin", "users", "r", "search-datatable"],
+                  "query": [
+                    {
+                      "key": "searchText",
+                      "value": "hello"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASC"
+                    },
+                    {
+                      "key": "sortField",
+                      "value": "username"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/admin/users/r/11"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "user",
+          "item": [
+            {
+              "name": "create a user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"hello7\",\n    \"password\": \"hello8\",\n    \"email\": \"hello8@gmail.com\",\n    \"fullname\": \"hello ban 8\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/me/c/create"
+              },
+              "response": []
+            },
+            {
+              "name": "update me",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"hello3\",\n    \"password\": \"hello3\",\n    \"email\": \"hello3@gmail.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/me/p/update"
+              },
+              "response": []
+            },
+            {
+              "name": "change pass",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{access_token}}"
+                  }
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"currentPassword\": \"hello4\",\n    \"newPassword\": \"hello3\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": "{{baseURL}}/auth/me/p/change-password"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "refresh-token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Lấy JSON từ response\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "// Kiểm tra xem có token không\r",
+                  "if (response?.data?.accessToken) {\r",
+                  "    // Lưu vào biến môi trường\r",
+                  "    pm.environment.set(\"access_token\", response.data.accessToken);\r",
+                  "    console.log(\"✅ Đã lưu token vào biến môi trường: access_token\");\r",
+                  "} else {\r",
+                  "    console.warn(\"⚠️ Không tìm thấy 'token' trong response!\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "url": "{{baseURL}}/auth/me/p/refresh-token"
+          },
+          "response": []
+        },
+        {
+          "name": "verify",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": "{{baseURL}}/auth/me/internal/verify"
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Lấy JSON từ response\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "// Kiểm tra xem có token không\r",
+                  "if (response.token) {\r",
+                  "    // Lưu vào biến môi trường\r",
+                  "    pm.environment.set(\"access_token\", response.token);\r",
+                  "    console.log(\"✅ Đã lưu token vào biến môi trường: access_token\");\r",
+                  "} else {\r",
+                  "    console.warn(\"⚠️ Không tìm thấy 'token' trong response!\");\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\",\n    \"channel\": \"web\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseURL}}/auth/me/p/authenticate"
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "url": "{{baseURL}}/auth/me/p/logout"
+          },
+          "response": []
+        },
+        {
+          "name": "user profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseURL}}/auth/me"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "profile",
+      "item": [
+        {
+          "name": "send friend request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"receiverId\": \"68c8e542-ac1c-46c2-b1f8-9f7349c5cf85\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseURL}}/user-profile/friend-request"
+          },
+          "response": []
+        },
+        {
+          "name": "me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseURL}}/user-profile/me"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "file",
+      "item": [
+        {
+          "name": "upload",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{access_token}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [
+                    "postman-cloud:///1f00be4d-e12a-4be0-8bbd-cd2c29e87195",
+                    "postman-cloud:///1f063ef5-e7f2-45d0-813e-aaa20931fe95"
+                  ]
+                }
+              ]
+            },
+            "url": "{{baseURL}}/files/media/upload"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

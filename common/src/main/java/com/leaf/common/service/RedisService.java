@@ -3,14 +3,13 @@ package com.leaf.common.service;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.env.Environment;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
+import com.leaf.common.dto.UserSessionDTO;
+import com.leaf.common.utils.AESUtils;
+
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -19,42 +18,55 @@ public class RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final Environment environment;
 
-    private String getKeyToken(String username) {
+    private String getKeyToken(String username, String channel) {
         String envRunning = environment.getActiveProfiles()[0];
-        return String.format("%s:token:%s", envRunning, username);
+        return String.format("%s:token:%s:%s", envRunning, username, channel);
     }
 
-    public void saveToken(String username, String token, long durationSeconds) {
-        String key = this.getKeyToken(username);
-        redisTemplate.execute(new SessionCallback<Object>() {
-            @SuppressWarnings({ "rawtypes" })
-            @Override
-            public Object execute(@org.springframework.lang.NonNull RedisOperations operations)
-                    throws DataAccessException {
-                operations.multi();
-                operations.delete(key);
-                operations.opsForValue().set(key, token, durationSeconds, TimeUnit.SECONDS);
-                return operations.exec();
-            }
-        });
+    private String getKeyUser(String username, String channel) {
+        String envRunning = environment.getActiveProfiles()[0];
+        return String.format("%s:user:%s:%s", envRunning, username, channel);
     }
 
-    public String getToken(String username) {
-        return (String) redisTemplate.opsForValue().get(this.getKeyToken(username));
+    public String getToken(String username, String channel) {
+        return (String) redisTemplate.opsForValue().get(this.getKeyToken(username, channel));
     }
 
-    public boolean isTokenValid(String username, String token) {
-        String key = this.getKeyToken(username);
-        Object storedToken = redisTemplate.opsForValue().get(key);
+    public boolean isTokenValid(String username, String channel, String token) {
+        String key = this.getKeyToken(username, channel);
+        String stored = (String) redisTemplate.opsForValue().get(key);
 
-        if (storedToken == null) {
-            return false;
-        }
+        String hashed = AESUtils.hexString(token);
 
-        return Objects.equals(storedToken, token);
+        return Objects.equals(stored, hashed);
     }
 
-    public void deleteToken(String jwtName) {
-        redisTemplate.delete(this.getKeyToken(jwtName));
+    public void deleteToken(String username, String channel) {
+        redisTemplate.delete(this.getKeyToken(username, channel));
+    }
+
+    public void cacheToken(String username, String channel, String token) {
+        String tokenKey = this.getKeyToken(username, channel);
+        redisTemplate.opsForValue().set(tokenKey, AESUtils.hexString(token));
+    }
+
+    public void cacheUser(String username, String channel, String sessionId, String secretKey) {
+        String userKey = this.getKeyUser(username, channel);
+        UserSessionDTO user = UserSessionDTO.builder()
+                .sessionId(sessionId)
+                .channel(channel)
+                .username(username)
+                .secretKey(secretKey)
+                .build();
+        redisTemplate.opsForValue().set(userKey, user);
+    }
+
+    public void deleteUser(String username, String channel) {
+        redisTemplate.delete(this.getKeyUser(username, channel));
+    }
+
+    public UserSessionDTO getUser(String username, String channel) {
+        String userKey = this.getKeyUser(username, channel);
+        return (UserSessionDTO) redisTemplate.opsForValue().get(userKey);
     }
 }

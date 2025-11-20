@@ -6,33 +6,30 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.leaf.auth.utils.CookieUtil;
-import com.leaf.common.enums.AuthKey;
+import com.leaf.auth.util.AuthUtil;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class JWTFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
-    private final CookieUtil cookieUtil;
+    private final AuthUtil authUtil;
 
-    public JWTFilter(TokenProvider tokenProvider, CookieUtil cookieUtil) {
+    public JWTFilter(TokenProvider tokenProvider, AuthUtil authUtil) {
         this.tokenProvider = tokenProvider;
-        this.cookieUtil = cookieUtil;
+        this.authUtil = authUtil;
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = resolveToken(httpServletRequest);
+        String jwt = authUtil.resolveToken(httpServletRequest);
         String path = httpServletRequest.getRequestURI();
 
         if (path.startsWith("/ws")) {
@@ -45,21 +42,5 @@ public class JWTFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        String jwt = request.getParameter(AuthKey.ACCESS_TOKEN.getKey());
-        if (StringUtils.hasText(jwt)) {
-            return jwt;
-        }
-        var res = cookieUtil.getTokenCookie(request);
-        if (Objects.isNull(res))
-            return null;
-
-        return res.getAccessToken();
     }
 }

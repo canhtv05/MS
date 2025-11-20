@@ -1,4 +1,4 @@
-package com.leaf.auth.utils;
+package com.leaf.auth.util;
 
 import com.leaf.auth.dto.excel.ExcelTemplateConfig;
 import com.leaf.auth.dto.excel.ReadExcelResult;

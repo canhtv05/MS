@@ -1,4 +1,4 @@
-package com.leaf.auth.utils;
+package com.leaf.auth.util;
 
 import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.dto.CookieValue;

@@ -20,6 +20,7 @@ const LandingFooterLayout = () => {
             <div className="mb-6">
               <div className="flex gap-2">
                 <input
+                  id="email_"
                   type="email"
                   placeholder="Enter your email"
                   className="flex-1 px-4 py-2 rounded-full bg-gray-600 border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors duration-200"

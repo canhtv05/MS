@@ -43,9 +43,11 @@ public class UserJWTController {
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            @RequestBody String channel,
             HttpServletRequest httpServletRequest, HttpServletResponse response) {
         return ResponseEntity
-                .ok(ResponseObject.success(authService.refreshToken(cookieValue, httpServletRequest, response)));
+                .ok(ResponseObject
+                        .success(authService.refreshToken(cookieValue, channel, httpServletRequest, response)));
     }
 
     @PostMapping("/internal/verify")
@@ -61,8 +63,8 @@ public class UserJWTController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile() {
-        return ResponseEntity.ok(ResponseObject.success(authService.getProfile()));
+    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(HttpServletRequest request) {
+        return ResponseEntity.ok(ResponseObject.success(authService.getProfile(request)));
     }
 
     @PostMapping("/p/change-password")
@@ -80,8 +82,9 @@ public class UserJWTController {
     @PostMapping("/p/logout")
     public ResponseEntity<ResponseObject<?>> logout(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            String channel,
             HttpServletResponse response) {
-        authService.logout(cookieValue, response);
+        authService.logout(cookieValue, channel, response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 }
