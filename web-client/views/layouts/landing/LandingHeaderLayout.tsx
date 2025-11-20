@@ -217,7 +217,7 @@ const HeaderMD = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             >
               <Button
-                onClick={() => router.push('/sign-up')}
+                onClick={() => router.push('/sign-in')}
                 variant={'outline'}
                 className={cn(
                   'bg-transparent shadow-none border-none hover:bg-transparent dark:hover:bg-transparent dark:bg-transparent',
@@ -241,7 +241,11 @@ const HeaderMD = () => {
                       <SheetTrigger className="flex items-center justify-center cursor-pointer">
                         <Menu className={'stroke-1 stroke-black'} />
                       </SheetTrigger>
-                      <SheetContent showCloseButton={false} side="left" className="h-full bg-white">
+                      <SheetContent
+                        showCloseButton={false}
+                        side="right"
+                        className="h-full bg-white"
+                      >
                         <SheetClose className="absolute top-4 right-4 text-black hover:text-gray-700">
                           <X />
                         </SheetClose>

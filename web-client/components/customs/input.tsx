@@ -10,6 +10,7 @@ interface IInputProps extends React.ComponentProps<'input'> {
   onFocus?: () => void;
   onBlur?: () => void;
   icon?: React.ReactNode;
+  endIcon?: React.ReactNode;
   name?: string;
   label?: string;
   id?: string;
@@ -26,6 +27,7 @@ function Input({
   errorText,
   required,
   icon,
+  endIcon,
   className,
   name,
   inputSize = 'lg',
@@ -69,16 +71,16 @@ function Input({
         <div
           className={cn(
             'flex items-center relative rounded-xl border border-input bg-background transition-all duration-300 group',
-            'focus-within:border-purple-300 focus-within:shadow-lg',
+            'focus-within:border-purple-300',
             isInvalid && 'border-red-500',
+            className,
           )}
         >
           {icon && (
             <div
               className={cn(
-                'px-3 h-10 border-input border-r group-focus-within:border-r-purple-300 grid place-items-center transition-all duration-300',
+                'px-3 h-10 grid place-items-center transition-all duration-300',
                 inputSize === 'lg' && 'h-11',
-                isInvalid && 'border-red-500',
               )}
             >
               {icon}
@@ -88,16 +90,20 @@ function Input({
             type={typeInput}
             data-slot="input"
             className={cn(
-              'rounded-xl p-2.5 bg-background border text-foreground focus:outline-none focus:border-purple-300 transition-all duration-300',
-              'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+              'rounded-xl h-full p-2.5 bg-background border text-foreground focus:outline-none focus:border-purple-300 transition-all duration-300',
+              'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
               'focus-visible:transform focus-visible:placeholder:translate-x-0.5 not-focus-visible:placeholder:-translate-x-0.5 focus-visible:placeholder:transition-transform focus-visible:placeholder:duration-150 not-focus-visible:placeholder:duration-150',
-              'focus-visible:shadow-lg placeholder:pl-1 text-foreground mt-0! dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
+              'placeholder:pl-1 text-foreground mt-0! dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
               !!validate && isEmpty && 'border-red-500',
               (typeInput === 'password' || prevType === 'password') && 'pr-11',
               className,
-              icon &&
+              (icon || endIcon) &&
                 'border-none shadow-none bg-transparent! focus-visible:ring-0 focus-visible:shadow-none py-0',
+              icon && 'pl-1!',
+              endIcon && 'pr-1!',
+              icon && !endIcon && 'pr-3!',
+              !icon && endIcon && 'pl-3!',
               isInvalid && 'border-red-500',
               inputSize === 'lg' && 'p-3',
             )}
@@ -108,6 +114,16 @@ function Input({
             id={id}
             {...props}
           />
+          {endIcon && (
+            <div
+              className={cn(
+                'px-3 h-10 grid place-items-center transition-all duration-300',
+                inputSize === 'lg' && 'h-11',
+              )}
+            >
+              {endIcon}
+            </div>
+          )}
 
           {isEmpty && !!validate && (
             <CircleAlert
