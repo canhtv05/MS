@@ -33,7 +33,11 @@ export const useAuthMutation = () => {
         await queryClient.fetchQuery({
           queryKey: ['/auth/me'],
           queryFn: async () => {
-            const profileRes = await api.get(API_ENDPOINTS.AUTH.ME);
+            const profileRes = await api.get(API_ENDPOINTS.AUTH.ME, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
             setUser(profileRes.data.data);
             return profileRes.data;
           },

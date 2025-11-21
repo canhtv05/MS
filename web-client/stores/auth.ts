@@ -5,7 +5,7 @@ interface AuthState {
   token: string | null;
   user: IUserProfileDTO | undefined;
   setToken: (token: string | null) => void;
-  setUser: (user: IUserProfileDTO) => void;
+  setUser: (user: IUserProfileDTO | undefined) => void;
   logout: () => void;
 }
 
