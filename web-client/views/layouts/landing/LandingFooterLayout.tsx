@@ -215,7 +215,7 @@ const LandingFooterLayout = () => {
               <a
                 href="#"
                 aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +236,7 @@ const LandingFooterLayout = () => {
               <a
                 href="#"
                 aria-label="Twitter"
-                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +257,7 @@ const LandingFooterLayout = () => {
               <a
                 href="#"
                 aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -280,7 +280,7 @@ const LandingFooterLayout = () => {
               <a
                 href="#"
                 aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -303,7 +303,7 @@ const LandingFooterLayout = () => {
               <a
                 href="#"
                 aria-label="YouTube"
-                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center group"
+                className="w-10 h-10 rounded-full bg-gray-600 hover:linear-1 hover:border-none hover:shadow-purple-400! hover:shadow-lg flex items-center justify-center transition-all duration-300 group"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

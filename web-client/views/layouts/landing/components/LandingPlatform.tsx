@@ -48,7 +48,12 @@ const LandingFeatureCard = ({
   return (
     <Card className="h-full bg-transparent! border-none shadow-none group py-2">
       <CardContent className="h-full">
-        <div className={cn('inline-block p-2 rounded-md group-hover:scale-110', className)}>
+        <div
+          className={cn(
+            'inline-block transition-all p-2 rounded-md group-hover:scale-110 duration-300',
+            className,
+          )}
+        >
           <Icon className="text-white" />
         </div>
         <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
