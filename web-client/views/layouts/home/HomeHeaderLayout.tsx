@@ -317,7 +317,7 @@ const HomeHeaderLayout = () => {
   } = useHomeHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
   const { t, ready } = useTranslation('layout');
-  const token = useAuthStore(s => s.token);
+  const user = useAuthStore(s => s.user);
   if (!ready) return null;
 
   const itemClassName =
@@ -380,7 +380,7 @@ const HomeHeaderLayout = () => {
               </SheetContent>
             </Sheet>
           </div>
-          {token ? (
+          {user?.username ? (
             <div className="flex gap-5 items-center justify-center">
               <div className="flex items-center justify-center gap-2">
                 <AnimateIcon animateOnHover>
@@ -403,7 +403,7 @@ const HomeHeaderLayout = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <div className="relative">
-                    <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
+                    <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
                   </div>
                 </DropdownMenuTrigger>
 
@@ -415,14 +415,14 @@ const HomeHeaderLayout = () => {
                 >
                   <DropdownMenuLabel className="flex gap-2">
                     <div className="relative inline-block">
-                      <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
+                      <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        John doe
+                        {user?.username}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-                        @johndoe
+                        {user?.username}
                       </span>
                     </div>
                   </DropdownMenuLabel>

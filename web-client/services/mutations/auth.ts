@@ -14,6 +14,7 @@ export const useAuthMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  const setUser = useAuthStore(state => state.setUser);
   const setToken = useAuthStore(state => state.setToken);
 
   const loginMutation = useMutation({
@@ -24,11 +25,20 @@ export const useAuthMutation = () => {
     onMutate: () => {
       toast.loading('login...', { id: 'login-toast' });
     },
-    onSuccess: res => {
+    onSuccess: async res => {
       if (res.data) {
         const { token } = res.data;
         setToken(token);
-        queryClient.invalidateQueries({ queryKey: ['users'] });
+        queryClient.invalidateQueries({ queryKey: ['/auth/me'] });
+        await queryClient.fetchQuery({
+          queryKey: ['/auth/me'],
+          queryFn: async () => {
+            const profileRes = await api.get(API_ENDPOINTS.AUTH.ME);
+            setUser(profileRes.data.data);
+            return profileRes.data;
+          },
+        });
+
         toast.success('logined', { id: 'login-toast' });
         router.push('/home');
       }
