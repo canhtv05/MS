@@ -13,15 +13,18 @@ public class CustomUserDetails extends User implements UserPrincipal {
 
     private final String role;
     private final boolean isGlobal;
+    private final String channel;
 
     public CustomUserDetails(String username,
             String password,
             Collection<? extends GrantedAuthority> authorities,
             String roles,
-            boolean isGlobal) {
+            boolean isGlobal,
+            String channel) {
         super(username, password, authorities);
         this.role = roles;
         this.isGlobal = isGlobal;
+        this.channel = channel;
     }
 
     @Override
@@ -37,5 +40,10 @@ public class CustomUserDetails extends User implements UserPrincipal {
     @Override
     public String getRole() {
         return this.role;
+    }
+
+    @Override
+    public String getChannel() {
+        return this.channel;
     }
 }

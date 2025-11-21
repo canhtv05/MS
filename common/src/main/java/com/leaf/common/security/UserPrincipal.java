@@ -6,4 +6,6 @@ public interface UserPrincipal {
     boolean isGlobal();
 
     String getRole();
+
+    String getChannel();
 }

@@ -176,7 +176,8 @@ public class TokenProvider {
                 "",
                 authorities,
                 claims.get(ROLES_KEY, String.class),
-                claims.get(USER_GLOBAL_KEY, Boolean.class));
+                claims.get(USER_GLOBAL_KEY, Boolean.class),
+                claims.get(CHANNEL_KEY, String.class));
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
@@ -211,16 +212,6 @@ public class TokenProvider {
             user.setRefreshToken(null);
             userRepository.save(user);
             redisService.deleteToken(claims.getSubject(), channel);
-        }
-    }
-
-    public String getChannelFromToken(String token) {
-        try {
-            Claims claims = jwtParser.parseClaimsJws(token).getBody();
-            return claims.get(CHANNEL_KEY, String.class);
-        } catch (Exception e) {
-            log.error("Error extracting channel from token: {}", e.getMessage());
-            return null;
         }
     }
 

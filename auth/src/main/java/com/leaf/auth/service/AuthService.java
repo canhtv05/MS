@@ -1,5 +1,6 @@
 package com.leaf.auth.service;
 
+import com.leaf.auth.context.AuthenticationContext;
 import com.leaf.auth.domain.Permission;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
@@ -12,7 +13,6 @@ import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
-import com.leaf.auth.util.AuthUtil;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
 import com.leaf.common.dto.UserSessionDTO;
@@ -58,20 +58,25 @@ public class AuthService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
     RedisCacheManager redisCacheManager;
-    AuthUtil authUtil;
 
     @Transactional
     public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword());
+        try {
+            AuthenticationContext.setChannel(loginRequest.getChannel());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword());
 
-        return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
-                loginRequest.getChannel());
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
+                    loginRequest.getChannel());
+        } finally {
+            AuthenticationContext.clear();
+        }
     }
 
     @Transactional
@@ -115,11 +120,7 @@ public class AuthService {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
 
-        String token = authUtil.resolveToken(request);
-        String channel = token != null ? tokenProvider.getChannelFromToken(token) : null;
-
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
-
         UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
         if (cached != null) {
             return cached;
@@ -133,12 +134,10 @@ public class AuthService {
         this.mappingUserPermissions(userProfileDTO, user.get());
 
         // Get user session from Redis using channel
-        if (channel != null) {
-            UserSessionDTO userSessionDTO = redisService.getUser(username, channel);
-            if (userSessionDTO != null) {
-                userProfileDTO.setChannel(userSessionDTO.getChannel());
-                userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
-            }
+        UserSessionDTO userSessionDTO = redisService.getUser(username, AuthenticationContext.getChannel());
+        if (userSessionDTO != null) {
+            userProfileDTO.setChannel(userSessionDTO.getChannel());
+            userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
         }
 
         if (Objects.nonNull(cache)) {

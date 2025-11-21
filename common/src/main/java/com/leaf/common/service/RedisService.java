@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.utils.AESUtils;
+import com.leaf.common.utils.JsonF;
 
 import java.util.Objects;
 
@@ -67,6 +68,8 @@ public class RedisService {
 
     public UserSessionDTO getUser(String username, String channel) {
         String userKey = this.getKeyUser(username, channel);
-        return (UserSessionDTO) redisTemplate.opsForValue().get(userKey);
+        UserSessionDTO userSessionDTO = JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
+                UserSessionDTO.class);
+        return userSessionDTO;
     }
 }

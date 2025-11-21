@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.leaf.auth.context.AuthenticationContext;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.exception.CustomAuthenticationException;
@@ -27,6 +28,8 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final AuthService authService;
 
+    private static final String DEFAULT_CHANNEL = "WEB"; // Default channel nếu không có
+
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(final String login) {
@@ -43,6 +46,10 @@ public class DomainUserDetailsService implements UserDetailsService {
             throw new CustomAuthenticationException("User " + lowercaseLogin + " was not activated",
                     HttpStatus.UNAUTHORIZED);
         }
+
+        // Lấy channel từ AuthenticationContext (ThreadLocal)
+        String channel = getChannelFromContext();
+
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user);
         authService.mappingUserPermissions(userProfileDTO, user);
         List<GrantedAuthority> grantedAuthorities = userProfileDTO.getPermissions().stream()
@@ -52,7 +59,22 @@ public class DomainUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 grantedAuthorities,
                 String.join(",", userProfileDTO.getRoles()),
-                user.getIsGlobal());
+                user.getIsGlobal(),
+                channel);
+    }
+
+    /**
+     * Lấy channel từ AuthenticationContext (ThreadLocal)
+     * Channel được set từ controller trước khi authenticate
+     */
+    private String getChannelFromContext() {
+        String channel = AuthenticationContext.getChannel();
+
+        if (channel != null && !channel.isEmpty()) {
+            return channel.toUpperCase();
+        }
+
+        return DEFAULT_CHANNEL;
     }
 
 }
