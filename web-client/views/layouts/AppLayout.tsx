@@ -5,7 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
-import AuthRoute from '@/guard/AuthRoute';
+import RouteGuard from '@/guard/RouteGuard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,7 +24,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <ThemeProvider attribute="class" defaultTheme="dark" enableColorScheme>
         <QueryClientProvider client={queryClient}>
           <ApiInterceptor>
-            <AuthRoute>{children}</AuthRoute>
+            <RouteGuard>{children}</RouteGuard>
           </ApiInterceptor>
         </QueryClientProvider>
         <Toaster richColors position="bottom-right" theme="light" />

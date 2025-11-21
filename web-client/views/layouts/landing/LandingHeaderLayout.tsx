@@ -186,9 +186,11 @@ const HeaderLG = () => {
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ type: 'spring', stiffness: 350, damping: 30, mass: 0.7 }}
                   >
-                    <Button variant="default" className="shadow-lg">
-                      <span className="font-medium">Sign up</span>
-                    </Button>
+                    <Link href={'/sign-up'}>
+                      <Button variant="default" className="shadow-lg">
+                        <span className="font-medium">Sign up</span>
+                      </Button>
+                    </Link>
                   </motion.div>
                 )}
               </AnimatePresence>
