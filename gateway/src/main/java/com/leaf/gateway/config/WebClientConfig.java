@@ -26,7 +26,7 @@ public class WebClientConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowedMethods(List.of("*"));
-    configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+    configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://web-client-azure.vercel.app"));
     configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
