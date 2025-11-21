@@ -1,1 +1,7 @@
-{}
+{
+  "string": {
+    "min": "{{field}} must be at least {min} characters",
+    "max": "{{field}} must be at most {max} characters"
+  },
+  "required": "{{field}} is required"
+}

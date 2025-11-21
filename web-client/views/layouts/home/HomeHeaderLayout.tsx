@@ -42,12 +42,17 @@ import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image, { StaticImageData } from 'next/image';
 import useHomeHeaderLayout from './use-home-header-layout';
-import { Loader2 } from 'lucide-react';
+import { EllipsisVertical, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef } from 'react';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
 import { LanguagesIcon } from '@/components/ui/languages';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
+import { useAuthStore } from '@/stores/auth';
+import { Button } from '@/components/animate-ui/components/buttons/button';
+import Link from 'next/link';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -61,11 +66,20 @@ interface IHomeHeaderSearch {
   isShowSearch: boolean;
   isLoading: boolean;
   debouncedValue: string;
+  t: TFunction<'translate', undefined>;
 }
 
 interface IHomeHeaderSearchCard {
   value: string;
   index: number;
+}
+
+interface IHomeHeaderDropdown {
+  theme?: string;
+  setTheme: Dispatch<SetStateAction<string>>;
+  handleChangeLang: (lang: 'vi' | 'en') => void;
+  currentLang: 'vi' | 'en';
+  itemClassName: string;
 }
 
 const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
@@ -105,7 +119,13 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
   );
 };
 
-const HomeHeaderSearchMD = ({ value, onChange, isLoading, debouncedValue }: IHomeHeaderSearch) => {
+const HomeHeaderSearchMD = ({
+  value,
+  onChange,
+  isLoading,
+  debouncedValue,
+  t,
+}: IHomeHeaderSearch) => {
   return (
     <div className={cn(isLoading ? 'overflow-hidden' : 'overflow-y-auto')}>
       <div className="p-2 flex sticky top-0 z-50 bg-background items-center justify-start gap-3">
@@ -125,7 +145,7 @@ const HomeHeaderSearchMD = ({ value, onChange, isLoading, debouncedValue }: IHom
               inputSize="md"
               id="search-md"
               className="rounded-full w-full"
-              placeholder="Search posts, hashtags, people, ..."
+              placeholder={t('header.search_placeholder')}
               value={value}
               onChange={onChange}
             />
@@ -144,6 +164,109 @@ const HomeHeaderSearchMD = ({ value, onChange, isLoading, debouncedValue }: IHom
         </AnimatePresence>
       ) : null}
     </div>
+  );
+};
+
+const HomeHeaderDropdown = ({
+  theme,
+  setTheme,
+  handleChangeLang,
+  currentLang,
+  itemClassName,
+}: IHomeHeaderDropdown) => {
+  const { t, ready } = useTranslation('layout');
+  if (!ready) return null;
+
+  return (
+    <>
+      <AnimateIcon animateOnHover>
+        <DropdownMenuItem onSelect={e => e.preventDefault()}>
+          <div
+            className="flex items-center justify-between gap-2 w-full"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center gap-2">
+              {theme === 'dark' ? <SunMoon /> : <SunIcon />}
+              <span>{t('header.dark_mode')}</span>
+            </div>
+            <Switch
+              className={cn(
+                'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border transition-colors',
+                'data-[state=checked]:bg-emerald-500 bg-foreground',
+              )}
+              checked={theme === 'dark'}
+              onTap={() => {
+                setTheme(theme === 'dark' ? 'light' : 'dark');
+              }}
+            >
+              <SwitchThumb
+                className={cn(
+                  'h-full aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
+                  'group-data-[state=checked]:translate-x-4',
+                )}
+                pressedAnimation={{ width: 22 }}
+              />
+            </Switch>
+          </div>
+        </DropdownMenuItem>
+      </AnimateIcon>
+      <DropdownMenuSub>
+        <DropdownMenuHighlightItem className="group cursor-pointer">
+          <DropdownMenuSubTrigger className={`${itemClassName} cursor-pointer`}>
+            <LanguagesIcon className="group-hover:animate-icon text-foreground/70" />
+            <span>{t('header.language')}</span>
+          </DropdownMenuSubTrigger>
+        </DropdownMenuHighlightItem>
+        <DropdownMenuSubContent className="overflow-hidden min-w-32 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
+          <DropdownMenuHighlightItem>
+            <DropdownMenuItem
+              onClick={e => {
+                e.preventDefault();
+                handleChangeLang('vi');
+              }}
+              className={`${itemClassName} flex items-center gap-2`}
+            >
+              <span
+                className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : ''}`}
+              ></span>
+              <div className="size-5 relative">
+                <Image
+                  sizes="(max-width: 768px) 24px, 32px"
+                  src={images.vn}
+                  alt="VN"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span>{t('header.vn')}</span>
+            </DropdownMenuItem>
+          </DropdownMenuHighlightItem>
+          <DropdownMenuHighlightItem>
+            <DropdownMenuItem
+              onClick={e => {
+                e.preventDefault();
+                handleChangeLang('en');
+              }}
+              className={itemClassName}
+            >
+              <span
+                className={`relative inline-flex size-2 rounded-full ${currentLang === 'en' ? 'bg-emerald-400' : ''}`}
+              ></span>
+              <div className="size-5 relative">
+                <Image
+                  sizes="(max-width: 768px) 24px, 32px"
+                  src={images.us}
+                  alt="VN"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span>{t('header.us')}</span>
+            </DropdownMenuItem>
+          </DropdownMenuHighlightItem>
+        </DropdownMenuSubContent>
+      </DropdownMenuSub>
+    </>
   );
 };
 
@@ -193,6 +316,9 @@ const HomeHeaderLayout = () => {
     currentLang,
   } = useHomeHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
+  const { t, ready } = useTranslation('layout');
+  const token = useAuthStore(s => s.token);
+  if (!ready) return null;
 
   const itemClassName =
     'relative z-[1] focus:text-accent-foreground select-none flex items-center gap-2 px-2 py-1.5 text-sm outline-none [&_svg]:size-4 [&_span]:data-[slot=dropdown-menu-shortcut]:text-xs [&_span]:data-[slot=dropdown-menu-shortcut]:ml-auto';
@@ -209,7 +335,7 @@ const HomeHeaderLayout = () => {
                   id="search"
                   className="rounded-full"
                   icon={<Search className={'size-5 p-0.5'} />}
-                  placeholder="Search posts, hashtags, people, ..."
+                  placeholder={t('header.search_placeholder')}
                   onChange={handleSearch}
                   value={search}
                   onFocus={() => setIsShowSearch(true)}
@@ -218,6 +344,7 @@ const HomeHeaderLayout = () => {
               </AnimateIcon>
               {isShowSearch && debouncedSearch.trim() !== '' && !isLoading ? (
                 <HomeHeaderSearchLG
+                  t={t}
                   ref={ref}
                   value={search}
                   onChange={handleSearch}
@@ -242,6 +369,7 @@ const HomeHeaderLayout = () => {
                   <SheetDescription></SheetDescription>
                 </SheetHeader>
                 <HomeHeaderSearchMD
+                  t={t}
                   isLoading={isLoading}
                   isShowSearch={isShowSearch}
                   value={search}
@@ -252,167 +380,125 @@ const HomeHeaderLayout = () => {
               </SheetContent>
             </Sheet>
           </div>
-          <div className="flex gap-5 items-center justify-center">
-            <div className="flex items-center justify-center gap-2">
-              <AnimateIcon animateOnHover>
-                <IconButton
-                  className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
-                  variant={'accent'}
-                >
-                  <Bell />
-                </IconButton>
-              </AnimateIcon>
-              <AnimateIcon animateOnHover>
-                <IconButton
-                  className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
-                  variant={'accent'}
-                >
-                  <MessageCircleMore />
-                </IconButton>
-              </AnimateIcon>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="relative">
-                  <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
-                </div>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent side="bottom" align="end" sideOffset={10} className="w-[220px]">
-                <DropdownMenuLabel className="flex gap-2">
-                  <div className="relative inline-block">
+          {token ? (
+            <div className="flex gap-5 items-center justify-center">
+              <div className="flex items-center justify-center gap-2">
+                <AnimateIcon animateOnHover>
+                  <IconButton
+                    className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
+                    variant={'accent'}
+                  >
+                    <Bell />
+                  </IconButton>
+                </AnimateIcon>
+                <AnimateIcon animateOnHover>
+                  <IconButton
+                    className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
+                    variant={'accent'}
+                  >
+                    <MessageCircleMore />
+                  </IconButton>
+                </AnimateIcon>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="relative">
                     <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
                   </div>
-                  <div className="flex flex-col">
-                    <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                      John doe
-                    </h3>
-                    <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-                      @johndoe
-                    </span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  side="bottom"
+                  align="end"
+                  sideOffset={10}
+                  className="w-[220px]"
+                >
+                  <DropdownMenuLabel className="flex gap-2">
+                    <div className="relative inline-block">
+                      <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
+                        John doe
+                      </h3>
+                      <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
+                        @johndoe
+                      </span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <AnimateIcon animateOnHover>
+                      <DropdownMenuItem>
+                        <div className="flex items-center justify-center gap-2">
+                          <UserRound />
+                          <span>{t('header.view_profile')}</span>
+                        </div>
+                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </AnimateIcon>
+                    <AnimateIcon animateOnHover>
+                      <DropdownMenuItem>
+                        <div className="flex items-center justify-center gap-2">
+                          <Settings />
+                          <span>{t('header.settings')}</span>
+                        </div>
+                      </DropdownMenuItem>
+                    </AnimateIcon>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <HomeHeaderDropdown
+                    currentLang={currentLang}
+                    handleChangeLang={handleChangeLang}
+                    theme={theme}
+                    setTheme={setTheme}
+                    itemClassName={itemClassName}
+                  />
+                  <DropdownMenuSeparator />
                   <AnimateIcon animateOnHover>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push('/sign-in')}>
                       <div className="flex items-center justify-center gap-2">
-                        <UserRound />
-                        <span>View profile</span>
+                        <LogOut />
+                        <span>{t('header.logout')}</span>
                       </div>
-                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                      <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </AnimateIcon>
-                  <AnimateIcon animateOnHover>
-                    <DropdownMenuItem>
-                      <div className="flex items-center justify-center gap-2">
-                        <Settings />
-                        <span>Settings</span>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            <div className="flex gap-5 items-center justify-center">
+              <div className="flex items-center justify-center gap-5">
+                <Link href="/sign-in">
+                  <Button className="h-9 px-4">{t('auth:sign_in.sign_in_button')}</Button>
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
+                    <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
+                      <div className="relative transparent!">
+                        <EllipsisVertical className="size-6 p-0.5" />
                       </div>
-                    </DropdownMenuItem>
-                  </AnimateIcon>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <AnimateIcon animateOnHover>
-                  <DropdownMenuItem onSelect={e => e.preventDefault()}>
-                    <div
-                      className="flex items-center justify-between gap-2 w-full"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <div className="flex items-center justify-center gap-2">
-                        {theme === 'dark' ? <SunMoon /> : <SunIcon />}
-                        <span>Dark mode</span>
-                      </div>
-                      <Switch
-                        className={cn(
-                          'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border transition-colors',
-                          'data-[state=checked]:bg-emerald-500 bg-foreground',
-                        )}
-                        checked={theme === 'dark'}
-                        onTap={() => {
-                          setTheme(theme === 'dark' ? 'light' : 'dark');
-                        }}
-                      >
-                        <SwitchThumb
-                          className={cn(
-                            'h-full aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
-                            'group-data-[state=checked]:translate-x-4',
-                          )}
-                          pressedAnimation={{ width: 22 }}
-                        />
-                      </Switch>
-                    </div>
-                  </DropdownMenuItem>
-                </AnimateIcon>
-                <DropdownMenuSub>
-                  <DropdownMenuHighlightItem className="group cursor-pointer">
-                    <DropdownMenuSubTrigger className={`${itemClassName} cursor-pointer`}>
-                      <LanguagesIcon className="group-hover:animate-icon text-foreground/70" />
-                      <span>Language</span>
-                    </DropdownMenuSubTrigger>
-                  </DropdownMenuHighlightItem>
-                  <DropdownMenuSubContent className="overflow-hidden min-w-32 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
-                    <DropdownMenuHighlightItem>
-                      <DropdownMenuItem
-                        onClick={e => {
-                          e.preventDefault();
-                          handleChangeLang('vi');
-                        }}
-                        className={`${itemClassName} flex items-center gap-2`}
-                      >
-                        <span
-                          className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : ''}`}
-                        ></span>
-                        <div className="size-5 relative">
-                          <Image
-                            sizes="(max-width: 768px) 24px, 32px"
-                            src={images.vn}
-                            alt="VN"
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                        <span>VietNam</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuHighlightItem>
-                    <DropdownMenuHighlightItem>
-                      <DropdownMenuItem
-                        onClick={e => {
-                          e.preventDefault();
-                          handleChangeLang('en');
-                        }}
-                        className={itemClassName}
-                      >
-                        <span
-                          className={`relative inline-flex size-2 rounded-full ${currentLang === 'en' ? 'bg-emerald-400' : ''}`}
-                        ></span>
-                        <div className="size-5 relative">
-                          <Image
-                            sizes="(max-width: 768px) 24px, 32px"
-                            src={images.us}
-                            alt="VN"
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                        <span>US</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuHighlightItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator />
-                <AnimateIcon animateOnHover>
-                  <DropdownMenuItem onClick={() => router.push('/sign-in')}>
-                    <div className="flex items-center justify-center gap-2">
-                      <LogOut />
-                      <span>Logout</span>
-                    </div>
-                    <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </AnimateIcon>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                    </IconButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="bottom"
+                    align="end"
+                    sideOffset={10}
+                    className="w-[220px]"
+                  >
+                    <HomeHeaderDropdown
+                      currentLang={currentLang}
+                      handleChangeLang={handleChangeLang}
+                      theme={theme}
+                      setTheme={setTheme}
+                      itemClassName={itemClassName}
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -10,7 +10,7 @@ interface ICheckBockProps extends CheckboxProps {
 
 const CheckBox = ({ indeterminate, content, ...props }: ICheckBockProps) => {
   return (
-    <Label className="flex items-center gap-x-3">
+    <Label className="flex items-center gap-x-3 cursor-pointer">
       <Checkbox
         {...props}
         indeterminate={indeterminate}

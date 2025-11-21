@@ -5,6 +5,8 @@ import { initReactI18next } from 'react-i18next';
 
 import commonEN from './en/common.json';
 import commonVI from './vi/common.json';
+import layoutEN from './en/layout.json';
+import layoutVI from './vi/layout.json';
 import authEN from './en/auth.json';
 import authVI from './vi/auth.json';
 import validationEN from './en/validation.json';
@@ -13,8 +15,8 @@ import { APP_KEY } from '@/utils/cookieUtils';
 
 // the translations
 const resources = {
-  en: { auth: authEN, validation: validationEN, common: commonEN },
-  vi: { auth: authVI, validation: validationVI, common: commonVI },
+  en: { auth: authEN, validation: validationEN, common: commonEN, layout: layoutEN },
+  vi: { auth: authVI, validation: validationVI, common: commonVI, layout: layoutVI },
 };
 
 let currentLang: 'vi' | 'en' = 'vi';
@@ -45,7 +47,7 @@ if (!i18next.isInitialized) {
     fallbackLng: 'vi',
     debug: false,
     interpolation: { escapeValue: false },
-    ns: ['auth', 'validation', 'common'],
+    ns: ['auth', 'validation', 'common', 'layout'],
     defaultNS: 'common',
     lng: 'vi', // default language SSR
   });

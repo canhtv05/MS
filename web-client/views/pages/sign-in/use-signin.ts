@@ -1,6 +1,6 @@
 'use client';
 
-import { signInSchema } from '@/validators/auth';
+import { signInSchema } from '@/validations/auth';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
