@@ -4,6 +4,9 @@ import { useTheme } from 'next-themes';
 import { usePathname, useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/use-debounce';
 import { useState, useEffect, useTransition } from 'react';
+import useLocalStorage from '@/hooks/use-local-storage';
+import i18next from '@/locale/i18n';
+import i18n from 'i18next';
 
 const useHomeHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
@@ -14,6 +17,8 @@ const useHomeHeaderLayout = () => {
   const debouncedSearch = useDebounce(search, 500);
   const [isShowSearch, setIsShowSearch] = useState(false);
   const [isLoading, startTransition] = useTransition();
+  const { setStorage } = useLocalStorage();
+  const [currentLang, setCurrentLang] = useState(i18n.language as 'vi' | 'en');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -33,6 +38,12 @@ const useHomeHeaderLayout = () => {
     setIsShowSearch(debouncedSearch.trim() !== '');
   }, [debouncedSearch]);
 
+  const handleChangeLang = (lang: 'vi' | 'en') => {
+    setStorage({ language: lang });
+    i18next.changeLanguage(lang);
+    setCurrentLang(lang);
+  };
+
   return {
     theme,
     setTheme,
@@ -44,6 +55,8 @@ const useHomeHeaderLayout = () => {
     setIsShowSearch,
     isLoading,
     debouncedSearch,
+    handleChangeLang,
+    currentLang,
   };
 };
 

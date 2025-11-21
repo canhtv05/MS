@@ -70,19 +70,14 @@ function Input({
         </Label>
         <div
           className={cn(
-            'flex items-center relative rounded-xl border border-input bg-background transition-all duration-300 group',
+            'flex items-center relative rounded-xl border border-input bg-background group',
             'focus-within:border-purple-300',
             isInvalid && 'border-red-500',
             className,
           )}
         >
           {icon && (
-            <div
-              className={cn(
-                'px-3 h-10 grid place-items-center transition-all duration-300',
-                inputSize === 'lg' && 'h-11',
-              )}
-            >
+            <div className={cn('px-3 h-10 grid place-items-center', inputSize === 'lg' && 'h-11')}>
               {icon}
             </div>
           )}
@@ -90,7 +85,7 @@ function Input({
             type={typeInput}
             data-slot="input"
             className={cn(
-              'rounded-xl h-full p-2.5 bg-background border text-foreground focus:outline-none focus:border-purple-300 transition-all duration-300',
+              'rounded-xl h-full p-2.5 bg-background border text-foreground focus:outline-none focus:border-purple-300',
               'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
               'focus-visible:transform focus-visible:placeholder:translate-x-0.5 not-focus-visible:placeholder:-translate-x-0.5 focus-visible:placeholder:transition-transform focus-visible:placeholder:duration-150 not-focus-visible:placeholder:duration-150',
@@ -115,12 +110,7 @@ function Input({
             {...props}
           />
           {endIcon && (
-            <div
-              className={cn(
-                'px-3 h-10 grid place-items-center transition-all duration-300',
-                inputSize === 'lg' && 'h-11',
-              )}
-            >
+            <div className={cn('px-3 h-10 grid place-items-center', inputSize === 'lg' && 'h-11')}>
               {endIcon}
             </div>
           )}

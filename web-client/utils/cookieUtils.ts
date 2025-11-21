@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-export const COOKIE_KEY = 'MY_MICROSERVICE';
+export const APP_KEY = 'MY_MICROSERVICE';
 
 const cookieUtils = {
   setStorage: (objectSet = {}, options = {}) => {
@@ -9,14 +9,14 @@ const cookieUtils = {
 
     const jsonData = JSON.stringify(data);
 
-    Cookies.set(COOKIE_KEY, jsonData, { ...options, secure: true, sameSite: 'Strict' });
+    Cookies.set(APP_KEY, jsonData, { ...options, secure: true, sameSite: 'Strict' });
   },
   getStorage: () => {
-    const data = Cookies.get(COOKIE_KEY);
+    const data = Cookies.get(APP_KEY);
     return data ? JSON.parse(data) : {};
   },
   deleteStorage: () => {
-    Cookies.remove(COOKIE_KEY);
+    Cookies.remove(APP_KEY);
   },
 };
 

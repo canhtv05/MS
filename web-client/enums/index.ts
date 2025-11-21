@@ -7,17 +7,15 @@ export enum Viewport {
 }
 
 export enum Status {
-  UPDATE_SUCCESS = 'status.updateSuccess',
-  UPDATE_FAILED = 'status.updateFailed',
-  ADD_SUCCESS = 'status.addSuccess',
-  ADD_FAILED = 'status.addFailed',
-  REMOVE_SUCCESS = 'status.removeSuccess',
-  REMOVE_FAILED = 'status.removeFailed',
+  UPDATE_SUCCESS = 'status.update_success',
+  UPDATE_FAILED = 'status.update_failed',
+  ADD_SUCCESS = 'status.add_success',
+  ADD_FAILED = 'status.add_failed',
+  REMOVE_SUCCESS = 'status.remove_success',
+  REMOVE_FAILED = 'status.remove_failed',
   ERROR = 'status.error',
-  LOGOUT_FAILED = 'status.logoutFailed',
-  LOGOUT_SUCCESS = 'status.logoutSuccess',
-  REGISTER_SUCCESS = 'status.registerSuccess',
-  ERROR_STATISTICS = 'status.errorStatistics',
-  RESTORE_SUCCESS = 'status.restoreSuccess',
-  RESTORE_FAILED = 'status.restoreFailed',
+  LOGOUT_FAILED = 'status.logout_failed',
+  LOGOUT_SUCCESS = 'status.logout_success',
+  REGISTER_FAILED = 'status.register_failed',
+  REGISTER_SUCCESS = 'status.register_success',
 }

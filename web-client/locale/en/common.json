@@ -1,0 +1,15 @@
+{
+  "status": {
+    "update_success": "Update successful",
+    "update_failed": "Update failed",
+    "add_success": "Added successfully",
+    "add_failed": "Add failed",
+    "remove_success": "Removed successfully",
+    "remove_failed": "Remove failed",
+    "error": "An error occurred",
+    "logout_failed": "Logout failed",
+    "logout_success": "Logout successful",
+    "register_failed": "Registration failed",
+    "register_success": "Registration successful"
+  }
+}

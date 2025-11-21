@@ -57,10 +57,7 @@ const LandingFeatureCard = ({ description, icon, title, className }: LandingFeat
       <div className="p-5 rounded-lg linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
         <div className="h-full border-none shadow-none">
           <div
-            className={cn(
-              'border inline-block p-2 rounded-md group-hover:scale-110 transition-all duration-300',
-              className,
-            )}
+            className={cn('border inline-block p-2 rounded-md group-hover:scale-110', className)}
           >
             {icon}
           </div>

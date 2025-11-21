@@ -2,6 +2,8 @@ import bgLogin from './bg-login.png';
 import fallBackImg from './fallback-img.png';
 import logo from './logo.png';
 import platform from './platform.jpg';
+import vn from './vn.webp';
+import us from './us.webp';
 
 import avt1 from './avatars/avatar1.jpeg';
 import avt2 from './avatars/avatar2.jpg';
@@ -24,6 +26,8 @@ const images = {
   fallBackImg,
   logo,
   platform,
+  vn,
+  us,
   avt1,
   avt2,
   avt3,

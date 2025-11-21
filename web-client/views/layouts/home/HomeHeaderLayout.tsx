@@ -9,6 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import {
@@ -37,12 +40,14 @@ import Ring from '@/components/customs/ring';
 import Logo from '@/components/Logo';
 import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
-import { StaticImageData } from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import useHomeHeaderLayout from './use-home-header-layout';
 import { Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef } from 'react';
+import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
+import { LanguagesIcon } from '@/components/ui/languages';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -184,11 +189,16 @@ const HomeHeaderLayout = () => {
     isLoading,
     debouncedSearch,
     setIsShowSearch,
+    handleChangeLang,
+    currentLang,
   } = useHomeHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
 
+  const itemClassName =
+    'relative z-[1] focus:text-accent-foreground select-none flex items-center gap-2 px-2 py-1.5 text-sm outline-none [&_svg]:size-4 [&_span]:data-[slot=dropdown-menu-shortcut]:text-xs [&_span]:data-[slot=dropdown-menu-shortcut]:ml-auto';
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-foreground/10 transition-colors duration-300 bg-purple-50 dark:bg-purple-900/20 backdrop-blur-md">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-foreground/10 bg-secondary backdrop-blur-md">
       <div className="mx-auto px-4 flex items-center justify-center sm:px-6 lg:px-8">
         <div className="max-w-7xl flex items-center justify-between p-1 w-full">
           <Logo responsive />
@@ -268,12 +278,7 @@ const HomeHeaderLayout = () => {
                 </div>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                side="bottom"
-                align="end"
-                sideOffset={10}
-                className="w-[220px] transition-colors duration-300"
-              >
+              <DropdownMenuContent side="bottom" align="end" sideOffset={10} className="w-[220px]">
                 <DropdownMenuLabel className="flex gap-2">
                   <div className="relative inline-block">
                     <HomeHeaderAvatar src={images.avt1} fallback="John Doe" />
@@ -339,6 +344,62 @@ const HomeHeaderLayout = () => {
                     </div>
                   </DropdownMenuItem>
                 </AnimateIcon>
+                <DropdownMenuSub>
+                  <DropdownMenuHighlightItem className="group cursor-pointer">
+                    <DropdownMenuSubTrigger className={`${itemClassName} cursor-pointer`}>
+                      <LanguagesIcon className="group-hover:animate-icon text-foreground/70" />
+                      <span>Language</span>
+                    </DropdownMenuSubTrigger>
+                  </DropdownMenuHighlightItem>
+                  <DropdownMenuSubContent className="overflow-hidden min-w-32 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
+                    <DropdownMenuHighlightItem>
+                      <DropdownMenuItem
+                        onClick={e => {
+                          e.preventDefault();
+                          handleChangeLang('vi');
+                        }}
+                        className={`${itemClassName} flex items-center gap-2`}
+                      >
+                        <span
+                          className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : ''}`}
+                        ></span>
+                        <div className="size-5 relative">
+                          <Image
+                            sizes="(max-width: 768px) 24px, 32px"
+                            src={images.vn}
+                            alt="VN"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span>VietNam</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuHighlightItem>
+                    <DropdownMenuHighlightItem>
+                      <DropdownMenuItem
+                        onClick={e => {
+                          e.preventDefault();
+                          handleChangeLang('en');
+                        }}
+                        className={itemClassName}
+                      >
+                        <span
+                          className={`relative inline-flex size-2 rounded-full ${currentLang === 'en' ? 'bg-emerald-400' : ''}`}
+                        ></span>
+                        <div className="size-5 relative">
+                          <Image
+                            sizes="(max-width: 768px) 24px, 32px"
+                            src={images.us}
+                            alt="VN"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <span>US</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuHighlightItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <AnimateIcon animateOnHover>
                   <DropdownMenuItem onClick={() => router.push('/sign-in')}>

@@ -1,0 +1,15 @@
+{
+  "status": {
+    "update_success": "Cập nhật thành công",
+    "update_failed": "Cập nhật thất bại",
+    "add_success": "Thêm thành công",
+    "add_failed": "Thêm thất bại",
+    "remove_success": "Xóa thành công",
+    "remove_failed": "Xóa thất bại",
+    "error": "Đã xảy ra lỗi",
+    "logout_failed": "Đăng xuất thất bại",
+    "logout_success": "Đăng xuất thành công",
+    "register_failed": "Đăng ký thất bại",
+    "register_success": "Đăng ký thành công"
+  }
+}

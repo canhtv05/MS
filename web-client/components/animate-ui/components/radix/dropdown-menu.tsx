@@ -92,7 +92,7 @@ function DropdownMenuItem({
 }: DropdownMenuItemProps) {
   return (
     <DropdownMenuHighlightItemPrimitive
-      activeClassName={`${variant === 'destructive' ? 'bg-destructive/10 dark:bg-destructive/20' : ''} transition-colors duration-300`}
+      activeClassName={`${variant === 'destructive' ? 'bg-destructive/10 dark:bg-destructive/20' : ''}`}
       disabled={disabled}
     >
       <DropdownMenuItemPrimitive

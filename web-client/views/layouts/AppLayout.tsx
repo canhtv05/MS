@@ -4,11 +4,12 @@ import ApiInterceptor from '@/services/interceptor';
 import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Toaster } from 'sonner';
+import '@/locale/i18n';
 
 interface AppLayoutProps {
   children: ReactNode;

@@ -1,3 +1,5 @@
+'use client';
+
 import { Checkbox, CheckboxIndicator, CheckboxProps } from '../animate-ui/primitives/base/checkbox';
 import { Label } from './label';
 

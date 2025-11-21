@@ -6,8 +6,11 @@ import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
 import { AtIcon, GoogleIcon, LockIcon, LockOpenIcon, MailIcon, UserIcon } from '@/public/icons';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 
 const SignUpPage = () => {
+  const { t } = useTranslation('auth');
+
   return (
     <div
       id="sing-up-card"
@@ -17,15 +20,15 @@ const SignUpPage = () => {
         <div className="inline-block mb-5">
           <Logo />
         </div>
-        <h1 className="text-2xl font-bold text-foreground mb-2">Join Our Community</h1>
-        <p className="text-foreground text-sm">Create your account and connect with others</p>
+        <h1 className="text-[22px] font-bold text-foreground mb-2">{t('sign_up.title')}</h1>
+        <p className="text-foreground text-sm">{t('sign_up.description')}</p>
       </div>
 
       <form id="sing-up-form" className="space-y-2 section-clickable">
         <div id="fullname-field" className="section-clickable">
           <Input
             id="fullname"
-            label="Full name"
+            label={t('sign_up.full_name')}
             placeholder="John Doe"
             type="text"
             required
@@ -38,7 +41,7 @@ const SignUpPage = () => {
         <div id="username-field" className="section-clickable">
           <Input
             id="username"
-            label="Username"
+            label={t('sign_up.username')}
             placeholder="joindoe"
             type="text"
             required
@@ -50,7 +53,7 @@ const SignUpPage = () => {
         <div id="email-field" className="section-clickable">
           <Input
             id="email"
-            label="Email address"
+            label={t('sign_up.email')}
             placeholder="john@gmail.com"
             type="text"
             required
@@ -62,7 +65,7 @@ const SignUpPage = () => {
         <div id="password-field" className="section-clickable">
           <Input
             id="password"
-            label="Password"
+            label={t('sign_up.password')}
             placeholder="••••••••"
             type="password"
             required
@@ -74,7 +77,7 @@ const SignUpPage = () => {
         <div id="re-password-field" className="section-clickable">
           <Input
             id="re_password"
-            label="Confirm password"
+            label={t('sign_up.confirm_password')}
             placeholder="••••••••"
             type="password"
             required
@@ -85,11 +88,11 @@ const SignUpPage = () => {
         </div>
 
         <Button className="w-full rounded-full mt-2" size={'lg'}>
-          Sign up
+          {t('sign_up.sign_up_button')}
         </Button>
       </form>
 
-      <Divider content="or continue with" />
+      <Divider content={t('sign_up.or_continue_with')} />
 
       <div id="social-sing-up" className="space-y-4 section-clickable">
         <Button
@@ -99,19 +102,19 @@ const SignUpPage = () => {
         >
           <div className="flex items-center gap-2 justify-center">
             <GoogleIcon className="text-red-400" />
-            <p className="text-foreground/80">Continue with Google</p>
+            <p className="text-foreground/80">{t('sign_up.continue_with_google')}</p>
           </div>
         </Button>
       </div>
 
       <div id="signup-link" className="text-center mt-8 section-clickable">
         <p className="text-foreground/70 text-sm">
-          {`Already have an account?`}
+          {t('sign_up.already_have_account')}
           <Link
             href="/sign-in"
             className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium transition-colors"
           >
-            Sign in here
+            {t('sign_up.sign_in_here')}
           </Link>
         </p>
       </div>

@@ -57,7 +57,8 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  /* --secondary: oklch(0.97 0 0); */
+  --secondary: oklch(97.7% 0.014 308.299);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -91,7 +92,8 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  /* --secondary: oklch(0.269 0 0); */
+  --secondary: oklch(37.883% 0.17596 304.235 / 0.2);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -121,7 +123,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-roboto;
+    @apply bg-background text-foreground font-roboto transition-all duration-300;
   }
 
   ::-webkit-scrollbar {
@@ -168,8 +170,7 @@
 
 @utility linear-1 {
   @apply bg-linear-to-r from-purple-500 to-cyan-500 
-        shadow-lg border transition-all duration-300
-        hover:opacity-90 hover:shadow-primary hover:shadow-lg
+        shadow-lg border hover:opacity-90 hover:shadow-primary hover:shadow-lg
       hover:border-white/80;
 }
 
