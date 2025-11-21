@@ -37,8 +37,8 @@ import java.util.Objects;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final CorsFilter corsFilter;
     private final AuthUtil authUtil;
+    private final CorsFilter corsFilter;
 
     public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter,
             ApplicationProperties applicationProperties, AuthUtil authUtil) {
@@ -107,5 +107,4 @@ public class SecurityConfig {
                     accessDeniedException.getMessage()))));
         };
     }
-
 }

@@ -1,18 +1,29 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { FormEvent } from 'react';
+import { signInSchema } from '@/validators/auth';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod/v4';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuthMutation } from '@/services/mutations/auth';
 
 const useSignIn = () => {
-  const router = useRouter();
+  const { loginMutation } = useAuthMutation();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    router.push('/home');
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof signInSchema>) => {
+    loginMutation.mutate(data);
   };
 
   return {
-    handleSubmit,
+    onSubmit,
+    form,
   };
 };
 

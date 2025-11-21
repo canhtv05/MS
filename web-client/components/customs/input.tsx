@@ -149,10 +149,12 @@ function Input({
           )}
         </div>
       </div>
-      {isEmpty && !!validate && (
+      {isEmpty && !!validate && touched && (
         <span className="text-[12px] text-red-500 font-light text-left">Thông tin bắt buộc</span>
       )}
-      <span className="text-[12px] text-red-500 font-light text-left">{errorText}</span>
+      {!touched && (
+        <span className="text-[12px] text-red-500 font-light text-left">{errorText}</span>
+      )}
     </>
   );
 }

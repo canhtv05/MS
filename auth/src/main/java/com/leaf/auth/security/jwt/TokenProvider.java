@@ -104,7 +104,14 @@ public class TokenProvider {
                     .username(userDetails.getUsername())
                     .build();
             messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
-            this.revokeToken(tokenExisting, channel);
+
+            // Revoke old session: delete tokens and clear refresh token
+            // Note: tokenExisting is a hash, not the actual JWT, so we can't parse it
+            User user = userRepository.findByUsername(jwtName)
+                    .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+            user.setRefreshToken(null);
+            userRepository.save(user);
+            redisService.deleteToken(jwtName, channel);
         }
 
         String token = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
@@ -203,15 +210,14 @@ public class TokenProvider {
     }
 
     public void revokeToken(String token, String channel) {
-        Claims claims = jwtParser.parseClaimsJws(token).getBody();
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
-        if (Objects.equals(claims.getSubject(), username)) {
+        if (StringUtils.isNotBlank(username)) {
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
-            redisService.deleteToken(claims.getSubject(), channel);
+            redisService.deleteToken(username, channel);
         }
     }
 

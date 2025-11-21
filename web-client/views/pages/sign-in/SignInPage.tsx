@@ -8,9 +8,10 @@ import Logo from '@/components/Logo';
 import { GoogleIcon, LockIcon, UserIcon } from '@/public/icons';
 import Link from 'next/link';
 import useSignIn from './use-signin';
+import { Controller } from 'react-hook-form';
 
 const SignInPage = () => {
-  const { handleSubmit } = useSignIn();
+  const { onSubmit, form } = useSignIn();
 
   return (
     <div
@@ -25,43 +26,60 @@ const SignInPage = () => {
         <p className="text-foreground text-sm">Sign in to continue your journey</p>
       </div>
 
-      <form onSubmit={handleSubmit} id="sing-in-form" className="space-y-2 section-clickable">
-        <div id="email-field" className="section-clickable">
-          <Input
-            id="username"
-            label="Email or Username"
-            placeholder="Enter your email or username"
-            type="text"
-            required
-            validate
-            inputSize="md"
-            icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
-
-        <div id="password-field" className="space-y-2 section-clickable">
-          <div className="relative">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        id="sing-in-form"
+        className="space-y-2 flex flex-col gap-1 section-clickable"
+      >
+        <Controller
+          name="username"
+          control={form.control}
+          render={({ field, fieldState }) => (
             <Input
+              {...field}
+              id="username"
+              label="Email or Username"
+              placeholder="Enter your email or username"
+              icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+              inputSize="md"
+              errorText={fieldState?.error?.message}
+              validate
+              required
+            />
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
               id="password"
               label="Password"
               placeholder="Enter your password"
               type="password"
-              required
-              validate
-              inputSize="md"
               icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+              inputSize="md"
+              errorText={fieldState?.error?.message}
+              validate
+              required
             />
-          </div>
-        </div>
+          )}
+        />
 
         <div id="options-section" className="flex items-center justify-between py-2">
-          <CheckBox content="Remember me" />
-          <a href="#" className="text-cyan-300 text-sm hover:text-cyan-200 transition-colors">
+          <CheckBox content="Remember me" tabIndex={-1} />
+          <a
+            href="#"
+            className="text-cyan-300 text-sm hover:text-cyan-200 transition-colors"
+            tabIndex={-1}
+          >
             Forgot password?
           </a>
         </div>
 
-        <Button className="w-full rounded-full" size={'lg'}>
+        <Button className="w-full rounded-full" size={'lg'} type="submit">
           Sign in
         </Button>
       </form>

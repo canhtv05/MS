@@ -45,12 +45,6 @@
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-		<!-- Web services -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web-services</artifactId>
-		</dependency>
-
 		<!-- Postgres -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
