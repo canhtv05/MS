@@ -45,7 +45,7 @@ import useHomeHeaderLayout from './use-home-header-layout';
 import { EllipsisVertical, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
-import { Dispatch, forwardRef, SetStateAction, useRef } from 'react';
+import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
 import { LanguagesIcon } from '@/components/ui/languages';
 import { useTranslation } from 'react-i18next';
@@ -53,6 +53,8 @@ import { TFunction } from 'i18next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import Link from 'next/link';
+import { useProfileStore } from '@/stores/profile';
+import Dialog from '@/components/customs/dialog';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -303,7 +305,6 @@ HomeHeaderSearchLG.displayName = 'HomeHeaderSearchLG';
 const HomeHeaderLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
   const {
-    router,
     setTheme,
     theme,
     handleSearch,
@@ -314,10 +315,13 @@ const HomeHeaderLayout = () => {
     setIsShowSearch,
     handleChangeLang,
     currentLang,
+    handleLogout,
   } = useHomeHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
-  const { t, ready } = useTranslation('layout');
+  const { t, ready } = useTranslation(['layout', 'auth']);
+  const [open, setOpen] = useState(false);
   const user = useAuthStore(s => s.user);
+  const userProfile = useProfileStore(s => s.userProfile);
   if (!ready) return null;
 
   const itemClassName =
@@ -419,7 +423,7 @@ const HomeHeaderLayout = () => {
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {user?.username}
+                        {userProfile?.username}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
                         {user?.username}
@@ -456,7 +460,7 @@ const HomeHeaderLayout = () => {
                   />
                   <DropdownMenuSeparator />
                   <AnimateIcon animateOnHover>
-                    <DropdownMenuItem onClick={() => router.push('/sign-in')}>
+                    <DropdownMenuItem onClick={() => setOpen(true)}>
                       <div className="flex items-center justify-center gap-2">
                         <LogOut />
                         <span>{t('header.logout')}</span>
@@ -501,6 +505,13 @@ const HomeHeaderLayout = () => {
           )}
         </div>
       </div>
+      <Dialog
+        open={open}
+        title={t('auth:logout.title')}
+        onClose={() => setOpen(false)}
+        description={t('auth:logout.description')}
+        onAccept={handleLogout}
+      />
     </header>
   );
 };

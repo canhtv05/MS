@@ -2,6 +2,7 @@ import axios from 'axios';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { BASE_URL } from './endpoints';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import cookieUtils from './cookieUtils';
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -20,6 +21,7 @@ export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: str
   } else {
     nextRouter.replace('/sign-in');
   }
+  cookieUtils.deleteStorage();
 };
 
 export const isTokenValid = (token: string): boolean => {

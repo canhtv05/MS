@@ -16,4 +16,5 @@ public class UserProfileCreationReq {
 
     String userId;
     String email;
+    String fullname;
 }

@@ -7,6 +7,8 @@ import { useState, useEffect, useTransition } from 'react';
 import useLocalStorage from '@/hooks/use-local-storage';
 import i18next from '@/locale/i18n';
 import i18n from 'i18next';
+import { useAuthMutation } from '@/services/mutations/auth';
+import cookieUtils from '@/utils/cookieUtils';
 
 const useHomeHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
@@ -14,11 +16,13 @@ const useHomeHeaderLayout = () => {
   const pathname = usePathname();
 
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 500);
   const [isShowSearch, setIsShowSearch] = useState(false);
   const [isLoading, startTransition] = useTransition();
-  const { setStorage } = useLocalStorage();
   const [currentLang, setCurrentLang] = useState(i18n.language as 'vi' | 'en');
+
+  const debouncedSearch = useDebounce(search, 500);
+  const { setStorage } = useLocalStorage();
+  const { logoutMutation } = useAuthMutation();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -44,6 +48,11 @@ const useHomeHeaderLayout = () => {
     setCurrentLang(lang);
   };
 
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    cookieUtils.deleteStorage();
+  };
+
   return {
     theme,
     setTheme,
@@ -57,6 +66,7 @@ const useHomeHeaderLayout = () => {
     debouncedSearch,
     handleChangeLang,
     currentLang,
+    handleLogout,
   };
 };
 

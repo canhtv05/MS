@@ -4,6 +4,7 @@ import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
 import com.leaf.auth.dto.req.LoginRequest;
+import com.leaf.auth.dto.req.LogoutRequest;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
@@ -82,9 +83,9 @@ public class UserJWTController {
     @PostMapping("/p/logout")
     public ResponseEntity<ResponseObject<?>> logout(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-            String channel,
+            @RequestBody LogoutRequest request,
             HttpServletResponse response) {
-        authService.logout(cookieValue, channel, response);
+        authService.logout(cookieValue, request.getChannel(), response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 }

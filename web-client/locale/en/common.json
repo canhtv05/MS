@@ -11,5 +11,9 @@
     "logout_success": "Logout successful",
     "register_failed": "Registration failed",
     "register_success": "Registration successful"
+  },
+  "button": {
+    "accept": "Accept",
+    "close": "Close"
   }
 }

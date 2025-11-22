@@ -136,6 +136,7 @@ const LanguagesIcon = forwardRef<LanguagesIconHandle, LanguagesIconProps>(
           strokeLinecap="round"
           strokeLinejoin="round"
           variants={svgVariants}
+          initial="normal"
           animate={svgControls}
         >
           <motion.path d="m5 8 6 6" variants={pathVariants} custom={3} animate={pathControls} />

@@ -19,3 +19,10 @@ export enum Status {
   REGISTER_FAILED = 'status.register_failed',
   REGISTER_SUCCESS = 'status.register_success',
 }
+
+export enum PrivacyLevel {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
+  CUSTOM = 'CUSTOM',
+  FRIENDS_ONLY = 'FRIENDS_ONLY',
+}

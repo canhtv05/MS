@@ -11,5 +11,9 @@
     "logout_success": "Đăng xuất thành công",
     "register_failed": "Đăng ký thất bại",
     "register_success": "Đăng ký thành công"
+  },
+  "button": {
+    "accept": "Đồng ý",
+    "close": "Đóng"
   }
 }

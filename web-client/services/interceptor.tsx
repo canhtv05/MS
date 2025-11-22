@@ -86,7 +86,7 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
         handleRedirectLogin(router, pathname);
         return Promise.reject(error);
       }
-
+      cookieUtils.deleteStorage();
       return Promise.reject(error);
     },
   );

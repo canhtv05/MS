@@ -33,6 +33,7 @@ public class UserProfileService {
                 .userId(req.getUserId())
                 .email(req.getEmail())
                 .username(req.getUserId())
+                .fullname(req.getFullname())
                 .build();
 
         var UserProfile = userProfileRepository.save(userProfile);

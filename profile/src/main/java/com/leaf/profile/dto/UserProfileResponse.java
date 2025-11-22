@@ -26,6 +26,7 @@ public class UserProfileResponse {
 
     String id;
     String username;
+    String fullname;
     String email;
     LocalDate dob;
     String city;

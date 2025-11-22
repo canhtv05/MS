@@ -218,6 +218,7 @@ public class TokenProvider {
             user.setRefreshToken(null);
             userRepository.save(user);
             redisService.deleteToken(username, channel);
+            redisService.deleteUser(username, channel);
         }
     }
 

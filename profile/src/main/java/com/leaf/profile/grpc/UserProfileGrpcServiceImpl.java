@@ -21,12 +21,14 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
         UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
                 .email(request.getEmail())
                 .userId(request.getUserId())
+                .fullname(request.getFullname())
                 .build();
 
         UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
         UserProfileDTO response = UserProfileDTO.newBuilder()
                 .setEmail(newUserProfile.getEmail())
                 .setUserId(newUserProfile.getUsername())
+                .setFullname(newUserProfile.getFullname())
                 .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
