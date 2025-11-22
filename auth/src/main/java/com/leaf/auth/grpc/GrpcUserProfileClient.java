@@ -2,9 +2,12 @@ package com.leaf.auth.grpc;
 
 import org.springframework.stereotype.Service;
 
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
 
+import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
 @Service
@@ -14,6 +17,13 @@ public class GrpcUserProfileClient {
     private UserProfileGrpcServiceGrpc.UserProfileGrpcServiceBlockingStub stub;
 
     public UserProfileDTO createUserProfile(UserProfileDTO req) {
-        return stub.createUserProfile(req);
+        try {
+            return stub.createUserProfile(req);
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
+                throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
+            }
+        }
+        return null;
     }
 }

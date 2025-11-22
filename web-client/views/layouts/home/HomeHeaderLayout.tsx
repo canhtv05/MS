@@ -423,10 +423,10 @@ const HomeHeaderLayout = () => {
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {userProfile?.username}
+                        {userProfile?.fullname}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-                        {user?.username}
+                        @{user?.username}
                       </span>
                     </div>
                   </DropdownMenuLabel>

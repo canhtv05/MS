@@ -1,5 +1,6 @@
 package com.leaf.profile.grpc;
 
+import com.leaf.common.exception.ApiException;
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
 import com.leaf.profile.dto.UserProfileCreationReq;
@@ -18,20 +19,30 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
 
     @Override
     public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
-        UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
-                .email(request.getEmail())
-                .userId(request.getUserId())
-                .fullname(request.getFullname())
-                .build();
+        try {
+            UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
+                    .email(request.getEmail())
+                    .userId(request.getUserId())
+                    .fullname(request.getFullname())
+                    .build();
 
-        UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
-        UserProfileDTO response = UserProfileDTO.newBuilder()
-                .setEmail(newUserProfile.getEmail())
-                .setUserId(newUserProfile.getUsername())
-                .setFullname(newUserProfile.getFullname())
-                .build();
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+            UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
+            UserProfileDTO response = UserProfileDTO.newBuilder()
+                    .setEmail(newUserProfile.getEmail())
+                    .setUserId(newUserProfile.getUsername())
+                    .setFullname(newUserProfile.getFullname())
+                    .build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        } catch (ApiException e) {
+            responseObserver.onError(io.grpc.Status.ALREADY_EXISTS
+                    .withDescription(e.getMessage())
+                    .asRuntimeException());
+        } catch (Exception e) {
+            responseObserver.onError(io.grpc.Status.ALREADY_EXISTS
+                    .withDescription(e.getMessage())
+                    .asRuntimeException());
+        }
     }
 
 }

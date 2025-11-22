@@ -15,7 +15,7 @@ public enum ErrorMessage {
     REFRESH_TOKEN_INVALID("400", "Refresh token invalid"),
     ACCESS_TOKEN_INVALID("400", "Access token invalid"),
     USERNAME_ALREADY_EXITS("USERNAME_ALREADY_EXITS", "Username already exists"),
-    EMAIL_ALREADY_EXITS("EMAIL_ALREADY_EXITS", "Username already exists"),
+    EMAIL_ALREADY_EXITS("EMAIL_ALREADY_EXITS", "Email already exists"),
     INVALID_PASSWORD("INVALID_PASSWORD", "Invalid password"),
     USER_NOT_FOUND("USER_NOT_FOUND", "User not found"),
     CURRENT_PASSWORD_INVALID("CURRENT_PASSWORD_INVALID", "Current password invalid"),

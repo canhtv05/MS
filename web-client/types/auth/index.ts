@@ -22,3 +22,10 @@ export interface IRefreshTokenResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface IRegisterRequest {
+  email: string;
+  username: string;
+  fullname: string;
+  password: string;
+}

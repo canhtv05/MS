@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
     LOGIN: `${BASE_URL}/auth/me/p/authenticate`,
     LOGOUT: `${BASE_URL}/auth/me/p/logout`,
     ME: `${BASE_URL}/auth/me`,
+    REGISTER: `${BASE_URL}/auth/me/c/create`,
   },
   PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,

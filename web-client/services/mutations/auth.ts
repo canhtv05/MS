@@ -2,7 +2,7 @@
 
 import { useAuthStore } from '@/stores/auth';
 import { useProfileStore } from '@/stores/profile';
-import { ILoginRequest, ILoginResponse } from '@/types/auth';
+import { ILoginRequest, ILoginResponse, IRegisterRequest } from '@/types/auth';
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
@@ -91,8 +91,25 @@ export const useAuthMutation = () => {
     },
   });
 
+  const registerMutation = useMutation({
+    mutationKey: ['/auth/me/c/create'],
+    mutationFn: async (payload: IRegisterRequest): Promise<IResponseObject<void>> =>
+      await api.post(API_ENDPOINTS.AUTH.REGISTER, payload),
+    onError: error => handleMutationError(error, 'register-toast'),
+    onMutate: () => {
+      toast.loading(t('sign_up.loading'), { id: 'register-toast' });
+    },
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ['auth', 'me'] });
+      queryClient.removeQueries({ queryKey: ['profile', 'me'] });
+      toast.success(t('sign_up.register_success'), { id: 'register-toast' });
+      router.push('/sign-in');
+    },
+  });
+
   return {
     loginMutation,
     logoutMutation,
+    registerMutation,
   };
 };

@@ -7,8 +7,11 @@ import Logo from '@/components/Logo';
 import { AtIcon, GoogleIcon, LockIcon, LockOpenIcon, MailIcon, UserIcon } from '@/public/icons';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import useSignUp from './use-signup';
+import { Controller } from 'react-hook-form';
 
 const SignUpPage = () => {
+  const { onSubmit, form } = useSignUp();
   const { t } = useTranslation('auth');
 
   return (
@@ -24,68 +27,106 @@ const SignUpPage = () => {
         <p className="text-foreground text-sm">{t('sign_up.description')}</p>
       </div>
 
-      <form id="sing-up-form" className="space-y-2 section-clickable">
-        <div id="fullname-field" className="section-clickable">
-          <Input
-            id="fullname"
-            label={t('sign_up.full_name')}
-            placeholder="John Doe"
-            type="text"
-            required
-            validate
-            inputSize="md"
-            icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
-
-        <div id="username-field" className="section-clickable">
-          <Input
-            id="username"
-            label={t('sign_up.username')}
-            placeholder="joindoe"
-            type="text"
-            required
-            validate
-            inputSize="md"
-            icon={<AtIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
-        <div id="email-field" className="section-clickable">
-          <Input
-            id="email"
-            label={t('sign_up.email')}
-            placeholder="john@gmail.com"
-            type="text"
-            required
-            validate
-            inputSize="md"
-            icon={<MailIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
-        <div id="password-field" className="section-clickable">
-          <Input
-            id="password"
-            label={t('sign_up.password')}
-            placeholder="••••••••"
-            type="password"
-            required
-            validate
-            inputSize="md"
-            icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
-        <div id="re-password-field" className="section-clickable">
-          <Input
-            id="re_password"
-            label={t('sign_up.confirm_password')}
-            placeholder="••••••••"
-            type="password"
-            required
-            validate
-            inputSize="md"
-            icon={<LockOpenIcon className="size-5 p-0.5 text-foreground/70" />}
-          />
-        </div>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        id="sing-up-form"
+        className="space-y-2 flex flex-col gap-1 section-clickable"
+      >
+        <Controller
+          name="fullname"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              id="fullname"
+              label={t('sign_up.full_name')}
+              placeholder="John Doe"
+              type="text"
+              required
+              validate
+              inputSize="md"
+              errorText={fieldState?.error?.message}
+              icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+            />
+          )}
+        />
+        <Controller
+          name="username"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              id="username"
+              label={t('sign_up.username')}
+              placeholder="johndoe_123"
+              type="text"
+              required
+              validate
+              inputSize="md"
+              errorText={fieldState.error?.message}
+              icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+              value={field.value}
+              onChange={e => {
+                const raw = e.target.value;
+                const sanitized = raw.replace(/[^a-zA-Z0-9_]/g, '');
+                field.onChange(sanitized);
+              }}
+            />
+          )}
+        />
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              id="email"
+              label={t('sign_up.email')}
+              placeholder="john@gmail.com"
+              type="text"
+              required
+              validate
+              inputSize="md"
+              icon={<MailIcon className="size-5 p-0.5 text-foreground/70" />}
+              errorText={fieldState?.error?.message}
+            />
+          )}
+        />
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              id="password"
+              label={t('sign_up.password')}
+              placeholder="••••••••"
+              type="password"
+              required
+              validate
+              inputSize="md"
+              icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+              errorText={fieldState?.error?.message}
+            />
+          )}
+        />
+        <Controller
+          name="confirmPassword"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              id="confirmPassword"
+              label={t('sign_up.confirm_password')}
+              placeholder="••••••••"
+              type="password"
+              required
+              validate
+              inputSize="md"
+              icon={<LockOpenIcon className="size-5 p-0.5 text-foreground/70" />}
+              errorText={fieldState?.error?.message}
+            />
+          )}
+        />
 
         <Button className="w-full rounded-full mt-2" size={'lg'}>
           {t('sign_up.sign_up_button')}

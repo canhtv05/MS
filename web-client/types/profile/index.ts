@@ -3,6 +3,7 @@ import { PrivacyLevel } from '@/enums';
 export interface IUserProfileDTO {
   id: string;
   username: string;
+  fullname: string;
   email: string;
   dob?: string;
   city?: string;
