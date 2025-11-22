@@ -14,15 +14,8 @@ spring:
     ansi:
       enabled: always
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: notification-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: com.example.notificationservice.event
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
 
 eureka:
   client:

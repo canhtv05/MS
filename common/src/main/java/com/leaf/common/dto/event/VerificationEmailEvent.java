@@ -16,5 +16,4 @@ public class VerificationEmailEvent {
 
     String to;
     String username;
-    String verifyUrl;
 }

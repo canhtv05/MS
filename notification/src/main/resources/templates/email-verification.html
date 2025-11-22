@@ -1,0 +1,113 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7f6;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: 1px solid #e0e6e4;
+      }
+      .header {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .content {
+        padding: 40px 30px;
+        line-height: 1.6;
+      }
+      .greeting {
+        font-size: 18px;
+        color: #2e7d32;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .message {
+        margin-bottom: 30px;
+        color: #555;
+      }
+      .btn-container {
+        text-align: center;
+        margin: 30px 0;
+      }
+      .btn {
+        display: inline-block;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+      }
+      .btn:hover {
+        background-color: #43a047;
+      }
+      .footer {
+        background-color: #f9fbfb;
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #888;
+        border-top: 1px solid #eee;
+      }
+      .leaf-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <span class="leaf-icon">🌿</span>
+        <h1>Welcome to Leaf</h1>
+      </div>
+      <div class="content">
+        <div class="greeting">
+          Xin chào,
+          <span th:text="${username}">User</span>
+          !
+        </div>
+        <p class="message">
+          Cảm ơn bạn đã tham gia cùng chúng tôi. Đơn hàng của bạn đã được ghi nhận và đang được xử
+          lý.
+        </p>
+        <p class="message">Chúng tôi rất vui khi được phục vụ bạn.</p>
+        <div class="btn-container">
+          <a th:href="@{'http://localhost:3000/verify-email?token=' + ${token}}" class="btn">
+            Xác Thực Email
+          </a>
+        </div>
+      </div>
+      <div class="footer">
+        &copy; 2025 Leaf Application. All rights reserved.
+        <br />
+        Sent with 💚 from Nature.
+      </div>
+    </div>
+  </body>
+</html>
