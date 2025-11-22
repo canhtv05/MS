@@ -12,6 +12,9 @@ spring:
   application:
     name: user-profile
 
+  profiles:
+    active: dev
+
   output:
     ansi:
       enabled: always
@@ -31,7 +34,7 @@ spring:
     hibernate:
       ddl-auto: true
     properties:
-      "[hibernate.format_sql]": true
+      '[hibernate.format_sql]': true
 eureka:
   client:
     service-url:

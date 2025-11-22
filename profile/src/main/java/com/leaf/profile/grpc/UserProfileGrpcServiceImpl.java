@@ -34,10 +34,6 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        } catch (ApiException e) {
-            responseObserver.onError(io.grpc.Status.ALREADY_EXISTS
-                    .withDescription(e.getMessage())
-                    .asRuntimeException());
         } catch (Exception e) {
             responseObserver.onError(io.grpc.Status.ALREADY_EXISTS
                     .withDescription(e.getMessage())

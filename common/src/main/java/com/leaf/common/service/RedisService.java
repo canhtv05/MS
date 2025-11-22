@@ -68,8 +68,7 @@ public class RedisService {
 
     public UserSessionDTO getUser(String username, String channel) {
         String userKey = this.getKeyUser(username, channel);
-        UserSessionDTO userSessionDTO = JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
+        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
                 UserSessionDTO.class);
-        return userSessionDTO;
     }
 }

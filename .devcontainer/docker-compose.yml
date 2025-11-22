@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - '${POSTGRES_PORT}:5432'
     volumes:
       - postgres_ms:/var/lib/postgresql
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${REDIS_PORT}:6379"
+      - '${REDIS_PORT}:6379'
     volumes:
       - redis_ms:/data
 
@@ -37,7 +37,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     ports:
-      - "${MONGO_PORT}:27017"
+      - '${MONGO_PORT}:27017'
     volumes:
       - mongo_ms:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
@@ -57,7 +57,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${ME_CONFIG_MONGODB_ADMINPASSWORD}
       ME_CONFIG_MONGODB_SERVER: mongo
     ports:
-      - "${MONGO_EXPRESS_PORT}:8081"
+      - '${MONGO_EXPRESS_PORT}:8081'
     links:
       - mongo
 
@@ -68,8 +68,8 @@ services:
     env_file:
       - .env
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - '7474:7474'
+      - '7687:7687'
     volumes:
       - ./import:/var/lib/neo4j/import
       - ./plugins:/var/lib/neo4j/plugins
@@ -78,14 +78,39 @@ services:
       - NEO4J_dbms_memory_heap_max__size=1G
       - NEO4J_dbms_allow__upgrade=true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7474"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:7474']
       interval: 10s
       timeout: 5s
       retries: 5
     restart: always
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    container_name: zookeeper_ms
+    ports:
+      - '2181:2181'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    container_name: kafka_ms
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_ms:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
 volumes:
   postgres_ms:
   redis_ms:
   mongo_ms:
   neo4j_ms:
+  zookeeper_ms:
+  kafka_ms:

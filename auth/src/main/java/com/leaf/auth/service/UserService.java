@@ -21,6 +21,8 @@ import com.leaf.auth.repository.RoleRepository;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.util.ExcelBuilder;
+import com.leaf.common.constant.EventConstants;
+import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.AuthoritiesConstants;
@@ -45,6 +47,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +70,7 @@ public class UserService {
     private final UserPermissionRepository userPermissionRepository;
     private final GrpcUserProfileClient userProfileClient;
     private final AuthService authService;
+    private final KafkaTemplate<String, VerificationEmailEvent> kafkaTemplate;
 
     public UserDTO findById(Long id) {
         return userRepository.findById(id).map(UserDTO::fromEntity)
@@ -80,7 +84,7 @@ public class UserService {
 
         User user = User.builder()
                 .username(request.getUsername())
-                .activated(isAdmin ? request.isActivated() : true)
+                .activated(isAdmin ? request.isActivated() : false)
                 .isGlobal(isAdmin ? request.getIsGlobal() : false)
                 .build();
 
@@ -98,6 +102,10 @@ public class UserService {
                 .setFullname(request.getFullname())
                 .build();
         userProfileClient.createUserProfile(userProfileDTO);
+        kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
+                .to(request.getEmail())
+                .username(request.getUsername())
+                .build());
         return UserDTO.fromEntity(res);
     }
 
@@ -130,7 +138,8 @@ public class UserService {
         if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
-        String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        String userLogin = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
         Optional<User> optionalUser = userRepository.findByUsername(userLogin);
         if (optionalUser.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
@@ -148,7 +157,8 @@ public class UserService {
     }
 
     public void updateUserProfile(UserProfileDTO request) {
-        String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        String userLogin = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
         Optional<User> optionalUser = userRepository.findByUsername(userLogin);
         if (optionalUser.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
@@ -234,8 +244,8 @@ public class UserService {
                 new RowHeader("Vai trò", "role", 2));
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
         List<ImportUserDTO> fileData = mapData.getData().stream()
-                .map(item -> ImportUserDTO.fromExcelData(item))
-                .collect(Collectors.toList());
+                .map(ImportUserDTO::fromExcelData)
+                .toList();
         result.getHeaders().addAll(rowHeaders);
         List<String> usernames = fileData.stream()
                 .map(ImportUserDTO::getUsername)
