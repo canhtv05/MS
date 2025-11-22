@@ -15,4 +15,5 @@ public class ChangePasswordReq {
 
     private String currentPassword;
     private String newPassword;
+    private String channel;
 }

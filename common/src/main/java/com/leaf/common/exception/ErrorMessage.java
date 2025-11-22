@@ -19,6 +19,8 @@ public enum ErrorMessage {
     INVALID_PASSWORD("INVALID_PASSWORD", "Invalid password"),
     USER_NOT_FOUND("USER_NOT_FOUND", "User not found"),
     CURRENT_PASSWORD_INVALID("CURRENT_PASSWORD_INVALID", "Current password invalid"),
+    PASSWORD_NEW_CANNOT_BE_SAME_AS_OLD("PASSWORD_NEW_CANNOT_BE_SAME_AS_OLD",
+            "New password cannot be the same as current password"),
     PERMISSION_ALREADY_EXITS("PERMISSION_ALREADY_EXITS", "Permission already exists"),
     PERMISSION_NOT_FOUND("PERMISSION_NOT_FOUND", "Permission not found"),
     ROLE_ALREADY_EXITS("ROLE_ALREADY_EXITS", "Role already exists"),

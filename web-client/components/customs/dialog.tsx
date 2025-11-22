@@ -18,9 +18,10 @@ interface IDialog {
   title: string;
   description: string;
   open: boolean;
+  id?: string;
 }
 
-const Dialog = ({ children, open, onAccept, onClose, title, description }: IDialog) => {
+const Dialog = ({ children, open, onAccept, onClose, title, description, id }: IDialog) => {
   const { t } = useTranslation();
 
   return (
@@ -39,9 +40,9 @@ const Dialog = ({ children, open, onAccept, onClose, title, description }: IDial
             variant={'destructive'}
             onClick={() => {
               onAccept?.();
-              onClose?.();
             }}
             type="submit"
+            form={id}
           >
             {t('button.accept')}
           </Button>

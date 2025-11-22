@@ -2,7 +2,12 @@
 
 import { useAuthStore } from '@/stores/auth';
 import { useProfileStore } from '@/stores/profile';
-import { ILoginRequest, ILoginResponse, IRegisterRequest } from '@/types/auth';
+import {
+  IChangePasswordRequest,
+  ILoginRequest,
+  ILoginResponse,
+  IRegisterRequest,
+} from '@/types/auth';
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
@@ -107,9 +112,34 @@ export const useAuthMutation = () => {
     },
   });
 
+  const changePasswordMutation = useMutation({
+    mutationKey: ['/auth/me/p/change-password'],
+    mutationFn: async (payload: IChangePasswordRequest): Promise<IResponseObject<void>> =>
+      await api.post(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    onError: error => handleMutationError(error, 'change-password-toast'),
+    onMutate: () => {
+      toast.loading(t('auth:change_password.loading'), { id: 'change-password-toast' });
+    },
+    onSuccess: async () => {
+      setUser(undefined);
+      setUserProfile(undefined);
+      queryClient.removeQueries({ queryKey: ['auth', 'me'] });
+      queryClient.removeQueries({ queryKey: ['profile', 'me'] });
+      cookieUtils.deleteStorage();
+      toast.success(t('auth:change_password.change_password_success'), {
+        id: 'change-password-toast',
+      });
+    },
+  });
+
   return {
     loginMutation,
     logoutMutation,
     registerMutation,
+    changePasswordMutation,
   };
 };

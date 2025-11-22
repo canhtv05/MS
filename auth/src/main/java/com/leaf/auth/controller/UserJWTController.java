@@ -69,8 +69,10 @@ public class UserJWTController {
     }
 
     @PostMapping("/p/change-password")
-    public ResponseEntity<ResponseObject<Boolean>> changePassword(@RequestBody ChangePasswordReq req) {
-        userService.changePassword(req);
+    public ResponseEntity<ResponseObject<Boolean>> changePassword(
+            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            @RequestBody ChangePasswordReq req, HttpServletResponse response) {
+        userService.changePassword(cookieValue, req, response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 

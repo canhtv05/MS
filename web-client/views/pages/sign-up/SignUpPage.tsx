@@ -4,7 +4,7 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import Divider from '@/components/customs/divider';
 import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
-import { AtIcon, GoogleIcon, LockIcon, LockOpenIcon, MailIcon, UserIcon } from '@/public/icons';
+import { GoogleIcon, LockIcon, LockOpenIcon, MailIcon, UserIcon } from '@/public/icons';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import useSignUp from './use-signup';

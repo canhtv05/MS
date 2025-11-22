@@ -29,6 +29,7 @@ import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.DateUtils;
 
 import jakarta.persistence.criteria.Predicate;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
@@ -65,6 +66,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final GrpcUserProfileClient userProfileClient;
+    private final AuthService authService;
 
     public UserDTO findById(Long id) {
         return userRepository.findById(id).map(UserDTO::fromEntity)
@@ -124,7 +126,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void changePassword(ChangePasswordReq req) {
+    public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
         if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
@@ -137,8 +139,12 @@ public class UserService {
         if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPassword())) {
             throw new ApiException(ErrorMessage.CURRENT_PASSWORD_INVALID);
         }
+        if (passwordEncoder.matches(req.getNewPassword(), user.getPassword())) {
+            throw new ApiException(ErrorMessage.PASSWORD_NEW_CANNOT_BE_SAME_AS_OLD);
+        }
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
         userRepository.save(user);
+        authService.logout(cookieValue, req.getChannel(), response);
     }
 
     public void updateUserProfile(UserProfileDTO request) {

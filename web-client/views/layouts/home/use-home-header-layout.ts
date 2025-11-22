@@ -9,6 +9,7 @@ import i18next from '@/locale/i18n';
 import i18n from 'i18next';
 import { useAuthMutation } from '@/services/mutations/auth';
 import cookieUtils from '@/utils/cookieUtils';
+import { IChangePasswordRequest } from '@/types/auth';
 
 const useHomeHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
@@ -22,7 +23,7 @@ const useHomeHeaderLayout = () => {
 
   const debouncedSearch = useDebounce(search, 500);
   const { setStorage } = useLocalStorage();
-  const { logoutMutation } = useAuthMutation();
+  const { logoutMutation, changePasswordMutation } = useAuthMutation();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -53,6 +54,10 @@ const useHomeHeaderLayout = () => {
     cookieUtils.deleteStorage();
   };
 
+  const handleChangePassword = async (data: IChangePasswordRequest) => {
+    await changePasswordMutation.mutateAsync(data);
+  };
+
   return {
     theme,
     setTheme,
@@ -67,6 +72,7 @@ const useHomeHeaderLayout = () => {
     handleChangeLang,
     currentLang,
     handleLogout,
+    handleChangePassword,
   };
 };
 

@@ -29,3 +29,8 @@ export interface IRegisterRequest {
   fullname: string;
   password: string;
 }
+
+export interface IChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}

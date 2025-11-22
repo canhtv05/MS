@@ -55,6 +55,8 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import Link from 'next/link';
 import { useProfileStore } from '@/stores/profile';
 import Dialog from '@/components/customs/dialog';
+import { LockIcon } from '@/components/ui/lock';
+import ChangePassword from '@/partials/change-password/ChangePassword';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -318,8 +320,10 @@ const HomeHeaderLayout = () => {
     handleLogout,
   } = useHomeHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
+
   const { t, ready } = useTranslation(['layout', 'auth']);
-  const [open, setOpen] = useState(false);
+  const [openLogout, setOpenLogout] = useState(false);
+  const [openChangePassword, setOpenChangePassword] = useState(false);
   const user = useAuthStore(s => s.user);
   const userProfile = useProfileStore(s => s.userProfile);
   if (!ready) return null;
@@ -423,7 +427,7 @@ const HomeHeaderLayout = () => {
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {userProfile?.fullname}
+                        {userProfile?.fullname || user?.username}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
                         @{user?.username}
@@ -441,6 +445,13 @@ const HomeHeaderLayout = () => {
                         <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </AnimateIcon>
+                    <DropdownMenuItem
+                      onClick={() => setOpenChangePassword(true)}
+                      className="group cursor-pointer flex items-center justify-start gap-2"
+                    >
+                      <LockIcon className="group-hover:animate-icon text-foreground/70" />
+                      <span>{t('header.change_password')}</span>
+                    </DropdownMenuItem>
                     <AnimateIcon animateOnHover>
                       <DropdownMenuItem>
                         <div className="flex items-center justify-center gap-2">
@@ -460,7 +471,7 @@ const HomeHeaderLayout = () => {
                   />
                   <DropdownMenuSeparator />
                   <AnimateIcon animateOnHover>
-                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                    <DropdownMenuItem onClick={() => setOpenLogout(true)}>
                       <div className="flex items-center justify-center gap-2">
                         <LogOut />
                         <span>{t('header.logout')}</span>
@@ -506,12 +517,21 @@ const HomeHeaderLayout = () => {
         </div>
       </div>
       <Dialog
-        open={open}
+        open={openLogout}
         title={t('auth:logout.title')}
-        onClose={() => setOpen(false)}
+        onClose={() => setOpenLogout(false)}
         description={t('auth:logout.description')}
         onAccept={handleLogout}
       />
+      <Dialog
+        open={openChangePassword}
+        title={t('auth:change_password.title')}
+        onClose={() => setOpenChangePassword(false)}
+        description={t('auth:change_password.description')}
+        id="change-password-form"
+      >
+        <ChangePassword onSuccess={() => setOpenChangePassword(false)} />
+      </Dialog>
     </header>
   );
 };
