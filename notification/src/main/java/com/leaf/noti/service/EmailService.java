@@ -1,7 +1,6 @@
 package com.leaf.noti.service;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,6 +14,7 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.service.RedisService;
 import com.leaf.noti.config.EmailProperties;
+import com.leaf.noti.util.TokenUtil;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -31,8 +31,8 @@ public class EmailService {
     SpringTemplateEngine templateEngine;
     RedisService redisService;
     EmailProperties emailProperties;
+    TokenUtil tokenUtil;
 
-    @SuppressWarnings("null")
     public void sendVerificationEmail(@NonNull VerificationEmailEvent event) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -42,7 +42,7 @@ public class EmailService {
             helper.setTo(Objects.requireNonNull(event.getTo()));
             helper.setSubject("🔐 Xác thực tài khoản của bạn");
 
-            String token = UUID.randomUUID().toString();
+            String token = tokenUtil.generateToken(event);
             redisService.saveVerificationToken(token, event.getUsername());
             Context context = new Context();
             context.setVariable("username", event.getUsername());

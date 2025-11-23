@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.VerificationEmailEvent;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +20,10 @@ public class VerifyEmailService {
 
   @KafkaListener(topics = EventConstants.verificationEmailTopic, groupId = "notification-group", containerFactory = "verificationEmailEventListenerFactory")
   public void listen(VerificationEmailEvent event) {
-    log.info("📨 Nhận được yêu cầu gửi email xác thực cho: {}", event.getUsername());
-
     try {
       emailService.sendVerificationEmail(event);
-      log.info("✅ Xử lý email xác thực thành công cho: {}", event.getUsername());
     } catch (Exception e) {
-      log.error("❌ Lỗi khi xử lý email xác thực cho {}: {}", event.getUsername(), e.getMessage(), e);
+      throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR, e.getMessage());
     }
   }
 }

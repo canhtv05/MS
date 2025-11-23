@@ -3,6 +3,9 @@ logging:
     root: INFO
 
 spring:
+  app:
+    secret-key: ${BASE_64_SECRET}
+
   mail:
     host: smtp.gmail.com
     port: 587

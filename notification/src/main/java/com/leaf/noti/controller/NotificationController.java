@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.service.RedisService;
+import com.leaf.noti.dto.VerifyEmailTokenResponse;
+import com.leaf.noti.service.NotificationService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +16,12 @@ import lombok.experimental.FieldDefaults;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class VerificationController {
+public class NotificationController {
 
-    RedisService redisService;
+    NotificationService notificationService;
 
     @GetMapping("/verify-email")
-    public ResponseEntity<ResponseObject<Boolean>> verifyEmail(@RequestParam String token) {
-        String userId = redisService.validateToken(token);
-        return ResponseEntity.ok(ResponseObject.success(userId != null));
+    public ResponseEntity<ResponseObject<VerifyEmailTokenResponse>> verifyEmail(@RequestParam String token) {
+        return ResponseEntity.ok(ResponseObject.success(notificationService.verifyEmailToken(token)));
     }
 }

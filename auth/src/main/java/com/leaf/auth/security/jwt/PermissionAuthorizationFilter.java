@@ -90,7 +90,8 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return Arrays.asList(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).stream().anyMatch(res -> path.startsWith(res))
+        return Arrays.asList(CommonConstants.PREFIX_AUTH_PUBLIC_ENDPOINTS).stream()
+                .anyMatch(res -> path.startsWith(res))
                 || path.startsWith("/ws");
     }
 

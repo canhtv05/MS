@@ -72,7 +72,7 @@ public class SecurityConfig {
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(CommonConstants.PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(CommonConstants.AUTH_PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
                 .apply(securityConfigurerAdapter());
         return http.build();

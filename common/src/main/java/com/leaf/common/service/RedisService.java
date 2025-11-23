@@ -79,15 +79,15 @@ public class RedisService {
                 UserSessionDTO.class);
     }
 
-    public void saveVerificationToken(String token, String userId) {
-        redisTemplate.opsForValue().set(getKeyVerification(token), userId, Duration.ofMinutes(5));
+    public void saveVerificationToken(String token, String username) {
+        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(5));
     }
 
     public String validateToken(String token) {
-        String userId = (String) redisTemplate.opsForValue().get(getKeyVerification(token));
-        if (StringUtils.hasText(userId)) {
+        String username = (String) redisTemplate.opsForValue().get(getKeyVerification(token));
+        if (StringUtils.hasText(username)) {
             redisTemplate.delete(getKeyVerification(token));
-            return userId;
+            return username;
         }
         return null;
     }

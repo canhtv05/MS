@@ -6,6 +6,7 @@ option java_outer_classname = "AuthProto";
 
 service AuthGrpcService {
   rpc verifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
+  rpc verifyEmailToken (VerifyEmailTokenDTO) returns (VerifyEmailTokenDTO);
 }
 
 message VerifyTokenRequest {
@@ -14,4 +15,10 @@ message VerifyTokenRequest {
 
 message VerifyTokenResponse {
   bool valid = 1;
+}
+
+message VerifyEmailTokenDTO {
+  string username = 1;
+  string fullname = 2;
+  string email = 3;
 }

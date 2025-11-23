@@ -2,6 +2,7 @@ package com.leaf.auth.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.service.AuthService;
+import com.leaf.common.dto.event.VerificationEmailEvent;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 public class DomainUserDetailsService implements UserDetailsService {
 
     private final AuthService authService;
+    private final KafkaTemplate<String, VerificationEmailEvent> kafkaTemplate;
 
     private static final String DEFAULT_CHANNEL = "WEB"; // Default channel nếu không có
 
@@ -43,6 +46,11 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private CustomUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.isActivated()) {
+            VerificationEmailEvent event = VerificationEmailEvent.builder()
+                    .username(lowercaseLogin)
+                    // .email(user.)
+                    .build();
+            kafkaTemplate.send("verification-email", event);
             throw new CustomAuthenticationException("User " + lowercaseLogin + " was not activated",
                     HttpStatus.UNAUTHORIZED);
         }

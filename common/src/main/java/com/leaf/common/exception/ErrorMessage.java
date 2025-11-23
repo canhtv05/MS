@@ -35,7 +35,8 @@ public enum ErrorMessage {
     FRIEND_REQUEST_ALREADY_SENT("FRIEND_REQUEST_ALREADY_SENT", "Yêu cầu kết bạn đã được gửi"),
 
     // notification
-    SEND_EMAIL_ERROR("SEND_EMAIL_ERROR", "Gửi email thất bại");
+    SEND_EMAIL_ERROR("SEND_EMAIL_ERROR", "Gửi email thất bại"),
+    VERIFY_EMAIL_TOKEN_ERROR("VERIFY_EMAIL_TOKEN_ERROR", "Xác minh token thất bại");
 
     private final String code;
     private final String message;

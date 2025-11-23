@@ -25,6 +25,7 @@ import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.security.AuthoritiesConstants;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.common.utils.CommonUtils;
@@ -96,15 +97,11 @@ public class UserService {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
         User res = userRepository.save(user);
-        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                .setEmail(request.getEmail())
-                .setUserId(res.getUsername())
-                .setFullname(request.getFullname())
-                .build();
-        userProfileClient.createUserProfile(userProfileDTO);
         kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
                 .to(request.getEmail())
                 .username(request.getUsername())
+                .email(request.getEmail())
+                .fullname(request.getFullname())
                 .build());
         return UserDTO.fromEntity(res);
     }
@@ -132,6 +129,26 @@ public class UserService {
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setActivated(isActive);
         userRepository.save(user);
+    }
+
+    public VerifyEmailTokenDTO activeUserByUserName(VerifyEmailTokenDTO request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        user.setActivated(true);
+        userRepository.save(user);
+
+        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                .setEmail(request.getEmail())
+                .setUserId(user.getUsername())
+                .setFullname(request.getFullname())
+                .build();
+        userProfileClient.createUserProfile(userProfileDTO);
+
+        return VerifyEmailTokenDTO.newBuilder()
+                .setUsername(user.getUsername())
+                .setFullname(request.getFullname())
+                .setEmail(request.getEmail())
+                .build();
     }
 
     public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {

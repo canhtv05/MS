@@ -1,21 +1,20 @@
-package com.leaf.common.dto.event;
+package com.leaf.noti.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class VerificationEmailEvent {
+public class VerifyEmailTokenResponse {
 
-    String to;
-    String username;
-    String fullname;
-    String email;
+    boolean valid;
 }

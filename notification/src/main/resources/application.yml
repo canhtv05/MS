@@ -3,6 +3,12 @@ server:
     context-path: /notifications
   port: 1004
 
+grpc:
+  client:
+    auth-service:
+      address: static://localhost:9001
+      negotiationType: plaintext
+
 spring:
   application:
     name: notification
