@@ -68,8 +68,8 @@ export const useAuthMutation = () => {
           },
         });
 
-        toast.success(t('sign_in.login_success'), { id: 'login-toast' });
         router.push('/home');
+        toast.success(t('sign_in.login_success'), { id: 'login-toast' });
       }
     },
   });

@@ -206,3 +206,7 @@
     background-position: 0% 50%;
   }
 }
+
+/* @utility glass-effect {
+  @apply bg-background/40 backdrop-blur-xl border border-foreground/10 shadow-2xl;
+} */

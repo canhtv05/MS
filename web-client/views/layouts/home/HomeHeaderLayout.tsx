@@ -519,7 +519,10 @@ const HomeHeaderLayout = () => {
         title={t('auth:logout.title')}
         onClose={() => setOpenLogout(false)}
         description={t('auth:logout.description')}
-        onAccept={handleLogout}
+        onAccept={() => {
+          handleLogout();
+          setOpenLogout(false);
+        }}
       />
       <Dialog
         open={openChangePassword}

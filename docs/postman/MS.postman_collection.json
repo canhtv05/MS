@@ -36,7 +36,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"username\": \"hello8\",\n    \"password\": \"hello8\",\n    \"email\": \"hello8@gmail.com\",\n    \"activated\": true,\n    \"isGlobal\": true\n}",
+                  "raw": "{\n    \"username\": \"helloworld1234\",\n    \"password\": \"helloworld1234\",\n    \"email\": \"canhtvph51036+1234gmail.com\",\n    \"fullname\": \"hello\",\n    \"activated\": true,\n    \"isGlobal\": false\n}\n",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -80,7 +80,7 @@
               "response": []
             },
             {
-              "name": "deactive an user",
+              "name": "lock an user",
               "event": [
                 {
                   "listen": "test",
@@ -101,12 +101,12 @@
                 },
                 "method": "GET",
                 "header": [],
-                "url": "{{baseURL}}/auth/admin/users/u/deactivate/11"
+                "url": "{{baseURL}}/auth/admin/users/u/lock/19"
               },
               "response": []
             },
             {
-              "name": "active an user",
+              "name": "unlock an user",
               "event": [
                 {
                   "listen": "test",
@@ -127,7 +127,7 @@
                 },
                 "method": "GET",
                 "header": [],
-                "url": "{{baseURL}}/auth/admin/users/u/activate/11"
+                "url": "{{baseURL}}/auth/admin/users/u/unlock/19"
               },
               "response": []
             },
@@ -429,7 +429,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"username\": \"hello7\",\n    \"password\": \"hello8\",\n    \"email\": \"hello8@gmail.com\",\n    \"fullname\": \"hello ban 8\"\n}",
+                  "raw": "{\n    \"username\": \"hello114\",\n    \"password\": \"hello114\",\n    \"email\": \"canhtvph51036+14@gmail.com\",\n    \"fullname\": \"hello ban 8\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -597,7 +597,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\",\n    \"channel\": \"web\"\n}",
+              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\",\n    \"channel\": \"WEB\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -612,10 +612,7 @@
           "name": "logout",
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": {
-                "token": "{{access_token}}"
-              }
+              "type": "noauth"
             },
             "method": "POST",
             "header": [],
@@ -625,9 +622,6 @@
         },
         {
           "name": "user profile",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
           "request": {
             "auth": {
               "type": "bearer",
@@ -637,15 +631,6 @@
             },
             "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": "{{baseURL}}/auth/me"
           },
           "response": []
