@@ -32,7 +32,10 @@ public enum ErrorMessage {
 
     // profile
     USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng"),
-    FRIEND_REQUEST_ALREADY_SENT("FRIEND_REQUEST_ALREADY_SENT", "Yêu cầu kết bạn đã được gửi");
+    FRIEND_REQUEST_ALREADY_SENT("FRIEND_REQUEST_ALREADY_SENT", "Yêu cầu kết bạn đã được gửi"),
+
+    // notification
+    SEND_EMAIL_ERROR("SEND_EMAIL_ERROR", "Gửi email thất bại");
 
     private final String code;
     private final String message;

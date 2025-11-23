@@ -37,6 +37,14 @@ spring:
                 - Path=${app.api-prefix}/user-profile/**
               filters:
                 - StripPrefix=2
+
+            - id: notification-service
+              uri: lb://notification
+              predicates:
+                - Path=${app.api-prefix}/notifications/**
+              filters:
+                - StripPrefix=2
+
 grpc:
   client:
     auth-service:
@@ -47,6 +55,9 @@ grpc:
       negotiationType: plaintext
     profile-service:
       address: static://localhost:9003
+      negotiationType: plaintext
+    notification-service:
+      address: static://localhost:9004
       negotiationType: plaintext
 
 eureka:

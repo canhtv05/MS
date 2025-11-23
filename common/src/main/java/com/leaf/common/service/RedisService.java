@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.JsonF;
 
+import java.time.Duration;
 import java.util.Objects;
 
 @Service
@@ -27,6 +29,11 @@ public class RedisService {
     private String getKeyUser(String username, String channel) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:user:%s:%s", envRunning, username, channel);
+    }
+
+    private String getKeyVerification(String token) {
+        String envRunning = environment.getActiveProfiles()[0];
+        return String.format("%s:verification:%s", envRunning, token);
     }
 
     public String getToken(String username, String channel) {
@@ -70,5 +77,18 @@ public class RedisService {
         String userKey = this.getKeyUser(username, channel);
         return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
                 UserSessionDTO.class);
+    }
+
+    public void saveVerificationToken(String token, String userId) {
+        redisTemplate.opsForValue().set(getKeyVerification(token), userId, Duration.ofMinutes(5));
+    }
+
+    public String validateToken(String token) {
+        String userId = (String) redisTemplate.opsForValue().get(getKeyVerification(token));
+        if (StringUtils.hasText(userId)) {
+            redisTemplate.delete(getKeyVerification(token));
+            return userId;
+        }
+        return null;
     }
 }

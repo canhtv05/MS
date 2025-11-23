@@ -11,6 +11,10 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.leaf.common.dto.event.VerificationEmailEvent;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.service.RedisService;
+import com.leaf.noti.config.EmailProperties;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -26,32 +30,33 @@ public class EmailService {
     JavaMailSender javaMailSender;
     SpringTemplateEngine templateEngine;
     RedisService redisService;
+    EmailProperties emailProperties;
 
     @SuppressWarnings("null")
-    public void sendOrderEmail(@NonNull VerificationEmailEvent event) {
+    public void sendVerificationEmail(@NonNull VerificationEmailEvent event) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom("sender@example.com");
+            helper.setFrom(emailProperties.getUsername());
             helper.setTo(Objects.requireNonNull(event.getTo()));
-            helper.setSubject("🛒 Đơn hàng mới #");
+            helper.setSubject("🔐 Xác thực tài khoản của bạn");
 
             String token = UUID.randomUUID().toString();
             redisService.saveVerificationToken(token, event.getUsername());
-
             Context context = new Context();
             context.setVariable("username", event.getUsername());
             context.setVariable("token", token);
+            context.setVariable("verificationUrl",
+                    new StringBuilder(emailProperties.getVerifyUrl()).append("?token=").append(token).toString());
+
             String body = templateEngine.process("email-verification", context);
 
             helper.setText(body, true);
-
             javaMailSender.send(message);
-            System.out.println("📧 Gửi email thành công!");
 
         } catch (MessagingException e) {
-            System.err.println("❌ Gửi email thất bại: " + e.getMessage());
+            throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR, e.getMessage());
         }
     }
 }

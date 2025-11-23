@@ -6,8 +6,9 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${USERNAME}
-    password: ${PASSWORD}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    verify-url: http://localhost:3000/verify-email
     properties:
       mail:
         smtp:
@@ -23,3 +24,4 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       trusted-packages: com.leaf.common.dto.event
+      enable-auto-commit: false

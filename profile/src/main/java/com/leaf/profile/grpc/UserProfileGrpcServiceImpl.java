@@ -1,6 +1,5 @@
 package com.leaf.profile.grpc;
 
-import com.leaf.common.exception.ApiException;
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
 import com.leaf.profile.dto.UserProfileCreationReq;

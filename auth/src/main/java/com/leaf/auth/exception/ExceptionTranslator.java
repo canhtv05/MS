@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.leaf.common.dto.ResponseObject;
+import com.leaf.common.exception.ApiException;
 
 @RestControllerAdvice(name = "ExceptionTranslatorAuth")
 public class ExceptionTranslator {
@@ -20,5 +21,10 @@ public class ExceptionTranslator {
     @ExceptionHandler(JsonParseException.class)
     public <T> ResponseEntity<T> handleParserCookie(JsonParseException ex) {
         return ResponseEntity.badRequest().body(null);
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(ApiException ex) {
+        return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
     }
 }
