@@ -30,7 +30,7 @@ const VerifyEmailPage = () => {
           params: { token },
         });
 
-        if (response.data?.data === true) {
+        if (response.data?.data?.valid === true) {
           setStatus('success');
           setMessage('Email của bạn đã được xác thực thành công!');
         } else {

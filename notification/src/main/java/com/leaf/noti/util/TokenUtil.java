@@ -1,6 +1,5 @@
 package com.leaf.noti.util;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,6 +13,7 @@ import com.leaf.noti.config.NotificationProperites;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +25,7 @@ public class TokenUtil {
     private static final String EMAIL_KEY = "email";
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = notificationProperites.getSecretKey().getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = Decoders.BASE64.decode(notificationProperites.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
