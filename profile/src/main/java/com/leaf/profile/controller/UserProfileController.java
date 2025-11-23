@@ -30,5 +30,4 @@ public class UserProfileController {
     public ResponseEntity<ResponseObject<UserProfileResponse>> getUserProfile() {
         return ResponseEntity.ok(ResponseObject.success(userProfileService.getUserProfile()));
     }
-
 }

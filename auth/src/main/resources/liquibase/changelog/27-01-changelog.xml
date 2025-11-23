@@ -107,10 +107,19 @@
             <column name="username" type="VARCHAR(255)">
                 <constraints nullable="false" unique="true" />
             </column>
+            <column name="full_name" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true" />
+            </column>
             <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false" />
             </column>
             <column name="activated" type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_locked" type="BOOLEAN">
                 <constraints nullable="false" />
             </column>
             <column name="is_global" type="BOOLEAN">
@@ -121,6 +130,8 @@
     </changeSet>
     <changeSet id="1761551503149-8" author="CanhPC">
         <addUniqueConstraint columnNames="username" constraintName="uc_users_username"
+            tableName="users" />
+        <addUniqueConstraint columnNames="email" constraintName="uc_users_email"
             tableName="users" />
     </changeSet>
     <changeSet id="1761551503149-9" author="CanhPC">
@@ -157,6 +168,7 @@
             usePreparedStatements="true">
             <column name="id" type="numeric" />
             <column name="activated" type="boolean" />
+            <column name="is_locked" type="boolean" />
             <column
                 name="created_date" type="timestamp" />
         </loadData>

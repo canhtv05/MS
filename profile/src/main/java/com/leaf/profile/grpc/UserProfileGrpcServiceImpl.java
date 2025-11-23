@@ -20,23 +20,18 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
     public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
         try {
             UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
-                    .email(request.getEmail())
                     .userId(request.getUserId())
-                    .fullname(request.getFullname())
                     .build();
 
             UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
             UserProfileDTO response = UserProfileDTO.newBuilder()
-                    .setEmail(newUserProfile.getEmail())
-                    .setUserId(newUserProfile.getUsername())
-                    .setFullname(newUserProfile.getFullname())
+                    .setUserId(newUserProfile.getUserId())
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(io.grpc.Status.ALREADY_EXISTS
-                    .withDescription(e.getMessage())
-                    .asRuntimeException());
+            responseObserver
+                    .onError(io.grpc.Status.ALREADY_EXISTS.withDescription(e.getMessage()).asRuntimeException());
         }
     }
 

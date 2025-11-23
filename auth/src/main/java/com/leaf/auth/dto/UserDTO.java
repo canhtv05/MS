@@ -60,6 +60,7 @@ public class UserDTO implements Serializable {
         this.activated = entity.isActivated();
         this.isGlobal = entity.getIsGlobal();
         this.password = entity.getPassword();
+        this.email = entity.getEmail();
     }
 
     public static UserDTO fromEntity(User entity) {
@@ -68,6 +69,8 @@ public class UserDTO implements Serializable {
         dto.setRoles(entity.getRoles().stream().map(Role::getCode).collect(Collectors.toList()));
         dto.setRoleLabels(entity.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()));
         dto.setPassword(null);
+        dto.setEmail(entity.getEmail());
+        dto.setFullname(entity.getFullName());
         return dto;
     }
 }

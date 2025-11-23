@@ -83,10 +83,17 @@ public class UserService {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
 
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .activated(isAdmin ? request.isActivated() : false)
                 .isGlobal(isAdmin ? request.getIsGlobal() : false)
+                .isLocked(false)
+                .email(request.getEmail())
+                .fullName(request.getFullname())
                 .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -97,12 +104,18 @@ public class UserService {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
         User res = userRepository.save(user);
-        kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
-                .to(request.getEmail())
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .fullname(request.getFullname())
-                .build());
+        if ((isAdmin && !request.isActivated()) || !isAdmin) {
+            kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
+                    .to(request.getEmail())
+                    .username(request.getUsername())
+                    .email(request.getEmail())
+                    .build());
+        } else if (isAdmin && request.isActivated()) {
+            com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                    .setUserId(user.getUsername())
+                    .build();
+            userProfileClient.createUserProfile(userProfileDTO);
+        }
         return UserDTO.fromEntity(res);
     }
 
@@ -124,10 +137,10 @@ public class UserService {
         return UserDTO.fromEntity(user);
     }
 
-    public void changeActiveUser(Long id, boolean isActive) {
+    public void changeLockUser(Long id, boolean isLocked) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
-        user.setActivated(isActive);
+        user.setLocked(isLocked);
         userRepository.save(user);
     }
 
@@ -138,15 +151,12 @@ public class UserService {
         userRepository.save(user);
 
         com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                .setEmail(request.getEmail())
                 .setUserId(user.getUsername())
-                .setFullname(request.getFullname())
                 .build();
         userProfileClient.createUserProfile(userProfileDTO);
 
         return VerifyEmailTokenDTO.newBuilder()
                 .setUsername(user.getUsername())
-                .setFullname(request.getFullname())
                 .setEmail(request.getEmail())
                 .build();
     }

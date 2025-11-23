@@ -12,15 +12,13 @@ import java.util.Optional;
 @Repository
 public interface UserProfileRepository extends Neo4jRepository<UserProfile, String> {
 
-	Optional<UserProfile> findByUsername(String username);
-
-	boolean existsByEmail(String email);
+	Optional<UserProfile> findByUserId(String userId);
 
 	@Query("""
 			MATCH (u:user_profile {user_id: $userId})
 			RETURN u.id as id
 			""")
-	Optional<String> findByUserId(@Param("userId") String userId);
+	Optional<String> findByUserIdReturnString(@Param("userId") String userId);
 
 	@Query("""
 			MATCH (sender:user_profile {id: $senderId})

@@ -39,7 +39,10 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
 
       return config;
     },
-    () => handleRedirectLogin(router, pathname),
+    () => {
+      handleRedirectLogin(router, pathname);
+      return Promise.reject(new Error('Request failed'));
+    },
   );
 
   api.interceptors.response.use(
@@ -87,6 +90,7 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
         return Promise.reject(error);
       }
       cookieUtils.deleteStorage();
+      handleRedirectLogin(router, pathname);
       return Promise.reject(error);
     },
   );

@@ -18,7 +18,7 @@ const RouteGuard = ({ children }: IRouteGuard) => {
 
   useEffect(() => {
     if (pathname === '/sign-up' || pathname === '/sign-in') {
-      if (user || userProfile) {
+      if (user && userProfile) {
         router.push('/home');
       }
     }

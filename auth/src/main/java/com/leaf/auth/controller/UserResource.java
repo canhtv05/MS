@@ -54,15 +54,15 @@ public class UserResource {
         return ResponseEntity.ok(ResponseObject.success(updatedUser));
     }
 
-    @GetMapping("/users/u/deactivate/{id}")
-    public ResponseEntity<ResponseObject<Boolean>> deactivateTenant(@PathVariable Long id) {
-        userService.changeActiveUser(id, false);
+    @GetMapping("/users/u/lock/{id}")
+    public ResponseEntity<ResponseObject<Boolean>> lockUser(@PathVariable Long id) {
+        userService.changeLockUser(id, true);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
-    @GetMapping("/users/u/activate/{id}")
-    public ResponseEntity<ResponseObject<Boolean>> activateTenant(@PathVariable Long id) {
-        userService.changeActiveUser(id, true);
+    @GetMapping("/users/u/unlock/{id}")
+    public ResponseEntity<ResponseObject<Boolean>> unlockUser(@PathVariable Long id) {
+        userService.changeLockUser(id, false);
         return ResponseEntity.ok(ResponseObject.success());
     }
 

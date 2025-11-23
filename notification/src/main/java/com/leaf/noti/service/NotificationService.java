@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.service.RedisService;
 import com.leaf.noti.dto.VerifyEmailTokenResponse;
-import com.leaf.noti.grpc.GrpcUserProfileClient;
+import com.leaf.noti.grpc.GrpcAuthClient;
 import com.leaf.noti.util.TokenUtil;
 
 import io.micrometer.common.util.StringUtils;
@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationService {
 
-    GrpcUserProfileClient grpcUserProfileClient;
+    GrpcAuthClient grpcAuthClient;
     RedisService redisService;
     TokenUtil tokenUtil;
 
@@ -37,10 +37,9 @@ public class NotificationService {
             VerifyEmailTokenDTO request = VerifyEmailTokenDTO.newBuilder()
                     .setUsername(username)
                     .setEmail(tokenDTO.getEmail())
-                    .setFullname(tokenDTO.getFullname())
                     .build();
 
-            var response = grpcUserProfileClient.verifyEmailToken(request);
+            var response = grpcAuthClient.verifyEmailToken(request);
             return VerifyEmailTokenResponse.builder()
                     .valid(Objects.nonNull(response) && Objects.nonNull(response.getUsername())).build();
         } catch (Exception e) {

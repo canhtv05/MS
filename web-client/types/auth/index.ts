@@ -1,5 +1,7 @@
 export interface IUserProfileDTO {
   username: string;
+  fullname: string;
+  email: string;
   isGlobal: boolean;
   roles: string[];
   roleLabels: string[];

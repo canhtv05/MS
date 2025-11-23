@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class TokenUtil {
 
     private final NotificationProperites notificationProperites;
-    private static final String FULLNAME_KEY = "fullname";
     private static final String EMAIL_KEY = "email";
 
     private SecretKey getSigningKey() {
@@ -34,7 +33,6 @@ public class TokenUtil {
         return Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setSubject(request.getUsername())
-                .claim(FULLNAME_KEY, request.getFullname())
                 .claim(EMAIL_KEY, request.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 phút
@@ -51,7 +49,6 @@ public class TokenUtil {
 
         return VerifyEmailTokenDTO.newBuilder()
                 .setUsername(body.getSubject())
-                .setFullname(body.get(FULLNAME_KEY, String.class))
                 .setEmail(body.get(EMAIL_KEY, String.class))
                 .build();
     }

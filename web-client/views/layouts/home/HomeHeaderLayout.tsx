@@ -53,7 +53,6 @@ import { TFunction } from 'i18next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import Link from 'next/link';
-import { useProfileStore } from '@/stores/profile';
 import Dialog from '@/components/customs/dialog';
 import { LockIcon } from '@/components/ui/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
@@ -325,7 +324,6 @@ const HomeHeaderLayout = () => {
   const [openLogout, setOpenLogout] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const user = useAuthStore(s => s.user);
-  const userProfile = useProfileStore(s => s.userProfile);
   if (!ready) return null;
 
   const itemClassName =
@@ -427,7 +425,7 @@ const HomeHeaderLayout = () => {
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {userProfile?.fullname || user?.username}
+                        {user?.fullname || user?.username}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
                         @{user?.username}

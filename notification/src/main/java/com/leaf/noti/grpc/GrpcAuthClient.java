@@ -11,7 +11,7 @@ import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
 @Service
-public class GrpcUserProfileClient {
+public class GrpcAuthClient {
 
     @GrpcClient("auth-service")
     private AuthGrpcServiceBlockingStub stub;

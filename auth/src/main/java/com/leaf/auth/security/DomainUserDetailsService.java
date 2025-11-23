@@ -45,12 +45,18 @@ public class DomainUserDetailsService implements UserDetailsService {
     }
 
     private CustomUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
+        if (user.isLocked()) {
+            throw new CustomAuthenticationException("User " + lowercaseLogin + " was locked",
+                    HttpStatus.UNAUTHORIZED);
+        }
+
         if (!user.isActivated()) {
             VerificationEmailEvent event = VerificationEmailEvent.builder()
                     .username(lowercaseLogin)
-                    // .email(user.)
+                    .email(user.getEmail())
                     .build();
             kafkaTemplate.send("verification-email", event);
+            // todo
             throw new CustomAuthenticationException("User " + lowercaseLogin + " was not activated",
                     HttpStatus.UNAUTHORIZED);
         }

@@ -25,15 +25,8 @@ public class UserProfileService {
     UserProfileRepository userProfileRepository;
 
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {
-        if (userProfileRepository.existsByEmail(req.getEmail())) {
-            throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
-        }
-
         UserProfile userProfile = UserProfile.builder()
                 .userId(req.getUserId())
-                .email(req.getEmail())
-                .username(req.getUserId())
-                .fullname(req.getFullname())
                 .build();
 
         var UserProfile = userProfileRepository.save(userProfile);
@@ -44,7 +37,7 @@ public class UserProfileService {
         String userId = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
-        String currentUserId = userProfileRepository.findByUserId(userId)
+        String currentUserId = userProfileRepository.findByUserIdReturnString(userId)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
 
         if (userProfileRepository.isSent(currentUserId, request.getReceiverId())) {
@@ -58,7 +51,7 @@ public class UserProfileService {
         String username = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
 
-        UserProfile userProfile = userProfileRepository.findByUsername(username)
+        UserProfile userProfile = userProfileRepository.findByUserId(username)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
 
         return UserProfileResponse.toUserProfileResponse(userProfile);

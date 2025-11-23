@@ -25,9 +25,7 @@ import lombok.experimental.FieldDefaults;
 public class UserProfileResponse {
 
     String id;
-    String username;
-    String fullname;
-    String email;
+    String userId;
     LocalDate dob;
     String city;
     Gender gender;

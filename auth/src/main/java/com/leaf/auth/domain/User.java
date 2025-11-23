@@ -29,6 +29,12 @@ public class User extends AbstractAuditingPostgresEntity {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
     @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
@@ -36,6 +42,10 @@ public class User extends AbstractAuditingPostgresEntity {
     @Column(name = "activated", nullable = false)
     @Builder.Default
     private boolean activated = false;
+
+    @Column(name = "is_locked", nullable = false)
+    @Builder.Default
+    private boolean isLocked = false;
 
     @Column(name = "is_global", nullable = false)
     @Builder.Default

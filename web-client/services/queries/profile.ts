@@ -16,7 +16,11 @@ export const useUserProfileQuery = (enabled: boolean = true) => {
   const query = useQuery({
     queryKey: ['profile', 'me'],
     queryFn: async (): Promise<IResponseObject<IUserProfileDTO>> => {
-      const res = await api.get(API_ENDPOINTS.PROFILE.ME);
+      const res = await api.get(API_ENDPOINTS.PROFILE.ME, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUserProfile(res.data.data);
       return res.data;
     },
