@@ -11,7 +11,7 @@ export const API_ENDPOINTS = {
   PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,
   },
-  NOTIFICATION: {
+  NOTIFICATIONS: {
     VERIFY_EMAIL: `${BASE_URL}/notifications/verify-email`,
   },
 };

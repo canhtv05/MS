@@ -484,7 +484,9 @@ const HomeHeaderLayout = () => {
             <div className="flex gap-5 items-center justify-center">
               <div className="flex items-center justify-center gap-5">
                 <Link href="/sign-in">
-                  <Button className="h-9 px-4">{t('auth:sign_in.sign_in_button')}</Button>
+                  <Button variant={'destructive'} className="h-9 px-4">
+                    {t('auth:sign_in.sign_in_button')}
+                  </Button>
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">

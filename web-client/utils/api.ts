@@ -12,13 +12,22 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-export const PUBLIC_ENDPOINS: string[] = ['/me/p/authenticate', '/me/c/create'];
-export const PREFIX_PUBLIC_ENDPOINTS = PUBLIC_ENDPOINS.map(endpoint => `/auth${endpoint}`);
+export const apiHandler = async <T>(promise: Promise<{ data: T }>) => {
+  return promise
+    .then(res => [undefined, res.data] as const)
+    .catch(err => [err, undefined] as const);
+};
+
+export const AUTH_PUBLIC_ENDPOINS: string[] = ['/me/p/authenticate', '/me/c/create'];
+export const NOTIFICATION_PUBLIC_ENDPOINS: string[] = ['/verify-email'];
+export const PREFIX_PUBLIC_ENDPOINTS = [
+  ...AUTH_PUBLIC_ENDPOINS.map(endpoint => `/auth${endpoint}`),
+  ...NOTIFICATION_PUBLIC_ENDPOINS.map(endpoint => `/notifications${endpoint}`),
+];
 
 export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {
   if (pathname !== '/home' && pathname !== '/sign-in' && pathname !== '/landing') {
     nextRouter.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
-  } else {
     nextRouter.replace('/sign-in');
   }
   cookieUtils.deleteStorage();

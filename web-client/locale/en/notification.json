@@ -1,0 +1,13 @@
+{
+  "verify": {
+    "token_invalid": "The token is invalid or missing.",
+    "verify_error": "An error occurred during verification. Please try again later.",
+    "verify_success": "Your email has been successfully verified!",
+    "verify_failed": "Verification failed. Please try again.",
+    "pending": "Pending verification...",
+    "success": "Verification successful!",
+    "error": "Verification failed.",
+    "go_to_sign_in": "Go to sign in",
+    "go_to_home": "Go to home"
+  }
+}

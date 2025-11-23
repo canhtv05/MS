@@ -1,61 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import Logo from '@/components/Logo';
-import { API_ENDPOINTS } from '@/utils/endpoints';
-import axios from 'axios';
-
-type VerificationStatus = 'pending' | 'success' | 'error';
+import useVerifyEmail from './use-verify-email';
+import { useTranslation } from 'react-i18next';
 
 const VerifyEmailPage = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [status, setStatus] = useState<VerificationStatus>('pending');
-  const [message, setMessage] = useState('');
-  const token = searchParams.get('token');
-
-  useEffect(() => {
-    const verifyEmail = async () => {
-      if (!token) {
-        setStatus('error');
-        setMessage('Token không hợp lệ hoặc không tồn tại');
-        return;
-      }
-
-      try {
-        const response = await axios.get(API_ENDPOINTS.NOTIFICATION.VERIFY_EMAIL, {
-          params: { token },
-        });
-
-        if (response.data?.data?.valid === true) {
-          setStatus('success');
-          setMessage('Email của bạn đã được xác thực thành công!');
-        } else {
-          setStatus('error');
-          setMessage('Xác thực thất bại. Vui lòng thử lại.');
-        }
-      } catch (error: unknown) {
-        setStatus('error');
-        const errorMessage =
-          (error as any)?.response?.data?.message ||
-          'Đã có lỗi xảy ra trong quá trình xác thực. Vui lòng thử lại sau.';
-        setMessage(errorMessage);
-      }
-    };
-
-    verifyEmail();
-  }, [token]);
-
-  const handleGoToLogin = () => {
-    router.push('/sign-in');
-  };
-
-  const handleGoHome = () => {
-    router.push('/home');
-  };
+  const { t } = useTranslation('notification');
+  const { status, message, handleGoToLogin, handleGoHome } = useVerifyEmail();
 
   return (
     <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
@@ -65,21 +17,9 @@ const VerifyEmailPage = () => {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="glass-effect rounded-2xl p-10 w-full max-w-md relative overflow-hidden"
       >
-        {/* Background decoration */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -z-10" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -z-10" />
 
-        {/* Logo */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-          className="flex justify-center mb-8"
-        >
-          <Logo />
-        </motion.div>
-
-        {/* Status Icon */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -146,30 +86,27 @@ const VerifyEmailPage = () => {
           )}
         </motion.div>
 
-        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="text-3xl font-bold text-center text-foreground mb-3"
         >
-          {status === 'pending' && 'Đang xác thực email...'}
-          {status === 'success' && 'Xác thực thành công!'}
-          {status === 'error' && 'Xác thực thất bại'}
+          {status === 'pending' && t('verify.pending')}
+          {status === 'success' && t('verify.success')}
+          {status === 'error' && t('verify.error')}
         </motion.h1>
 
-        {/* Message */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           className="text-center text-foreground/70 mb-8"
         >
-          {status === 'pending' && 'Vui lòng đợi trong giây lát...'}
+          {status === 'pending' && t('verify.pending')}
           {message}
         </motion.p>
 
-        {/* Action buttons */}
         {status !== 'pending' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -184,7 +121,7 @@ const VerifyEmailPage = () => {
                   className="w-full rounded-full bg-linear-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-opacity"
                   size="lg"
                 >
-                  Về trang chủ
+                  {t('verify.go_to_home')}
                 </Button>
                 <Button
                   onClick={handleGoToLogin}
@@ -192,7 +129,7 @@ const VerifyEmailPage = () => {
                   className="w-full rounded-full border border-foreground/20"
                   size="lg"
                 >
-                  Đăng nhập ngay
+                  {t('verify.go_to_sign_in')}
                 </Button>
               </>
             )}
@@ -203,13 +140,12 @@ const VerifyEmailPage = () => {
                 className="w-full rounded-full bg-linear-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-opacity"
                 size="lg"
               >
-                Về trang đăng nhập
+                {t('verify.go_to_sign_in')}
               </Button>
             )}
           </motion.div>
         )}
 
-        {/* Decorative elements */}
         <div className="absolute top-10 right-10 w-2 h-2 bg-cyan-400 rounded-full animate-ping" />
         <div className="absolute bottom-10 left-10 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-1000" />
       </motion.div>

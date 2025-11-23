@@ -11,12 +11,26 @@ import authEN from './en/auth.json';
 import authVI from './vi/auth.json';
 import validationEN from './en/validation.json';
 import validationVI from './vi/validation.json';
+import notificationEN from './en/notification.json';
+import notificationVI from './vi/notification.json';
 import { APP_KEY } from '@/utils/cookieUtils';
 
 // the translations
 const resources = {
-  en: { auth: authEN, validation: validationEN, common: commonEN, layout: layoutEN },
-  vi: { auth: authVI, validation: validationVI, common: commonVI, layout: layoutVI },
+  en: {
+    auth: authEN,
+    validation: validationEN,
+    common: commonEN,
+    layout: layoutEN,
+    notification: notificationEN,
+  },
+  vi: {
+    auth: authVI,
+    validation: validationVI,
+    common: commonVI,
+    layout: layoutVI,
+    notification: notificationVI,
+  },
 };
 
 let currentLang: 'vi' | 'en' = 'vi';

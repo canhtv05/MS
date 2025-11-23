@@ -1,0 +1,13 @@
+{
+  "verify": {
+    "token_invalid": "Token không hợp lệ hoặc không tồn tại",
+    "verify_error": "Đã có lỗi xảy ra trong quá trình xác thực. Vui lòng thử lại sau.",
+    "verify_success": "Email của bạn đã được xác thực thành công!",
+    "verify_failed": "Xác thực thất bại. Vui lòng thử lại.",
+    "pending": "Đang xác thực...",
+    "success": "Xác thực thành công!",
+    "error": "Xác thực thất bại.",
+    "go_to_sign_in": "Về trang đăng nhập",
+    "go_to_home": "Về trang chủ"
+  }
+}
