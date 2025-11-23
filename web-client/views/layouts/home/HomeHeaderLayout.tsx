@@ -56,6 +56,7 @@ import Link from 'next/link';
 import Dialog from '@/components/customs/dialog';
 import { LockIcon } from '@/components/ui/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
+import { itemClassName } from '../auth/AuthLayout';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -230,7 +231,7 @@ const HomeHeaderDropdown = ({
               className={`${itemClassName} flex items-center gap-2`}
             >
               <span
-                className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : ''}`}
+                className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : 'bg-foreground/20'}`}
               ></span>
               <div className="size-5 relative">
                 <Image
@@ -253,7 +254,7 @@ const HomeHeaderDropdown = ({
               className={itemClassName}
             >
               <span
-                className={`relative inline-flex size-2 rounded-full ${currentLang === 'en' ? 'bg-emerald-400' : ''}`}
+                className={`relative inline-flex size-2 rounded-full ${currentLang === 'en' ? 'bg-emerald-400' : 'bg-foreground/20'}`}
               ></span>
               <div className="size-5 relative">
                 <Image
@@ -325,9 +326,6 @@ const HomeHeaderLayout = () => {
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const user = useAuthStore(s => s.user);
   if (!ready) return null;
-
-  const itemClassName =
-    'relative z-[1] focus:text-accent-foreground select-none flex items-center gap-2 px-2 py-1.5 text-sm outline-none [&_svg]:size-4 [&_span]:data-[slot=dropdown-menu-shortcut]:text-xs [&_span]:data-[slot=dropdown-menu-shortcut]:ml-auto';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-foreground/10 bg-secondary backdrop-blur-md">

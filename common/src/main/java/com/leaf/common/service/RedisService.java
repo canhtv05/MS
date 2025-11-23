@@ -33,7 +33,7 @@ public class RedisService {
 
     private String getKeyVerification(String token) {
         String envRunning = environment.getActiveProfiles()[0];
-        return String.format("%s:verification:%s", envRunning, token);
+        return String.format("%s:verify:email:%s", envRunning, token);
     }
 
     public String getToken(String username, String channel) {
@@ -80,7 +80,7 @@ public class RedisService {
     }
 
     public void saveVerificationToken(String token, String username) {
-        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(5));
+        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
     }
 
     public String validateToken(String token) {

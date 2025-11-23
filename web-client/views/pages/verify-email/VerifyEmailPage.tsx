@@ -10,16 +10,13 @@ const VerifyEmailPage = () => {
   const { status, message, handleGoToLogin, handleGoHome } = useVerifyEmail();
 
   return (
-    <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="glass-effect rounded-2xl p-10 w-full max-w-md relative overflow-hidden"
+        className="rounded-2xl p-10 w-full max-w-md relative overflow-hidden"
       >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -z-10" />
-
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -116,17 +113,13 @@ const VerifyEmailPage = () => {
           >
             {status === 'success' && (
               <>
-                <Button
-                  onClick={handleGoHome}
-                  className="w-full rounded-full bg-linear-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-opacity"
-                  size="lg"
-                >
+                <Button onClick={handleGoHome} className="w-full rounded-full" size="lg">
                   {t('verify.go_to_home')}
                 </Button>
                 <Button
                   onClick={handleGoToLogin}
+                  className="w-full rounded-full"
                   variant="accent"
-                  className="w-full rounded-full border border-foreground/20"
                   size="lg"
                 >
                   {t('verify.go_to_sign_in')}
@@ -135,11 +128,7 @@ const VerifyEmailPage = () => {
             )}
 
             {status === 'error' && (
-              <Button
-                onClick={handleGoToLogin}
-                className="w-full rounded-full bg-linear-to-r from-purple-500 to-cyan-500 hover:opacity-90 transition-opacity"
-                size="lg"
-              >
+              <Button onClick={handleGoToLogin} className="w-full rounded-full" size="lg">
                 {t('verify.go_to_sign_in')}
               </Button>
             )}

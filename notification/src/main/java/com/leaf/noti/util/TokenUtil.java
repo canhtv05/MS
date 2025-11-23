@@ -35,7 +35,7 @@ public class TokenUtil {
                 .setSubject(request.getUsername())
                 .claim(EMAIL_KEY, request.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 phút
+                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10 phút
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
