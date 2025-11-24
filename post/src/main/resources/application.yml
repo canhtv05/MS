@@ -1,36 +1,31 @@
 server:
   servlet:
-    context-path: /files
-  port: 1003
+    context-path: /posts
+  port: 1004
 
 grpc:
   server:
-    port: 9003
+    port: 9004
 
 spring:
   application:
-    name: file
+    name: posts
 
   output:
     ansi:
       enabled: always
 
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
 
-# eureka:
-#   client:
-#     service-url:
-#       defaultZone: http://localhost:8761/eureka
-#   instance:
-#     prefer-ip-address: true
-#     ip-address: 127.0.0.1
-#     instance-id: ${spring.application.name}:${server.port}
-
-# management:
-#   endpoints:
-#     web:
-#       exposure:
-#         include: health,info
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

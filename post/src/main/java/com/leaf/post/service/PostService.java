@@ -1,26 +1,34 @@
 package com.leaf.post.service;
 
+import com.leaf.common.exceptions.ApiException;
+import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.security.SecurityUtils;
 import com.leaf.post.dto.req.PostCreationRequest;
 import com.leaf.post.dto.res.PostResponse;
 import com.leaf.post.entity.Post;
 import com.leaf.post.repository.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public PostResponse createPost(PostCreationRequest request) {
+        String username = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
         Post post = new Post();
         post.setContent(request.getContent());
         post.setReactionCounts(0L);
         post.setHashtags(null);
+        post.setUserId(username);
 
         postRepository.save(post);
         return toPostResponse(post);

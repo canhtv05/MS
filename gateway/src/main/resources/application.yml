@@ -37,6 +37,13 @@ spring:
                 - Path=${app.api-prefix}/user-profile/**
               filters:
                 - StripPrefix=2
+
+            - id: post-service
+              uri: lb://post-service
+              predicates:
+                - Path=${app.api-prefix}/posts/**
+              filters:
+                - StripPrefix=2
 grpc:
   client:
     auth-service:
@@ -47,6 +54,9 @@ grpc:
       negotiationType: plaintext
     profile-service:
       address: static://localhost:9003
+      negotiationType: plaintext
+    post-service:
+      address: static://localhost:9004
       negotiationType: plaintext
 
 eureka:
