@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -55,11 +55,10 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0); */
-  --primary: oklch(0.65 0.18 130); /* xanh lá cây sáng */
-  --primary-foreground: oklch(0.985 0 0); /* chữ sáng trên nền primary */
-  --secondary: oklch(0.97 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  /* --secondary: oklch(0.97 0 0); */
+  --secondary: oklch(97.7% 0.014 308.299);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -91,11 +90,10 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  /* --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0); */
-  --primary: oklch(0.48 0.22 130); /* xanh lá cây đậm hơn cho dark mode */
-  --primary-foreground: oklch(0.985 0 0); /* chữ sáng */
-  --secondary: oklch(0.269 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  /* --secondary: oklch(0.269 0 0); */
+  --secondary: oklch(37.883% 0.17596 304.235 / 0.2);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -125,6 +123,90 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-roboto;
+    @apply bg-background text-foreground font-roboto transition-all duration-300;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklch, var(--color-muted-foreground) 80%, transparent);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    visibility: hidden;
+  }
+
+  *:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+  }
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent) transparent;
   }
 }
+
+@utility linear-1 {
+  @apply bg-linear-to-r from-purple-500 to-cyan-500 
+        shadow-lg border hover:opacity-90 hover:shadow-primary hover:shadow-lg
+      hover:border-white/80;
+}
+
+@utility linear-2 {
+  @apply bg-linear-to-r from-purple-50 via-teal-50 to-cyan-50;
+}
+
+@utility linear-3 {
+  @apply bg-linear-to-br from-blue-50 via-teal-50 to-emerald-50;
+}
+
+@utility gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #667eea 50%,
+    #f093fb 75%,
+    #f5576c 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* @utility glass-effect {
+  @apply bg-background/40 backdrop-blur-xl border border-foreground/10 shadow-2xl;
+} */

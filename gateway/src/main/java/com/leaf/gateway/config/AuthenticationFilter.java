@@ -25,7 +25,7 @@ import org.springframework.web.server.ServerWebExchange;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.JsonF;
 import com.leaf.gateway.grpc.GrpcAuthClient;
 

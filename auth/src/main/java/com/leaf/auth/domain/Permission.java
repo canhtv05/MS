@@ -1,6 +1,6 @@
 package com.leaf.auth.domain;
 
-import com.leaf.common.domain.AbstractAuditingEntity;
+import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Entity
 @Table(name = "permissions")
-public class Permission extends AbstractAuditingEntity {
+public class Permission extends AbstractAuditingPostgresEntity {
 
     @Id
     @Column(name = "code", length = 50, unique = true, nullable = false)

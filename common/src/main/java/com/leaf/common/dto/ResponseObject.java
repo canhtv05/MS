@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ErrorMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
 package com.leaf.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.auth.domain.Role;
@@ -25,12 +26,15 @@ import java.util.stream.Collectors;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
+    private String fullname;
+
     @JsonDeserialize(using = LowerCaseTrimDeserializer.class)
     private String username;
 
@@ -56,6 +60,7 @@ public class UserDTO implements Serializable {
         this.activated = entity.isActivated();
         this.isGlobal = entity.getIsGlobal();
         this.password = entity.getPassword();
+        this.email = entity.getEmail();
     }
 
     public static UserDTO fromEntity(User entity) {
@@ -63,6 +68,9 @@ public class UserDTO implements Serializable {
         BeanUtils.copyProperties(entity, dto);
         dto.setRoles(entity.getRoles().stream().map(Role::getCode).collect(Collectors.toList()));
         dto.setRoleLabels(entity.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()));
+        dto.setPassword(null);
+        dto.setEmail(entity.getEmail());
+        dto.setFullname(entity.getFullName());
         return dto;
     }
 }

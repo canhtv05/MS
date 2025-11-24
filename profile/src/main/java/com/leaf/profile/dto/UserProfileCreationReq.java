@@ -15,5 +15,4 @@ import lombok.experimental.FieldDefaults;
 public class UserProfileCreationReq {
 
     String userId;
-    String email;
 }

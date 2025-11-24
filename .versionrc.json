@@ -1,0 +1,8 @@
+{
+  "message": "chore(release): v%s",
+  "types": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "chore", "hidden": true }
+  ]
+}

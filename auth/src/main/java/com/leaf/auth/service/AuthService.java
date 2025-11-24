@@ -1,5 +1,6 @@
 package com.leaf.auth.service;
 
+import com.leaf.auth.context.AuthenticationContext;
 import com.leaf.auth.domain.Permission;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
@@ -8,16 +9,18 @@ import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
-import com.leaf.auth.utils.CookieUtil;
+import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
+import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
+import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
 
 import io.micrometer.common.util.StringUtils;
@@ -47,6 +50,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
+    RedisService redisService;
     CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
@@ -58,22 +62,30 @@ public class AuthService {
     @Transactional
     public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword());
+        try {
+            AuthenticationContext.setChannel(loginRequest.getChannel());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(),
+                    loginRequest.getPassword());
 
-        return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse);
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
+                    loginRequest.getChannel());
+        } finally {
+            AuthenticationContext.clear();
+        }
     }
 
     @Transactional
-    public RefreshTokenResponse refreshToken(String cookieValue, HttpServletRequest httpServletRequest,
+    public RefreshTokenResponse refreshToken(String cookieValue, String channel, HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse);
+        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse,
+                channel);
     }
 
     @Transactional(readOnly = true)
@@ -91,9 +103,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(String cookieValue, HttpServletResponse response) {
+    public void logout(String cookieValue, String channel, HttpServletResponse response) {
         String accessToken = getAccessToken(cookieValue, false);
-        tokenProvider.revokeToken(accessToken);
+        tokenProvider.revokeToken(accessToken, channel);
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();
     }
@@ -104,12 +116,11 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileDTO getProfile() {
+    public UserProfileDTO getProfile(HttpServletRequest request) {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
                 () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
 
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
-
         UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
         if (cached != null) {
             return cached;
@@ -121,6 +132,13 @@ public class AuthService {
         }
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
+
+        // Get user session from Redis using channel
+        UserSessionDTO userSessionDTO = redisService.getUser(username, AuthenticationContext.getChannel());
+        if (userSessionDTO != null) {
+            userProfileDTO.setChannel(userSessionDTO.getChannel());
+            userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
+        }
 
         if (Objects.nonNull(cache)) {
             cache.put(username, userProfileDTO);

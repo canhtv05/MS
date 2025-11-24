@@ -16,4 +16,7 @@ public class LoginRequest {
 
     @NotBlank(message = "Password is not blank")
     String password;
+
+    @NotBlank(message = "Channel is not blank")
+    String channel;
 }

@@ -25,10 +25,14 @@ public class UserProfileDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String username;
+    private String fullName;
+    private String email;
     private Boolean isGlobal;
     private List<String> roles;
     private List<String> roleLabels;
     private List<String> permissions;
+    private String secretKey;
+    private String channel;
 
     public static UserProfileDTO fromEntity(User user) {
         return UserProfileDTO.builder()
@@ -36,6 +40,8 @@ public class UserProfileDTO implements Serializable {
                 .isGlobal(user.getIsGlobal())
                 .roles(user.getRoles().stream().map(Role::getCode).collect(Collectors.toList()))
                 .roleLabels(user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()))
+                .fullName(user.getFullName())
+                .email(user.getEmail())
                 .build();
     }
 }

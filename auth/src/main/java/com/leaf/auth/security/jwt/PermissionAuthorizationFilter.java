@@ -1,7 +1,7 @@
 package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.dto.PermissionSelect;
-import com.leaf.auth.exceptions.CustomAuthenticationException;
+import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomUserDetails;
 import com.leaf.auth.service.PublicApiService;
 import com.leaf.common.constant.CommonConstants;
@@ -90,7 +90,8 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return Arrays.asList(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).stream().anyMatch(res -> path.startsWith(res))
+        return Arrays.asList(CommonConstants.PREFIX_AUTH_PUBLIC_ENDPOINTS).stream()
+                .anyMatch(res -> path.startsWith(res))
                 || path.startsWith("/ws");
     }
 

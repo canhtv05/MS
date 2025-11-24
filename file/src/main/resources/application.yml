@@ -15,6 +15,9 @@ spring:
   application:
     name: file
 
+  profiles:
+    active: dev
+
   output:
     ansi:
       enabled: always

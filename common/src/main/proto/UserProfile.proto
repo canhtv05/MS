@@ -10,5 +10,4 @@ service UserProfileGrpcService {
 
 message UserProfileDTO {
     string userId = 1;
-    string email = 2;
 }

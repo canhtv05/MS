@@ -20,15 +20,19 @@ import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
-import com.leaf.auth.utils.ExcelBuilder;
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.auth.util.ExcelBuilder;
+import com.leaf.common.constant.EventConstants;
+import com.leaf.common.dto.event.VerificationEmailEvent;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.security.AuthoritiesConstants;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.DateUtils;
 
 import jakarta.persistence.criteria.Predicate;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
@@ -44,6 +48,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +70,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserPermissionRepository userPermissionRepository;
     private final GrpcUserProfileClient userProfileClient;
+    private final AuthService authService;
+    private final KafkaTemplate<String, VerificationEmailEvent> kafkaTemplate;
 
     public UserDTO findById(Long id) {
         return userRepository.findById(id).map(UserDTO::fromEntity)
@@ -76,10 +83,17 @@ public class UserService {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
 
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
-                .activated(isAdmin ? request.isActivated() : true)
+                .activated(isAdmin ? request.isActivated() : false)
                 .isGlobal(isAdmin ? request.getIsGlobal() : false)
+                .isLocked(false)
+                .email(request.getEmail())
+                .fullName(request.getFullname())
                 .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -90,11 +104,18 @@ public class UserService {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
         User res = userRepository.save(user);
-        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                .setEmail(request.getEmail())
-                .setUserId(res.getUsername())
-                .build();
-        userProfileClient.createUserProfile(userProfileDTO);
+        if ((isAdmin && !request.isActivated()) || !isAdmin) {
+            kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
+                    .to(request.getEmail())
+                    .username(request.getUsername())
+                    .email(request.getEmail())
+                    .build());
+        } else if (isAdmin && request.isActivated()) {
+            com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                    .setUserId(user.getUsername())
+                    .build();
+            userProfileClient.createUserProfile(userProfileDTO);
+        }
         return UserDTO.fromEntity(res);
     }
 
@@ -116,18 +137,36 @@ public class UserService {
         return UserDTO.fromEntity(user);
     }
 
-    public void changeActiveUser(Long id, boolean isActive) {
+    public void changeLockUser(Long id, boolean isLocked) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
-        user.setActivated(isActive);
+        user.setLocked(isLocked);
         userRepository.save(user);
     }
 
-    public void changePassword(ChangePasswordReq req) {
+    public VerifyEmailTokenDTO activeUserByUserName(VerifyEmailTokenDTO request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        user.setActivated(true);
+        userRepository.save(user);
+
+        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                .setUserId(user.getUsername())
+                .build();
+        userProfileClient.createUserProfile(userProfileDTO);
+
+        return VerifyEmailTokenDTO.newBuilder()
+                .setUsername(user.getUsername())
+                .setEmail(request.getEmail())
+                .build();
+    }
+
+    public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
         if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
-        String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        String userLogin = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
         Optional<User> optionalUser = userRepository.findByUsername(userLogin);
         if (optionalUser.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
@@ -136,12 +175,17 @@ public class UserService {
         if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPassword())) {
             throw new ApiException(ErrorMessage.CURRENT_PASSWORD_INVALID);
         }
+        if (passwordEncoder.matches(req.getNewPassword(), user.getPassword())) {
+            throw new ApiException(ErrorMessage.PASSWORD_NEW_CANNOT_BE_SAME_AS_OLD);
+        }
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
         userRepository.save(user);
+        authService.logout(cookieValue, req.getChannel(), response);
     }
 
     public void updateUserProfile(UserProfileDTO request) {
-        String userLogin = SecurityUtils.getCurrentUserLogin().get();
+        String userLogin = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
         Optional<User> optionalUser = userRepository.findByUsername(userLogin);
         if (optionalUser.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
@@ -227,8 +271,8 @@ public class UserService {
                 new RowHeader("Vai trò", "role", 2));
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
         List<ImportUserDTO> fileData = mapData.getData().stream()
-                .map(item -> ImportUserDTO.fromExcelData(item))
-                .collect(Collectors.toList());
+                .map(ImportUserDTO::fromExcelData)
+                .toList();
         result.getHeaders().addAll(rowHeaders);
         List<String> usernames = fileData.stream()
                 .map(ImportUserDTO::getUsername)

@@ -4,6 +4,7 @@ import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
 import com.leaf.auth.dto.req.LoginRequest;
+import com.leaf.auth.dto.req.LogoutRequest;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
@@ -43,9 +44,11 @@ public class UserJWTController {
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            @RequestBody String channel,
             HttpServletRequest httpServletRequest, HttpServletResponse response) {
         return ResponseEntity
-                .ok(ResponseObject.success(authService.refreshToken(cookieValue, httpServletRequest, response)));
+                .ok(ResponseObject
+                        .success(authService.refreshToken(cookieValue, channel, httpServletRequest, response)));
     }
 
     @PostMapping("/internal/verify")
@@ -61,13 +64,15 @@ public class UserJWTController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile() {
-        return ResponseEntity.ok(ResponseObject.success(authService.getProfile()));
+    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(HttpServletRequest request) {
+        return ResponseEntity.ok(ResponseObject.success(authService.getProfile(request)));
     }
 
     @PostMapping("/p/change-password")
-    public ResponseEntity<ResponseObject<Boolean>> changePassword(@RequestBody ChangePasswordReq req) {
-        userService.changePassword(req);
+    public ResponseEntity<ResponseObject<Boolean>> changePassword(
+            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            @RequestBody ChangePasswordReq req, HttpServletResponse response) {
+        userService.changePassword(cookieValue, req, response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
@@ -80,8 +85,9 @@ public class UserJWTController {
     @PostMapping("/p/logout")
     public ResponseEntity<ResponseObject<?>> logout(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+            @RequestBody LogoutRequest request,
             HttpServletResponse response) {
-        authService.logout(cookieValue, response);
+        authService.logout(cookieValue, request.getChannel(), response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 }

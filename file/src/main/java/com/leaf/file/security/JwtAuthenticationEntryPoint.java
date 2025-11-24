@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.JsonF;
 
 import jakarta.servlet.http.HttpServletRequest;

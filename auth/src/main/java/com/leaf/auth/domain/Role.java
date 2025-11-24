@@ -1,7 +1,7 @@
 package com.leaf.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leaf.common.domain.AbstractAuditingEntity;
+import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -19,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractAuditingEntity {
+public class Role extends AbstractAuditingPostgresEntity {
 
     @Id
     @Column(name = "code", length = 50, unique = true, nullable = false)

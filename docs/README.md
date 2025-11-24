@@ -1,144 +1,164 @@
-# README — Hướng dẫn cài đặt & chạy (MS microservices)
+# MS Microservices System
 
-Tệp này thay thế hướng dẫn trước đó trong `docs/README.md`. Nội dung dưới đây hướng dẫn chi tiết từng bước 1 để bạn có thể cài đặt và khởi hệ thống microservices trên máy Windows (PowerShell). Nội dung cũng giải thích vai trò các service chính trong repo.
+Chào mừng bạn đến với hệ thống MS Microservices! Tài liệu này cung cấp hướng dẫn chi tiết về luồng hoạt động, cách cài đặt và chạy hệ thống, cũng như cách sử dụng Postman để kiểm thử.
 
-## Tổng quan ngắn
+## 1. Luồng Hoạt Động (Activity Flow)
 
-- Registry: `discovery-server` (Eureka) — port mặc định: 8761
-- Authentication service: `auth` — đăng ký với Eureka (defaultZone -> http://localhost:8761/eureka)
-- API Gateway: `gateway` — client của Eureka, route đến các service
-- File service: `file` — xử lý upload/download file
-- Shared models: `common-object` — proto / DTO dùng chung
-- Frontend: `web-client` — Next.js (dev server: http://localhost:3000)
-- Postman collection: `docs/postman/MS.postman_collection.json`
+Biểu đồ dưới đây mô tả luồng tương tác cơ bản giữa Client, Gateway, Auth Service và các thành phần khác trong hệ thống.
 
-## Yêu cầu (Prerequisites)
+```mermaid
+sequenceDiagram
+    autonumber
+    participant User as User/Web Client
+    participant Gateway as API Gateway
+    participant Auth as Auth Service
+    participant Eureka as Discovery Server
+    participant DB as Database (MySQL/Redis)
+    participant File as File Service
 
-- Java 17+ (hoặc phiên bản phù hợp với cấu hình project)
-- Docker & Docker Compose (để khởi DB, repo có folder `.devcontainer` với `docker-compose.yml` và `init-db.sql` / `mongo-init.js`)
-- Git
-- Maven (dùng wrapper: `mvnw` / `mvnw.cmd` có sẵn)
-- Node.js + npm (để chạy `web-client`)
-- Postman (đã có collection trong `docs/postman`)
+    Note over User, File: Khởi động hệ thống
+    Auth->>Eureka: Đăng ký Service (Auth)
+    Gateway->>Eureka: Đăng ký & Fetch Registry
+    File->>Eureka: Đăng ký Service (File)
 
-Ghi chú: hướng dẫn lệnh dưới dùng PowerShell (Windows). Dùng `.
-mvnw.cmd` để gọi Maven wrapper trên Windows.
+    Note over User, File: Luồng Đăng nhập & Xác thực
+    User->>Gateway: POST /api/auth/login (credentials)
+    Gateway->>Auth: Forward request (Load Balanced)
+    Auth->>DB: Kiểm tra thông tin User
+    DB-->>Auth: Kết quả User
+    Auth->>Auth: Tạo JWT Token & Cache Session
+    Auth-->>Gateway: Trả về Token + User Info
+    Gateway-->>User: Response (Token)
 
-## File cấu hình Docker (DB) trong repo
+    Note over User, File: Luồng Request có xác thực
+    User->>Gateway: GET /api/profile/me (Header: Bearer Token)
+    Gateway->>Gateway: Validate Token (qua Auth Filter)
+    Gateway->>Auth: Verify Token (nếu cần check sâu)
+    Auth-->>Gateway: Token Valid
+    Gateway->>Gateway: Route đến Service đích (ví dụ: Profile/Auth)
+    Gateway-->>User: Trả về dữ liệu
+```
 
-Có một cấu hình Docker để khởi DB (được dùng cho development) nằm trong:
+## 2. Yêu cầu hệ thống (Prerequisites)
 
-.devcontainer/docker-compose.yml
+Trước khi bắt đầu, hãy đảm bảo bạn đã cài đặt các công cụ sau:
 
-File `.devcontainer` còn chứa `init-db.sql` và `mongo-init.js` để khởi dữ liệu ban đầu — dùng khi bạn muốn chạy DB theo môi trường dev.
+- **Java 17+**: Để chạy các microservices (Spring Boot).
+- **Maven**: Để build và quản lý dependencies (có thể dùng `mvnw` có sẵn).
+- **Docker & Docker Compose**: Để chạy Database (MySQL, Redis, MongoDB).
+- **Node.js & npm**: Để chạy Web Client (Next.js).
+- **Postman**: Để import collection và test API.
+- **Git**: Để clone source code.
 
-## Thứ tự khởi chạy chính (từng bước 1)
+## 3. Cài đặt & Khởi chạy (Installation & Running)
 
-1. Khởi Discovery Server (Eureka)
+Thực hiện lần lượt các bước sau để khởi động toàn bộ hệ thống.
 
-   Mục đích: cung cấp service registry. Phải khởi trước để các service client (auth, gateway, ...) có thể đăng ký.
+### Bước 1: Khởi chạy Discovery Server (Eureka)
 
-   PowerShell:
+Đây là trái tim của hệ thống, nơi các service khác đăng ký.
 
 ```powershell
-cd d:\MY_PROJECT\MS\discovery-server
+cd discovery-server
 .\mvnw.cmd spring-boot:run
 ```
 
-Sau khi chạy, kiểm tra Eureka UI: http://localhost:8761 (mặc định port cấu hình là 8761).
+_Truy cập Dashboard:_ `http://localhost:8761`
 
-2. Khởi Docker DB (chạy container database cho `auth`)
+### Bước 2: Khởi chạy Database (Docker)
 
-   Nếu bạn muốn dùng docker-compose trong repo (tốt cho local dev):
+Sử dụng Docker Compose để bật MySQL, Redis và các DB cần thiết.
 
 ```powershell
-cd d:\MY_PROJECT\MS\.devcontainer
+cd .devcontainer
 docker-compose up -d
-docker ps
 ```
 
-- Kiểm tra logs nếu cần:
+_Kiểm tra:_ Chạy `docker ps` để đảm bảo các container đã running.
+
+### Bước 3: Khởi chạy Auth Service
+
+Service chịu trách nhiệm xác thực và phân quyền.
 
 ```powershell
-docker-compose logs -f
-```
-
-- Nếu Docker không bật, bật Docker Desktop trước khi chạy.
-
-3. Khởi Auth service
-
-   Khi DB đã sẵn sàng và `discovery-server` đang chạy, khởi `auth`:
-
-```powershell
-cd d:\MY_PROJECT\MS\auth
+cd auth
 .\mvnw.cmd spring-boot:run
 ```
 
-- `auth` đã cấu hình `eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka` (xem `auth/src/main/resources/application.yml`).
-- Kiểm tra trong Eureka UI để thấy service `auth` đăng ký.
+_Lưu ý:_ Đợi vài giây để service đăng ký thành công với Eureka.
 
-4. Khởi Gateway
+### Bước 4: Khởi chạy API Gateway
+
+Cổng vào duy nhất cho mọi request từ client.
 
 ```powershell
-cd d:\MY_PROJECT\MS\gateway
+cd gateway
 .\mvnw.cmd spring-boot:run
 ```
 
-- Gateway là điểm vào (entrypoint) cho client; nó dùng Eureka để discover các service backend.
+### Bước 5: Khởi chạy các Service khác (Tùy chọn)
 
-5. Khởi File service và các service khác
+Ví dụ: File Service.
 
 ```powershell
-cd d:\MY_PROJECT\MS\file
+cd file
 .\mvnw.cmd spring-boot:run
-
-# Hoặc build trước khi chạy (nếu cần):
-.\mvnw.cmd clean package -DskipTests
-java -jar target\*.jar
 ```
 
-- Lặp lại cho các service khác nếu có (ví dụ service mới, hoặc `common-object` nếu có module service thực thi).
+### Bước 6: Khởi chạy Web Client (Frontend)
 
-6. Chạy Frontend (web-client)
+Giao diện người dùng được xây dựng bằng Next.js.
 
 ```powershell
-cd d:\MY_PROJECT\MS\web-client
+cd web-client
 npm install
 npm run dev
 ```
 
-- Giao diện dev mặc định: http://localhost:3000
+_Truy cập Web:_ `http://localhost:3000`
 
-## Kiểm tra nhanh (smoke checks)
+---
 
-- Kiểm tra Eureka UI: http://localhost:8761 — các service đã đăng ký sẽ xuất hiện.
-- Kiểm tra logs console của từng service để biết lỗi khởi động.
-- Sử dụng Postman (collection trong `docs/postman`) để gửi request test, nhớ lấy token (nếu endpoint cần auth).
+## 4. Hướng dẫn Postman (Postman Collection)
 
-## Giải thích ngắn về các service trong repo
+Repo cung cấp sẵn bộ Collection đầy đủ để bạn test API ngay lập tức.
 
-- discovery-server: Spring Boot app chạy Eureka server. Vai trò: service registry cho hệ thống.
-- auth: Service xác thực, quản lý user/role, kết nối DB (migrations/liquibase có trong `auth/src/main/resources/liquibase`). Đăng ký với Eureka (xem `application.yml`).
-- gateway: API Gateway (Spring Cloud / Netflix stack), route request đến các service dựa trên tên service đăng ký trong Eureka.
-- file: Service xử lý upload/download file. Thường kèm config Cloudinary (xem `file/src/main/java/.../config/CloudinaryConfig.java`).
-- common-object: chứa proto (`src/main/proto`) và DTO, enums, utils dùng chung giữa các service.
-- web-client: Frontend (Next.js) giao tiếp tới gateway hoặc trực tiếp tới service tuỳ cấu hình.
+### Vị trí file
 
-## Postman
+- **Collection**: `docs/postman/MS.postman_collection.json`
+- **Environment**: `docs/postman/MS.postman_environment.json`
 
-- Collection: `docs/postman/MS.postman_collection.json`
-- Environment: `docs/postman/MS.postman_environment.json`
+### Cách sử dụng
 
-Hướng dẫn import: Postman > Import > chọn 2 file trên > chọn environment > chạy requests.
+1.  Mở **Postman**.
+2.  Nhấn nút **Import** (góc trên bên trái).
+3.  Kéo thả hoặc chọn 2 file JSON ở đường dẫn trên vào.
+4.  Sau khi import thành công:
+    - Chọn Environment là **MS** (hoặc tên tương tự trong file env) ở góc trên bên phải.
+    - Mở Collection **MS** bên thanh sidebar.
+5.  **Bắt đầu test**:
+    - Chạy request **Login** trước để lấy Token.
+    - Token thường sẽ được tự động lưu vào Environment Variable (nếu script test đã được cấu hình sẵn trong Collection). Nếu không, hãy copy `accessToken` từ response và paste vào biến môi trường `token` hoặc tab **Auth** của các request khác.
 
-## Troubleshooting & Tips
+### Lưu ý khi test
 
-- Nếu service không tự đăng ký Eureka: kiểm tra `spring.application.name`, `server.port` và `eureka.client.serviceUrl.defaultZone` trong `application.yml`.
-- Nếu port trùng: đổi `server.port` trong `application.yml` tương ứng.
-- Dùng `.
-mvnw.cmd spring-boot:run` cho Windows (PowerShell) để đảm bảo wrapper được dùng.
-- Nếu DB không kết nối: kiểm tra biến môi trường `.env` (nếu sử dụng) và config trong `application.yml` của service.
+- Đảm bảo **Gateway** và **Auth Service** đang chạy.
+- Nếu gặp lỗi 401/403, hãy kiểm tra lại Token.
+- Nếu gặp lỗi kết nối, hãy kiểm tra lại Docker và Eureka.
 
-## Muốn tự động hóa (tùy chọn)
+---
 
-- Mình có thể thêm script PowerShell ở repo root để chạy theo thứ tự và chờ từng service sẵn sàng (ví dụ: chờ Eureka trả về danh sách instances của `auth` trước khi start gateway).
+## 5. Cấu trúc dự án (Project Structure)
+
+- `discovery-server`: Eureka Server.
+- `gateway`: Spring Cloud Gateway.
+- `auth`: Authentication Service (JWT, OAuth2).
+- `file`: File Management Service.
+- `common-object`: Shared DTOs, Protos.
+- `web-client`: Next.js Frontend.
+- `.devcontainer`: Docker config cho môi trường Dev.
+- `docs`: Tài liệu và Postman Collection.
+
+---
+
+_Chúc bạn cài đặt và phát triển thành công!_

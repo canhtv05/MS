@@ -5,9 +5,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.leaf.auth.utils.CookieUtil;
+import com.leaf.auth.util.AuthUtil;
 
-public record JWTConfigurer(TokenProvider tokenProvider, CookieUtil cookieUtil)
+public record JWTConfigurer(TokenProvider tokenProvider, AuthUtil authUtil)
         implements SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {
 
     @Override
@@ -17,7 +17,7 @@ public record JWTConfigurer(TokenProvider tokenProvider, CookieUtil cookieUtil)
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
-        JWTFilter customFilter = new JWTFilter(tokenProvider, cookieUtil);
+        JWTFilter customFilter = new JWTFilter(tokenProvider, authUtil);
         builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

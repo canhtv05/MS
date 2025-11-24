@@ -20,8 +20,8 @@ public class ApplicationInitConfig {
             try (Session session = driver.session()) {
                 String cypher = """
                         LOAD CSV WITH HEADERS FROM 'file:///user_profile.csv' AS row
-                        MERGE (u:user_profile {id: toInteger(row.id)})
-                        SET u.user_id = row.user_id, u.username = row.username, u.email = row.email
+                        MERGE (u:user_profile {id: (row.id)})
+                        SET u.user_id = row.user_id, u.username = row.username, u.email = row.email, u.created_by = row.created_by, u.modified_by = row.modified_by
                         """;
 
                 session.executeWrite(ex -> {
