@@ -55,6 +55,9 @@
     ],
     "*.{css,scss,json,md}": [
       "prettier --write"
+    ],
+    "*.java": [
+      "echo 'Java files changed. Run: mvn spotless:apply to format'"
     ]
   }
 }
