@@ -26,9 +26,13 @@ export const PREFIX_PUBLIC_ENDPOINTS = [
 ];
 
 export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {
-  if (pathname !== '/home' && pathname !== '/sign-in' && pathname !== '/landing') {
+  if (
+    pathname !== '/home' &&
+    pathname !== '/sign-in' &&
+    pathname !== '/sign-up' &&
+    pathname !== '/landing'
+  ) {
     nextRouter.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
-    nextRouter.replace('/sign-in');
   }
   cookieUtils.deleteStorage();
 };

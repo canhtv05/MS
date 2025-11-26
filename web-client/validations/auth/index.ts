@@ -34,7 +34,7 @@ export const signUpSchema = z
       .min(3, t('validation:string.min', { field: t('auth:sign_up.confirm_password'), min: 3 })),
   })
   .refine(data => data.password === data.confirmPassword, {
-    message: t('validation:sign_up.password_not_match'),
+    message: t('auth:sign_up.password_not_match'),
     path: ['confirmPassword'],
   });
 

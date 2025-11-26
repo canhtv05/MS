@@ -1,11 +1,11 @@
 server:
   servlet:
     context-path: /posts
-  port: 1004
+  port: 1005
 
 grpc:
   server:
-    port: 9004
+    port: 9005
 
 spring:
   application:

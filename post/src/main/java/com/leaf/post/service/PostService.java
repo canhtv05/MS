@@ -1,7 +1,7 @@
 package com.leaf.post.service;
 
-import com.leaf.common.exceptions.ApiException;
-import com.leaf.common.exceptions.ErrorMessage;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.post.dto.req.PostCreationRequest;
 import com.leaf.post.dto.res.PostResponse;
