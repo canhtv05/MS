@@ -26,6 +26,9 @@ export const signUpSchema = z
       .string()
       .min(3, t('validation:string.min', { field: t('auth:sign_up.username'), min: 3 })),
     email: z.email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 })),
+    // .refine(value => !value.split('@')[0].includes('+'), {
+    //   message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
+    // }),
     password: z
       .string()
       .min(3, t('validation:string.min', { field: t('auth:sign_up.password'), min: 3 })),

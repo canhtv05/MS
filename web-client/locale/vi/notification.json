@@ -8,6 +8,8 @@
     "success": "Xác thực thành công!",
     "error": "Xác thực thất bại.",
     "go_to_sign_in": "Về trang đăng nhập",
-    "go_to_home": "Về trang chủ"
+    "go_to_home": "Về trang chủ",
+    "verify_invalid": "Xác thực thất bại. Token không hợp lệ hoặc không tồn tại",
+    "verify_expired": "Xác thực thất bại. Token đã hết hạn"
   }
 }

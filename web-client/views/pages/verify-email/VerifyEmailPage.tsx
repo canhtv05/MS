@@ -109,28 +109,25 @@ const VerifyEmailPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="space-y-3"
+            className="space-y-3 flex items-center justify-between w-full"
           >
             {status === 'success' && (
-              <>
-                <Button onClick={handleGoHome} className="w-full rounded-full" size="lg">
+              <div className="w-full flex justify-center items-center gap-3">
+                <Button onClick={handleGoHome} size="lg">
                   {t('verify.go_to_home')}
                 </Button>
-                <Button
-                  onClick={handleGoToLogin}
-                  className="w-full rounded-full"
-                  variant="accent"
-                  size="lg"
-                >
+                <Button onClick={handleGoToLogin} variant="accent" size="lg">
                   {t('verify.go_to_sign_in')}
                 </Button>
-              </>
+              </div>
             )}
 
             {status === 'error' && (
-              <Button onClick={handleGoToLogin} className="w-full rounded-full" size="lg">
-                {t('verify.go_to_sign_in')}
-              </Button>
+              <div className="flex items-center w-full justify-center">
+                <Button onClick={handleGoToLogin} size="lg">
+                  {t('verify.go_to_sign_in')}
+                </Button>
+              </div>
             )}
           </motion.div>
         )}

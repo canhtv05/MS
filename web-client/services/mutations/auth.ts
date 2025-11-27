@@ -108,7 +108,7 @@ export const useAuthMutation = () => {
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       queryClient.removeQueries({ queryKey: ['profile', 'me'] });
       toast.success(t('sign_up.register_success'), { id: 'register-toast' });
-      router.push('/sign-in');
+      // router.push('/sign-in');
     },
   });
 

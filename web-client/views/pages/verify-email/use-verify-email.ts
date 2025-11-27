@@ -1,5 +1,6 @@
 'use client';
 
+import { VerificationStatus } from '@/enums';
 import { IResponseObject } from '@/types/common';
 import { IVerifyEmailTokenResponse } from '@/types/notification';
 import { api, apiHandler } from '@/utils/api';
@@ -43,7 +44,13 @@ const useVerifyEmail = () => {
         setMessage(t('verify.verify_success'));
       } else {
         setStatus('error');
-        setMessage(t('verify.verify_failed'));
+        if (data?.data?.verificationStatus === VerificationStatus.INVALID) {
+          setMessage(t('verify.verify_invalid'));
+        } else if (data?.data?.verificationStatus === VerificationStatus.EXPIRED) {
+          setMessage(t('verify.verify_expired'));
+        } else {
+          setMessage(t('verify.verify_failed'));
+        }
       }
     };
 

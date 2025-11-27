@@ -3,6 +3,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { BASE_URL } from './endpoints';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import cookieUtils from './cookieUtils';
+import { PUBLIC_ROUTERS } from './common';
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -18,20 +19,15 @@ export const apiHandler = async <T>(promise: Promise<{ data: T }>) => {
     .catch(err => [err, undefined] as const);
 };
 
-export const AUTH_PUBLIC_ENDPOINS: string[] = ['/me/p/authenticate', '/me/c/create'];
-export const NOTIFICATION_PUBLIC_ENDPOINS: string[] = ['/verify-email'];
+export const AUTH_PUBLIC_ENDPOINTS: string[] = ['/me/p/authenticate', '/me/c/create'];
+export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email'];
 export const PREFIX_PUBLIC_ENDPOINTS = [
-  ...AUTH_PUBLIC_ENDPOINS.map(endpoint => `/auth${endpoint}`),
-  ...NOTIFICATION_PUBLIC_ENDPOINS.map(endpoint => `/notifications${endpoint}`),
+  ...AUTH_PUBLIC_ENDPOINTS.map(endpoint => `/auth${endpoint}`),
+  ...NOTIFICATION_PUBLIC_ENDPOINTS.map(endpoint => `/notifications${endpoint}`),
 ];
 
 export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {
-  if (
-    pathname !== '/home' &&
-    pathname !== '/sign-in' &&
-    pathname !== '/sign-up' &&
-    pathname !== '/landing'
-  ) {
+  if (!PUBLIC_ROUTERS.includes(pathname)) {
     nextRouter.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
   }
   cookieUtils.deleteStorage();

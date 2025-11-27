@@ -4,7 +4,10 @@
 
 - Tạo API khóa tài khoản(ok) + gỡ khóa tài khoản(ok) + tạo bảng lý do khóa tài khoản
 - Tạo API quên mật khẩu
-- Kiểm tra email ko được chứa dấu +
+- Kiểm tra email ko được chứa dấu + (ok)
+
+# Notification
+
 - Tạo bảng mới: email_verification_logs gồm các trường:
   - userId: string
   - emailVerified: boolean

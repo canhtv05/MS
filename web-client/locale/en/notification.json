@@ -8,6 +8,8 @@
     "success": "Verification successful!",
     "error": "Verification failed.",
     "go_to_sign_in": "Go to sign in",
-    "go_to_home": "Go to home"
+    "go_to_home": "Go to home",
+    "verify_invalid": "Verification failed. The token is invalid or missing.",
+    "verify_expired": "Verification failed. The token has expired."
   }
 }

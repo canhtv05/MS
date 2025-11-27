@@ -3,6 +3,7 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "AuthProto";
+import "google/protobuf/timestamp.proto";
 
 service AuthGrpcService {
   rpc verifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
@@ -21,4 +22,6 @@ message VerifyEmailTokenDTO {
   string username = 1;
   string fullname = 2;
   string email = 3;
+  google.protobuf.Timestamp expiredAt = 4;
+  string jti = 5;
 }

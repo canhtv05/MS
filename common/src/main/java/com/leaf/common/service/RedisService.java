@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.utils.AESUtils;
@@ -79,16 +78,15 @@ public class RedisService {
                 UserSessionDTO.class);
     }
 
-    public void saveVerificationToken(String token, String username) {
+    public void saveEmailToken(String token, String username) {
         redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
     }
 
-    public String validateToken(String token) {
-        String username = (String) redisTemplate.opsForValue().get(getKeyVerification(token));
-        if (StringUtils.hasText(username)) {
-            redisTemplate.delete(getKeyVerification(token));
-            return username;
-        }
-        return null;
+    public String getUsernameIfEmailTokenAlive(String token) {
+        return (String) redisTemplate.opsForValue().get(getKeyVerification(token));
+    }
+
+    public void deleteEmailToken(String token) {
+        redisTemplate.delete(getKeyVerification(token));
     }
 }

@@ -7,9 +7,10 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.google.protobuf.Timestamp;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
-import com.leaf.noti.config.NotificationProperites;
+import com.leaf.noti.config.NotificationProperties;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,21 +22,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenUtil {
 
-    private final NotificationProperites notificationProperites;
+    private final NotificationProperties notificationProperties;
     private static final String EMAIL_KEY = "email";
 
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(notificationProperites.getSecretKey());
+    public SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(notificationProperties.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(VerificationEmailEvent request) {
+    public String generateToken(VerificationEmailEvent request, Date expiredAt) {
         return Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setSubject(request.getUsername())
                 .claim(EMAIL_KEY, request.getEmail())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10 phút
+                .setExpiration(expiredAt)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -47,9 +48,18 @@ public class TokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
+        Date exp = body.getExpiration();
+
+        Timestamp expiredAt = Timestamp.newBuilder()
+                .setSeconds(exp.getTime() / 1000)
+                .setNanos(0)
+                .build();
+
         return VerifyEmailTokenDTO.newBuilder()
                 .setUsername(body.getSubject())
                 .setEmail(body.get(EMAIL_KEY, String.class))
+                .setExpiredAt(expiredAt)
+                .setJti(body.getId())
                 .build();
     }
 }

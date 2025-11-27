@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 import com.leaf.noti.config.EmailProperties;
 import com.leaf.noti.config.KafkaConsumerProperties;
-import com.leaf.noti.config.NotificationProperites;
+import com.leaf.noti.config.NotificationProperties;
 
 @SpringBootApplication(scanBasePackages = { "com.leaf", "com.leaf.common" })
-@EnableConfigurationProperties({ KafkaConsumerProperties.class, EmailProperties.class, NotificationProperites.class })
+@EnableConfigurationProperties({ KafkaConsumerProperties.class, EmailProperties.class, NotificationProperties.class })
 public class NotificationApplication {
 
 	public static void main(String[] args) {

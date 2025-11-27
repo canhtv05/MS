@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "spring.app")
-public class NotificationProperites {
+public class NotificationProperties {
 
     private String secretKey;
 }

@@ -23,7 +23,7 @@ public class VerifyEmailService {
     try {
       emailService.sendVerificationEmail(event);
     } catch (Exception e) {
-      throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR, e.getMessage());
+      throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR);
     }
   }
 }

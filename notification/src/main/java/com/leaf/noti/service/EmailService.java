@@ -1,5 +1,6 @@
 package com.leaf.noti.service;
 
+import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.lang.NonNull;
@@ -14,8 +15,12 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.service.RedisService;
 import com.leaf.noti.config.EmailProperties;
+import com.leaf.noti.domain.EmailVerificationLogs;
+import com.leaf.noti.enums.VerificationStatus;
+import com.leaf.noti.repository.EmailVerificationLogsRepository;
 import com.leaf.noti.util.TokenUtil;
 
+import io.jsonwebtoken.Jwts;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
@@ -32,6 +37,7 @@ public class EmailService {
     RedisService redisService;
     EmailProperties emailProperties;
     TokenUtil tokenUtil;
+    EmailVerificationLogsRepository emailVerificationLogsRepository;
 
     public void sendVerificationEmail(@NonNull VerificationEmailEvent event) {
         try {
@@ -42,8 +48,23 @@ public class EmailService {
             helper.setTo(Objects.requireNonNull(event.getTo()));
             helper.setSubject("🔐 Xác thực tài khoản của bạn");
 
-            String token = tokenUtil.generateToken(event);
-            redisService.saveVerificationToken(token, event.getUsername());
+            Date expiredAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10min
+
+            String token = tokenUtil.generateToken(event, expiredAt);
+            redisService.saveEmailToken(token, event.getUsername());
+            emailVerificationLogsRepository.save(EmailVerificationLogs.builder()
+                    .userId(event.getUsername())
+                    .token(token)
+                    .verifiedAt(null)
+                    .jti(Jwts.parserBuilder()
+                            .setSigningKey(tokenUtil.getSigningKey())
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody()
+                            .getId())
+                    .expiredAt(expiredAt.toInstant())
+                    .verificationStatus(VerificationStatus.PENDING)
+                    .build());
             Context context = new Context();
             context.setVariable("username", event.getUsername());
             context.setVariable("token", token);
@@ -56,7 +77,7 @@ public class EmailService {
             javaMailSender.send(message);
 
         } catch (MessagingException e) {
-            throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR, e.getMessage());
+            throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR);
         }
     }
 }

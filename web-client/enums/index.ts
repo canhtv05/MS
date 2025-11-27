@@ -26,3 +26,10 @@ export enum PrivacyLevel {
   CUSTOM = 'CUSTOM',
   FRIENDS_ONLY = 'FRIENDS_ONLY',
 }
+
+export enum VerificationStatus {
+  PENDING = 'PENDING',
+  VERIFIED = 'VERIFIED',
+  INVALID = 'INVALID',
+  EXPIRED = 'EXPIRED',
+}

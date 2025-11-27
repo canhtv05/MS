@@ -5,3 +5,5 @@ export function genUUID(): string {
     return v.toString(16);
   });
 }
+
+export const PUBLIC_ROUTERS = ['/sign-in', '/sign-up', '/landing', '/verify-email'];

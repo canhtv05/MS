@@ -3,6 +3,9 @@ logging:
     root: INFO
 
 spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
   app:
     secret-key: ${BASE_64_SECRET}
 
