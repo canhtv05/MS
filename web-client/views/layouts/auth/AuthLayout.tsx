@@ -69,13 +69,13 @@ const AuthLayout = () => {
               <div className="size-5 relative">
                 <Image
                   sizes="(max-width: 768px) 24px, 32px"
-                  src={images.us}
+                  src={images.uk}
                   alt="US"
                   fill
                   className="object-contain"
                 />
               </div>
-              <span>{t('header.us')}</span>
+              <span>{t('header.uk')}</span>
             </DropdownMenuItem>
           </DropdownMenuHighlightItem>
         </DropdownMenuContent>

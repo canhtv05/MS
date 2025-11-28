@@ -17,6 +17,7 @@ const useVerifyEmail = () => {
   const router = useRouter();
   const [status, setStatus] = useState<TVerificationStatus>('pending');
   const [message, setMessage] = useState('');
+  const [time, setTime] = useState(5);
   const token = searchParams.get('token');
 
   useEffect(() => {
@@ -57,6 +58,20 @@ const useVerifyEmail = () => {
     verifyEmail();
   }, [token, t]);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(time => (time > 0 ? time - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (time === 0 && status === 'success') {
+      router.push('/home');
+    }
+  }, [time, status, router]);
+
   const handleGoToLogin = () => {
     router.push('/sign-in');
   };
@@ -70,6 +85,7 @@ const useVerifyEmail = () => {
     message,
     handleGoToLogin,
     handleGoHome,
+    time,
   };
 };
 

@@ -11,5 +11,13 @@
     "go_to_home": "Go to home",
     "verify_invalid": "Verification failed. The token is invalid or missing.",
     "verify_expired": "Verification failed. The token has expired."
+  },
+  "resend_verify_email": {
+    "title": "Resend verification email",
+    "description": "Are you sure you want to resend the verification email?",
+    "loading": "Resending verification email...",
+    "resend_verify_email_success": "Verification email has been sent successfully!",
+    "resend_verify_email_failed": "Failed to resend verification email. Please try again.",
+    "resend_verify_email_error": "An error occurred during the process of resending verification email. Please try again later."
   }
 }

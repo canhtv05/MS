@@ -14,11 +14,15 @@ import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/utils/endpoints';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 export const useAuthMutation = () => {
+  const [showResendEmail, setShowResendEmail] = useState(false);
+
   const queryClient = useQueryClient();
   const router = useRouter();
   const { t } = useTranslation('auth');
@@ -32,7 +36,15 @@ export const useAuthMutation = () => {
     mutationKey: ['/auth/me/p/authenticate'],
     mutationFn: async (payload: ILoginRequest): Promise<IResponseObject<ILoginResponse>> =>
       await api.post(API_ENDPOINTS.AUTH.LOGIN, payload),
-    onError: error => handleMutationError(error, 'login-toast'),
+    onError: error => {
+      if (error instanceof axios.AxiosError) {
+        const message: string = error.response?.data?.message;
+        if (message.includes('was not activated')) {
+          setShowResendEmail(true);
+        }
+      }
+      handleMutationError(error, 'login-toast');
+    },
     onMutate: () => {
       toast.loading(t('sign_in.loading'), { id: 'login-toast' });
     },
@@ -40,33 +52,38 @@ export const useAuthMutation = () => {
       if (res.data) {
         const { token } = res.data;
         setToken(token);
-        queryClient.removeQueries({ queryKey: ['auth', 'me'] });
-        queryClient.removeQueries({ queryKey: ['profile', 'me'] });
-        await queryClient.fetchQuery({
-          queryKey: ['auth', 'me'],
-          queryFn: async () => {
-            const profileRes = await api.get(API_ENDPOINTS.AUTH.ME, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-            setUser(profileRes.data.data);
-            return profileRes.data;
-          },
-        });
+        await Promise.all([
+          queryClient.removeQueries({ queryKey: ['auth', 'me'] }),
+          queryClient.removeQueries({ queryKey: ['profile', 'me'] }),
+        ]);
 
-        await queryClient.fetchQuery({
-          queryKey: ['profile', 'me'],
-          queryFn: async () => {
-            const profileRes = await api.get(API_ENDPOINTS.PROFILE.ME, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-            setUserProfile(profileRes.data.data);
-            return profileRes.data;
-          },
-        });
+        await Promise.all([
+          queryClient.fetchQuery({
+            queryKey: ['auth', 'me'],
+            queryFn: async () => {
+              const profileRes = await api.get(API_ENDPOINTS.AUTH.ME, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              setUser(profileRes.data.data);
+              return profileRes.data;
+            },
+          }),
+
+          queryClient.fetchQuery({
+            queryKey: ['profile', 'me'],
+            queryFn: async () => {
+              const profileRes = await api.get(API_ENDPOINTS.PROFILE.ME, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              setUserProfile(profileRes.data.data);
+              return profileRes.data;
+            },
+          }),
+        ]);
 
         router.push('/home');
         toast.success(t('sign_in.login_success'), { id: 'login-toast' });
@@ -108,7 +125,7 @@ export const useAuthMutation = () => {
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       queryClient.removeQueries({ queryKey: ['profile', 'me'] });
       toast.success(t('sign_up.register_success'), { id: 'register-toast' });
-      // router.push('/sign-in');
+      router.push('/sign-in');
     },
   });
 
@@ -141,5 +158,7 @@ export const useAuthMutation = () => {
     logoutMutation,
     registerMutation,
     changePasswordMutation,
+    showResendEmail,
+    setShowResendEmail,
   };
 };

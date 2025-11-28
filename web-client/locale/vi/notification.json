@@ -11,5 +11,13 @@
     "go_to_home": "Về trang chủ",
     "verify_invalid": "Xác thực thất bại. Token không hợp lệ hoặc không tồn tại",
     "verify_expired": "Xác thực thất bại. Token đã hết hạn"
+  },
+  "resend_verify_email": {
+    "title": "Gửi lại email xác thực",
+    "description": "Bạn có chắc chắn muốn gửi lại email xác thực không?",
+    "loading": "Đang gửi lại email xác thực...",
+    "resend_verify_email_success": "Email xác thực đã được gửi lại thành công!",
+    "resend_verify_email_failed": "Gửi lại email xác thực thất bại. Vui lòng thử lại.",
+    "resend_verify_email_error": "Đã có lỗi xảy ra trong quá trình gửi lại email xác thực. Vui lòng thử lại sau."
   }
 }

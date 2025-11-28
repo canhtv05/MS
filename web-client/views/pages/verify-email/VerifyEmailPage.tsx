@@ -4,10 +4,11 @@ import { motion } from 'motion/react';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import useVerifyEmail from './use-verify-email';
 import { useTranslation } from 'react-i18next';
+import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 
 const VerifyEmailPage = () => {
   const { t } = useTranslation('notification');
-  const { status, message, handleGoToLogin, handleGoHome } = useVerifyEmail();
+  const { status, message, handleGoToLogin, time } = useVerifyEmail();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -112,13 +113,9 @@ const VerifyEmailPage = () => {
             className="space-y-3 flex items-center justify-between w-full"
           >
             {status === 'success' && (
-              <div className="w-full flex justify-center items-center gap-3">
-                <Button onClick={handleGoHome} size="lg">
-                  {t('verify.go_to_home')}
-                </Button>
-                <Button onClick={handleGoToLogin} variant="accent" size="lg">
-                  {t('verify.go_to_sign_in')}
-                </Button>
+              <div className="w-full flex flex-col justify-center items-center gap-1">
+                <GradientText text={t('verify.go_to_home')} className="text-lg font-bold" />
+                <GradientText text={time.toString()} className="text-sm font-bold" />
               </div>
             )}
 

@@ -18,6 +18,10 @@ import com.leaf.noti.grpc.GrpcAuthClient;
 import com.leaf.noti.repository.EmailVerificationLogsRepository;
 import com.leaf.noti.util.TokenUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -60,7 +64,26 @@ public class NotificationService {
                         .build();
             }
 
-            VerifyEmailTokenDTO tokenDTO = tokenUtil.parseToken(token);
+            VerifyEmailTokenDTO tokenDTO;
+            try {
+                tokenDTO = tokenUtil.parseToken(token);
+            } catch (ExpiredJwtException e) {
+                logs.setVerificationStatus(VerificationStatus.EXPIRED);
+                emailVerificationLogsRepository.save(logs);
+                return VerifyEmailTokenResponse.builder()
+                        .valid(false)
+                        .verificationStatus(VerificationStatus.EXPIRED)
+                        .build();
+            } catch (MalformedJwtException | UnsupportedJwtException | SignatureException
+                    | IllegalArgumentException e) {
+                logs.setVerificationStatus(VerificationStatus.INVALID);
+                emailVerificationLogsRepository.save(logs);
+                return VerifyEmailTokenResponse.builder()
+                        .valid(false)
+                        .verificationStatus(VerificationStatus.INVALID)
+                        .build();
+            }
+
             if (!Objects.equals(username, tokenDTO.getUsername())
                     || !Objects.equals(logs.getExpiredAt().getEpochSecond(), tokenDTO.getExpiredAt().getSeconds())
                     || !Objects.equals(logs.getJti(), tokenDTO.getJti())

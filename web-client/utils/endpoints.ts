@@ -13,5 +13,6 @@ export const API_ENDPOINTS = {
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: `${BASE_URL}/notifications/verify-email`,
+    RESEND_VERIFY_EMAIL: `${BASE_URL}/notifications/resend-verify-email`,
   },
 };

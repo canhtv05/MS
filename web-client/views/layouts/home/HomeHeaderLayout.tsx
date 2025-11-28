@@ -221,7 +221,7 @@ const HomeHeaderDropdown = ({
             <span>{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
-        <DropdownMenuSubContent className="overflow-hidden min-w-32 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
+        <DropdownMenuSubContent className="overflow-hidden min-w-36 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
           <DropdownMenuHighlightItem>
             <DropdownMenuItem
               onClick={e => {
@@ -259,13 +259,13 @@ const HomeHeaderDropdown = ({
               <div className="size-5 relative">
                 <Image
                   sizes="(max-width: 768px) 24px, 32px"
-                  src={images.us}
+                  src={images.uk}
                   alt="VN"
                   fill
                   className="object-contain"
                 />
               </div>
-              <span>{t('header.us')}</span>
+              <span>{t('header.uk')}</span>
             </DropdownMenuItem>
           </DropdownMenuHighlightItem>
         </DropdownMenuSubContent>

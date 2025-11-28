@@ -20,7 +20,7 @@ export const apiHandler = async <T>(promise: Promise<{ data: T }>) => {
 };
 
 export const AUTH_PUBLIC_ENDPOINTS: string[] = ['/me/p/authenticate', '/me/c/create'];
-export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email'];
+export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email', '/resend-verify-email'];
 export const PREFIX_PUBLIC_ENDPOINTS = [
   ...AUTH_PUBLIC_ENDPOINTS.map(endpoint => `/auth${endpoint}`),
   ...NOTIFICATION_PUBLIC_ENDPOINTS.map(endpoint => `/notifications${endpoint}`),
