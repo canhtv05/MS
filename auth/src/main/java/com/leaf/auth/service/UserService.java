@@ -108,7 +108,6 @@ public class UserService {
             kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
                     .to(request.getEmail())
                     .username(request.getUsername())
-                    .email(request.getEmail())
                     .build());
         } else if (isAdmin && request.isActivated()) {
             com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()

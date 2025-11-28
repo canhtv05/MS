@@ -52,19 +52,35 @@ public class EmailService {
 
             String token = tokenUtil.generateToken(event, expiredAt);
             redisService.saveEmailToken(token, event.getUsername());
-            emailVerificationLogsRepository.save(EmailVerificationLogs.builder()
-                    .userId(event.getUsername())
-                    .token(token)
-                    .verifiedAt(null)
-                    .jti(Jwts.parserBuilder()
-                            .setSigningKey(tokenUtil.getSigningKey())
-                            .build()
-                            .parseClaimsJws(token)
-                            .getBody()
-                            .getId())
-                    .expiredAt(expiredAt.toInstant())
-                    .verificationStatus(VerificationStatus.PENDING)
-                    .build());
+            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername())
+                    .orElse(null);
+
+            String jti = Jwts.parserBuilder()
+                    .setSigningKey(tokenUtil.getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getId();
+
+            if (Objects.isNull(logs)) {
+                emailVerificationLogsRepository.save(EmailVerificationLogs.builder()
+                        .userId(event.getUsername())
+                        .token(token)
+                        .verifiedAt(null)
+                        .jti(jti)
+                        .expiredAt(expiredAt.toInstant())
+                        .email(event.getTo())
+                        .verificationStatus(VerificationStatus.PENDING)
+                        .build());
+            } else {
+                logs.setToken(token);
+                logs.setExpiredAt(expiredAt.toInstant());
+                logs.setVerificationStatus(VerificationStatus.PENDING);
+                logs.setVerifiedAt(null);
+                logs.setJti(jti);
+                emailVerificationLogsRepository.save(logs);
+            }
+
             Context context = new Context();
             context.setVariable("username", event.getUsername());
             context.setVariable("token", token);

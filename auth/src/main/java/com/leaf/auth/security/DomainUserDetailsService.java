@@ -53,7 +53,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         if (!user.isActivated()) {
             VerificationEmailEvent event = VerificationEmailEvent.builder()
                     .username(lowercaseLogin)
-                    .email(user.getEmail())
+                    .to(user.getEmail())
                     .build();
             kafkaTemplate.send("verification-email", event);
             // todo

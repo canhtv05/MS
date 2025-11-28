@@ -10,5 +10,7 @@ import com.leaf.noti.domain.EmailVerificationLogs;
 @Repository
 public interface EmailVerificationLogsRepository extends MongoRepository<EmailVerificationLogs, String> {
 
-  Optional<EmailVerificationLogs> findByToken(String token);
+    Optional<EmailVerificationLogs> findByToken(String token);
+
+    Optional<EmailVerificationLogs> findByUserId(String userId);
 }

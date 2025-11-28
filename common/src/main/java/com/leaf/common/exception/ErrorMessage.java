@@ -38,7 +38,10 @@ public enum ErrorMessage {
     SEND_EMAIL_ERROR("SEND_EMAIL_ERROR", "Gửi email thất bại"),
     VERIFY_EMAIL_TOKEN_ERROR("VERIFY_EMAIL_TOKEN_ERROR", "Xác minh token thất bại"),
     EMAIL_TOKEN_INVALID("EMAIL_TOKEN_INVALID", "Token email không hợp lệ"),
-    EMAIL_VERIFIED("EMAIL_VERIFIED", "Email đã được xác minh");
+    EMAIL_VERIFIED("EMAIL_VERIFIED", "Email đã được xác minh"),
+    EMAIL_TOKEN_EXPIRED("EMAIL_TOKEN_EXPIRED", "Token email đã hết hạn"),
+    EMAIL_TOKEN_ALREADY_SENT("EMAIL_TOKEN_ALREADY_SENT", "Token email đã được gửi"),
+    EMAIL_TOKEN_NOT_FOUND("EMAIL_TOKEN_NOT_FOUND", "Token email không tồn tại");
 
     private final String code;
     private final String message;

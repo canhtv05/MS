@@ -8,7 +8,7 @@
 
 # Notification
 
-- Tạo bảng mới: email_verification_logs gồm các trường:
+- Tạo bảng mới: email_verification_logs gồm các trường: (done)
   - userId: string
   - emailVerified: boolean
   - lastVerifyTokenCreatedAt: Instant

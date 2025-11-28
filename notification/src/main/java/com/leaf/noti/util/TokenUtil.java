@@ -34,7 +34,7 @@ public class TokenUtil {
         return Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setSubject(request.getUsername())
-                .claim(EMAIL_KEY, request.getEmail())
+                .claim(EMAIL_KEY, request.getTo())
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

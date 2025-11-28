@@ -6,6 +6,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
@@ -30,6 +31,7 @@ public class NotificationService {
     RedisService redisService;
     TokenUtil tokenUtil;
     EmailVerificationLogsRepository emailVerificationLogsRepository;
+    EmailService emailService;
 
     public VerifyEmailTokenResponse verifyEmailToken(String token) {
         try {
@@ -61,7 +63,8 @@ public class NotificationService {
             VerifyEmailTokenDTO tokenDTO = tokenUtil.parseToken(token);
             if (!Objects.equals(username, tokenDTO.getUsername())
                     || !Objects.equals(logs.getExpiredAt().getEpochSecond(), tokenDTO.getExpiredAt().getSeconds())
-                    || !Objects.equals(logs.getJti(), tokenDTO.getJti())) {
+                    || !Objects.equals(logs.getJti(), tokenDTO.getJti())
+                    || !Objects.equals(logs.getEmail(), tokenDTO.getEmail())) {
                 logs.setVerificationStatus(VerificationStatus.INVALID);
                 emailVerificationLogsRepository.save(logs);
                 return VerifyEmailTokenResponse.builder()
@@ -89,5 +92,30 @@ public class NotificationService {
                     .verificationStatus(VerificationStatus.INVALID)
                     .build();
         }
+    }
+
+    public void resendEmailToken(VerificationEmailEvent request) {
+        EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(request.getUsername())
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+
+        VerificationStatus verificationStatus = logs.getVerificationStatus();
+        if (verificationStatus == VerificationStatus.PENDING) {
+            throw new ApiException(ErrorMessage.EMAIL_TOKEN_ALREADY_SENT);
+        }
+        if (verificationStatus == VerificationStatus.VERIFIED) {
+            throw new ApiException(ErrorMessage.EMAIL_VERIFIED);
+        }
+        if (verificationStatus == VerificationStatus.INVALID || verificationStatus == VerificationStatus.EXPIRED) {
+            try {
+                redisService.deleteEmailToken(logs.getToken());
+                request.setTo(logs.getEmail());
+                emailService.sendVerificationEmail(request);
+                return;
+            } catch (Exception e) {
+                throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR);
+            }
+        }
+
+        throw new ApiException(ErrorMessage.EMAIL_TOKEN_INVALID);
     }
 }

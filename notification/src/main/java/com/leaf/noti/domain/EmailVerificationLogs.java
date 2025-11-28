@@ -26,5 +26,6 @@ public class EmailVerificationLogs {
     Instant verifiedAt;
     Instant expiredAt;
     String token;
+    String email;
     VerificationStatus verificationStatus;
 }
