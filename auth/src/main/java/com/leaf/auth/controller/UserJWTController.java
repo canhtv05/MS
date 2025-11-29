@@ -3,8 +3,10 @@ package com.leaf.auth.controller;
 import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
+import com.leaf.auth.dto.req.ForgotPasswordReq;
 import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.req.LogoutRequest;
+import com.leaf.auth.dto.req.ResetPasswordReq;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
@@ -71,8 +73,20 @@ public class UserJWTController {
     @PostMapping("/p/change-password")
     public ResponseEntity<ResponseObject<Boolean>> changePassword(
             @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-            @RequestBody ChangePasswordReq req, HttpServletResponse response) {
+            @Valid @RequestBody ChangePasswordReq req, HttpServletResponse response) {
         userService.changePassword(cookieValue, req, response);
+        return ResponseEntity.ok(ResponseObject.success());
+    }
+
+    @PostMapping("/p/reset-password")
+    public ResponseEntity<ResponseObject<Boolean>> resetPassword(@Valid @RequestBody ResetPasswordReq req) {
+        userService.resetPassword(req);
+        return ResponseEntity.ok(ResponseObject.success());
+    }
+
+    @PostMapping("/p/forgot-password")
+    public ResponseEntity<ResponseObject<Boolean>> forgotPassword(@Valid @RequestBody ForgotPasswordReq req) {
+        userService.forgotPasswordRequest(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 

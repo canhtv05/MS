@@ -1,4 +1,4 @@
-import { VerificationStatus } from '@/enums';
+import { VerificationStatus } from '@/enums/common';
 
 export interface IVerifyEmailTokenResponse {
   valid: boolean;

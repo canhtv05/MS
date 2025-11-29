@@ -26,6 +26,7 @@ public enum ErrorMessage {
     ROLE_ALREADY_EXITS("ROLE_ALREADY_EXITS", "Role already exists"),
     ROLE_NOT_FOUND("ROLE_NOT_FOUND", "Role not found"),
     IMPORT_EXCEL_ERROR("IMPORT_EXCEL_ERROR", "Xử lý file lỗi"),
+    EMAIL_NOT_FOUND("EMAIL_NOT_FOUND", "Không tìm thấy email"),
 
     // file
     FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file"),
@@ -41,7 +42,10 @@ public enum ErrorMessage {
     EMAIL_VERIFIED("EMAIL_VERIFIED", "Email đã được xác minh"),
     EMAIL_TOKEN_EXPIRED("EMAIL_TOKEN_EXPIRED", "Token email đã hết hạn"),
     EMAIL_TOKEN_ALREADY_SENT("EMAIL_TOKEN_ALREADY_SENT", "Token email đã được gửi"),
-    EMAIL_TOKEN_NOT_FOUND("EMAIL_TOKEN_NOT_FOUND", "Token email không tồn tại");
+    EMAIL_TOKEN_NOT_FOUND("EMAIL_TOKEN_NOT_FOUND", "Token email không tồn tại"),
+    FORGET_PASSWORD_OTP_ALREADY_SENT("FORGET_PASSWORD_OTP_ALREADY_SENT", "Mã OTP đã được gửi"),
+    FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED("FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED",
+            "Mã OTP chưa được gửi hoặc đã hết hạn");
 
     private final String code;
     private final String message;

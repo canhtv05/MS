@@ -12,14 +12,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordReq {
+public class ForgotPasswordReq {
 
-    @NotBlank(message = "Current password is required")
-    private String currentPassword;
-
-    @NotBlank(message = "New password is required")
-    private String newPassword;
-
-    @NotBlank(message = "Channel is required")
-    private String channel;
+    @NotBlank(message = "Email is required")
+    private String email;
 }

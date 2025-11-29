@@ -36,3 +36,7 @@ export interface IChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
 }
+
+export interface IForgotPasswordRequest {
+  email: string;
+}

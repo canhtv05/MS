@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useProfileStore } from '@/stores/profile';
 import {
   IChangePasswordRequest,
+  IForgotPasswordRequest,
   ILoginRequest,
   ILoginResponse,
   IRegisterRequest,
@@ -33,7 +34,7 @@ export const useAuthMutation = () => {
   const setUserProfile = useProfileStore(state => state.setUserProfile);
 
   const loginMutation = useMutation({
-    mutationKey: ['/auth/me/p/authenticate'],
+    mutationKey: [API_ENDPOINTS.AUTH.LOGIN],
     mutationFn: async (payload: ILoginRequest): Promise<IResponseObject<ILoginResponse>> =>
       await api.post(API_ENDPOINTS.AUTH.LOGIN, payload),
     onError: error => {
@@ -92,7 +93,7 @@ export const useAuthMutation = () => {
   });
 
   const logoutMutation = useMutation({
-    mutationKey: ['/auth/me/p/logout'],
+    mutationKey: [API_ENDPOINTS.AUTH.LOGOUT],
     mutationFn: async (): Promise<IResponseObject<void>> =>
       await api.post(API_ENDPOINTS.AUTH.LOGOUT, null, {
         headers: {
@@ -114,7 +115,7 @@ export const useAuthMutation = () => {
   });
 
   const registerMutation = useMutation({
-    mutationKey: ['/auth/me/c/create'],
+    mutationKey: [API_ENDPOINTS.AUTH.REGISTER],
     mutationFn: async (payload: IRegisterRequest): Promise<IResponseObject<void>> =>
       await api.post(API_ENDPOINTS.AUTH.REGISTER, payload),
     onError: error => handleMutationError(error, 'register-toast'),
@@ -130,7 +131,7 @@ export const useAuthMutation = () => {
   });
 
   const changePasswordMutation = useMutation({
-    mutationKey: ['/auth/me/p/change-password'],
+    mutationKey: [API_ENDPOINTS.AUTH.CHANGE_PASSWORD],
     mutationFn: async (payload: IChangePasswordRequest): Promise<IResponseObject<void>> =>
       await api.post(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload, {
         headers: {
@@ -153,11 +154,27 @@ export const useAuthMutation = () => {
     },
   });
 
+  const forgotPasswordMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.AUTH.FORGOT_PASSWORD],
+    mutationFn: async (payload: IForgotPasswordRequest): Promise<IResponseObject<void>> =>
+      await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, payload),
+    onError: error => handleMutationError(error, 'forgot-password-toast'),
+    onMutate: () => {
+      toast.loading(t('auth:forgot_password.loading'), { id: 'forgot-password-toast' });
+    },
+    onSuccess: async () => {
+      toast.success(t('auth:forgot_password.send_reset_password_email_success'), {
+        id: 'forgot-password-toast',
+      });
+    },
+  });
+
   return {
     loginMutation,
     logoutMutation,
     registerMutation,
     changePasswordMutation,
+    forgotPasswordMutation,
     showResendEmail,
     setShowResendEmail,
   };

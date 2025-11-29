@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
@@ -88,6 +89,32 @@ public class EmailService {
                     new StringBuilder(emailProperties.getVerifyUrl()).append("?token=").append(token).toString());
 
             String body = templateEngine.process("email-verification", context);
+
+            helper.setText(body, true);
+            javaMailSender.send(message);
+
+        } catch (MessagingException e) {
+            throw new ApiException(ErrorMessage.SEND_EMAIL_ERROR);
+        }
+    }
+
+    public void sendForgotPasswordEmail(@NonNull ForgotPasswordEvent event) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(emailProperties.getUsername());
+            helper.setTo(Objects.requireNonNull(event.getTo()));
+            helper.setSubject("🔐 Quên mật khẩu");
+
+            String otp = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
+            redisService.saveForgotPasswordOTP(event.getUsername(), otp);
+
+            Context context = new Context();
+            context.setVariable("username", event.getUsername());
+            context.setVariable("otp", otp);
+
+            String body = templateEngine.process("forgot-password", context);
 
             helper.setText(body, true);
             javaMailSender.send(message);

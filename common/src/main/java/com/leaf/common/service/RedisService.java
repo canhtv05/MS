@@ -35,6 +35,11 @@ public class RedisService {
         return String.format("%s:verify:email:%s", envRunning, token);
     }
 
+    private String getKeyForgotPassword(String token) {
+        String envRunning = environment.getActiveProfiles()[0];
+        return String.format("%s:forgot:password:%s", envRunning, token);
+    }
+
     public String getToken(String username, String channel) {
         return (String) redisTemplate.opsForValue().get(this.getKeyToken(username, channel));
     }
@@ -88,5 +93,20 @@ public class RedisService {
 
     public void deleteEmailToken(String token) {
         redisTemplate.delete(getKeyVerification(token));
+    }
+
+    public void saveForgotPasswordOTP(String username, String otp) {
+        String key = this.getKeyForgotPassword(username);
+        redisTemplate.opsForValue().set(key, otp, Duration.ofMinutes(10));
+    }
+
+    public String getForgotPasswordOTP(String username) {
+        String key = this.getKeyForgotPassword(username);
+        return (String) redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteForgotPasswordOTP(String username) {
+        String key = this.getKeyForgotPassword(username);
+        redisTemplate.delete(key);
     }
 }

@@ -1,4 +1,4 @@
-import { Status } from '@/enums';
+import { Status } from '@/enums/common';
 import axios from 'axios';
 import { toast } from 'sonner';
 import i18next from 'i18next';

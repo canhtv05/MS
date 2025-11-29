@@ -1,4 +1,4 @@
-import { PrivacyLevel } from '@/enums';
+import { PrivacyLevel } from '@/enums/common';
 
 export interface IUserProfileDTO {
   id: string;

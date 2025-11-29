@@ -75,13 +75,13 @@ const SignInPage = () => {
 
           <div id="options-section" className="flex items-center justify-between py-2">
             <CheckBox content={t('sign_in.remember_me')} tabIndex={-1} />
-            <a
-              href="#"
+            <Link
+              href="/forgot-password"
               className="text-cyan-300 text-sm hover:text-cyan-200 transition-colors"
               tabIndex={-1}
             >
               {t('sign_in.forgot_password')}
-            </a>
+            </Link>
           </div>
 
           <Button className="w-full rounded-full" size={'lg'} type="submit">

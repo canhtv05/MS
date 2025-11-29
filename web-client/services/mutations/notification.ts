@@ -13,7 +13,7 @@ export const useNotificationMutation = () => {
   const { t } = useTranslation('notification');
 
   const resendVerifyEmailMutation = useMutation({
-    mutationKey: ['/notifications/resend-verify-email'],
+    mutationKey: [API_ENDPOINTS.NOTIFICATIONS.RESEND_VERIFY_EMAIL],
     mutationFn: async (payload: IVerificationEmailEvent): Promise<IResponseObject<void>> =>
       await api.post(API_ENDPOINTS.NOTIFICATIONS.RESEND_VERIFY_EMAIL, payload),
     onError: error => handleMutationError(error, 'resend-verify-email-toast'),

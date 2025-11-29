@@ -2,7 +2,7 @@
 
 # Auth
 
-- Tạo API khóa tài khoản(ok) + gỡ khóa tài khoản(ok) + tạo bảng lý do khóa tài khoản
+- Tạo API khóa tài khoản(ok) + gỡ khóa tài khoản(ok) + tạo bảng lý do khóa tài khoản(admin)
 - Tạo API quên mật khẩu
 - Kiểm tra email ko được chứa dấu + (ok)
 

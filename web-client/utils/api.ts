@@ -19,7 +19,12 @@ export const apiHandler = async <T>(promise: Promise<{ data: T }>) => {
     .catch(err => [err, undefined] as const);
 };
 
-export const AUTH_PUBLIC_ENDPOINTS: string[] = ['/me/p/authenticate', '/me/c/create'];
+export const AUTH_PUBLIC_ENDPOINTS: string[] = [
+  '/me/p/authenticate',
+  '/me/c/create',
+  '/me/p/forgot-password',
+  '/me/p/reset-password',
+];
 export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email', '/resend-verify-email'];
 export const PREFIX_PUBLIC_ENDPOINTS = [
   ...AUTH_PUBLIC_ENDPOINTS.map(endpoint => `/auth${endpoint}`),

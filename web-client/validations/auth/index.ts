@@ -28,7 +28,7 @@ export const signUpSchema = z
     email: z.email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 })),
     // .refine(value => !value.split('@')[0].includes('+'), {
     //   message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
-    // }),
+    // })
     password: z
       .string()
       .min(3, t('validation:string.min', { field: t('auth:sign_up.password'), min: 3 })),
@@ -73,3 +73,11 @@ export const changePasswordSchema = z
     message: t('auth:change_password.password_not_match'),
     path: ['confirmPassword'],
   });
+
+export const forgotPasswordSchema = z.object({
+  email: z
+    .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
+    .refine(value => !value.split('@')[0].includes('+'), {
+      message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
+    }),
+});

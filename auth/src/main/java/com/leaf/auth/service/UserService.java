@@ -13,6 +13,8 @@ import com.leaf.auth.dto.excel.ReadExcelResult;
 import com.leaf.auth.dto.excel.RowData;
 import com.leaf.auth.dto.excel.RowHeader;
 import com.leaf.auth.dto.req.ChangePasswordReq;
+import com.leaf.auth.dto.req.ForgotPasswordReq;
+import com.leaf.auth.dto.req.ResetPasswordReq;
 import com.leaf.auth.dto.search.SearchRequest;
 import com.leaf.auth.dto.search.SearchResponse;
 import com.leaf.auth.enums.PermissionAction;
@@ -22,12 +24,14 @@ import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.util.ExcelBuilder;
 import com.leaf.common.constant.EventConstants;
+import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.security.AuthoritiesConstants;
 import com.leaf.common.security.SecurityUtils;
+import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.DateUtils;
 
@@ -48,7 +52,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +74,8 @@ public class UserService {
     private final UserPermissionRepository userPermissionRepository;
     private final GrpcUserProfileClient userProfileClient;
     private final AuthService authService;
-    private final KafkaTemplate<String, VerificationEmailEvent> kafkaTemplate;
+    private final KafkaProducerService kafkaProducerService;
+    private final RedisService redisService;
 
     public UserDTO findById(Long id) {
         return userRepository.findById(id).map(UserDTO::fromEntity)
@@ -103,17 +107,23 @@ public class UserService {
         } else {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
-        User res = userRepository.save(user);
-        if ((isAdmin && !request.isActivated()) || !isAdmin) {
-            kafkaTemplate.send(EventConstants.verificationEmailTopic, VerificationEmailEvent.builder()
-                    .to(request.getEmail())
-                    .username(request.getUsername())
-                    .build());
-        } else if (isAdmin && request.isActivated()) {
-            com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                    .setUserId(user.getUsername())
-                    .build();
-            userProfileClient.createUserProfile(userProfileDTO);
+
+        User res = null;
+        try {
+            if ((isAdmin && !request.isActivated()) || !isAdmin) {
+                kafkaProducerService.send(EventConstants.VERIFICATION_EMAIL_TOPIC, VerificationEmailEvent.builder()
+                        .to(request.getEmail())
+                        .username(request.getUsername())
+                        .build());
+            } else if (isAdmin && request.isActivated()) {
+                com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                        .setUserId(user.getUsername())
+                        .build();
+                userProfileClient.createUserProfile(userProfileDTO);
+            }
+            res = userRepository.save(user);
+        } catch (Exception e) {
+            throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
         }
         return UserDTO.fromEntity(res);
     }
@@ -158,6 +168,38 @@ public class UserService {
                 .setUsername(user.getUsername())
                 .setEmail(request.getEmail())
                 .build();
+    }
+
+    public void forgotPasswordRequest(ForgotPasswordReq request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
+
+        boolean hasOTP = hasOTP(user.getUsername());
+        if (hasOTP) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_ALREADY_SENT);
+        }
+
+        kafkaProducerService.send(EventConstants.FORGOT_PASSWORD_TOPIC, ForgotPasswordEvent.builder()
+                .to(request.getEmail())
+                .username(user.getUsername())
+                .build());
+    }
+
+    public void resetPassword(ResetPasswordReq request) {
+        if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword())) {
+            throw new ApiException(ErrorMessage.VALIDATION_ERROR);
+        }
+
+        boolean hasOTP = hasOTP(request.getEmail());
+        if (!hasOTP) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
+        }
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
@@ -319,5 +361,9 @@ public class UserService {
         userPermissionRepository.saveAll(request.stream()
                 .map(item -> item.toEntity(userId))
                 .collect(Collectors.toSet()));
+    }
+
+    private boolean hasOTP(String username) {
+        return StringUtils.isNotEmpty(redisService.getForgotPasswordOTP(username));
     }
 }
