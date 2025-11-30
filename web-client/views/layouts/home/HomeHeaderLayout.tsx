@@ -98,7 +98,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
       <AnimateIcon animateOnHover>
-        <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-card hover:bg-muted cursor-pointer rounded-md">
+        <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 hover:bg-muted cursor-pointer rounded-md">
           <IconButton
             className="dark:group-hover:bg-muted group-hover:bg-card rounded-full flex cursor-pointer shadow-none"
             variant={'accent'}
@@ -273,7 +273,7 @@ const HomeHeaderSearchLG = forwardRef(
         ref={ref}
         className={cn(
           isLoading ? 'overflow-hidden' : 'overflow-y-auto',
-          'z-40 relative max-h-[40vh] bg-background border rounded-lg',
+          'z-40 relative max-h-[40vh] bg-background dark:bg-gray-700 border rounded-lg',
           'fixed top-[60px] left-5 right-5 w-auto',
           'lg:absolute lg:w-full lg:top-13 lg:left-1/2 lg:right-auto lg:transform lg:-translate-x-1/2',
         )}
@@ -325,14 +325,14 @@ const HomeHeaderLayout = () => {
           <div className="lg:block hidden">
             <Logo />
           </div>
-          <div className="flex-1 max-w-md  md:py-0 py-[5px] md:mx-8 mx-2 items-center justify-center">
+          <div className="flex-1 max-w-md md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 items-center lg:justify-center justify-start">
             <div className="block relative z-50">
               <AnimateIcon animateOnTap>
                 <Input
                   inputSize="md"
                   id="search"
-                  className="dark:bg-gray-600 bg-gray-200"
-                  classNameIcon="dark:bg-gray-600 bg-gray-200"
+                  className="dark:bg-gray-600 bg-gray-200 h-9"
+                  classNameIcon="dark:bg-gray-600 bg-gray-200 h-9"
                   icon={<Search className={'size-5 p-0.5 text-foreground/70'} />}
                   placeholder={t('header.search_placeholder')}
                   onChange={handleSearch}
