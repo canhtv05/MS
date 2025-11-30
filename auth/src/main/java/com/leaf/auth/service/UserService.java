@@ -88,6 +88,10 @@ public class UserService {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
         }
 
+        if (request.getEmail().contains("+")) {
+            throw new ApiException(ErrorMessage.EMAIL_INVALID);
+        }
+
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
         }
@@ -155,6 +159,10 @@ public class UserService {
     }
 
     public VerifyEmailTokenDTO activeUserByUserName(VerifyEmailTokenDTO request) {
+        if (request.getEmail().contains("+")) {
+            throw new ApiException(ErrorMessage.EMAIL_INVALID);
+        }
+
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setActivated(true);
@@ -172,6 +180,10 @@ public class UserService {
     }
 
     public void forgotPasswordRequest(ForgotPasswordReq request) {
+        if (request.getEmail().contains("+")) {
+            throw new ApiException(ErrorMessage.EMAIL_INVALID);
+        }
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
 
@@ -189,6 +201,10 @@ public class UserService {
     public void resetPassword(ResetPasswordReq request) {
         if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
+        }
+
+        if (request.getEmail().contains("+")) {
+            throw new ApiException(ErrorMessage.EMAIL_INVALID);
         }
 
         User user = userRepository.findByEmail(request.getEmail())
@@ -211,6 +227,10 @@ public class UserService {
     public void verifyForgotPasswordOTP(VerifyOTPReq request) {
         if (CommonUtils.isEmpty(request.getEmail(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
+        }
+
+        if (request.getEmail().contains("+")) {
+            throw new ApiException(ErrorMessage.EMAIL_INVALID);
         }
 
         User user = userRepository.findByEmail(request.getEmail())

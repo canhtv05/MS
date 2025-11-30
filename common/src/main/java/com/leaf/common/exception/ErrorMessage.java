@@ -27,6 +27,7 @@ public enum ErrorMessage {
     ROLE_NOT_FOUND("ROLE_NOT_FOUND", "Role not found"),
     IMPORT_EXCEL_ERROR("IMPORT_EXCEL_ERROR", "Xử lý file lỗi"),
     EMAIL_NOT_FOUND("EMAIL_NOT_FOUND", "Không tìm thấy email"),
+    EMAIL_INVALID("EMAIL_INVALID", "Email không hợp lệ"),
 
     // file
     FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file"),
