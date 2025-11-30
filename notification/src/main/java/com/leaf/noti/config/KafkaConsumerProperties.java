@@ -18,7 +18,6 @@ public class KafkaConsumerProperties {
     @Getter
     @Setter
     public static class Consumer {
-        private String groupId;
         private String keyDeserializer;
         private String valueDeserializer;
         private String trustedPackages;

@@ -8,6 +8,8 @@ import {
   ILoginRequest,
   ILoginResponse,
   IRegisterRequest,
+  IResetPasswordReq,
+  IVerifyOTPReq,
 } from '@/types/auth';
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
@@ -169,13 +171,48 @@ export const useAuthMutation = () => {
     },
   });
 
+  const verifyForgotPasswordOTPMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.AUTH.VERIFY_FORGOT_PASSWORD_OTP],
+    mutationFn: async (payload: IVerifyOTPReq): Promise<IResponseObject<void>> =>
+      await api.post(API_ENDPOINTS.AUTH.VERIFY_FORGOT_PASSWORD_OTP, payload),
+    onError: error => handleMutationError(error, 'verify-forgot-password-otp-toast'),
+    onMutate: () => {
+      toast.loading(t('auth:verify_forgot_password_otp.loading'), {
+        id: 'verify-forgot-password-otp-toast',
+      });
+    },
+    onSuccess: async () => {
+      toast.success(t('auth:verify_forgot_password_otp.verify_otp_success'), {
+        id: 'verify-forgot-password-otp-toast',
+      });
+    },
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.AUTH.RESET_PASSWORD],
+    mutationFn: async (payload: IResetPasswordReq): Promise<IResponseObject<void>> =>
+      await api.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, payload),
+    onError: error => handleMutationError(error, 'reset-password-toast'),
+    onMutate: () => {
+      toast.loading(t('auth:reset_password.loading'), { id: 'reset-password-toast' });
+    },
+    onSuccess: async () => {
+      toast.success(t('auth:reset_password.reset_password_success'), {
+        id: 'reset-password-toast',
+      });
+      router.push('/sign-in');
+    },
+  });
+
   return {
     loginMutation,
     logoutMutation,
     registerMutation,
     changePasswordMutation,
     forgotPasswordMutation,
+    verifyForgotPasswordOTPMutation,
     showResendEmail,
+    resetPasswordMutation,
     setShowResendEmail,
   };
 };

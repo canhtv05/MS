@@ -9,9 +9,20 @@ import { useTranslation } from 'react-i18next';
 import { Mail } from 'lucide-react';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { ChevronLeft } from '@/components/animate-ui/icons/chevron-left';
+import { InputOTP } from '@/components/customs/input-otp';
+import { LockIcon, LockOpenIcon } from '@/public/icons';
 
 const ForgotPasswordPage = () => {
-  const { onSubmit, form, navigateSignIn } = useForgotPassword();
+  const {
+    onSubmitForgotPassword,
+    forgotPasswordForm,
+    navigateSignIn,
+    type,
+    onSubmitVerifyForgotPassword,
+    verifyForgotPasswordOtpForm,
+    onSubmitResetPassword,
+    resetPasswordForm,
+  } = useForgotPassword();
   const { t } = useTranslation('auth');
 
   return (
@@ -28,33 +39,125 @@ const ForgotPasswordPage = () => {
           <p className="text-foreground text-sm">{t('forgot_password.description')}</p>
         </div>
 
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          id="forgot-password-form"
-          className="space-y-2 flex flex-col gap-1 section-clickable"
-        >
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id="email"
-                label={t('forgot_password.email_address')}
-                placeholder={t('forgot_password.enter_your_email_address')}
-                icon={<Mail className="size-5 p-0.5 text-foreground/70" />}
-                inputSize="md"
-                errorText={fieldState?.error?.message}
-                validate
-                required
-              />
-            )}
-          />
+        {type === 'FORGOT' && (
+          <form
+            onSubmit={forgotPasswordForm.handleSubmit(onSubmitForgotPassword)}
+            id="forgot-password-form"
+            className="space-y-2 flex flex-col gap-1 section-clickable"
+          >
+            <Controller
+              name="email"
+              control={forgotPasswordForm.control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id="email"
+                  label={t('forgot_password.email_address')}
+                  placeholder={t('forgot_password.enter_your_email_address')}
+                  icon={<Mail className="size-5 p-0.5 text-foreground/70" />}
+                  inputSize="md"
+                  errorText={fieldState?.error?.message}
+                  validate
+                  required
+                />
+              )}
+            />
 
-          <Button className="w-full rounded-full" size={'lg'} type="submit">
-            {t('forgot_password.send_reset_password_email')}
-          </Button>
-        </form>
+            <Button className="w-full rounded-full" size={'lg'} type="submit">
+              {t('forgot_password.send_reset_password_email')}
+            </Button>
+          </form>
+        )}
+
+        {type === 'VERIFY' && (
+          <form
+            onSubmit={verifyForgotPasswordOtpForm.handleSubmit(onSubmitVerifyForgotPassword)}
+            id="verify-otp-form"
+            className="space-y-2 flex flex-col gap-1 section-clickable"
+          >
+            <Controller
+              name="email"
+              control={verifyForgotPasswordOtpForm.control}
+              render={({ field }) => <input type="hidden" {...field} />}
+            />
+            <Controller
+              name="OTP"
+              control={verifyForgotPasswordOtpForm.control}
+              render={({ field, fieldState }) => (
+                <InputOTP
+                  pattern="^[0-9]*$"
+                  {...field}
+                  maxLength={6}
+                  label={t('verify_forgot_password_otp.otp')}
+                  required
+                  id="otp"
+                  errorText={fieldState?.error?.message}
+                />
+              )}
+            />
+            <Button className="w-full rounded-full" size={'lg'} type="submit">
+              {t('verify_forgot_password_otp.verify_otp')}
+            </Button>
+          </form>
+        )}
+
+        {type === 'RESET' && (
+          <form
+            onSubmit={resetPasswordForm.handleSubmit(onSubmitResetPassword)}
+            id="verify-otp-form"
+            className="space-y-2 flex flex-col gap-1 section-clickable"
+          >
+            <Controller
+              name="email"
+              control={resetPasswordForm.control}
+              render={({ field }) => <input type="hidden" {...field} />}
+            />
+            <Controller
+              name="OTP"
+              control={resetPasswordForm.control}
+              render={({ field }) => <input type="hidden" {...field} />}
+            />
+            <Controller
+              name="newPassword"
+              control={resetPasswordForm.control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id="password"
+                  label={t('reset_password.new_password')}
+                  placeholder="••••••••"
+                  type="password"
+                  required
+                  validate
+                  inputSize="md"
+                  icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+                  errorText={fieldState?.error?.message}
+                />
+              )}
+            />
+            <Controller
+              name="confirmPassword"
+              control={resetPasswordForm.control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id="confirmPassword"
+                  label={t('reset_password.confirm_password')}
+                  placeholder="••••••••"
+                  type="password"
+                  required
+                  validate
+                  inputSize="md"
+                  icon={<LockOpenIcon className="size-5 p-0.5 text-foreground/70" />}
+                  errorText={fieldState?.error?.message}
+                />
+              )}
+            />
+            <Button className="w-full rounded-full" size={'lg'} type="submit">
+              {t('reset_password.reset_password')}
+            </Button>
+          </form>
+        )}
 
         <div id="social-sign-in" className="space-y-4 pt-5 section-clickable">
           <AnimateIcon animateOnHover>

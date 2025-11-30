@@ -45,7 +45,8 @@ public enum ErrorMessage {
     EMAIL_TOKEN_NOT_FOUND("EMAIL_TOKEN_NOT_FOUND", "Token email không tồn tại"),
     FORGET_PASSWORD_OTP_ALREADY_SENT("FORGET_PASSWORD_OTP_ALREADY_SENT", "Mã OTP đã được gửi"),
     FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED("FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED",
-            "Mã OTP chưa được gửi hoặc đã hết hạn");
+            "Mã OTP chưa được gửi hoặc đã hết hạn"),
+    FORGET_PASSWORD_OTP_INVALID("FORGET_PASSWORD_OTP_INVALID", "Mã OTP không hợp lệ");
 
     private final String code;
     private final String message;

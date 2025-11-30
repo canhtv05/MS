@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
     REGISTER: `${BASE_URL}/auth/me/c/create`,
     CHANGE_PASSWORD: `${BASE_URL}/auth/me/p/change-password`,
     FORGOT_PASSWORD: `${BASE_URL}/auth/me/p/forgot-password`,
+    VERIFY_FORGOT_PASSWORD_OTP: `${BASE_URL}/auth/me/p/verify-forgot-password-otp`,
+    RESET_PASSWORD: `${BASE_URL}/auth/me/p/reset-password`,
   },
   PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,

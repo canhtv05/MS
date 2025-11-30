@@ -25,10 +25,11 @@ export const signUpSchema = z
     username: z
       .string()
       .min(3, t('validation:string.min', { field: t('auth:sign_up.username'), min: 3 })),
-    email: z.email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 })),
-    // .refine(value => !value.split('@')[0].includes('+'), {
-    //   message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
-    // })
+    email: z
+      .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
+      .refine(value => !value.split('@')[0].includes('+'), {
+        message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
+      }),
     password: z
       .string()
       .min(3, t('validation:string.min', { field: t('auth:sign_up.password'), min: 3 })),
@@ -81,3 +82,34 @@ export const forgotPasswordSchema = z.object({
       message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
     }),
 });
+
+export const verifyForgotPasswordOTPSchema = z.object({
+  OTP: z
+    .string()
+    .min(
+      6,
+      t('validation:string.min', { field: t('auth:verify_forgot_password_otp.otp'), min: 6 }),
+    ),
+  email: z
+    .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
+    .refine(value => !value.split('@')[0].includes('+'), {
+      message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
+    }),
+});
+
+export const resetPasswordSchema = verifyForgotPasswordOTPSchema
+  .extend({
+    newPassword: z
+      .string()
+      .min(3, t('validation:string.min', { field: t('auth:reset_password.new_password'), min: 3 })),
+    confirmPassword: z
+      .string()
+      .min(
+        3,
+        t('validation:string.min', { field: t('auth:reset_password.confirm_password'), min: 3 }),
+      ),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: t('auth:reset_password.password_not_match'),
+    path: ['confirmPassword'],
+  });

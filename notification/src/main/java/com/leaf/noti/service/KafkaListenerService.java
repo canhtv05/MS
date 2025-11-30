@@ -18,9 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaListenerService {
 
     private final EmailService emailService;
-    private static final String GROUP_ID = "notification-group";
 
-    @KafkaListener(topics = EventConstants.VERIFICATION_EMAIL_TOPIC, groupId = GROUP_ID, containerFactory = "verificationEmailKafkaListenerContainerFactory")
+    @KafkaListener(topics = EventConstants.VERIFICATION_EMAIL_TOPIC, groupId = EventConstants.VERIFICATION_EMAIL_GROUP_ID, containerFactory = "verificationEmailKafkaListenerContainerFactory")
     public void listenVerifyEmailToken(VerificationEmailEvent verificationEmailEvent) {
         try {
             emailService.sendVerificationEmail(verificationEmailEvent);
@@ -29,7 +28,7 @@ public class KafkaListenerService {
         }
     }
 
-    @KafkaListener(topics = EventConstants.FORGOT_PASSWORD_TOPIC, groupId = GROUP_ID, containerFactory = "forgotPasswordKafkaListenerContainerFactory")
+    @KafkaListener(topics = EventConstants.FORGOT_PASSWORD_TOPIC, groupId = EventConstants.FORGOT_PASSWORD_GROUP_ID, containerFactory = "forgotPasswordKafkaListenerContainerFactory")
     public void listenForgotPassword(ForgotPasswordEvent forgotPasswordEvent) {
         try {
             emailService.sendForgotPasswordEmail(forgotPasswordEvent);

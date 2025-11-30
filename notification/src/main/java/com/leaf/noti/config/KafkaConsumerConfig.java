@@ -9,6 +9,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.messaging.converter.MessageConversionException;
 import org.springframework.util.backoff.FixedBackOff;
 
+import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 
@@ -27,11 +28,10 @@ public class KafkaConsumerConfig {
 
     private final KafkaConsumerProperties kafkaConsumerProperties;
 
-    @Bean
-    public Map<String, Object> stringConsumerProps() {
+    private Map<String, Object> stringConsumerProps(String groupId) {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConsumerProperties.getBootstrapServers());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerProperties.getConsumer().getGroupId());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 kafkaConsumerProperties.getConsumer().getKeyDeserializer());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
@@ -42,6 +42,15 @@ public class KafkaConsumerConfig {
         return props;
     }
 
+    private <T> ConcurrentKafkaListenerContainerFactory<String, T> buildFactory(Class<T> clazz, String groupId) {
+        DefaultKafkaConsumerFactory<String, T> consumerFactory = new DefaultKafkaConsumerFactory<>(
+                stringConsumerProps(groupId), new StringDeserializer(), new JsonDeserializer<>(clazz, false));
+        ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.setCommonErrorHandler(errorHandler());
+        return factory;
+    }
+
     @Bean
     public CommonErrorHandler errorHandler() {
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(new FixedBackOff(0L, 0));
@@ -50,25 +59,12 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public <T> ConcurrentKafkaListenerContainerFactory<String, T> genericKafkaListenerContainerFactory(Class<T> clazz) {
-        Map<String, Object> props = stringConsumerProps();
-        DefaultKafkaConsumerFactory<String, T> consumerFactory = new DefaultKafkaConsumerFactory<>(props,
-                new StringDeserializer(),
-                new JsonDeserializer<>(clazz, false));
-
-        ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
-        factory.setCommonErrorHandler(errorHandler());
-        return factory;
-    }
-
-    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ForgotPasswordEvent> forgotPasswordKafkaListenerContainerFactory() {
-        return genericKafkaListenerContainerFactory(ForgotPasswordEvent.class);
+        return buildFactory(ForgotPasswordEvent.class, EventConstants.FORGOT_PASSWORD_GROUP_ID);
     }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, VerificationEmailEvent> verificationEmailKafkaListenerContainerFactory() {
-        return genericKafkaListenerContainerFactory(VerificationEmailEvent.class);
+        return buildFactory(VerificationEmailEvent.class, EventConstants.VERIFICATION_EMAIL_GROUP_ID);
     }
 }

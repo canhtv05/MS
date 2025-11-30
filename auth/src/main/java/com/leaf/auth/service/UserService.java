@@ -13,6 +13,7 @@ import com.leaf.auth.dto.excel.ReadExcelResult;
 import com.leaf.auth.dto.excel.RowData;
 import com.leaf.auth.dto.excel.RowHeader;
 import com.leaf.auth.dto.req.ChangePasswordReq;
+import com.leaf.auth.dto.req.VerifyOTPReq;
 import com.leaf.auth.dto.req.ForgotPasswordReq;
 import com.leaf.auth.dto.req.ResetPasswordReq;
 import com.leaf.auth.dto.search.SearchRequest;
@@ -186,20 +187,43 @@ public class UserService {
     }
 
     public void resetPassword(ResetPasswordReq request) {
-        if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword())) {
+        if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
-        }
-
-        boolean hasOTP = hasOTP(request.getEmail());
-        if (!hasOTP) {
-            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
         }
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
 
+        boolean hasOTP = hasOTP(user.getUsername());
+        if (!hasOTP) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
+        }
+
+        if (!request.getOTP().equals(redisService.getForgotPasswordOTP(user.getUsername()))) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_INVALID);
+        }
+
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+        redisService.deleteForgotPasswordOTP(user.getUsername());
+    }
+
+    public void verifyForgotPasswordOTP(VerifyOTPReq request) {
+        if (CommonUtils.isEmpty(request.getEmail(), request.getOTP())) {
+            throw new ApiException(ErrorMessage.VALIDATION_ERROR);
+        }
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
+
+        String otp = redisService.getForgotPasswordOTP(user.getUsername());
+        if (CommonUtils.isEmpty(otp)) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
+        }
+
+        if (!otp.equals(request.getOTP())) {
+            throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_INVALID);
+        }
     }
 
     public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {

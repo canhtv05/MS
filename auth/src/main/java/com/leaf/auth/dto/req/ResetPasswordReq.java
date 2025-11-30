@@ -1,5 +1,7 @@
 package com.leaf.auth.dto.req;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +21,8 @@ public class ResetPasswordReq {
 
     @NotBlank(message = "New password is required")
     private String newPassword;
+
+    @NotBlank(message = "OTP is required")
+    @JsonProperty("OTP")
+    private String OTP;
 }

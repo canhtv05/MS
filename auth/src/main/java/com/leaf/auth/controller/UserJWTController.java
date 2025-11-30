@@ -3,6 +3,7 @@ package com.leaf.auth.controller;
 import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
+import com.leaf.auth.dto.req.VerifyOTPReq;
 import com.leaf.auth.dto.req.ForgotPasswordReq;
 import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.req.LogoutRequest;
@@ -87,6 +88,13 @@ public class UserJWTController {
     @PostMapping("/p/forgot-password")
     public ResponseEntity<ResponseObject<Boolean>> forgotPassword(@Valid @RequestBody ForgotPasswordReq req) {
         userService.forgotPasswordRequest(req);
+        return ResponseEntity.ok(ResponseObject.success());
+    }
+
+    @PostMapping("/p/verify-forgot-password-otp")
+    public ResponseEntity<ResponseObject<Boolean>> verifyForgotPasswordOTP(
+            @Valid @RequestBody VerifyOTPReq req) {
+        userService.verifyForgotPasswordOTP(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 

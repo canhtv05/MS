@@ -40,3 +40,14 @@ export interface IChangePasswordRequest {
 export interface IForgotPasswordRequest {
   email: string;
 }
+
+export interface IVerifyOTPReq {
+  email: string;
+  OTP: string;
+}
+
+export interface IResetPasswordReq {
+  email: string;
+  OTP: string;
+  newPassword: string;
+}
