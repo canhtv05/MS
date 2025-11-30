@@ -7,9 +7,9 @@ interface IHomeLayoutProps {
 
 const HomeLayout = ({ children }: IHomeLayoutProps) => {
   return (
-    <div>
+    <div className="h-screen">
       <HomeHeaderLayout />
-      {children}
+      <div className="bg-gray-200 dark:bg-gray-900 h-full">{children}</div>
     </div>
   );
 };

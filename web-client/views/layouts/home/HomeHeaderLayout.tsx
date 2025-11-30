@@ -14,20 +14,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/animate-ui/components/radix/sheet';
-import { ArrowLeft } from '@/components/animate-ui/icons/arrow-left';
 import { Bell } from '@/components/animate-ui/icons/bell';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { LogOut } from '@/components/animate-ui/icons/log-out';
-import { MessageCircleMore } from '@/components/animate-ui/icons/message-circle-more';
 import { Search, SearchIcon } from '@/components/animate-ui/icons/search';
 import { Settings } from '@/components/animate-ui/icons/settings';
 import { SunIcon } from '@/components/animate-ui/icons/sun';
@@ -42,7 +31,7 @@ import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image, { StaticImageData } from 'next/image';
 import useHomeHeaderLayout from './use-home-header-layout';
-import { EllipsisVertical, Loader2 } from 'lucide-react';
+import { EllipsisVertical, Loader2, Plus } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
@@ -123,53 +112,53 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
   );
 };
 
-const HomeHeaderSearchMD = ({
-  value,
-  onChange,
-  isLoading,
-  debouncedValue,
-  t,
-}: IHomeHeaderSearch) => {
-  return (
-    <div className={cn(isLoading ? 'overflow-hidden' : 'overflow-y-auto')}>
-      <div className="p-2 flex sticky top-0 z-50 bg-background items-center justify-start gap-3">
-        <SheetClose asChild>
-          <AnimateIcon animateOnHover>
-            <IconButton
-              className="rounded-full flex bg-background cursor-pointer shadow-none"
-              variant={'accent'}
-            >
-              <ArrowLeft className={'size-6 p-0.5'} />
-            </IconButton>
-          </AnimateIcon>
-        </SheetClose>
-        <div className="flex-1">
-          <AnimateIcon animateOnTap>
-            <Input
-              inputSize="md"
-              id="search-md"
-              className="rounded-full w-full"
-              placeholder={t('header.search_placeholder')}
-              value={value}
-              onChange={onChange}
-            />
-          </AnimateIcon>
-        </div>
-      </div>
-      {isLoading ? (
-        <div className="flex mt-2 items-center justify-center">
-          <Loader2 className="animate-spin size-8 text-foreground" />
-        </div>
-      ) : debouncedValue.trim() !== '' && !isLoading ? (
-        <AnimatePresence>
-          {Array.from({ length: 20 }).map((_, index) => (
-            <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
-          ))}
-        </AnimatePresence>
-      ) : null}
-    </div>
-  );
-};
+// const HomeHeaderSearchMD = ({
+//   value,
+//   onChange,
+//   isLoading,
+//   debouncedValue,
+//   t,
+// }: IHomeHeaderSearch) => {
+//   return (
+//     <div className={cn(isLoading ? 'overflow-hidden' : 'overflow-y-auto')}>
+//       <div className="p-2 flex sticky top-0 z-50 bg-background items-center justify-start gap-3">
+//         <SheetClose asChild>
+//           <AnimateIcon animateOnHover>
+//             <IconButton
+//               className="rounded-full flex bg-background cursor-pointer shadow-none"
+//               variant={'accent'}
+//             >
+//               <ArrowLeft className={'size-6 p-0.5'} />
+//             </IconButton>
+//           </AnimateIcon>
+//         </SheetClose>
+//         <div className="flex-1">
+//           <AnimateIcon animateOnTap>
+//             <Input
+//               inputSize="md"
+//               id="search-md"
+//               className="rounded-full w-full dark:bg-gray-600 bg-gray-200"
+//               placeholder={t('header.search_placeholder')}
+//               value={value}
+//               onChange={onChange}
+//             />
+//           </AnimateIcon>
+//         </div>
+//       </div>
+//       {isLoading ? (
+//         <div className="flex mt-2 items-center justify-center">
+//           <Loader2 className="animate-spin size-8 text-foreground" />
+//         </div>
+//       ) : debouncedValue.trim() !== '' && !isLoading ? (
+//         <AnimatePresence>
+//           {Array.from({ length: 20 }).map((_, index) => (
+//             <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
+//           ))}
+//         </AnimatePresence>
+//       ) : null}
+//     </div>
+//   );
+// };
 
 const HomeHeaderDropdown = ({
   theme,
@@ -284,7 +273,9 @@ const HomeHeaderSearchLG = forwardRef(
         ref={ref}
         className={cn(
           isLoading ? 'overflow-hidden' : 'overflow-y-auto',
-          'absolute w-[calc(100%-20px)] transform -translate-x-1/2 top-13 z-40 left-1/2 max-h-[40vh] bg-background border rounded-lg',
+          'z-40 relative max-h-[40vh] bg-background border rounded-lg',
+          'fixed top-[60px] left-5 right-5 w-auto',
+          'lg:absolute lg:w-full lg:top-13 lg:left-1/2 lg:right-auto lg:transform lg:-translate-x-1/2',
         )}
       >
         {isLoading ? (
@@ -328,17 +319,21 @@ const HomeHeaderLayout = () => {
   if (!ready) return null;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-foreground/10 bg-secondary backdrop-blur-md">
-      <div className="mx-auto px-4 flex items-center justify-center sm:px-6 lg:px-8">
+    <header className="fixed top-0 left-0 h-[54px] right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
+      <div className="mx-auto px-4 flex h-full items-center justify-center sm:px-6 lg:px-8">
         <div className="max-w-7xl flex items-center justify-between p-1 w-full">
-          <Logo responsive />
-          <div className="flex-1 max-w-xl md:py-0 py-[5px] md:mx-8 mx-2 items-center justify-center">
-            <div className="md:block hidden relative z-50">
+          <div className="lg:block hidden">
+            <Logo />
+          </div>
+          <div className="flex-1 max-w-md  md:py-0 py-[5px] md:mx-8 mx-2 items-center justify-center">
+            <div className="block relative z-50">
               <AnimateIcon animateOnTap>
                 <Input
+                  inputSize="md"
                   id="search"
-                  className="rounded-full"
-                  icon={<Search className={'size-5 p-0.5'} />}
+                  className="dark:bg-gray-600 bg-gray-200"
+                  classNameIcon="dark:bg-gray-600 bg-gray-200"
+                  icon={<Search className={'size-5 p-0.5 text-foreground/70'} />}
                   placeholder={t('header.search_placeholder')}
                   onChange={handleSearch}
                   value={search}
@@ -358,7 +353,7 @@ const HomeHeaderLayout = () => {
                 />
               ) : null}
             </div>
-            <Sheet>
+            {/* <Sheet>
               <SheetTrigger asChild>
                 <IconButton
                   className="md:hidden border rounded-full flex bg-background cursor-pointer shadow-none"
@@ -382,25 +377,25 @@ const HomeHeaderLayout = () => {
                   setIsShowSearch={setIsShowSearch}
                 />
               </SheetContent>
-            </Sheet>
+            </Sheet> */}
           </div>
           {user?.username ? (
             <div className="flex gap-5 items-center justify-center">
               <div className="flex items-center justify-center gap-2">
                 <AnimateIcon animateOnHover>
                   <IconButton
-                    className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
-                    <Bell />
+                    <Bell className="text-foreground/70" />
                   </IconButton>
                 </AnimateIcon>
                 <AnimateIcon animateOnHover>
                   <IconButton
-                    className="not-hover:bg-transparent! hover:bg-card dark:hover:bg-input rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
-                    <MessageCircleMore />
+                    <Plus className="text-foreground/70" />
                   </IconButton>
                 </AnimateIcon>
               </div>
