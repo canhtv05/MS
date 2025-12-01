@@ -23,15 +23,14 @@ import { SunIcon } from '@/components/animate-ui/icons/sun';
 import { SunMoon } from '@/components/animate-ui/icons/sun-moon';
 import { UserRound } from '@/components/animate-ui/icons/user-round';
 import { Switch, SwitchThumb } from '@/components/animate-ui/primitives/radix/switch';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import { Input } from '@/components/customs/input';
 import Ring from '@/components/customs/ring';
 import Logo from '@/components/Logo';
 import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image, { StaticImageData } from 'next/image';
-import useHomeHeaderLayout from './use-home-header-layout';
-import { CirclePlus, EllipsisVertical, Loader2 } from 'lucide-react';
+import useHeaderLayout from './use-header-layout';
+import { EllipsisVertical, Loader2, SquarePlus } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
@@ -46,6 +45,7 @@ import Dialog from '@/components/customs/dialog';
 import { LockIcon } from '@/components/ui/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
+import CustomImage from '@/components/customs/custom-image';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -78,10 +78,14 @@ interface IHomeHeaderDropdown {
 const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
   return (
     <>
-      <Avatar className="border-2 border-purple-300 cursor-pointer">
-        <AvatarImage src={src.src} />
-        <AvatarFallback>{fallback}</AvatarFallback>
-      </Avatar>
+      <CustomImage
+        src={src.src}
+        alt={fallback}
+        fallbackSrc={images.avt1.src}
+        width={35}
+        height={35}
+        className="rounded-full border-2 border-purple-300 cursor-pointer"
+      />
       <div className="absolute -bottom-0.5 -right-1">
         <Ring className="border-card! border-2" />
       </div>
@@ -293,7 +297,7 @@ const HomeHeaderSearchLG = forwardRef(
 );
 HomeHeaderSearchLG.displayName = 'HomeHeaderSearchLG';
 
-const HomeHeaderLayout = () => {
+const HeaderLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
   const {
     setTheme,
@@ -307,7 +311,7 @@ const HomeHeaderLayout = () => {
     handleChangeLang,
     currentLang,
     handleLogout,
-  } = useHomeHeaderLayout();
+  } = useHeaderLayout();
   useClickOutside(ref, () => setIsShowSearch(false));
 
   const { t, ready } = useTranslation(['layout', 'auth']);
@@ -399,8 +403,8 @@ const HomeHeaderLayout = () => {
                     variant={'secondary'}
                     className="bg-blue-500! hover:opacity-80 transition-opacity duration-300 rounded-lg"
                   >
-                    <div className="flex gap-1 items-center justify-center">
-                      <CirclePlus className="dark:text-foreground/70 text-white" />
+                    <div className="flex gap-2 items-center justify-center">
+                      <SquarePlus className="dark:text-foreground/70 text-white" />
                       <span className="font-normal dark:text-foreground/70 text-white">
                         {t('header.create')}
                       </span>
@@ -427,7 +431,7 @@ const HomeHeaderLayout = () => {
                     </div>
                     <div className="flex flex-col">
                       <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {user?.fullname || user?.username}
+                        {user?.fullName || user?.username}
                       </h3>
                       <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
                         @{user?.username}
@@ -541,4 +545,4 @@ const HomeHeaderLayout = () => {
   );
 };
 
-export default HomeHeaderLayout;
+export default HeaderLayout;

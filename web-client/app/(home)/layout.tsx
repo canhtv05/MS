@@ -1,4 +1,5 @@
-import HomeHeaderLayout from '@/views/layouts/home/HomeHeaderLayout';
+import HeaderLayout from '@/views/layouts/home/HeaderLayout';
+import NavigationLayout from '@/views/layouts/navigation/NavigationLayout';
 import { ReactNode } from 'react';
 
 interface IHomeLayoutProps {
@@ -8,8 +9,11 @@ interface IHomeLayoutProps {
 const HomeLayout = ({ children }: IHomeLayoutProps) => {
   return (
     <div className="h-screen">
-      <HomeHeaderLayout />
-      <div className="bg-gray-200 dark:bg-gray-900 h-full">{children}</div>
+      <HeaderLayout />
+      <div className="bg-gray-200 px-8 dark:bg-gray-900 h-full flex pt-16">
+        <NavigationLayout />
+        <div className="w-full flex-1">{children}</div>
+      </div>
     </div>
   );
 };

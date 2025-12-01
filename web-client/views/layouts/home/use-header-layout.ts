@@ -11,7 +11,7 @@ import { useAuthMutation } from '@/services/mutations/auth';
 import cookieUtils from '@/utils/cookieUtils';
 import { IChangePasswordRequest } from '@/types/auth';
 
-const useHomeHeaderLayout = () => {
+const useHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
@@ -76,4 +76,4 @@ const useHomeHeaderLayout = () => {
   };
 };
 
-export default useHomeHeaderLayout;
+export default useHeaderLayout;
