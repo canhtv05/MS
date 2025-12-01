@@ -1,0 +1,87 @@
+{
+  "configurations": [
+    {
+      "console": "integratedTerminal",
+      "type": "java",
+      "name": "Spring Boot-AuthApplication<auth>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.auth.AuthApplication",
+      "projectName": "auth",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env.dev",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "dev"
+      },
+      "vmArgs": "-Duser.timezone=Asia/Ho_Chi_Minh -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=56569 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=auth"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-DiscoveryServerApplication<discovery-server>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.cantv05.discovery_server.DiscoveryServerApplication",
+      "projectName": "discovery-server",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=62112 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=discovery-server"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-GatewayApplication<gateway>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.gateway.GatewayApplication",
+      "projectName": "gateway",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=gateway"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-FileApplication<file>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.file.FileApplication",
+      "projectName": "file",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "dev"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-DiscoveryServerApplication<discovery-server>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.discovery_server.DiscoveryServerApplication",
+      "projectName": "discovery-server",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-ProfileApplication<profile>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.profile.ProfileApplication",
+      "projectName": "profile",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "SPRING_PROFILES_ACTIVE": "dev"
+      }
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-NotificationApplication<notification>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.noti.NotificationApplication",
+      "projectName": "notification",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

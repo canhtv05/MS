@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image, { StaticImageData } from 'next/image';
 import useHomeHeaderLayout from './use-home-header-layout';
-import { EllipsisVertical, Loader2, Plus } from 'lucide-react';
+import { CirclePlus, EllipsisVertical, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
@@ -97,17 +97,15 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
-      <AnimateIcon animateOnHover>
-        <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 hover:bg-muted cursor-pointer rounded-md">
-          <IconButton
-            className="dark:group-hover:bg-muted group-hover:bg-card rounded-full flex cursor-pointer shadow-none"
-            variant={'accent'}
-          >
-            <SearchIcon className={'size-6 p-0.5'} />
-          </IconButton>
-          <span className="text-foreground text-sm">{value}</span>
-        </div>
-      </AnimateIcon>
+      <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer rounded-md transition-colors duration-300">
+        <IconButton
+          className="rounded-full bg-transparent flex cursor-pointer shadow-none transition-all duration-300"
+          variant={'accent'}
+        >
+          <SearchIcon className={'size-6 p-0.5'} />
+        </IconButton>
+        <span className="text-foreground text-sm">{value}</span>
+      </div>
     </motion.div>
   );
 };
@@ -331,7 +329,7 @@ const HomeHeaderLayout = () => {
                 <Input
                   inputSize="md"
                   id="search"
-                  className="dark:bg-gray-600 bg-gray-200 h-9"
+                  className="dark:bg-gray-600 bg-gray-200 h-9 rounded-lg"
                   classNameIcon="dark:bg-gray-600 bg-gray-200 h-9"
                   icon={<Search className={'size-5 p-0.5 text-foreground/70'} />}
                   placeholder={t('header.search_placeholder')}
@@ -384,19 +382,30 @@ const HomeHeaderLayout = () => {
               <div className="flex items-center justify-center gap-2">
                 <AnimateIcon animateOnHover>
                   <IconButton
-                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-200 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <Bell className="text-foreground/70" />
                   </IconButton>
                 </AnimateIcon>
                 <AnimateIcon animateOnHover>
-                  <IconButton
+                  {/* <IconButton
                     className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
-                    <Plus className="text-foreground/70" />
-                  </IconButton>
+                    <CirclePlus className="text-foreground/70" />
+                  </IconButton> */}
+                  <Button
+                    variant={'secondary'}
+                    className="bg-blue-500! hover:opacity-80 transition-opacity duration-300 rounded-lg"
+                  >
+                    <div className="flex gap-1 items-center justify-center">
+                      <CirclePlus className="dark:text-foreground/70 text-white" />
+                      <span className="font-normal dark:text-foreground/70 text-white">
+                        {t('header.create')}
+                      </span>
+                    </div>
+                  </Button>
                 </AnimateIcon>
               </div>
               <DropdownMenu>

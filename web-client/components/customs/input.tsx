@@ -94,7 +94,7 @@ function Input({
               'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-foreground/70',
               'focus-visible:transform focus-visible:placeholder:translate-x-0.5 not-focus-visible:placeholder:-translate-x-0.5 focus-visible:placeholder:transition-transform focus-visible:placeholder:duration-150 not-focus-visible:placeholder:duration-150',
-              'placeholder:pl-1 text-foreground mt-0! dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
+              'placeholder:pl-1 text-foreground mt-0! placeholder:transition-none dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
               !!validate && isEmpty && 'border-red-500',
               (typeInput === 'password' || prevType === 'password') && 'pr-11',
               className,

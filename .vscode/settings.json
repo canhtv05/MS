@@ -1,0 +1,14 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.project.sourcePaths": ["src/main/java", "target/generated-sources/protobuf/java"],
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "C:\\Program Files\\Java\\jdk-21"
+    }
+  ],
+  "editor.formatOnType": false,
+  "editor.formatOnSave": true,
+  "java.debug.settings.onBuildFailureProceed": true
+}
