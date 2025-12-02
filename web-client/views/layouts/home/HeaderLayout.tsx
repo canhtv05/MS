@@ -14,7 +14,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
-import { Bell } from '@/components/animate-ui/icons/bell';
+// import { Bell } from '@/components/animate-ui/icons/bell';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { LogOut } from '@/components/animate-ui/icons/log-out';
 import { Search, SearchIcon } from '@/components/animate-ui/icons/search';
@@ -45,7 +45,7 @@ import Dialog from '@/components/customs/dialog';
 import { LockIcon } from '@/components/ui/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
-import CustomImage from '@/components/customs/custom-image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -78,14 +78,24 @@ interface IHomeHeaderDropdown {
 const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
   return (
     <>
-      <CustomImage
+      {/* <CustomImage
         src={src.src}
         alt={fallback}
         fallbackSrc={images.avt1.src}
         width={35}
         height={35}
         className="rounded-full border-2 border-purple-300 cursor-pointer"
-      />
+      /> */}
+      <Avatar>
+        <AvatarImage
+          width={35}
+          height={35}
+          className="rounded-full border-2 border-purple-300 cursor-pointer"
+          src={src.src}
+          alt={fallback}
+        />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
       <div className="absolute -bottom-0.5 -right-1">
         <Ring className="border-card! border-2" />
       </div>
@@ -212,7 +222,7 @@ const HomeHeaderDropdown = ({
             <span>{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
-        <DropdownMenuSubContent className="overflow-hidden min-w-36 overflow-y-auto overflow-x-hidden border p-1 z-50">
+        <DropdownMenuSubContent className="overflow-hidden min-w-40 overflow-y-auto overflow-x-hidden border p-1 z-50">
           <DropdownMenuHighlightItem>
             <DropdownMenuItem
               onClick={e => {
@@ -324,18 +334,18 @@ const HeaderLayout = () => {
     <header className="fixed top-0 left-0 h-[54px] right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
       <div className="mx-auto px-4 flex h-full items-center justify-center sm:px-6 lg:px-8">
         <div className="max-w-7xl flex items-center justify-between p-1 w-full">
-          <div className="lg:block hidden">
+          <div className="pr-2 md:block hidden">
             <Logo />
           </div>
-          <div className="flex-1 flex md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 items-center lg:justify-center justify-start">
-            <div className="block relative w-full max-w-md z-50">
+          <div className="flex w-full md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 gap-2 items-center justify-end">
+            <div className="block relative w-full md:max-w-md max-w-full z-50">
               <AnimateIcon animateOnTap>
                 <Input
                   inputSize="md"
                   id="search"
-                  className="dark:bg-gray-600 bg-gray-200 h-9 rounded-lg"
-                  classNameIcon="dark:bg-gray-600 bg-gray-200 h-9"
-                  icon={<Search className={'size-5 p-0.5 text-foreground/70'} />}
+                  className="dark:bg-gray-600 bg-gray-100 h-9 placeholder:font-medium rounded-md border-transparent"
+                  classNameIcon="dark:bg-gray-600 bg-gray-100 h-9"
+                  icon={<Search className={'size-5 p-0.5 text-foreground/60 stroke-3'} />}
                   placeholder={t('header.search_placeholder')}
                   onChange={handleSearch}
                   value={search}
@@ -343,7 +353,7 @@ const HeaderLayout = () => {
                   endIcon={isLoading ? <Loader2 className="animate-spin size-5 p-0.5" /> : null}
                 />
               </AnimateIcon>
-              {isShowSearch && debouncedSearch.trim() !== '' && !isLoading ? (
+              {isShowSearch && debouncedSearch.trim() !== '' && !isLoading && (
                 <HomeHeaderSearchLG
                   t={t}
                   ref={ref}
@@ -353,9 +363,10 @@ const HeaderLayout = () => {
                   isLoading={isLoading}
                   debouncedValue={debouncedSearch}
                 />
-              ) : null}
+              )}
             </div>
-            {/* <Sheet>
+            {/* <div>
+              <Sheet>
               <SheetTrigger asChild>
                 <IconButton
                   className="md:hidden border rounded-full flex bg-background cursor-pointer shadow-none"
@@ -379,135 +390,93 @@ const HeaderLayout = () => {
                   setIsShowSearch={setIsShowSearch}
                 />
               </SheetContent>
-            </Sheet> */}
-          </div>
-          {user?.username ? (
-            <div className="flex gap-5 items-center justify-center">
-              <div className="flex items-center justify-center gap-2">
-                <AnimateIcon animateOnHover>
+            </Sheet>
+            </div> */}
+            {user?.username ? (
+              <div className="flex gap-3 items-center justify-end">
+                <div className="flex items-center justify-center gap-2">
+                  {/* <AnimateIcon animateOnHover>
                   <IconButton
-                    className="bg-gray-200 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <Bell className="text-foreground/70" />
                   </IconButton>
-                </AnimateIcon>
-                <AnimateIcon animateOnHover>
-                  {/* <IconButton
+                </AnimateIcon> */}
+                  <AnimateIcon animateOnHover>
+                    {/* <IconButton
                     className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <CirclePlus className="text-foreground/70" />
                   </IconButton> */}
-                  <Button
-                    variant={'secondary'}
-                    className="bg-blue-500! hover:opacity-80 transition-opacity duration-300 rounded-lg"
-                  >
-                    <div className="flex gap-2 items-center justify-center">
-                      <SquarePlus className="dark:text-foreground/70 text-white" />
-                      <span className="font-normal dark:text-foreground/70 text-white">
-                        {t('header.create')}
-                      </span>
-                    </div>
-                  </Button>
-                </AnimateIcon>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <div className="relative">
-                    <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
-                  </div>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent
-                  side="bottom"
-                  align="end"
-                  sideOffset={10}
-                  className="w-[220px]"
-                >
-                  <DropdownMenuLabel className="flex gap-2">
-                    <div className="relative inline-block">
+                    <Button
+                    // variant={'secondary'}
+                    // className=" hover:opacity-80 transition-opacity duration-300 rounded-lg px-3"
+                    >
+                      <div className="flex gap-2 items-center justify-center">
+                        <SquarePlus className="dark:text-foreground/70 text-white stroke-[2.5px]" />
+                        <span className="font-medium dark:text-foreground/70 text-white">
+                          {t('header.create')}
+                        </span>
+                      </div>
+                    </Button>
+                  </AnimateIcon>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <div className="relative">
                       <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
                     </div>
-                    <div className="flex flex-col">
-                      <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                        {user?.fullName || user?.username}
-                      </h3>
-                      <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-                        @{user?.username}
-                      </span>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <AnimateIcon animateOnHover>
-                      <DropdownMenuItem>
-                        <div className="flex items-center justify-center gap-2">
-                          <UserRound />
-                          <span>{t('header.view_profile')}</span>
-                        </div>
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                      </DropdownMenuItem>
-                    </AnimateIcon>
-                    <DropdownMenuItem
-                      onClick={() => setOpenChangePassword(true)}
-                      className="group cursor-pointer flex items-center justify-start gap-2"
-                    >
-                      <LockIcon className="group-hover:animate-icon text-foreground/70" />
-                      <span>{t('header.change_password')}</span>
-                    </DropdownMenuItem>
-                    <AnimateIcon animateOnHover>
-                      <DropdownMenuItem>
-                        <div className="flex items-center justify-center gap-2">
-                          <Settings />
-                          <span>{t('header.settings')}</span>
-                        </div>
-                      </DropdownMenuItem>
-                    </AnimateIcon>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <HomeHeaderDropdown
-                    currentLang={currentLang}
-                    handleChangeLang={handleChangeLang}
-                    theme={theme}
-                    setTheme={setTheme}
-                    itemClassName={itemClassName}
-                  />
-                  <DropdownMenuSeparator />
-                  <AnimateIcon animateOnHover>
-                    <DropdownMenuItem onClick={() => setOpenLogout(true)}>
-                      <div className="flex items-center justify-center gap-2">
-                        <LogOut />
-                        <span>{t('header.logout')}</span>
-                      </div>
-                      <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </AnimateIcon>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          ) : (
-            <div className="flex gap-5 items-center justify-center">
-              <div className="flex items-center justify-center gap-5">
-                <Link href="/sign-in">
-                  <Button variant={'destructive'} className="h-9 px-4">
-                    {t('auth:sign_in.sign_in_button')}
-                  </Button>
-                </Link>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
-                    <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
-                      <div className="relative transparent!">
-                        <EllipsisVertical className="size-6 p-0.5" />
-                      </div>
-                    </IconButton>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent
                     side="bottom"
                     align="end"
                     sideOffset={10}
                     className="w-[220px]"
                   >
+                    <DropdownMenuLabel className="flex gap-2">
+                      <div className="relative inline-block">
+                        <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
+                      </div>
+                      <div className="flex flex-col">
+                        <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
+                          {user?.fullName || user?.username}
+                        </h3>
+                        <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
+                          @{user?.username}
+                        </span>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <AnimateIcon animateOnHover>
+                        <DropdownMenuItem>
+                          <div className="flex items-center justify-center gap-2">
+                            <UserRound />
+                            <span>{t('header.view_profile')}</span>
+                          </div>
+                          <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      </AnimateIcon>
+                      <DropdownMenuItem
+                        onClick={() => setOpenChangePassword(true)}
+                        className="group cursor-pointer flex items-center justify-start gap-2"
+                      >
+                        <LockIcon className="group-hover:animate-icon text-foreground/70" />
+                        <span>{t('header.change_password')}</span>
+                      </DropdownMenuItem>
+                      <AnimateIcon animateOnHover>
+                        <DropdownMenuItem>
+                          <div className="flex items-center justify-center gap-2">
+                            <Settings />
+                            <span>{t('header.settings')}</span>
+                          </div>
+                        </DropdownMenuItem>
+                      </AnimateIcon>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
                     <HomeHeaderDropdown
                       currentLang={currentLang}
                       handleChangeLang={handleChangeLang}
@@ -515,11 +484,54 @@ const HeaderLayout = () => {
                       setTheme={setTheme}
                       itemClassName={itemClassName}
                     />
+                    <DropdownMenuSeparator />
+                    <AnimateIcon animateOnHover>
+                      <DropdownMenuItem onClick={() => setOpenLogout(true)}>
+                        <div className="flex items-center justify-center gap-2">
+                          <LogOut />
+                          <span>{t('header.logout')}</span>
+                        </div>
+                        <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </AnimateIcon>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="flex gap-5 items-center justify-center">
+                <div className="flex items-center justify-center gap-5">
+                  <Link href="/sign-in">
+                    <Button variant={'destructive'} className="h-9 px-4">
+                      {t('auth:sign_in.sign_in_button')}
+                    </Button>
+                  </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
+                      <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
+                        <div className="relative transparent!">
+                          <EllipsisVertical className="size-6 p-0.5" />
+                        </div>
+                      </IconButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      side="bottom"
+                      align="end"
+                      sideOffset={10}
+                      className="w-[220px]"
+                    >
+                      <HomeHeaderDropdown
+                        currentLang={currentLang}
+                        handleChangeLang={handleChangeLang}
+                        theme={theme}
+                        setTheme={setTheme}
+                        itemClassName={itemClassName}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <Dialog

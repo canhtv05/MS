@@ -24,29 +24,29 @@ const menu: IMenuNavigation[] = [
   {
     title: 'navigation.home',
     href: routes.home,
-    icon: <House size={20} className="text-foreground/70" />,
+    icon: <House size={20} className="text-foreground/70 stroke-[2.5px]" />,
     isActive: true,
   },
   {
     title: 'navigation.people',
     href: routes.people,
-    icon: <UserSquareIcon className="text-foreground/70 size-5" />,
+    icon: <UserSquareIcon className="text-foreground/70 size-5 stroke-2" />,
   },
   {
     title: 'navigation.photos',
     href: routes.photos,
     // eslint-disable-next-line jsx-a11y/alt-text
-    icon: <Image size={20} className="text-foreground/70" />,
+    icon: <Image size={20} className="text-foreground/70 stroke-2" />,
   },
   {
     title: 'navigation.new_feed',
     href: routes.newFeed,
-    icon: <CalendarDays size={20} className="text-foreground/70" />,
+    icon: <CalendarDays size={20} className="text-foreground/70 stroke-2" />,
   },
   {
     title: 'navigation.profile',
     href: routes.profile,
-    icon: <UserCircleIcon className="text-foreground/70 size-5" />,
+    icon: <UserCircleIcon className="text-foreground/70 size-5 stroke-2" />,
   },
 ];
 
@@ -54,7 +54,7 @@ const NavigationHeader = () => {
   const { userProfile, user } = useNavigationLayout();
 
   return (
-    <div className="dark:bg-gray-800 w-full bg-white p-3 rounded-md">
+    <div className="dark:bg-gray-800 w-full bg-white p-4 rounded-md">
       <div className="flex items-center gap-2">
         <CustomImage
           src={userProfile?.avatarUrl || images.avt1.src}
@@ -90,7 +90,7 @@ const NavigationMenu = () => {
           key={index}
           href={item.href}
           className={cn(
-            `flex p-4 relative hover:bg-gray-100 dark:hover:bg-gray-700 hover:transition-colors hover:duration-300 items-center justify-start gap-5`,
+            `flex p-4 relative hover:bg-gray-100 dark:hover:bg-gray-700 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
             index === menu.length - 1 ? 'border-b-0' : 'border-b',
             isActive(item.href)
               ? "after:bg-blue-500 bg-accent dark:bg-gray-700 after:absolute after:top-1/2 after:-left-[2px] after:w-[4px] after:h-full after:rounded-md after:-translate-y-1/2 after:z-0 after:content-['']"
@@ -116,7 +116,7 @@ const NavigationMenu = () => {
 
 const NavigationLayout = () => {
   return (
-    <div className="w-56 py-5">
+    <div className="w-64 py-5">
       <div className="h-full flex justify-start items-start flex-col gap-5">
         <NavigationHeader />
         <NavigationMenu />

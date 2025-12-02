@@ -50,7 +50,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  /* --primary: oklch(0.205 0 0); */
+  --primary: var(--color-sky-400);
   --primary-foreground: oklch(0.985 0 0);
   /* --secondary: oklch(0.97 0 0); */
   --secondary: oklch(97.7% 0.014 308.299);
@@ -76,6 +77,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
@@ -86,7 +89,8 @@
   /* --popover: oklch(0.205 0 0); */
   --popover: var(--color-gray-800);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+  /* --primary: oklch(0.922 0 0); */
+  --primary: var(--color-sky-600);
   --primary-foreground: oklch(0.205 0 0);
   /* --secondary: oklch(0.269 0 0); */
   --secondary: oklch(37.883% 0.17596 304.235 / 0.2);
@@ -120,7 +124,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-inter transition-all duration-300;
+    @apply bg-background text-foreground/70 font-inter;
   }
 
   ::-webkit-scrollbar {
