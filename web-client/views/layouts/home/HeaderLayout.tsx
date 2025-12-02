@@ -327,8 +327,8 @@ const HeaderLayout = () => {
           <div className="lg:block hidden">
             <Logo />
           </div>
-          <div className="flex-1 max-w-md md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 items-center lg:justify-center justify-start">
-            <div className="block relative z-50">
+          <div className="flex-1 flex md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 items-center lg:justify-center justify-start">
+            <div className="block relative w-full max-w-md z-50">
               <AnimateIcon animateOnTap>
                 <Input
                   inputSize="md"

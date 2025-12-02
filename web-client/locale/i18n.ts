@@ -11,6 +11,8 @@ import authEN from './en/auth.json';
 import authVI from './vi/auth.json';
 import validationEN from './en/validation.json';
 import validationVI from './vi/validation.json';
+import navigationEN from './en/navigation.json';
+import navigationVI from './vi/navigation.json';
 import notificationEN from './en/notification.json';
 import notificationVI from './vi/notification.json';
 import { APP_KEY } from '@/utils/cookieUtils';
@@ -22,6 +24,7 @@ const resources = {
     validation: validationEN,
     common: commonEN,
     layout: layoutEN,
+    navigation: navigationEN,
     notification: notificationEN,
   },
   vi: {
@@ -29,6 +32,7 @@ const resources = {
     validation: validationVI,
     common: commonVI,
     layout: layoutVI,
+    navigation: navigationVI,
     notification: notificationVI,
   },
 };
@@ -61,7 +65,7 @@ if (!i18next.isInitialized) {
     fallbackLng: 'vi',
     debug: false,
     interpolation: { escapeValue: false },
-    ns: ['auth', 'validation', 'common', 'layout'],
+    ns: ['auth', 'validation', 'common', 'layout', 'navigation'],
     defaultNS: 'common',
     lng: 'vi', // default language SSR
   });
