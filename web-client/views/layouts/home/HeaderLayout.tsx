@@ -212,7 +212,7 @@ const HomeHeaderDropdown = ({
             <span>{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
-        <DropdownMenuSubContent className="overflow-hidden min-w-36 overflow-y-auto overflow-x-hidden border bg-background p-1 z-50">
+        <DropdownMenuSubContent className="overflow-hidden min-w-36 overflow-y-auto overflow-x-hidden border p-1 z-50">
           <DropdownMenuHighlightItem>
             <DropdownMenuItem
               onClick={e => {
