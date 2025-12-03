@@ -14,7 +14,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
-// import { Bell } from '@/components/animate-ui/icons/bell';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { LogOut } from '@/components/animate-ui/icons/log-out';
 import { Search, SearchIcon } from '@/components/animate-ui/icons/search';
@@ -30,7 +29,7 @@ import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image, { StaticImageData } from 'next/image';
 import useHeaderLayout from './use-header-layout';
-import { EllipsisVertical, Loader2, SquarePlus } from 'lucide-react';
+import { EllipsisVertical, Loader2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
@@ -46,6 +45,8 @@ import { LockIcon } from '@/components/ui/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
+import { Bell } from '@/components/animate-ui/icons/bell';
+import { BookmarkIcon } from '@/components/ui/bookmark';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -94,7 +95,7 @@ const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
           src={src.src}
           alt={fallback}
         />
-        <AvatarFallback>CN</AvatarFallback>
+        <AvatarFallback>{fallback.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="absolute -bottom-0.5 -right-1">
         <Ring className="border-card! border-2" />
@@ -111,7 +112,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
-      <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer rounded-md transition-colors duration-300">
+      <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer rounded-lg transition-colors duration-300">
         <IconButton
           className="rounded-full bg-transparent flex cursor-pointer shadow-none transition-all duration-300"
           variant={'accent'}
@@ -285,9 +286,9 @@ const HomeHeaderSearchLG = forwardRef(
         ref={ref}
         className={cn(
           isLoading ? 'overflow-hidden' : 'overflow-y-auto',
-          'z-40 relative max-h-[40vh] bg-background dark:bg-gray-700 border rounded-lg',
-          'fixed top-[60px] left-5 right-5 w-auto',
-          'lg:absolute lg:w-full lg:top-13 lg:left-1/2 lg:right-auto lg:transform lg:-translate-x-1/2',
+          'z-40 relative max-h-[40vh] bg-gray-50 dark:bg-gray-700 rounded-lg',
+          'fixed top-[60px] left-5 right-5 w-auto shadow-lg',
+          'lg:absolute lg:w-full max-w-xs lg:top-10 lg:left-0 lg:right-auto',
         )}
       >
         {isLoading ? (
@@ -331,19 +332,20 @@ const HeaderLayout = () => {
   if (!ready) return null;
 
   return (
-    <header className="fixed top-0 left-0 h-[54px] right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
-      <div className="mx-auto px-4 flex h-full items-center justify-center sm:px-6 lg:px-8">
-        <div className="max-w-7xl flex items-center justify-between p-1 w-full">
-          <div className="pr-2 md:block hidden">
+    <header className="fixed top-0 left-0 py-2 right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
+      <div className="mx-auto w-full px-4 flex h-full items-center justify-center sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between p-1 w-full">
+          <div className="pr-5 flex items-center justify-start lg:min-w-[200px]">
             <Logo />
           </div>
-          <div className="flex w-full md:py-0 py-[5px] md:mx-8 lg:mx-2 mr-2 gap-2 items-center justify-end">
-            <div className="block relative w-full md:max-w-md max-w-full z-50">
-              <AnimateIcon animateOnTap>
+          <div className="flex w-full py-0 gap-2 items-center justify-between">
+            <div className="flex items-center justify-start relative w-full md:max-w-md max-w-full z-50 flex-1">
+              <div className="w-full max-w-xs">
                 <Input
+                  showClear
                   inputSize="md"
                   id="search"
-                  className="dark:bg-gray-600 bg-gray-100 h-9 placeholder:font-medium rounded-md border-transparent"
+                  className="dark:bg-gray-600 bg-gray-100 h-9 placeholder:font-medium rounded-lg border-transparent"
                   classNameIcon="dark:bg-gray-600 bg-gray-100 h-9"
                   icon={<Search className={'size-5 p-0.5 text-foreground/60 stroke-3'} />}
                   placeholder={t('header.search_placeholder')}
@@ -352,7 +354,7 @@ const HeaderLayout = () => {
                   onFocus={() => setIsShowSearch(true)}
                   endIcon={isLoading ? <Loader2 className="animate-spin size-5 p-0.5" /> : null}
                 />
-              </AnimateIcon>
+              </div>
               {isShowSearch && debouncedSearch.trim() !== '' && !isLoading && (
                 <HomeHeaderSearchLG
                   t={t}
@@ -394,25 +396,32 @@ const HeaderLayout = () => {
             </div> */}
             {user?.username ? (
               <div className="flex gap-3 items-center justify-end">
-                <div className="flex items-center justify-center gap-2">
-                  {/* <AnimateIcon animateOnHover>
+                <div className="flex items-center justify-center gap-2 pr-3">
+                  <AnimateIcon animateOnHover>
+                    <IconButton
+                      className="bg-gray-100 relative hover:opacity-80 transition-opacity duration-300 rounded-lg dark:bg-gray-600 dark:hover:opacity-80 cursor-pointer shadow-none"
+                      variant={'accent'}
+                    >
+                      <Bell className="text-foreground/70" />
+                      <span className="absolute top-2 right-2.5 dark:border-gray-600 border border-gray-100 bg-red-500 text-xs rounded-full w-2 h-2 flex items-center justify-center"></span>
+                    </IconButton>
+                  </AnimateIcon>
                   <IconButton
-                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-100 dark:bg-gray-600 border-gray-100 group rounded-lg hover:opacity-80 transition-opacity duration-300 dark:hover:opacity-80 cursor-pointer shadow-none"
                     variant={'accent'}
                   >
-                    <Bell className="text-foreground/70" />
+                    <BookmarkIcon className="text-foreground/70 group-hover:animate-icon" />
                   </IconButton>
-                </AnimateIcon> */}
-                  <AnimateIcon animateOnHover>
-                    {/* <IconButton
+                  {/* <AnimateIcon animateOnHover>
+                    <IconButton
                     className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <CirclePlus className="text-foreground/70" />
-                  </IconButton> */}
+                  </IconButton>
                     <Button
-                    // variant={'secondary'}
-                    // className=" hover:opacity-80 transition-opacity duration-300 rounded-lg px-3"
+                    variant={'secondary'}
+                    className=" hover:opacity-80 transition-opacity duration-300 rounded-lg px-3"
                     >
                       <div className="flex gap-2 items-center justify-center">
                         <SquarePlus className="dark:text-foreground/70 text-white stroke-[2.5px]" />
@@ -421,7 +430,7 @@ const HeaderLayout = () => {
                         </span>
                       </div>
                     </Button>
-                  </AnimateIcon>
+                  </AnimateIcon> */}
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
