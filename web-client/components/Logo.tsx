@@ -2,7 +2,7 @@ import Link from 'next/link';
 // import CustomImage from './customs/custom-image';
 // import images from '@/public/imgs';
 import { GradientText } from './animate-ui/primitives/texts/gradient';
-import { LeafIcon } from '@/public/icons';
+import { LeafIcon } from '@/components/animate-ui/icons/common';
 
 const Logo = () => {
   return (

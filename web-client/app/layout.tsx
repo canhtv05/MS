@@ -1,12 +1,42 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import AppLayout from '@/views/layouts/AppLayout';
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-inter',
+const ceraRoundPro = localFont({
+  src: [
+    {
+      path: '../public/fonts/CeraRoundProThinRegular.woff',
+      weight: '100',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/CeraRoundProLightRegular.woff',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/CeraRoundProRegular.woff',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/CeraRoundProMediumRegular.woff',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/CeraRoundProBold.woff',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/CeraRoundProBlackRegular.woff',
+      weight: '900',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-cera',
 });
 
 export const metadata: Metadata = {
@@ -21,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${inter.variable} antialiased`}>
+      <body suppressHydrationWarning className={`${ceraRoundPro.variable} antialiased`}>
         <AppLayout>{children}</AppLayout>
       </body>
     </html>

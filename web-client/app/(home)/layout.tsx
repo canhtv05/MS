@@ -11,8 +11,8 @@ const HomeLayout = ({ children }: IHomeLayoutProps) => {
   return (
     <div className="h-screen">
       <HeaderLayout />
-      <div className="bg-[#F9FBFC] px-8 dark:bg-gray-900 h-full flex pt-17">
-        {/* <NavigationLayout /> */}
+      <div className="bg-[#F9FBFC] px-6 dark:bg-gray-900 h-full flex pt-21">
+        <NavigationLayout />
         <div className="w-full flex-1">{children}</div>
         {/* <SidebarLayout /> */}
       </div>

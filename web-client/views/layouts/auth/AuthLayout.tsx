@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
-import { LanguagesIcon } from '@/components/ui/languages';
+import { LanguagesIcon } from '@/components/animate-ui/icons/languages';
 import { useTranslation } from 'react-i18next';
 import useAuthLayout from './use-auth-layout';
 import Image from 'next/image';

@@ -1,17 +1,17 @@
 'use client';
 
 import useNavigationLayout from './use-navigation-layout';
-import CustomImage from '@/components/customs/custom-image';
 
 import images from '@/public/imgs';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { CalendarDays, House, Image } from 'lucide-react';
-import { UserCircleIcon, UserSquareIcon } from '@/public/icons';
+import { CalendarDays, Image } from 'lucide-react';
+import { HouseIcon, UserCircleIcon, UserSquareIcon } from '@/components/animate-ui/icons/common';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { routes } from '@/utils/routes';
 import { usePathname } from 'next/navigation';
+import UserProfileCard from '@/components/UserProfileCard';
 
 interface IMenuNavigation {
   title: string;
@@ -24,7 +24,7 @@ const menu: IMenuNavigation[] = [
   {
     title: 'navigation.home',
     href: routes.home,
-    icon: <House size={20} className="text-foreground/70 stroke-[2.5px]" />,
+    icon: <HouseIcon className="size-5 text-foreground/70 stroke-[2.5px]" />,
     isActive: true,
   },
   {
@@ -54,23 +54,27 @@ const NavigationHeader = () => {
   const { userProfile, user } = useNavigationLayout();
 
   return (
-    <div className="dark:bg-gray-800 w-full bg-white p-4 rounded-md">
-      <div className="flex items-center gap-2">
-        <CustomImage
-          src={userProfile?.avatarUrl || images.avt1.src}
-          alt={user?.fullName || ''}
-          fallbackSrc={images.avt1.src}
-          width={35}
-          height={35}
-          className="rounded-full"
+    <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] w-full bg-white p-4 rounded-lg">
+      <div className="flex flex-col items-start justify-center gap-2 dark:bg-gray-700 bg-gray-100 rounded-lg p-4">
+        <UserProfileCard
+          username={user?.username || ''}
+          avatarUrl={userProfile?.avatarUrl || images.avt1.src}
+          fullName={user?.fullName || ''}
         />
-        <div className="flex flex-col">
-          <h3 className="text-[12px] max-w-[150px] font-bold w-full text-foreground truncate">
-            {user?.fullName || user?.username}
-          </h3>
-          <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-            @{user?.username}
-          </span>
+
+        <div className="pt-3 text-sm w-full flex gap-2 items-center justify-between">
+          <div className="flex flex-col">
+            <strong>2.3k</strong>
+            <span className="text-xs">Following</span>
+          </div>
+          <div className="flex flex-col">
+            <strong>2.3k</strong>
+            <span className="text-xs">Followers</span>
+          </div>
+          <div className="flex flex-col">
+            <strong>80</strong>
+            <span className="text-xs">Posts</span>
+          </div>
         </div>
       </div>
     </div>
@@ -84,26 +88,21 @@ const NavigationMenu = () => {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <div className="dark:bg-gray-800 py-2 group w-full bg-white rounded-md mt-3">
+    <div className="dark:bg-gray-800 p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] group w-full bg-white rounded-lg mt-1">
       {menu.map((item, index) => (
         <Link
           key={index}
           href={item.href}
           className={cn(
-            `flex p-4 relative hover:bg-gray-100 dark:hover:bg-gray-700 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
-            index === menu.length - 1 ? 'border-b-0' : 'border-b',
-            isActive(item.href)
-              ? "after:bg-blue-500 bg-accent dark:bg-gray-700 after:absolute after:top-1/2 after:-left-[2px] after:w-[4px] after:h-full after:rounded-md after:-translate-y-1/2 after:z-0 after:content-['']"
-              : '',
+            `flex p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
+            isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
           )}
         >
-          <span className={cn(isActive(item.href) ? `[&_svg]:text-blue-500` : '')}>
-            {item.icon}
-          </span>
+          <span className={cn(isActive(item.href) ? `[&_svg]:text-primary` : '')}>{item.icon}</span>
           <span
             className={cn(
               'text-sm text-foreground/70',
-              isActive(item.href) ? 'text-blue-500 font-bold' : 'font-medium',
+              isActive(item.href) ? 'text-primary font-bold' : 'font-medium',
             )}
           >
             {t(item.title)}
@@ -116,7 +115,7 @@ const NavigationMenu = () => {
 
 const NavigationLayout = () => {
   return (
-    <div className="w-64 py-5">
+    <div className="w-64">
       <div className="h-full flex justify-start items-start flex-col gap-5">
         <NavigationHeader />
         <NavigationMenu />

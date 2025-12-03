@@ -34,19 +34,21 @@ import { AnimatePresence, motion } from 'motion/react';
 import useClickOutside from '@/hooks/use-click-outside';
 import { Dispatch, forwardRef, SetStateAction, useRef, useState } from 'react';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
-import { LanguagesIcon } from '@/components/ui/languages';
+import { LanguagesIcon } from '@/components/animate-ui/icons/languages';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import Link from 'next/link';
 import Dialog from '@/components/customs/dialog';
-import { LockIcon } from '@/components/ui/lock';
+import { LockIcon } from '@/components/animate-ui/icons/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import { Bell } from '@/components/animate-ui/icons/bell';
-import { BookmarkIcon } from '@/components/ui/bookmark';
+import { BookmarkIcon } from '@/components/animate-ui/icons/bookmark';
+import UserProfileCard from '@/components/UserProfileCard';
+import { useProfileStore } from '@/stores/profile';
 
 interface IHomeHeaderAvatar {
   src: StaticImageData;
@@ -150,7 +152,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
 //             <Input
 //               inputSize="md"
 //               id="search-md"
-//               className="rounded-full w-full dark:bg-gray-600 bg-gray-200"
+//               className="rounded-full w-full dark:bg-gray-700 bg-gray-200"
 //               placeholder={t('header.search_placeholder')}
 //               value={value}
 //               onChange={onChange}
@@ -193,7 +195,7 @@ const HomeHeaderDropdown = ({
           >
             <div className="flex items-center justify-center gap-2">
               {theme === 'dark' ? <SunMoon /> : <SunIcon />}
-              <span>{t('header.dark_mode')}</span>
+              <span className="text-foreground/70">{t('header.dark_mode')}</span>
             </div>
             <Switch
               className={cn(
@@ -220,7 +222,7 @@ const HomeHeaderDropdown = ({
         <DropdownMenuHighlightItem className="group cursor-pointer">
           <DropdownMenuSubTrigger className={`${itemClassName} cursor-pointer`}>
             <LanguagesIcon className="group-hover:animate-icon text-foreground/70" />
-            <span>{t('header.language')}</span>
+            <span className="text-foreground/70">{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
         <DropdownMenuSubContent className="overflow-hidden min-w-40 overflow-y-auto overflow-x-hidden border p-1 z-50">
@@ -244,7 +246,7 @@ const HomeHeaderDropdown = ({
                   className="object-contain"
                 />
               </div>
-              <span>{t('header.vn')}</span>
+              <span className="text-foreground/70">{t('header.vn')}</span>
             </DropdownMenuItem>
           </DropdownMenuHighlightItem>
           <DropdownMenuHighlightItem>
@@ -267,7 +269,7 @@ const HomeHeaderDropdown = ({
                   className="object-contain"
                 />
               </div>
-              <span>{t('header.uk')}</span>
+              <span className="text-foreground/70">{t('header.uk')}</span>
             </DropdownMenuItem>
           </DropdownMenuHighlightItem>
         </DropdownMenuSubContent>
@@ -329,24 +331,26 @@ const HeaderLayout = () => {
   const [openLogout, setOpenLogout] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const user = useAuthStore(s => s.user);
+  const userProfile = useProfileStore(s => s.userProfile);
   if (!ready) return null;
 
   return (
     <header className="fixed top-0 left-0 py-2 right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
-      <div className="mx-auto w-full px-4 flex h-full items-center justify-center sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 flex h-full items-center justify-center md:px-6">
         <div className="flex items-center justify-between p-1 w-full">
-          <div className="pr-5 flex items-center justify-start lg:min-w-[200px]">
+          <div className="pr-5 flex items-center justify-start lg:min-w-[300px]">
             <Logo />
           </div>
           <div className="flex w-full py-0 gap-2 items-center justify-between">
             <div className="flex items-center justify-start relative w-full md:max-w-md max-w-full z-50 flex-1">
               <div className="w-full max-w-xs">
                 <Input
+                  autoComplete="off"
                   showClear
                   inputSize="md"
                   id="search"
-                  className="dark:bg-gray-600 bg-gray-100 h-9 placeholder:font-medium rounded-lg border-transparent"
-                  classNameIcon="dark:bg-gray-600 bg-gray-100 h-9"
+                  className="dark:bg-gray-700 bg-gray-100 h-8 placeholder:font-medium rounded-lg border-transparent"
+                  classNameIcon="dark:bg-gray-700 bg-gray-100 h-8"
                   icon={<Search className={'size-5 p-0.5 text-foreground/60 stroke-3'} />}
                   placeholder={t('header.search_placeholder')}
                   onChange={handleSearch}
@@ -396,25 +400,25 @@ const HeaderLayout = () => {
             </div> */}
             {user?.username ? (
               <div className="flex gap-3 items-center justify-end">
-                <div className="flex items-center justify-center gap-2 pr-3">
+                <div className="flex items-center justify-center gap-3 pr-3">
                   <AnimateIcon animateOnHover>
                     <IconButton
-                      className="bg-gray-100 relative hover:opacity-80 transition-opacity duration-300 rounded-lg dark:bg-gray-600 dark:hover:opacity-80 cursor-pointer shadow-none"
+                      className="bg-gray-100 relative hover:opacity-80 transition-opacity duration-300 rounded-lg dark:bg-gray-700 dark:hover:opacity-80 cursor-pointer shadow-none"
                       variant={'accent'}
                     >
-                      <Bell className="text-foreground/70" />
+                      <Bell className="text-foreground/70 stroke-[2.5]" />
                       <span className="absolute top-2 right-2.5 dark:border-gray-600 border border-gray-100 bg-red-500 text-xs rounded-full w-2 h-2 flex items-center justify-center"></span>
                     </IconButton>
                   </AnimateIcon>
                   <IconButton
-                    className="bg-gray-100 dark:bg-gray-600 border-gray-100 group rounded-lg hover:opacity-80 transition-opacity duration-300 dark:hover:opacity-80 cursor-pointer shadow-none"
+                    className="bg-gray-100 dark:bg-gray-700 border-gray-100 group rounded-lg hover:opacity-80 transition-opacity duration-300 dark:hover:opacity-80 cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <BookmarkIcon className="text-foreground/70 group-hover:animate-icon" />
                   </IconButton>
                   {/* <AnimateIcon animateOnHover>
                     <IconButton
-                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-600 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
+                    className="bg-gray-100 hover:opacity-95 dark:bg-gray-700 dark:hover:opacity-80 transition-opacity duration-300 rounded-full cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <CirclePlus className="text-foreground/70" />
@@ -443,20 +447,14 @@ const HeaderLayout = () => {
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px]"
+                    className="w-[220px] [&_span]:text-foreground/70"
                   >
                     <DropdownMenuLabel className="flex gap-2">
-                      <div className="relative inline-block">
-                        <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
-                      </div>
-                      <div className="flex flex-col">
-                        <h3 className="text-[12px] max-w-[150px] w-full text-foreground truncate">
-                          {user?.fullName || user?.username}
-                        </h3>
-                        <span className="text-[12px] max-w-[150px] w-full text-foreground/70 truncate">
-                          @{user?.username}
-                        </span>
-                      </div>
+                      <UserProfileCard
+                        username={user?.username || ''}
+                        avatarUrl={userProfile?.avatarUrl || images.avt1.src}
+                        fullName={user?.fullName || ''}
+                      />
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
@@ -498,7 +496,7 @@ const HeaderLayout = () => {
                       <DropdownMenuItem onClick={() => setOpenLogout(true)}>
                         <div className="flex items-center justify-center gap-2">
                           <LogOut />
-                          <span>{t('header.logout')}</span>
+                          <span className="text-sm">{t('header.logout')}</span>
                         </div>
                         <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
                       </DropdownMenuItem>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import useDebounce from '@/hooks/use-debounce';
 import { useState, useEffect, useTransition } from 'react';
 import useLocalStorage from '@/hooks/use-local-storage';
@@ -15,6 +15,7 @@ const useHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [search, setSearch] = useState('');
   const [isShowSearch, setIsShowSearch] = useState(false);
@@ -34,14 +35,26 @@ const useHeaderLayout = () => {
       startTransition(() => {
         router.push(`?query=${debouncedSearch}`);
       });
-    } else {
-      router.push(pathname);
     }
   }, [debouncedSearch, router, pathname]);
 
   useEffect(() => {
-    setIsShowSearch(debouncedSearch.trim() !== '');
+    if (debouncedSearch.trim() === '') {
+      router.push(pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch]);
+
+  useEffect(() => {
+    if (!searchParams.size) return;
+    const query = searchParams.get('query');
+    if (query) {
+      setSearch(query);
+      setIsShowSearch(false);
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleChangeLang = (lang: 'vi' | 'en') => {
     setStorage({ language: lang });

@@ -7,7 +7,7 @@ import { Send } from '@/components/animate-ui/icons/send';
 import { Star } from '@/components/animate-ui/icons/star';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 import { cn } from '@/lib/utils';
-import { FeatureIcon } from '@/public/icons';
+import { FeatureIcon } from '@/components/animate-ui/icons/common';
 import { JSX } from 'react';
 
 interface LandingFeatureCardProps {

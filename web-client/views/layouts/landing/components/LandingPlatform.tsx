@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/customs/card';
 import { cn } from '@/lib/utils';
-import { MobileScreenIcon } from '@/public/icons';
+import { MobileScreenIcon } from '@/components/animate-ui/icons/common';
 import images from '@/public/imgs';
 import { LucideIcon, RefreshCcw, Smartphone, TvMinimal } from 'lucide-react';
 import Image from 'next/image';

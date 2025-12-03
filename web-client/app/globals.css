@@ -1,12 +1,60 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProThinRegular.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProLightRegular.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProRegular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProMediumRegular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProBold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cera Round Pro';
+  src: url('/fonts/CeraRoundProBlackRegular.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-inter: var(--font-inter);
+  --font-cera: var(--font-cera);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -124,7 +172,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground/70 font-inter;
+    @apply bg-background text-foreground/70 font-cera;
   }
 
   ::-webkit-scrollbar {
@@ -162,8 +210,11 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-    -webkit-text-fill-color: var(--foreground) !important;
-    transition: background-color 9999s ease-in-out 0s;
+    -webkit-text-fill-color: var(--color-foreground) !important;
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: var(--color-foreground);
   }
 
   * {

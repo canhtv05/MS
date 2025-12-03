@@ -10,7 +10,7 @@ import { Mail } from 'lucide-react';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { ChevronLeft } from '@/components/animate-ui/icons/chevron-left';
 import { InputOTP } from '@/components/customs/input-otp';
-import { LockIcon, LockOpenIcon } from '@/public/icons';
+import { LockIcon, LockOpenIcon } from '@/components/animate-ui/icons/common';
 
 const ForgotPasswordPage = () => {
   const {

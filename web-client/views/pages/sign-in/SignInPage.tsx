@@ -5,7 +5,7 @@ import CheckBox from '@/components/customs/checkbox';
 import Divider from '@/components/customs/divider';
 import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
-import { GoogleIcon, LockIcon, UserIcon } from '@/public/icons';
+import { GoogleIcon, LockIcon, UserIcon } from '@/components/animate-ui/icons/common';
 import Link from 'next/link';
 import useSignIn from './use-signin';
 import { Controller } from 'react-hook-form';
