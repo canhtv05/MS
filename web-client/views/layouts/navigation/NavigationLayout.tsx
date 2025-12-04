@@ -4,7 +4,7 @@ import useNavigationLayout from './use-navigation-layout';
 
 import images from '@/public/imgs';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import {
   CalendarIcon,
   FriendsIcon,
@@ -16,6 +16,13 @@ import { cn } from '@/lib/utils';
 import { routes } from '@/utils/routes';
 import { usePathname } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
+import {
+  TooltipPanel,
+  TooltipTrigger,
+  Tooltip,
+} from '@/components/animate-ui/components/base/tooltip';
+import useViewport from '@/hooks/use-view-port';
+import { Viewport } from '@/enums/common';
 
 interface IMenuNavigation {
   title: string;
@@ -52,8 +59,8 @@ const NavigationHeader = () => {
   const { userProfile, user } = useNavigationLayout();
 
   return (
-    <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] lg:block inline-flex lg:w-full w-auto bg-white p-4 rounded-lg">
-      <div className="group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 dark:bg-gray-700 bg-gray-100 rounded-lg lg:p-4 p-0.5 cursor-pointer">
+    <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex lg:w-full w-auto bg-white p-4 rounded-lg">
+      <div className="group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 lg:dark:bg-gray-700 dark:bg-gray-800 bg-gray-100 rounded-lg lg:p-4 p-0.5 cursor-pointer">
         <UserProfileCard
           username={user?.username || ''}
           avatarUrl={userProfile?.avatarUrl || images.avt1.src}
@@ -84,41 +91,95 @@ const NavigationHeader = () => {
 const NavigationMenu = () => {
   const { t } = useTranslation('navigation');
   const pathname = usePathname();
+  const [tooltipSide, setTooltipSide] = useState<'top' | 'right' | null>(null);
+  const { width } = useViewport();
 
   const isActive = (href: string) => pathname === href;
 
+  useEffect(() => {
+    const updateTooltipSide = () => {
+      if (width >= Viewport.LG) {
+        setTooltipSide(null);
+      } else if (width >= Viewport.MD) {
+        setTooltipSide('right');
+      } else {
+        setTooltipSide('top');
+      }
+    };
+    updateTooltipSide();
+  }, [width]);
+
   return (
-    <div className="dark:bg-gray-800 lg:flex inline-flex flex-col gap-1 items-start justify-center lg:p-4 p-2 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] group lg:w-full w-auto bg-white rounded-lg mt-1">
-      {menu.map((item, index) => (
-        <Link
-          key={index}
-          href={item.href}
-          className={cn(
-            `flex p-4 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
-            isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
-          )}
-        >
-          <span className={cn(isActive(item.href) ? `[&_svg]:text-primary` : '')}>{item.icon}</span>
-          <span
-            className={cn(
-              'text-sm lg:block hidden text-foreground/70',
-              isActive(item.href) ? 'text-primary font-bold' : 'font-medium',
-            )}
-          >
-            {t(item.title)}
-          </span>
-        </Link>
-      ))}
+    <div className="lg:flex inline-flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
+      <div className="w-auto lg:w-full lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] inline-flex md:flex-col flex-row md:p-3 p-2 gap-1 items-start justify-center rounded-lg">
+        {menu.map((item, index) => {
+          const linkContent = (
+            <>
+              <span className={cn(isActive(item.href) ? `[&_svg]:text-primary` : '')}>
+                {item.icon}
+              </span>
+              <span
+                className={cn(
+                  'text-sm lg:block hidden text-foreground/70',
+                  isActive(item.href) ? 'text-primary font-bold' : 'font-medium',
+                )}
+              >
+                {t(item.title)}
+              </span>
+            </>
+          );
+
+          if (tooltipSide === null) {
+            return (
+              <Link
+                key={index}
+                href={item.href}
+                className={cn(
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
+                  isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                )}
+              >
+                {linkContent}
+              </Link>
+            );
+          }
+
+          return (
+            <Tooltip key={index}>
+              <TooltipTrigger
+                className={cn(
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
+                  isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                )}
+              >
+                <Link href={item.href} className="flex items-center gap-3">
+                  {linkContent}
+                </Link>
+              </TooltipTrigger>
+              <TooltipPanel
+                side={tooltipSide}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+              >
+                <span>{t(item.title)}</span>
+              </TooltipPanel>
+            </Tooltip>
+          );
+        })}
+      </div>
     </div>
   );
 };
 
 const NavigationLayout = () => {
   return (
-    <div className="lg:w-64 w-auto">
-      <div className="h-full flex justify-start items-start flex-col gap-5">
-        <NavigationHeader />
-        <NavigationMenu />
+    <div className="lg:w-64 w-full">
+      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start lg:gap-7 gap-4 w-full">
+        <div className="md:block hidden w-full">
+          <NavigationHeader />
+        </div>
+        <div className="md:order-2 order-1 w-full">
+          <NavigationMenu />
+        </div>
       </div>
     </div>
   );
