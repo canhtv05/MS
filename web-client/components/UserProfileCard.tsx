@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { AtSignIcon } from './animate-ui/icons/at-sign';
 import { Avatar, AvatarFallback, AvatarImage } from './customs/avatar';
 import Ring from './customs/ring';
@@ -8,11 +9,19 @@ interface IUserProfileCard {
   username: string;
   avatarUrl: string;
   fullName: string;
+  hasRing?: boolean;
+  responsive?: boolean;
 }
 
-const UserProfileCard = ({ username, avatarUrl, fullName }: IUserProfileCard) => {
+const UserProfileCard = ({
+  username,
+  avatarUrl,
+  fullName,
+  hasRing = true,
+  responsive = false,
+}: IUserProfileCard) => {
   return (
-    <div className="flex group items-center gap-2">
+    <div className="flex items-center gap-2">
       <div className="relative">
         <Avatar className="relative">
           <AvatarImage
@@ -24,12 +33,14 @@ const UserProfileCard = ({ username, avatarUrl, fullName }: IUserProfileCard) =>
           />
           <AvatarFallback>{username.charAt(0)}</AvatarFallback>
         </Avatar>
-        <div className="absolute z-50 -bottom-0.5 -right-1 pointer-events-none">
-          <Ring className="border-card border-2" />
-        </div>
+        {hasRing && (
+          <div className="absolute z-50 -bottom-0.5 -right-1 pointer-events-none">
+            <Ring className="border-card border-2" />
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col">
+      <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>
         <h3 className="text-sm max-w-[150px] font-bold w-full text-foreground truncate">
           {fullName}
         </h3>

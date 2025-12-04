@@ -1,7 +1,6 @@
 export const routes = {
   home: '/home',
-  people: '/people',
+  friends: '/friends',
   photos: '/photos',
   newFeed: '/new-feed',
-  profile: '/profile',
 };

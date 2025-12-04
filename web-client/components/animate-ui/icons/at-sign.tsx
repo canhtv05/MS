@@ -80,7 +80,7 @@ const AtSignIcon = forwardRef<AtSignIconHandle, AtSignIconProps>(
       if (!element) return;
 
       // Find parent with 'group' class
-      const parent = element.closest('.group');
+      const parent = element.closest('.group') || element.closest('.animate-icon');
       if (!parent) return;
 
       const handleParentMouseEnter = () => {
