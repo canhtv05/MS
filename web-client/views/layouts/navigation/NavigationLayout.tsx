@@ -111,7 +111,7 @@ const NavigationMenu = () => {
 
   return (
     <div className="lg:flex inline-flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
-      <div className="w-auto lg:w-full lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] inline-flex md:flex-col flex-row md:p-3 p-2 gap-1 items-start justify-center rounded-lg">
+      <div className="w-auto dark:bg-gray-800 bg-white lg:w-full lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] inline-flex md:flex-col flex-row md:p-3 p-2 gap-1 items-start justify-center rounded-lg">
         {menu.map((item, index) => {
           const linkContent = (
             <>
@@ -160,7 +160,7 @@ const NavigationMenu = () => {
                 side={tooltipSide}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               >
-                <span>{t(item.title)}</span>
+                <span className="text-white/70">{t(item.title)}</span>
               </TooltipPanel>
             </Tooltip>
           );

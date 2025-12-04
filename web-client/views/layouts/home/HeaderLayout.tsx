@@ -508,7 +508,7 @@ const HeaderLayout = () => {
               <div className="flex gap-5 items-center justify-center">
                 <div className="flex items-center justify-center gap-5">
                   <Link href="/sign-in">
-                    <Button variant={'destructive'} className="h-9 px-4">
+                    <Button variant={'destructive'} className="h-8 px-4">
                       {t('auth:sign_in.sign_in_button')}
                     </Button>
                   </Link>
@@ -516,7 +516,10 @@ const HeaderLayout = () => {
                     <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
                       <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
                         <div className="relative transparent!">
-                          <EllipsisVertical className="size-6 p-0.5" />
+                          <EllipsisVertical
+                            className="size-6 p-0.5"
+                            style={{ transition: 'none' }}
+                          />
                         </div>
                       </IconButton>
                     </DropdownMenuTrigger>

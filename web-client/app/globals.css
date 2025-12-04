@@ -126,7 +126,15 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color,
+    color,
+    border-color,
+    box-shadow,
+    transform,
+    opacity,
+    filter,
+    backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
