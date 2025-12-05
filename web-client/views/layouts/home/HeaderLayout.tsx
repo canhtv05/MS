@@ -336,7 +336,7 @@ const HeaderLayout = () => {
 
   return (
     <header className="fixed top-0 left-0 py-2 right-0 z-50 border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
-      <div className="mx-auto w-full flex h-full items-center justify-center px-6">
+      <div className="mx-auto w-full flex h-full items-center justify-center md:px-6 pl-6">
         <div className="flex items-center justify-between p-1 w-full">
           <div className="pr-5 flex items-center justify-start lg:min-w-[300px]">
             <Logo />
@@ -506,7 +506,7 @@ const HeaderLayout = () => {
               </div>
             ) : (
               <div className="flex gap-5 items-center justify-center">
-                <div className="flex items-center justify-center gap-5">
+                <div className="flex items-center justify-center gap-2">
                   <Link href="/sign-in">
                     <Button variant={'destructive'} className="h-8 px-4">
                       {t('auth:sign_in.sign_in_button')}
