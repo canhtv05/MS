@@ -14,10 +14,6 @@ export enum Status {
   REMOVE_SUCCESS = 'status.remove_success',
   REMOVE_FAILED = 'status.remove_failed',
   ERROR = 'status.error',
-  LOGOUT_FAILED = 'status.logout_failed',
-  LOGOUT_SUCCESS = 'status.logout_success',
-  REGISTER_FAILED = 'status.register_failed',
-  REGISTER_SUCCESS = 'status.register_success',
 }
 
 export enum PrivacyLevel {

@@ -17,7 +17,7 @@ const useHeaderLayout = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('query') || '');
   const [isShowSearch, setIsShowSearch] = useState(false);
   const [isLoading, startTransition] = useTransition();
   const [currentLang, setCurrentLang] = useState(i18n.language as 'vi' | 'en');
@@ -31,30 +31,17 @@ const useHeaderLayout = () => {
   };
 
   useEffect(() => {
+    const currentQuery = searchParams.get('query') || '';
+    if (debouncedSearch === currentQuery) return;
+
     if (debouncedSearch.trim() !== '') {
       startTransition(() => {
         router.push(`?query=${debouncedSearch}`);
       });
-    }
-  }, [debouncedSearch, router, pathname]);
-
-  useEffect(() => {
-    if (debouncedSearch.trim() === '') {
+    } else {
       router.push(pathname);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
-  useEffect(() => {
-    if (!searchParams.size) return;
-    const query = searchParams.get('query');
-    if (query) {
-      setSearch(query);
-      setIsShowSearch(false);
-      return;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [debouncedSearch, router, pathname, searchParams]);
 
   const handleChangeLang = (lang: 'vi' | 'en') => {
     setStorage({ language: lang });

@@ -71,15 +71,15 @@ const NavigationHeader = () => {
 
         <div className="pt-3 text-sm w-full lg:flex hidden gap-2 items-center justify-between">
           <div className="flex flex-col">
-            <strong>2.3k</strong>
+            <strong className="font-bold">2.3k</strong>
             <span className="text-xs">Following</span>
           </div>
           <div className="flex flex-col">
-            <strong>2.3k</strong>
+            <strong className="font-bold">2.3k</strong>
             <span className="text-xs">Followers</span>
           </div>
           <div className="flex flex-col">
-            <strong>80</strong>
+            <strong className="font-bold">80</strong>
             <span className="text-xs">Posts</span>
           </div>
         </div>
@@ -121,7 +121,7 @@ const NavigationMenu = () => {
               <span
                 className={cn(
                   'text-sm lg:block hidden text-foreground/70',
-                  isActive(item.href) ? 'text-primary font-bold' : 'font-medium',
+                  isActive(item.href) ? 'text-primary font-black' : 'font-bold',
                 )}
               >
                 {t(item.title)}

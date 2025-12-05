@@ -16,7 +16,7 @@ const HomeLayout = ({ children }: IHomeLayoutProps) => {
           <NavigationLayout />
         </div>
         <div className="w-full flex-1">{children}</div>
-        {/* <SidebarLayout /> */}
+        <SidebarLayout />
       </div>
     </div>
   );
