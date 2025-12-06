@@ -3,10 +3,7 @@
 import * as React from 'react';
 import { useMotionValue, useSpring, type SpringOptions } from 'motion/react';
 
-import {
-  useIsInView,
-  type UseIsInViewOptions,
-} from '@/hooks/use-is-in-view';
+import { useIsInView, type UseIsInViewOptions } from '@/hooks/use-is-in-view';
 
 type CountingNumberProps = Omit<React.ComponentProps<'span'>, 'children'> & {
   number: number;
@@ -34,14 +31,11 @@ function CountingNumber({
   initiallyStable = false,
   ...props
 }: CountingNumberProps) {
-  const { ref: localRef, isInView } = useIsInView(
-    ref as React.Ref<HTMLElement>,
-    {
-      inView,
-      inViewOnce,
-      inViewMargin,
-    },
-  );
+  const { ref: localRef, isInView } = useIsInView(ref as React.Ref<HTMLElement>, {
+    inView,
+    inViewOnce,
+    inViewMargin,
+  });
 
   const numberStr = number.toString();
   const decimals =
@@ -63,12 +57,9 @@ function CountingNumber({
   }, [isInView, number, motionVal, delay]);
 
   React.useEffect(() => {
-    const unsubscribe = springVal.on('change', (latest) => {
+    const unsubscribe = springVal.on('change', latest => {
       if (localRef.current) {
-        let formatted =
-          decimals > 0
-            ? latest.toFixed(decimals)
-            : Math.round(latest).toString();
+        let formatted = decimals > 0 ? latest.toFixed(decimals) : Math.round(latest).toString();
 
         if (decimals > 0) {
           formatted = formatted.replace('.', decimalSeparator);
@@ -78,9 +69,7 @@ function CountingNumber({
           const finalIntLength = Math.floor(Math.abs(number)).toString().length;
           const [intPart, fracPart] = formatted.split(decimalSeparator);
           const paddedInt = intPart?.padStart(finalIntLength, '0') ?? '';
-          formatted = fracPart
-            ? `${paddedInt}${decimalSeparator}${fracPart}`
-            : paddedInt;
+          formatted = fracPart ? `${paddedInt}${decimalSeparator}${fracPart}` : paddedInt;
         }
 
         localRef.current.textContent = formatted;

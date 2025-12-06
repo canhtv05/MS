@@ -1,13 +1,10 @@
 package com.leaf.file.dto;
 
+import com.leaf.file.domain.Image;
+import java.io.Serializable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
-
 import org.springframework.beans.BeanUtils;
-
-import com.leaf.file.domain.Image;
 
 @Data
 @Builder

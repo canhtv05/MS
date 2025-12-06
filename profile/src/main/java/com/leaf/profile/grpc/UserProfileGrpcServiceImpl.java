@@ -5,34 +5,39 @@ import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.service.UserProfileService;
-
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 @GrpcService
 @RequiredArgsConstructor
-public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserProfileGrpcServiceImplBase {
+public class UserProfileGrpcServiceImpl
+    extends UserProfileGrpcServiceGrpc.UserProfileGrpcServiceImplBase {
 
     private final UserProfileService userProfileService;
 
     @Override
-    public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
+    public void createUserProfile(
+        UserProfileDTO request,
+        StreamObserver<UserProfileDTO> responseObserver
+    ) {
         try {
             UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
-                    .userId(request.getUserId())
-                    .build();
+                .userId(request.getUserId())
+                .build();
 
-            UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
+            UserProfileResponse newUserProfile = userProfileService.createUserProfile(
+                userProfileCreationReq
+            );
             UserProfileDTO response = UserProfileDTO.newBuilder()
-                    .setUserId(newUserProfile.getUserId())
-                    .build();
+                .setUserId(newUserProfile.getUserId())
+                .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver
-                    .onError(io.grpc.Status.ALREADY_EXISTS.withDescription(e.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                io.grpc.Status.ALREADY_EXISTS.withDescription(e.getMessage()).asRuntimeException()
+            );
         }
     }
-
 }

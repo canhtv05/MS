@@ -1,15 +1,13 @@
 package com.leaf.auth.dto;
 
+import com.leaf.auth.domain.UserPermission;
+import com.leaf.auth.enums.PermissionAction;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.UUID;
-
-import com.leaf.auth.domain.UserPermission;
-import com.leaf.auth.enums.PermissionAction;
 
 @Getter
 @Setter
@@ -23,10 +21,10 @@ public class UserPermissionDTO {
 
     public UserPermission toEntity(Long userId) {
         return UserPermission.builder()
-                .id(UUID.randomUUID().toString())
-                .userId(userId)
-                .permissionCode(this.permissionCode)
-                .action(this.action)
-                .build();
+            .id(UUID.randomUUID().toString())
+            .userId(userId)
+            .permissionCode(this.permissionCode)
+            .action(this.action)
+            .build();
     }
 }

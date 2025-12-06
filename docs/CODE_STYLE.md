@@ -22,16 +22,16 @@ This document defines the code style standards for the MS project.
 
 ```java
 public class UserService {
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  private final UserRepository userRepository;
 
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  public User findById(Long id) {
+    return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+  }
 }
 ```
 
@@ -58,16 +58,14 @@ public class UserService {
 Separate each group with a blank line.
 
 ```java
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.leaf.common.Constants.DEFAULT_PAGE_SIZE;
 
 import com.leaf.auth.domain.User;
 import com.leaf.auth.repository.UserRepository;
-
-import static com.leaf.common.Constants.DEFAULT_PAGE_SIZE;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 ```
 
 ### Annotations
@@ -80,7 +78,7 @@ import static com.leaf.common.Constants.DEFAULT_PAGE_SIZE;
 @Transactional
 @Slf4j
 public class UserService {
-    // ...
+  // ...
 }
 ```
 
@@ -100,7 +98,7 @@ public class UserService {
  * @throws AuthenticationException if authentication fails
  */
 public User authenticate(String username, String password) {
-    // Implementation
+  // Implementation
 }
 ```
 
@@ -363,16 +361,16 @@ $spacing-unit: 8px;
 ```java
 @Test
 void shouldAuthenticateUserWithValidCredentials() {
-    // Arrange
-    String username = "testuser";
-    String password = "password123";
-    User expectedUser = new User(username);
+  // Arrange
+  String username = "testuser";
+  String password = "password123";
+  User expectedUser = new User(username);
 
-    // Act
-    User actualUser = authService.authenticate(username, password);
+  // Act
+  User actualUser = authService.authenticate(username, password);
 
-    // Assert
-    assertEquals(expectedUser, actualUser);
+  // Assert
+  assertEquals(expectedUser, actualUser);
 }
 ```
 

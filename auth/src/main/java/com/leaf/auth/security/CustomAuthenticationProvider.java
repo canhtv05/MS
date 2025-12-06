@@ -1,5 +1,6 @@
 package com.leaf.auth.security;
 
+import com.leaf.auth.exception.CustomAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.leaf.auth.exception.CustomAuthenticationException;
-
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -20,7 +19,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws CustomAuthenticationException {
+    public Authentication authenticate(Authentication authentication)
+        throws CustomAuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);

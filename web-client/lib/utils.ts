@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export interface IGitHubRepo {
   full_name: string;
@@ -30,7 +30,7 @@ export async function getInfoRepo(owner: string, repo: string): Promise<IGitHubR
 }
 
 export function formatStars(num: number | null): string {
-  if (!num) return "0";
+  if (!num) return '0';
   if (num < 1000) return num.toString();
   const formatted = (num / 1000).toFixed(1);
   return `${formatted}k`;

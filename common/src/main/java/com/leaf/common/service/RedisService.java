@@ -1,17 +1,14 @@
 package com.leaf.common.service;
 
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.JsonF;
-
 import java.time.Duration;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -65,11 +62,11 @@ public class RedisService {
     public void cacheUser(String username, String channel, String sessionId, String secretKey) {
         String userKey = this.getKeyUser(username, channel);
         UserSessionDTO user = UserSessionDTO.builder()
-                .sessionId(sessionId)
-                .channel(channel)
-                .username(username)
-                .secretKey(secretKey)
-                .build();
+            .sessionId(sessionId)
+            .channel(channel)
+            .username(username)
+            .secretKey(secretKey)
+            .build();
         redisTemplate.opsForValue().set(userKey, user);
     }
 
@@ -79,12 +76,16 @@ public class RedisService {
 
     public UserSessionDTO getUser(String username, String channel) {
         String userKey = this.getKeyUser(username, channel);
-        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
-                UserSessionDTO.class);
+        return JsonF.jsonToObject(
+            (String) redisTemplate.opsForValue().get(userKey),
+            UserSessionDTO.class
+        );
     }
 
     public void saveEmailToken(String token, String username) {
-        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
+        redisTemplate
+            .opsForValue()
+            .set(getKeyVerification(token), username, Duration.ofMinutes(10));
     }
 
     public String getUsernameIfEmailTokenAlive(String token) {

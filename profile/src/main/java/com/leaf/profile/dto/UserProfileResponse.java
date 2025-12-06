@@ -1,21 +1,18 @@
 package com.leaf.profile.dto;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.enums.Gender;
 import com.leaf.profile.enums.PrivacyLevel;
-
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.BeanUtils;
 
 @Data
 @AllArgsConstructor

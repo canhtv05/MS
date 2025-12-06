@@ -22,14 +22,14 @@ import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
 import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
-
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.http.HttpStatus;
@@ -41,9 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,32 +57,51 @@ public class AuthService {
     RedisCacheManager redisCacheManager;
 
     @Transactional
-    public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) {
+    public String authenticate(
+        LoginRequest loginRequest,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
         try {
             AuthenticationContext.setChannel(loginRequest.getChannel());
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+            UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(),
-                    loginRequest.getPassword());
+                    loginRequest.getPassword()
+                );
 
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            Authentication authentication = authenticationManagerBuilder
+                .getObject()
+                .authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
-                    loginRequest.getChannel());
+            return tokenProvider.createToken(
+                authentication,
+                httpServletRequest,
+                httpServletResponse,
+                loginRequest.getChannel()
+            );
         } finally {
             AuthenticationContext.clear();
         }
     }
 
     @Transactional
-    public RefreshTokenResponse refreshToken(String cookieValue, String channel, HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) {
-
+    public RefreshTokenResponse refreshToken(
+        String cookieValue,
+        String channel,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse,
-                channel);
+        return tokenProvider.refreshToken(
+            authentication,
+            cookieValue,
+            httpServletRequest,
+            httpServletResponse,
+            channel
+        );
     }
 
     @Transactional(readOnly = true)
@@ -97,9 +113,7 @@ public class AuthService {
 
         boolean valid = this.tokenProvider.validateToken(accessToken);
 
-        return VerifyTokenResponse.builder()
-                .valid(valid)
-                .build();
+        return VerifyTokenResponse.builder().valid(valid).build();
     }
 
     @Transactional
@@ -117,8 +131,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public UserProfileDTO getProfile(HttpServletRequest request) {
-        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
-                () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
+        );
 
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
         UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
@@ -134,7 +149,10 @@ public class AuthService {
         this.mappingUserPermissions(userProfileDTO, user.get());
 
         // Get user session from Redis using channel
-        UserSessionDTO userSessionDTO = redisService.getUser(username, AuthenticationContext.getChannel());
+        UserSessionDTO userSessionDTO = redisService.getUser(
+            username,
+            AuthenticationContext.getChannel()
+        );
         if (userSessionDTO != null) {
             userProfileDTO.setChannel(userSessionDTO.getChannel());
             userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
@@ -148,22 +166,32 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public void mappingUserPermissions(UserProfileDTO userProfileDTO, User user) {
-        Set<String> permissions = user.getRoles().stream()
-                .filter(role -> !ObjectUtils.isEmpty(role.getPermissions()))
-                .flatMap(role -> role.getPermissions().stream())
-                .filter(Objects::nonNull)
-                .map(Permission::getCode)
-                .collect(Collectors.toSet());
-        List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(user.getId());
+        Set<String> permissions = user
+            .getRoles()
+            .stream()
+            .filter(role -> !ObjectUtils.isEmpty(role.getPermissions()))
+            .flatMap(role -> role.getPermissions().stream())
+            .filter(Objects::nonNull)
+            .map(Permission::getCode)
+            .collect(Collectors.toSet());
+        List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(
+            user.getId()
+        );
         if (!userPermissions.isEmpty()) {
-            permissions.addAll(userPermissions.stream()
+            permissions.addAll(
+                userPermissions
+                    .stream()
                     .filter(pm -> PermissionAction.GRANT.equals(pm.getAction()))
                     .map(UserPermission::getPermissionCode)
-                    .collect(Collectors.toSet()));
-            permissions.removeAll(userPermissions.stream()
+                    .collect(Collectors.toSet())
+            );
+            permissions.removeAll(
+                userPermissions
+                    .stream()
                     .filter(pm -> PermissionAction.DENY.equals(pm.getAction()))
                     .map(UserPermission::getPermissionCode)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toSet())
+            );
         }
         userProfileDTO.setPermissions(new ArrayList<>(permissions));
     }

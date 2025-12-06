@@ -1,12 +1,10 @@
 package com.leaf.auth.security;
 
+import com.leaf.common.security.UserPrincipal;
+import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-
-import com.leaf.common.security.UserPrincipal;
-
-import java.util.Collection;
 
 @Getter
 public class CustomUserDetails extends User implements UserPrincipal {
@@ -15,12 +13,14 @@ public class CustomUserDetails extends User implements UserPrincipal {
     private final boolean isGlobal;
     private final String channel;
 
-    public CustomUserDetails(String username,
-            String password,
-            Collection<? extends GrantedAuthority> authorities,
-            String roles,
-            boolean isGlobal,
-            String channel) {
+    public CustomUserDetails(
+        String username,
+        String password,
+        Collection<? extends GrantedAuthority> authorities,
+        String roles,
+        boolean isGlobal,
+        String channel
+    ) {
         super(username, password, authorities);
         this.role = roles;
         this.isGlobal = isGlobal;

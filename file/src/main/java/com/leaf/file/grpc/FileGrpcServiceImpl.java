@@ -1,18 +1,15 @@
 package com.leaf.file.grpc;
 
-import java.util.List;
-
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.google.protobuf.ByteString;
 import com.leaf.common.grpc.*;
 import com.leaf.file.mapper.FileProtoMapper;
 import com.leaf.file.service.FileService;
-
 import io.grpc.stub.StreamObserver;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -21,13 +18,14 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     private final FileService fileService;
 
     @Override
-    public void deleteById(DeleteByIdRequest request, StreamObserver<DeleteByIdResponse> responseObserver) {
+    public void deleteById(
+        DeleteByIdRequest request,
+        StreamObserver<DeleteByIdResponse> responseObserver
+    ) {
         try {
             fileService.deleteById(request.getFileId());
 
-            DeleteByIdResponse response = DeleteByIdResponse.newBuilder()
-                    .setSuccess(true)
-                    .build();
+            DeleteByIdResponse response = DeleteByIdResponse.newBuilder().setSuccess(true).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -37,9 +35,14 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void getFileByIds(GetFilesByIdsRequest request, StreamObserver<GetFilesByIdsResponse> responseObserver) {
+    public void getFileByIds(
+        GetFilesByIdsRequest request,
+        StreamObserver<GetFilesByIdsResponse> responseObserver
+    ) {
         try {
-            List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(request.getIdsList());
+            List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(
+                request.getIdsList()
+            );
 
             GetFilesByIdsResponse.Builder builder = GetFilesByIdsResponse.newBuilder();
             files.forEach(f -> builder.addFiles(FileProtoMapper.toProto(f)));
@@ -52,7 +55,10 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void uploadFiles(UploadFilesRequest request, StreamObserver<FileResponse> responseObserver) {
+    public void uploadFiles(
+        UploadFilesRequest request,
+        StreamObserver<FileResponse> responseObserver
+    ) {
         try {
             // ✅ lấy đúng list bytes
             List<ByteString> bytesList = request.getFilesList();
@@ -68,25 +74,26 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
 
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
-
         } catch (Exception e) {
             responseObserver.onError(e);
         }
     }
 
     private MultipartFile[] convertFromGrpc(List<ByteString> filesList) {
-        return filesList.stream()
-                .map(FileGrpcServiceImpl::toMultipartFile)
-                .toArray(MultipartFile[]::new);
+        return filesList
+            .stream()
+            .map(FileGrpcServiceImpl::toMultipartFile)
+            .toArray(MultipartFile[]::new);
     }
 
     private static MultipartFile toMultipartFile(ByteString bs) {
         try {
             return new MockMultipartFile(
-                    "file",
-                    "file",
-                    "application/octet-stream",
-                    bs.toByteArray());
+                "file",
+                "file",
+                "application/octet-stream",
+                bs.toByteArray()
+            );
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert gRPC bytes to MultipartFile", e);
         }

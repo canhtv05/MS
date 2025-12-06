@@ -7,19 +7,17 @@ import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.common.utils.json.LowerCaseTrimDeserializer;
-
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.beans.BeanUtils;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -51,6 +49,7 @@ public class UserDTO implements Serializable {
 
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant createdDate;
+
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant modifiedDate;
 
@@ -67,7 +66,9 @@ public class UserDTO implements Serializable {
         UserDTO dto = new UserDTO();
         BeanUtils.copyProperties(entity, dto);
         dto.setRoles(entity.getRoles().stream().map(Role::getCode).collect(Collectors.toList()));
-        dto.setRoleLabels(entity.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()));
+        dto.setRoleLabels(
+            entity.getRoles().stream().map(Role::getDescription).collect(Collectors.toList())
+        );
         dto.setPassword(null);
         dto.setEmail(entity.getEmail());
         dto.setFullname(entity.getFullName());

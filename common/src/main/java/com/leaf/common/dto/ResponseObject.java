@@ -1,11 +1,9 @@
 package com.leaf.common.dto;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.leaf.common.exception.ErrorMessage;
-
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,54 +25,48 @@ public class ResponseObject<T> implements Serializable {
 
     public static <T> ResponseObject<T> success() {
         return ResponseObject.<T>builder()
-                .code(ErrorMessage.SUCCESS.getCode())
-                .message(ErrorMessage.SUCCESS.getMessage())
-                .build();
+            .code(ErrorMessage.SUCCESS.getCode())
+            .message(ErrorMessage.SUCCESS.getMessage())
+            .build();
     }
 
     public static <T> ResponseObject<T> success(T data) {
         return ResponseObject.<T>builder()
-                .code(ErrorMessage.SUCCESS.getCode())
-                .message(ErrorMessage.SUCCESS.getMessage())
-                .data(data)
-                .build();
+            .code(ErrorMessage.SUCCESS.getCode())
+            .message(ErrorMessage.SUCCESS.getMessage())
+            .data(data)
+            .build();
     }
 
     public static <T> ResponseObject<T> success(T data, PageResponse pageResponse) {
         return ResponseObject.<T>builder()
-                .code(ErrorMessage.SUCCESS.getCode())
-                .message(ErrorMessage.SUCCESS.getMessage())
-                .data(data)
-                .pagination(pageResponse)
-                .build();
+            .code(ErrorMessage.SUCCESS.getCode())
+            .message(ErrorMessage.SUCCESS.getMessage())
+            .data(data)
+            .pagination(pageResponse)
+            .build();
     }
 
     public static <T> ResponseObject<T> error(String code, String message) {
-        return ResponseObject.<T>builder()
-                .code(code)
-                .message(message)
-                .build();
+        return ResponseObject.<T>builder().code(code).message(message).build();
     }
 
     public static <T> ResponseObject<T> error(ErrorMessage errorMessage) {
         return ResponseObject.<T>builder()
-                .code(errorMessage.getCode())
-                .message(errorMessage.getMessage())
-                .build();
+            .code(errorMessage.getCode())
+            .message(errorMessage.getMessage())
+            .build();
     }
 
     public static <T> ResponseObject<T> error(ErrorMessage errorMessage, String message) {
-        return ResponseObject.<T>builder()
-                .code(errorMessage.getCode())
-                .message(message)
-                .build();
+        return ResponseObject.<T>builder().code(errorMessage.getCode()).message(message).build();
     }
 
     public static <T> ResponseObject<T> error(ErrorMessage errorMessage, T data) {
         return ResponseObject.<T>builder()
-                .code(errorMessage.getCode())
-                .message(errorMessage.getMessage())
-                .data(data)
-                .build();
+            .code(errorMessage.getCode())
+            .message(errorMessage.getMessage())
+            .data(data)
+            .build();
     }
 }

@@ -2,7 +2,6 @@ package com.leaf.common.dto.event;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.leaf.common.utils.json.LowerCaseTrimDeserializer;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

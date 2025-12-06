@@ -1,17 +1,14 @@
 package com.leaf.file.dto;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leaf.file.domain.File;
-
+import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
-
-import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @Setter

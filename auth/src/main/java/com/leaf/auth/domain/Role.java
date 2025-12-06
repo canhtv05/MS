@@ -2,16 +2,14 @@ package com.leaf.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leaf.common.domain.AbstractAuditingPostgresEntity;
-
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -36,9 +34,13 @@ public class Role extends AbstractAuditingPostgresEntity {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "role_permissions", joinColumns = {
-            @JoinColumn(name = "role_code", referencedColumnName = "code") }, inverseJoinColumns = {
-                    @JoinColumn(name = "permission_code", referencedColumnName = "code") })
+    @JoinTable(
+        name = "role_permissions",
+        joinColumns = { @JoinColumn(name = "role_code", referencedColumnName = "code") },
+        inverseJoinColumns = {
+            @JoinColumn(name = "permission_code", referencedColumnName = "code"),
+        }
+    )
     @Builder.Default
     private Set<Permission> permissions = new HashSet<>();
 }

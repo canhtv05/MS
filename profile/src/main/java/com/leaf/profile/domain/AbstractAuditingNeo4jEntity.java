@@ -1,6 +1,9 @@
 package com.leaf.profile.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +14,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
-
 @Setter
 @Getter
 @SuperBuilder
 @NoArgsConstructor
-@JsonIgnoreProperties(value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" }, allowGetters = true)
+@JsonIgnoreProperties(
+    value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" },
+    allowGetters = true
+)
 public abstract class AbstractAuditingNeo4jEntity implements Serializable {
 
     @Serial

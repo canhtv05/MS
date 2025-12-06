@@ -1,18 +1,16 @@
 package com.leaf.auth.dto;
 
+import com.leaf.auth.domain.Role;
+import com.leaf.auth.domain.User;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.leaf.auth.domain.Role;
-import com.leaf.auth.domain.User;
 
 @Getter
 @Setter
@@ -36,12 +34,14 @@ public class UserProfileDTO implements Serializable {
 
     public static UserProfileDTO fromEntity(User user) {
         return UserProfileDTO.builder()
-                .username(user.getUsername())
-                .isGlobal(user.getIsGlobal())
-                .roles(user.getRoles().stream().map(Role::getCode).collect(Collectors.toList()))
-                .roleLabels(user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()))
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .build();
+            .username(user.getUsername())
+            .isGlobal(user.getIsGlobal())
+            .roles(user.getRoles().stream().map(Role::getCode).collect(Collectors.toList()))
+            .roleLabels(
+                user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList())
+            )
+            .fullName(user.getFullName())
+            .email(user.getEmail())
+            .build();
     }
 }

@@ -8,13 +8,11 @@ import com.leaf.auth.repository.PermissionRepository;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.common.security.AuthoritiesConstants;
 import com.leaf.common.security.SecurityUtils;
-
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +28,11 @@ public class PublicApiService {
         if (permissionCache.get(CacheKey.LIST_PERMISSION.name()).isPresent()) {
             return permissionCache.get(CacheKey.LIST_PERMISSION.name()).get();
         }
-        List<PermissionSelect> permissions = permissionRepository.findAll().stream()
-                .map(PermissionSelect::fromEntity)
-                .toList();
+        List<PermissionSelect> permissions = permissionRepository
+            .findAll()
+            .stream()
+            .map(PermissionSelect::fromEntity)
+            .toList();
         if (!permissions.isEmpty()) {
             permissionCache.put(CacheKey.LIST_PERMISSION.name(), permissions);
         }
@@ -40,13 +40,16 @@ public class PublicApiService {
     }
 
     public List<RoleSelect> getRoleSelect() {
-        List<RoleSelect> roles = roleRepository.findAll().stream()
-                .map(RoleSelect::fromEntity)
-                .toList();
+        List<RoleSelect> roles = roleRepository
+            .findAll()
+            .stream()
+            .map(RoleSelect::fromEntity)
+            .toList();
         if (!SecurityUtils.isGlobalSuperAdmin()) {
-            return roles.stream()
-                    .filter(t -> !AuthoritiesConstants.SUPER_ADMIN.equalsIgnoreCase(t.code()))
-                    .toList();
+            return roles
+                .stream()
+                .filter(t -> !AuthoritiesConstants.SUPER_ADMIN.equalsIgnoreCase(t.code()))
+                .toList();
         }
         return roles;
     }

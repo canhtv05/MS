@@ -7,10 +7,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.common.utils.json.StringToInstantDeserializer;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.Instant;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonF {
@@ -36,7 +34,6 @@ public class JsonF {
     }
 
     public static <T> T jsonToObject(String str, Class<T> clazz) {
-
         try {
             return objectMapper.readValue(str, clazz);
         } catch (Exception e) {

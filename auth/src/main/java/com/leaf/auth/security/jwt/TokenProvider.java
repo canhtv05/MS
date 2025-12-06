@@ -1,23 +1,5 @@
 package com.leaf.auth.security.jwt;
 
-import java.security.Key;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
-
 import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.NotificationPayload;
@@ -34,7 +16,6 @@ import com.leaf.common.security.SecurityUtils;
 import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.JsonF;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
@@ -50,7 +31,23 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.security.Key;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -70,9 +67,13 @@ public class TokenProvider {
     private final Long tokenValidityDuration;
     private final Long refreshTokenValidityDuration;
 
-    public TokenProvider(SimpMessagingTemplate messagingTemplate,
-            RedisService redisService, UserRepository userRepository, CookieUtil cookieUtil,
-            ApplicationProperties applicationProperties) {
+    public TokenProvider(
+        SimpMessagingTemplate messagingTemplate,
+        RedisService redisService,
+        UserRepository userRepository,
+        CookieUtil cookieUtil,
+        ApplicationProperties applicationProperties
+    ) {
         this.messagingTemplate = messagingTemplate;
         this.redisService = redisService;
         this.userRepository = userRepository;
@@ -81,12 +82,22 @@ public class TokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-        this.tokenValidityDuration = cookieUtil.getProperties().getSecurity().getValidDurationInSeconds();
-        this.refreshTokenValidityDuration = cookieUtil.getProperties().getSecurity().getRefreshDurationInSeconds();
+        this.tokenValidityDuration = cookieUtil
+            .getProperties()
+            .getSecurity()
+            .getValidDurationInSeconds();
+        this.refreshTokenValidityDuration = cookieUtil
+            .getProperties()
+            .getSecurity()
+            .getRefreshDurationInSeconds();
     }
 
-    public String createToken(Authentication authentication, HttpServletRequest request,
-            HttpServletResponse response, String channel) {
+    public String createToken(
+        Authentication authentication,
+        HttpServletRequest request,
+        HttpServletResponse response,
+        String channel
+    ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String jwtName = authentication.getName();
@@ -96,26 +107,41 @@ public class TokenProvider {
 
         if (tokenExisting != null) {
             NotificationPayload<?> payload = NotificationPayload.builder()
-                    .type(NotificationType.FORCE_LOGOUT)
-                    .message("Tài khoản của bạn vừa đăng nhập ở nơi khác")
-                    .title("Phiên đăng nhập")
-                    .sessionId(sessionId)
-                    .timestamp(Instant.now())
-                    .username(userDetails.getUsername())
-                    .build();
-            messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
+                .type(NotificationType.FORCE_LOGOUT)
+                .message("Tài khoản của bạn vừa đăng nhập ở nơi khác")
+                .title("Phiên đăng nhập")
+                .sessionId(sessionId)
+                .timestamp(Instant.now())
+                .username(userDetails.getUsername())
+                .build();
+            messagingTemplate.convertAndSendToUser(
+                userDetails.getUsername(),
+                "/queue/force-logout",
+                payload
+            );
 
             // Revoke old session: delete tokens and clear refresh token
             // Note: tokenExisting is a hash, not the actual JWT, so we can't parse it
-            User user = userRepository.findByUsername(jwtName)
-                    .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+            User user = userRepository
+                .findByUsername(jwtName)
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
             redisService.deleteToken(jwtName, channel);
         }
 
-        String token = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
-        String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, request, channel);
+        String token = this.generateToken(
+            authentication,
+            this.tokenValidityDuration,
+            request,
+            channel
+        );
+        String refreshToken = this.generateToken(
+            authentication,
+            this.refreshTokenValidityDuration,
+            request,
+            channel
+        );
 
         redisService.cacheUser(jwtName, channel, sessionId, AESUtils.generateSecretKey());
         redisService.cacheToken(jwtName, channel, token);
@@ -123,18 +149,22 @@ public class TokenProvider {
         Cookie cookie = cookieUtil.setTokenCookie(token, refreshToken);
         response.addCookie(cookie);
 
-        User user = userRepository.findByUsername(jwtName)
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        User user = userRepository
+            .findByUsername(jwtName)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return token;
     }
 
-    public RefreshTokenResponse refreshToken(Authentication authentication,
-            String cookieValue,
-            HttpServletRequest request,
-            HttpServletResponse response, String channel) {
+    public RefreshTokenResponse refreshToken(
+        Authentication authentication,
+        String cookieValue,
+        HttpServletRequest request,
+        HttpServletResponse response,
+        String channel
+    ) {
         Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
 
         String refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
@@ -144,16 +174,29 @@ public class TokenProvider {
 
         Claims claims = jwtParser.parseClaimsJws(refreshToken).getBody();
         String username = claims.getSubject();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        User user = userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
 
-        if (!Objects.equals(user.getRefreshToken(), refreshToken) || StringUtils.isBlank(user.getRefreshToken())) {
+        if (
+            !Objects.equals(user.getRefreshToken(), refreshToken) ||
+            StringUtils.isBlank(user.getRefreshToken())
+        ) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
 
-        String newToken = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
-        String newRefreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration,
-                request, channel);
+        String newToken = this.generateToken(
+            authentication,
+            this.tokenValidityDuration,
+            request,
+            channel
+        );
+        String newRefreshToken = this.generateToken(
+            authentication,
+            this.refreshTokenValidityDuration,
+            request,
+            channel
+        );
         // save new refresh token
         user.setRefreshToken(newRefreshToken);
         userRepository.save(user);
@@ -166,25 +209,27 @@ public class TokenProvider {
         response.addCookie(cookie);
 
         return RefreshTokenResponse.builder()
-                .accessToken(newToken)
-                .refreshToken(newRefreshToken)
-                .build();
+            .accessToken(newToken)
+            .refreshToken(newRefreshToken)
+            .build();
     }
 
     public Authentication getAuthentication(String token) {
         Claims claims = jwtParser.parseClaimsJws(token).getBody();
-        Collection<? extends GrantedAuthority> authorities = Arrays
-                .stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .filter(auth -> !auth.trim().isEmpty())
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(
+            claims.get(AUTHORITIES_KEY).toString().split(",")
+        )
+            .filter(auth -> !auth.trim().isEmpty())
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
         CustomUserDetails principal = new CustomUserDetails(
-                claims.getSubject(),
-                "",
-                authorities,
-                claims.get(ROLES_KEY, String.class),
-                claims.get(USER_GLOBAL_KEY, Boolean.class),
-                claims.get(CHANNEL_KEY, String.class));
+            claims.getSubject(),
+            "",
+            authorities,
+            claims.get(ROLES_KEY, String.class),
+            claims.get(USER_GLOBAL_KEY, Boolean.class),
+            claims.get(CHANNEL_KEY, String.class)
+        );
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
@@ -201,7 +246,12 @@ public class TokenProvider {
             }
 
             return redisService.isTokenValid(username, channel, authToken);
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException e) {
+        } catch (
+            ExpiredJwtException
+            | UnsupportedJwtException
+            | MalformedJwtException
+            | SignatureException e
+        ) {
             log.trace(INVALID_JWT_TOKEN, e);
         } catch (IllegalArgumentException e) {
             log.error("Token validation error {}", e.getMessage());
@@ -210,11 +260,13 @@ public class TokenProvider {
     }
 
     public void revokeToken(String token, String channel) {
-        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
-                () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
+        );
         if (StringUtils.isNotBlank(username)) {
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+            User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
             redisService.deleteToken(username, channel);
@@ -222,11 +274,17 @@ public class TokenProvider {
         }
     }
 
-    private String generateToken(Authentication authentication, long validityTimeInSeconds,
-            HttpServletRequest request, String channel) {
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    private String generateToken(
+        Authentication authentication,
+        long validityTimeInSeconds,
+        HttpServletRequest request,
+        String channel
+    ) {
+        String authorities = authentication
+            .getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         long now = System.currentTimeMillis();
@@ -237,15 +295,15 @@ public class TokenProvider {
         String sessionId = session.getId();
 
         return Jwts.builder()
-                .setId(sessionId)
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .claim(ROLES_KEY, String.join(",", userDetails.getRole()))
-                .claim(USER_GLOBAL_KEY, userDetails.isGlobal())
-                .claim(CHANNEL_KEY, channel)
-                .setIssuedAt(new Date(now))
-                .setExpiration(validity)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+            .setId(sessionId)
+            .setSubject(authentication.getName())
+            .claim(AUTHORITIES_KEY, authorities)
+            .claim(ROLES_KEY, String.join(",", userDetails.getRole()))
+            .claim(USER_GLOBAL_KEY, userDetails.isGlobal())
+            .claim(CHANNEL_KEY, channel)
+            .setIssuedAt(new Date(now))
+            .setExpiration(validity)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
     }
 }

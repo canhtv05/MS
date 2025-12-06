@@ -1,19 +1,16 @@
 package com.leaf.auth.security.jwt;
 
+import com.leaf.auth.util.AuthUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-
+import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
-
-import com.leaf.auth.util.AuthUtil;
-
-import java.io.IOException;
 
 public class JWTFilter extends GenericFilterBean {
 
@@ -26,8 +23,11 @@ public class JWTFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(
+        ServletRequest servletRequest,
+        ServletResponse servletResponse,
+        FilterChain filterChain
+    ) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String jwt = authUtil.resolveToken(httpServletRequest);
         String path = httpServletRequest.getRequestURI();

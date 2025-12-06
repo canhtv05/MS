@@ -1,7 +1,6 @@
 package com.leaf.noti.dto;
 
 import com.leaf.noti.enums.VerificationStatus;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

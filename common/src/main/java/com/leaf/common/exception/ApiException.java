@@ -1,8 +1,7 @@
 package com.leaf.common.exception;
 
-import lombok.Getter;
-
 import java.io.Serial;
+import lombok.Getter;
 
 @Getter
 public class ApiException extends RuntimeException {

@@ -7,6 +7,7 @@
   "bracketSameLine": false,
   "htmlWhitespaceSensitivity": "ignore",
   "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-java"],
   "overrides": [
     {
       "files": "*.java",

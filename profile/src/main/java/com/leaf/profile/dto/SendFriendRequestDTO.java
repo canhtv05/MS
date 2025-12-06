@@ -1,11 +1,9 @@
 package com.leaf.profile.dto;
 
-import java.time.Instant;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.enums.FriendRequestStatus;
-
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +23,6 @@ public class SendFriendRequestDTO {
 
     @JsonSerialize(using = InstantToStringSerializer.class)
     Instant sendAt;
+
     FriendRequestStatus status;
 }

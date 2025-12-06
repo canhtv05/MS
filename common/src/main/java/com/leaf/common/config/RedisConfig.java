@@ -1,23 +1,5 @@
 package com.leaf.common.config;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -29,6 +11,22 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
@@ -61,45 +59,60 @@ public class RedisConfig {
     RedisCacheConfiguration cacheConfiguration() {
         ObjectMapper objectMapper = new ObjectMapper();
         JavaTimeModule module = new JavaTimeModule();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-                .withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").withZone(
+            ZoneId.systemDefault()
+        );
 
-        module.addSerializer(Instant.class, new JsonSerializer<Instant>() {
-            @Override
-            public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-                gen.writeString(formatter.format(value));
+        module.addSerializer(
+            Instant.class,
+            new JsonSerializer<Instant>() {
+                @Override
+                public void serialize(
+                    Instant value,
+                    JsonGenerator gen,
+                    SerializerProvider serializers
+                ) throws IOException {
+                    gen.writeString(formatter.format(value));
+                }
             }
-        });
+        );
 
-        module.addDeserializer(Instant.class, new JsonDeserializer<Instant>() {
-            @Override
-            public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String text = p.getText();
-                return Instant.from(formatter.parse(text));
+        module.addDeserializer(
+            Instant.class,
+            new JsonDeserializer<Instant>() {
+                @Override
+                public Instant deserialize(JsonParser p, DeserializationContext ctxt)
+                    throws IOException {
+                    String text = p.getText();
+                    return Instant.from(formatter.parse(text));
+                }
             }
-        });
+        );
 
         objectMapper.registerModule(module);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
-                JsonTypeInfo.As.PROPERTY);
+            LaissezFaireSubTypeValidator.instance,
+            ObjectMapper.DefaultTyping.NON_FINAL,
+            JsonTypeInfo.As.PROPERTY
+        );
 
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(
+            objectMapper
+        );
 
         return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(60))
-                .disableCachingNullValues()
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(serializer));
+            .entryTtl(Duration.ofMinutes(60))
+            .disableCachingNullValues()
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(serializer)
+            );
     }
 
     @Bean
     RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
         return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(cacheConfiguration())
-                .build();
+            .cacheDefaults(cacheConfiguration())
+            .build();
     }
-
 }

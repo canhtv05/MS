@@ -3,11 +3,11 @@ package com.leaf.auth.controller;
 import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
-import com.leaf.auth.dto.req.VerifyOTPReq;
 import com.leaf.auth.dto.req.ForgotPasswordReq;
 import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.req.LogoutRequest;
 import com.leaf.auth.dto.req.ResetPasswordReq;
+import com.leaf.auth.dto.req.VerifyOTPReq;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
@@ -15,7 +15,6 @@ import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -38,26 +37,40 @@ public class UserJWTController {
     private final UserService userService;
 
     @PostMapping("/p/authenticate")
-    public ResponseEntity<TokenResponse> authorize(@Valid @RequestBody LoginRequest loginRequest,
-            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String jwt = authService.authenticate(loginRequest, httpServletRequest, httpServletResponse);
+    public ResponseEntity<TokenResponse> authorize(
+        @Valid @RequestBody LoginRequest loginRequest,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
+        String jwt = authService.authenticate(
+            loginRequest,
+            httpServletRequest,
+            httpServletResponse
+        );
         return new ResponseEntity<>(new TokenResponse(jwt), HttpStatus.OK);
     }
 
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
-            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-            @RequestBody String channel,
-            HttpServletRequest httpServletRequest, HttpServletResponse response) {
-        return ResponseEntity
-                .ok(ResponseObject
-                        .success(authService.refreshToken(cookieValue, channel, httpServletRequest, response)));
+        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+        @RequestBody String channel,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse response
+    ) {
+        return ResponseEntity.ok(
+            ResponseObject.success(
+                authService.refreshToken(cookieValue, channel, httpServletRequest, response)
+            )
+        );
     }
 
     @PostMapping("/internal/verify")
     public ResponseEntity<ResponseObject<VerifyTokenResponse>> verifyToken(
-            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue) {
-        return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue, false)));
+        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue
+    ) {
+        return ResponseEntity.ok(
+            ResponseObject.success(authService.verifyToken(cookieValue, false))
+        );
     }
 
     @PostMapping("/c/create")
@@ -67,48 +80,60 @@ public class UserJWTController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(HttpServletRequest request) {
+    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(
+        HttpServletRequest request
+    ) {
         return ResponseEntity.ok(ResponseObject.success(authService.getProfile(request)));
     }
 
     @PostMapping("/p/change-password")
     public ResponseEntity<ResponseObject<Boolean>> changePassword(
-            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-            @Valid @RequestBody ChangePasswordReq req, HttpServletResponse response) {
+        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+        @Valid @RequestBody ChangePasswordReq req,
+        HttpServletResponse response
+    ) {
         userService.changePassword(cookieValue, req, response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/reset-password")
-    public ResponseEntity<ResponseObject<Boolean>> resetPassword(@Valid @RequestBody ResetPasswordReq req) {
+    public ResponseEntity<ResponseObject<Boolean>> resetPassword(
+        @Valid @RequestBody ResetPasswordReq req
+    ) {
         userService.resetPassword(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/forgot-password")
-    public ResponseEntity<ResponseObject<Boolean>> forgotPassword(@Valid @RequestBody ForgotPasswordReq req) {
+    public ResponseEntity<ResponseObject<Boolean>> forgotPassword(
+        @Valid @RequestBody ForgotPasswordReq req
+    ) {
         userService.forgotPasswordRequest(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/verify-forgot-password-otp")
     public ResponseEntity<ResponseObject<Boolean>> verifyForgotPasswordOTP(
-            @Valid @RequestBody VerifyOTPReq req) {
+        @Valid @RequestBody VerifyOTPReq req
+    ) {
         userService.verifyForgotPasswordOTP(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/update")
-    public ResponseEntity<ResponseObject<Boolean>> updateUserProfile(@RequestBody UserProfileDTO req) {
+    public ResponseEntity<ResponseObject<Boolean>> updateUserProfile(
+        @RequestBody UserProfileDTO req
+    ) {
         userService.updateUserProfile(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/logout")
     public ResponseEntity<ResponseObject<?>> logout(
-            @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-            @RequestBody LogoutRequest request,
-            HttpServletResponse response) {
+        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+        @RequestBody LogoutRequest request,
+        HttpServletResponse response
+    ) {
         authService.logout(cookieValue, request.getChannel(), response);
         return ResponseEntity.ok(ResponseObject.success());
     }

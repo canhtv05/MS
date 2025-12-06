@@ -1,13 +1,11 @@
 package com.leaf.auth.dto;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
+import com.leaf.auth.enums.NotificationType;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-
-import com.leaf.auth.enums.NotificationType;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder

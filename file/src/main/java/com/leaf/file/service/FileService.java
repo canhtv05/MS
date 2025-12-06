@@ -15,12 +15,17 @@ import com.leaf.file.dto.ImageResponse;
 import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
 import org.mp4parser.IsoFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,14 +34,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -49,8 +46,9 @@ public class FileService {
     FileRepository fileRepository;
 
     public FileResponse upload(MultipartFile[] files) throws IOException {
-        String userId = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
+        String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
 
         String imageString = "image";
         String videoString = "video";
@@ -63,29 +61,36 @@ public class FileService {
 
         for (MultipartFile file : files) {
             String contentType = file.getContentType();
-            if (contentType == null)
-                continue;
+            if (contentType == null) continue;
 
             totalSize += file.getSize();
 
             if (contentType.startsWith(imageString)) {
-                var imageResult = cloudinary.uploader().upload(
+                var imageResult = cloudinary
+                    .uploader()
+                    .upload(
                         file.getBytes(),
                         ObjectUtils.asMap(
-                                "resource_type", imageString,
-                                "upload_preset", "social-media",
-                                "folder", imageString));
+                            "resource_type",
+                            imageString,
+                            "upload_preset",
+                            "social-media",
+                            "folder",
+                            imageString
+                        )
+                    );
                 String imageUrl = imageResult.get(secureUrl).toString();
                 String imagePublicId = imageResult.get(publicId).toString();
 
-                imageResponses.add(ImageResponse.builder()
+                imageResponses.add(
+                    ImageResponse.builder()
                         .contentType(file.getContentType())
                         .imageUrl(imageUrl)
                         .fileSize(file.getSize())
                         .originFileName(file.getOriginalFilename())
                         .publicId(imagePublicId)
-                        .build());
-
+                        .build()
+                );
             } else if (contentType.startsWith(videoString)) {
                 File tmpFile = File.createTempFile("upload-", ".mp4");
                 tmpFile.deleteOnExit();
@@ -101,27 +106,37 @@ public class FileService {
                 long durationMillis = (duration * 1000) / timescale;
                 double durationSec = durationMillis / 1000.0;
 
-                var videoResult = cloudinary.uploader().upload(
+                var videoResult = cloudinary
+                    .uploader()
+                    .upload(
                         file.getBytes(),
                         ObjectUtils.asMap(
-                                "resource_type", videoString,
-                                "upload_preset", "social-media",
-                                "folder", videoString,
-                                "eager", List.of(
-                                        new EagerTransformation()
-                                                .width(320)
-                                                .height(240)
-                                                .crop("thumb")
-                                                .fetchFormat("jpg"))));
+                            "resource_type",
+                            videoString,
+                            "upload_preset",
+                            "social-media",
+                            "folder",
+                            videoString,
+                            "eager",
+                            List.of(
+                                new EagerTransformation()
+                                    .width(320)
+                                    .height(240)
+                                    .crop("thumb")
+                                    .fetchFormat("jpg")
+                            )
+                        )
+                    );
 
                 String videoUrl = videoResult.get(secureUrl).toString();
                 String videoPublicId = videoResult.get(publicId).toString();
                 @SuppressWarnings("unchecked")
-                String thumbnailUrl = ((List<Map<String, String>>) videoResult.get("eager")).getFirst()
-                        .get(
-                                secureUrl);
+                String thumbnailUrl = ((List<Map<String, String>>) videoResult.get(
+                        "eager"
+                    )).getFirst().get(secureUrl);
 
-                videoResponses.add(VideoResponse.builder()
+                videoResponses.add(
+                    VideoResponse.builder()
                         .contentType(file.getContentType())
                         .videoUrl(videoUrl)
                         .thumbnailUrl(thumbnailUrl)
@@ -130,75 +145,103 @@ public class FileService {
                         .fileSize(file.getSize())
                         .originFileName(file.getOriginalFilename())
                         .publicId(videoPublicId)
-                        .build());
+                        .build()
+                );
             }
         }
 
         String id = UUID.randomUUID().toString();
 
         com.leaf.file.domain.File fileEntity = com.leaf.file.domain.File.builder()
-                .id(id)
-                .ownerId(userId)
-                .totalSize(totalSize)
-                .images(imageResponses.stream().map(img -> Image.builder()
-                        .contentType(img.getContentType())
-                        .imageUrl(img.getImageUrl())
-                        .fileSize(img.getFileSize())
-                        .originFileName(img.getOriginFileName())
-                        .publicId(img.getPublicId())
-                        .build()).toList())
-                .videos(videoResponses.stream().map(vid -> Video.builder()
-                        .contentType(vid.getContentType())
-                        .videoUrl(vid.getVideoUrl())
-                        .thumbnailUrl(vid.getThumbnailUrl())
-                        .playtimeSeconds(vid.getPlaytimeSeconds())
-                        .playtimeString(vid.getPlaytimeString())
-                        .fileSize(vid.getFileSize())
-                        .originFileName(vid.getOriginFileName())
-                        .publicId(vid.getPublicId())
-                        .build()).toList())
-                .build();
+            .id(id)
+            .ownerId(userId)
+            .totalSize(totalSize)
+            .images(
+                imageResponses
+                    .stream()
+                    .map(img ->
+                        Image.builder()
+                            .contentType(img.getContentType())
+                            .imageUrl(img.getImageUrl())
+                            .fileSize(img.getFileSize())
+                            .originFileName(img.getOriginFileName())
+                            .publicId(img.getPublicId())
+                            .build()
+                    )
+                    .toList()
+            )
+            .videos(
+                videoResponses
+                    .stream()
+                    .map(vid ->
+                        Video.builder()
+                            .contentType(vid.getContentType())
+                            .videoUrl(vid.getVideoUrl())
+                            .thumbnailUrl(vid.getThumbnailUrl())
+                            .playtimeSeconds(vid.getPlaytimeSeconds())
+                            .playtimeString(vid.getPlaytimeString())
+                            .fileSize(vid.getFileSize())
+                            .originFileName(vid.getOriginFileName())
+                            .publicId(vid.getPublicId())
+                            .build()
+                    )
+                    .toList()
+            )
+            .build();
         fileRepository.save(fileEntity);
 
         return FileResponse.builder()
-                .ownerId(userId)
-                .id(id)
-                .totalSize(totalSize)
-                .images(imageResponses)
-                .videos(videoResponses)
-                .build();
+            .ownerId(userId)
+            .id(id)
+            .totalSize(totalSize)
+            .images(imageResponses)
+            .videos(videoResponses)
+            .build();
     }
 
     public ResponseObject<List<FileResponse>> getMyResources(Integer page, Integer size) {
-        String userId = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
+        String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
 
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, Sort.by(Sort.Order.desc("createdAt")));
-        Page<com.leaf.file.domain.File> pageResponse = fileRepository.findAllByOwnerId(userId, pageable);
+        Pageable pageable = PageRequest.of(
+            Math.max(0, page - 1),
+            size,
+            Sort.by(Sort.Order.desc("createdAt"))
+        );
+        Page<com.leaf.file.domain.File> pageResponse = fileRepository.findAllByOwnerId(
+            userId,
+            pageable
+        );
 
-        var result = pageResponse.getContent().stream()
-                .map(FileResponse::toFileResponse)
-                .toList();
+        var result = pageResponse.getContent().stream().map(FileResponse::toFileResponse).toList();
 
         return ResponseObject.<List<FileResponse>>builder()
-                .data(result)
-                .pagination(PageResponse.builder()
-                        .currentPage(page)
-                        .size(size)
-                        .total(pageResponse.getTotalElements())
-                        .totalPages(pageResponse.getTotalPages())
-                        .count(pageResponse.getContent().size())
-                        .build())
-                .build();
+            .data(result)
+            .pagination(
+                PageResponse.builder()
+                    .currentPage(page)
+                    .size(size)
+                    .total(pageResponse.getTotalElements())
+                    .totalPages(pageResponse.getTotalPages())
+                    .count(pageResponse.getContent().size())
+                    .build()
+            )
+            .build();
     }
 
     public FileResponse getFileById(String id) {
-        return fileRepository.getFileById(id)
-                .orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
+        return fileRepository
+            .getFileById(id)
+            .orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
     }
 
     public List<FileResponse> getFilesByIds(List<String> ids) {
-        return fileRepository.findAllByIdIn(ids).stream().map(FileResponse::toFileResponse).toList();
+        return fileRepository
+            .findAllByIdIn(ids)
+            .stream()
+            .map(FileResponse::toFileResponse)
+            .toList();
     }
 
     private String formatDuration(long millis) {
@@ -207,8 +250,9 @@ public class FileService {
     }
 
     public Void deleteById(String fileId) {
-        com.leaf.file.domain.File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
+        com.leaf.file.domain.File file = fileRepository
+            .findById(fileId)
+            .orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 

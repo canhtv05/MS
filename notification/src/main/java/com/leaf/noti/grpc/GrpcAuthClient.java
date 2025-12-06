@@ -1,14 +1,12 @@
 package com.leaf.noti.grpc;
 
-import org.springframework.stereotype.Service;
-
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.grpc.AuthGrpcServiceGrpc.AuthGrpcServiceBlockingStub;
-
+import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.stereotype.Service;
 
 @Service
 public class GrpcAuthClient {

@@ -1,22 +1,20 @@
 package com.leaf.common.security;
 
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Objects;
-import java.util.Optional;
-
 public final class SecurityUtils {
 
-    private SecurityUtils() {
-    }
+    private SecurityUtils() {}
 
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
-                .map(SecurityUtils::extractPrincipal)
-                .filter(Objects::nonNull);
+            .map(SecurityUtils::extractPrincipal)
+            .filter(Objects::nonNull);
     }
 
     private static String extractPrincipal(Authentication authentication) {
@@ -34,25 +32,30 @@ public final class SecurityUtils {
 
     public static boolean isGlobalSuperAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (authentication != null &&
-                authentication.getPrincipal() instanceof UserPrincipal &&
-                ((UserPrincipal) authentication.getPrincipal()).isGlobal() &&
-                ((UserPrincipal) authentication.getPrincipal()).getRole()
-                        .contains(AuthoritiesConstants.SUPER_ADMIN));
+        return (
+            authentication != null &&
+            authentication.getPrincipal() instanceof UserPrincipal &&
+            ((UserPrincipal) authentication.getPrincipal()).isGlobal() &&
+            ((UserPrincipal) authentication.getPrincipal()).getRole().contains(
+                AuthoritiesConstants.SUPER_ADMIN
+            )
+        );
     }
 
     public static boolean isGlobalUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (authentication != null &&
-                authentication.getPrincipal() instanceof UserPrincipal &&
-                ((UserPrincipal) authentication.getPrincipal()).isGlobal());
+        return (
+            authentication != null &&
+            authentication.getPrincipal() instanceof UserPrincipal &&
+            ((UserPrincipal) authentication.getPrincipal()).isGlobal()
+        );
     }
 
     public static Optional<String> getCurrentUserChannel() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(securityContext.getAuthentication())
-                .map(SecurityUtils::extractChannel)
-                .filter(Objects::nonNull);
+            .map(SecurityUtils::extractChannel)
+            .filter(Objects::nonNull);
     }
 
     private static String extractChannel(Authentication authentication) {

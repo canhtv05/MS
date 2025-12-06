@@ -8,8 +8,8 @@ import com.leaf.auth.util.AuthUtil;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
-
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,8 +29,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Objects;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -40,8 +38,12 @@ public class SecurityConfig {
     private final AuthUtil authUtil;
     private final CorsFilter corsFilter;
 
-    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter,
-            ApplicationProperties applicationProperties, AuthUtil authUtil) {
+    public SecurityConfig(
+        TokenProvider tokenProvider,
+        CorsFilter corsFilter,
+        ApplicationProperties applicationProperties,
+        AuthUtil authUtil
+    ) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.authUtil = authUtil;
@@ -53,28 +55,39 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http,
-            CustomAuthenticationProvider customProvider) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .authenticationProvider(customProvider)
-                .build();
+    public AuthenticationManager authenticationManager(
+        HttpSecurity http,
+        CustomAuthenticationProvider customProvider
+    ) throws Exception {
+        return http
+            .getSharedObject(AuthenticationManagerBuilder.class)
+            .authenticationProvider(customProvider)
+            .build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(authenticationEntryPoint())
-                        .accessDeniedHandler(accessDeniedHandler()))
-                .sessionManagement(
-                        sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(CommonConstants.AUTH_PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated())
-                .apply(securityConfigurerAdapter());
+            .csrf(AbstractHttpConfigurer::disable)
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(exceptionHandling ->
+                exceptionHandling
+                    .authenticationEntryPoint(authenticationEntryPoint())
+                    .accessDeniedHandler(accessDeniedHandler())
+            )
+            .sessionManagement(sessionManagement ->
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers(HttpMethod.OPTIONS, "/**")
+                    .permitAll()
+                    .requestMatchers(CommonConstants.AUTH_PUBLIC_ENDPOINTS)
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            )
+            .apply(securityConfigurerAdapter());
         return http.build();
     }
 
@@ -88,12 +101,27 @@ public class SecurityConfig {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             if (authException instanceof CustomAuthenticationException ex) {
                 response.setStatus(ex.getHttpStatus().value());
-                response.getWriter().write(Objects.requireNonNull(JsonF
-                        .toJson(ResponseObject.error(String.valueOf(ex.getHttpStatus().value()), ex.getMessage()))));
+                response
+                    .getWriter()
+                    .write(
+                        Objects.requireNonNull(
+                            JsonF.toJson(
+                                ResponseObject.error(
+                                    String.valueOf(ex.getHttpStatus().value()),
+                                    ex.getMessage()
+                                )
+                            )
+                        )
+                    );
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write(Objects.requireNonNull(JsonF.toJson(ResponseObject.error("401",
-                        authException.getMessage()))));
+                response
+                    .getWriter()
+                    .write(
+                        Objects.requireNonNull(
+                            JsonF.toJson(ResponseObject.error("401", authException.getMessage()))
+                        )
+                    );
             }
         };
     }
@@ -103,8 +131,15 @@ public class SecurityConfig {
         return (request, response, accessDeniedException) -> {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write(Objects.requireNonNull(JsonF.toJson(ResponseObject.error("403",
-                    accessDeniedException.getMessage()))));
+            response
+                .getWriter()
+                .write(
+                    Objects.requireNonNull(
+                        JsonF.toJson(
+                            ResponseObject.error("403", accessDeniedException.getMessage())
+                        )
+                    )
+                );
         };
     }
 }

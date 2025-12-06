@@ -14,6 +14,6 @@ import lombok.experimental.SuperBuilder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CookieValue {
 
-  String accessToken;
-  String refreshToken;
+    String accessToken;
+    String refreshToken;
 }

@@ -1,8 +1,7 @@
 package com.leaf.common.utils;
 
-import java.util.stream.Stream;
-
 import io.micrometer.common.util.StringUtils;
+import java.util.stream.Stream;
 
 public class CommonUtils {
 

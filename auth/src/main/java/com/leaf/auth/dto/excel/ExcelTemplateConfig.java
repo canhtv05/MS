@@ -1,12 +1,11 @@
 package com.leaf.auth.dto.excel;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +29,5 @@ public class ExcelTemplateConfig {
         private String rangeName;
         private int rowIndex;
         private List<String> data;
-
     }
 }

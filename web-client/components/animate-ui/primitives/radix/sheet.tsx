@@ -12,8 +12,7 @@ type SheetContextType = {
   setIsOpen: (isOpen: boolean) => void;
 };
 
-const [SheetProvider, useSheet] =
-  getStrictContext<SheetContextType>('SheetContext');
+const [SheetProvider, useSheet] = getStrictContext<SheetContextType>('SheetContext');
 
 type SheetProps = React.ComponentProps<typeof SheetPrimitive.Root>;
 
@@ -26,11 +25,7 @@ function Sheet(props: SheetProps) {
 
   return (
     <SheetProvider value={{ isOpen, setIsOpen }}>
-      <SheetPrimitive.Root
-        data-slot="sheet"
-        {...props}
-        onOpenChange={setIsOpen}
-      />
+      <SheetPrimitive.Root data-slot="sheet" {...props} onOpenChange={setIsOpen} />
     </SheetProvider>
   );
 }
@@ -54,9 +49,7 @@ function SheetPortal(props: SheetPortalProps) {
 
   return (
     <AnimatePresence>
-      {isOpen && (
-        <SheetPrimitive.Portal forceMount data-slot="sheet-portal" {...props} />
-      )}
+      {isOpen && <SheetPrimitive.Portal forceMount data-slot="sheet-portal" {...props} />}
     </AnimatePresence>
   );
 }
@@ -154,14 +147,10 @@ function SheetTitle(props: SheetTitleProps) {
   return <SheetPrimitive.Title data-slot="sheet-title" {...props} />;
 }
 
-type SheetDescriptionProps = React.ComponentProps<
-  typeof SheetPrimitive.Description
->;
+type SheetDescriptionProps = React.ComponentProps<typeof SheetPrimitive.Description>;
 
 function SheetDescription(props: SheetDescriptionProps) {
-  return (
-    <SheetPrimitive.Description data-slot="sheet-description" {...props} />
-  );
+  return <SheetPrimitive.Description data-slot="sheet-description" {...props} />;
 }
 
 export {

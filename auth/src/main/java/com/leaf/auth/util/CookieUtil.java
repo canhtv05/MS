@@ -4,17 +4,14 @@ import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.dto.CookieValue;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.utils.JsonF;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,9 +23,9 @@ public class CookieUtil {
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
         CookieValue cookieValue = CookieValue.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
 
         String jsonData = JsonF.toJson(cookieValue);
 
@@ -62,16 +59,15 @@ public class CookieUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if (c.getName().equals(CommonConstants.COOKIE_NAME))
-                    try {
-                        String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
+                if (c.getName().equals(CommonConstants.COOKIE_NAME)) try {
+                    String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
 
-                        CookieValue cookieValue = JsonF.jsonToObject(decoded, CookieValue.class);
-                        return cookieValue;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return null;
-                    }
+                    CookieValue cookieValue = JsonF.jsonToObject(decoded, CookieValue.class);
+                    return cookieValue;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         }
 

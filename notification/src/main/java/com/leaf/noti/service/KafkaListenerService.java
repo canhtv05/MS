@@ -1,16 +1,14 @@
 package com.leaf.noti.service;
 
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
-
 import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -19,7 +17,11 @@ public class KafkaListenerService {
 
     private final EmailService emailService;
 
-    @KafkaListener(topics = EventConstants.VERIFICATION_EMAIL_TOPIC, groupId = EventConstants.VERIFICATION_EMAIL_GROUP_ID, containerFactory = "verificationEmailKafkaListenerContainerFactory")
+    @KafkaListener(
+        topics = EventConstants.VERIFICATION_EMAIL_TOPIC,
+        groupId = EventConstants.VERIFICATION_EMAIL_GROUP_ID,
+        containerFactory = "verificationEmailKafkaListenerContainerFactory"
+    )
     public void listenVerifyEmailToken(VerificationEmailEvent verificationEmailEvent) {
         try {
             emailService.sendVerificationEmail(verificationEmailEvent);
@@ -28,7 +30,11 @@ public class KafkaListenerService {
         }
     }
 
-    @KafkaListener(topics = EventConstants.FORGOT_PASSWORD_TOPIC, groupId = EventConstants.FORGOT_PASSWORD_GROUP_ID, containerFactory = "forgotPasswordKafkaListenerContainerFactory")
+    @KafkaListener(
+        topics = EventConstants.FORGOT_PASSWORD_TOPIC,
+        groupId = EventConstants.FORGOT_PASSWORD_GROUP_ID,
+        containerFactory = "forgotPasswordKafkaListenerContainerFactory"
+    )
     public void listenForgotPassword(ForgotPasswordEvent forgotPasswordEvent) {
         try {
             emailService.sendForgotPasswordEmail(forgotPasswordEvent);

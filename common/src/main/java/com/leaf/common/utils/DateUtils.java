@@ -1,12 +1,11 @@
 package com.leaf.common.utils;
 
-import org.apache.logging.log4j.util.Strings;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import org.apache.logging.log4j.util.Strings;
 
 public class DateUtils {
 
@@ -27,12 +26,13 @@ public class DateUtils {
     }
 
     public static String getCurrentDate() {
-        return DateTimeFormatter.ofPattern("ddMMyyyy").format(Instant.now().atZone(ZoneId.systemDefault()));
+        return DateTimeFormatter.ofPattern("ddMMyyyy").format(
+            Instant.now().atZone(ZoneId.systemDefault())
+        );
     }
 
     public static Instant parseDateOnly(String dateString) {
         LocalDate localDate = LocalDate.parse(dateString);
         return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
-
 }

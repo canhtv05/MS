@@ -1,14 +1,11 @@
 package com.leaf.noti.domain;
 
+import com.leaf.noti.enums.VerificationStatus;
+import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.Instant;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-
-import com.leaf.noti.enums.VerificationStatus;
 
 @Getter
 @Setter
@@ -21,6 +18,7 @@ public class EmailVerificationLogs {
 
     @MongoId
     String id;
+
     String jti;
     String userId;
     Instant verifiedAt;

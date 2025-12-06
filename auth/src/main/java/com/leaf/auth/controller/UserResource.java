@@ -9,14 +9,11 @@ import com.leaf.auth.dto.search.SearchResponse;
 import com.leaf.auth.enums.PermissionAction;
 import com.leaf.auth.service.UserService;
 import com.leaf.common.dto.ResponseObject;
-
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +28,9 @@ public class UserResource {
     private final UserService userService;
 
     @PostMapping("/users/r/search-datatable")
-    public ResponseEntity<ResponseObject<SearchResponse<UserDTO>>> search(@ModelAttribute SearchRequest criteria) {
+    public ResponseEntity<ResponseObject<SearchResponse<UserDTO>>> search(
+        @ModelAttribute SearchRequest criteria
+    ) {
         SearchResponse<UserDTO> result = userService.searchDatatable(criteria);
         return ResponseEntity.ok(ResponseObject.success(result));
     }
@@ -71,11 +70,13 @@ public class UserResource {
         String filename = "export-user-" + LocalDate.now() + ".xlsx";
         byte[] file = userService.exportUser(request);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename
-                        + "\"")
-                .contentType(
-                        MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(file);
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+            .contentType(
+                MediaType.parseMediaType(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+            )
+            .body(file);
     }
 
     @GetMapping("/users/c/file-template")
@@ -83,29 +84,36 @@ public class UserResource {
         String filename = "user-import-template.xlsx";
         byte[] file = userService.downloadTemplate();
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename
-                        + "\"")
-                .contentType(
-                        MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(file);
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+            .contentType(
+                MediaType.parseMediaType(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+            )
+            .body(file);
     }
 
     @PostMapping("/users/c/import")
     public ResponseEntity<ResponseObject<ImportExcelResult<ImportUserDTO>>> importUser(
-            @RequestPart("file") MultipartFile file) {
+        @RequestPart("file") MultipartFile file
+    ) {
         ImportExcelResult<ImportUserDTO> result = userService.importUser(file);
         return ResponseEntity.ok(ResponseObject.success(result));
     }
 
     @GetMapping("/user-permission/r/{id}")
-    public ResponseEntity<ResponseObject<Map<String, PermissionAction>>> getUserPermission(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject<Map<String, PermissionAction>>> getUserPermission(
+        @PathVariable Long id
+    ) {
         Map<String, PermissionAction> result = userService.getUserPermissions(id);
         return ResponseEntity.ok(ResponseObject.success(result));
     }
 
     @PostMapping("/user-permission/u/{id}")
-    public ResponseEntity<ResponseObject<Boolean>> updateUserPermission(@PathVariable Long id,
-            @RequestBody List<UserPermissionDTO> request) {
+    public ResponseEntity<ResponseObject<Boolean>> updateUserPermission(
+        @PathVariable Long id,
+        @RequestBody List<UserPermissionDTO> request
+    ) {
         userService.updateUserPermission(id, request);
         return ResponseEntity.ok(ResponseObject.success());
     }

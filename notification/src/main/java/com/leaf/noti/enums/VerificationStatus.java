@@ -5,5 +5,4 @@ public enum VerificationStatus {
     VERIFIED,
     EXPIRED,
     INVALID,
-    ;
 }

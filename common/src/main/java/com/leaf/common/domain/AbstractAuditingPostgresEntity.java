@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,17 +18,16 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.Instant;
-
 @Setter
 @Getter
 @SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" }, allowGetters = true)
+@JsonIgnoreProperties(
+    value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" },
+    allowGetters = true
+)
 public abstract class AbstractAuditingPostgresEntity implements Serializable {
 
     @Serial

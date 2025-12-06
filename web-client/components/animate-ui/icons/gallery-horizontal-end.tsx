@@ -142,18 +142,8 @@ function IconComponent({ size, ...props }: GalleryVerticalEndProps) {
       strokeLinejoin="round"
       {...props}
     >
-      <motion.path
-        d="M7 2h10"
-        variants={variants.path1}
-        initial="initial"
-        animate={controls}
-      />
-      <motion.path
-        d="M5 6h14"
-        variants={variants.path2}
-        initial="initial"
-        animate={controls}
-      />
+      <motion.path d="M7 2h10" variants={variants.path1} initial="initial" animate={controls} />
+      <motion.path d="M5 6h14" variants={variants.path2} initial="initial" animate={controls} />
       <motion.rect
         width="18"
         height="12"
