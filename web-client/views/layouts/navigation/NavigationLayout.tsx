@@ -14,7 +14,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { routes } from '@/utils/routes';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 import {
   TooltipPanel,
@@ -57,30 +57,33 @@ const menu: IMenuNavigation[] = [
 
 const NavigationHeader = () => {
   const { userProfile, user } = useNavigationLayout();
+  const router = useRouter();
 
   return (
     <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex lg:w-full w-auto bg-white p-4 rounded-lg">
-      <div className="group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 lg:dark:bg-gray-700 dark:bg-gray-800 bg-gray-100 rounded-lg lg:p-4 p-0.5 cursor-pointer">
-        <UserProfileCard
-          username={user?.username || ''}
-          avatarUrl={userProfile?.avatarUrl || images.avt1.src}
-          fullName={user?.fullName || ''}
-          hasRing={false}
-          responsive
-        />
+      <div className="cursor-pointer" onClick={() => router.push(`/@${user?.username}`)}>
+        <div className="group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 lg:dark:bg-gray-700 dark:bg-gray-800 bg-gray-100 rounded-lg lg:p-4 p-0.5 cursor-pointer">
+          <UserProfileCard
+            username={user?.username || ''}
+            avatarUrl={userProfile?.avatarUrl || images.avt1.src}
+            fullName={user?.fullName || ''}
+            hasRing={false}
+            responsive
+          />
 
-        <div className="pt-3 text-sm w-full lg:flex hidden gap-2 items-center justify-between">
-          <div className="flex flex-col">
-            <strong className="font-bold">2.3k</strong>
-            <span className="text-xs">Following</span>
-          </div>
-          <div className="flex flex-col">
-            <strong className="font-bold">2.3k</strong>
-            <span className="text-xs">Followers</span>
-          </div>
-          <div className="flex flex-col">
-            <strong className="font-bold">80</strong>
-            <span className="text-xs">Posts</span>
+          <div className="pt-3 text-sm w-full lg:flex hidden gap-2 items-center justify-between">
+            <div className="flex flex-col">
+              <strong className="font-bold">2.3k</strong>
+              <span className="text-xs">Following</span>
+            </div>
+            <div className="flex flex-col">
+              <strong className="font-bold">2.3k</strong>
+              <span className="text-xs">Followers</span>
+            </div>
+            <div className="flex flex-col">
+              <strong className="font-bold">80</strong>
+              <span className="text-xs">Posts</span>
+            </div>
           </div>
         </div>
       </div>
@@ -172,7 +175,7 @@ const NavigationMenu = () => {
 
 const NavigationLayout = () => {
   return (
-    <div className="lg:w-64 w-full">
+    <div className="lg:w-64 w-auto">
       <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start lg:gap-7 gap-4 w-full">
         <div className="md:block hidden w-full">
           <NavigationHeader />

@@ -399,7 +399,7 @@ const HeaderLayout = () => {
             </Sheet>
             </div> */}
             {user?.username ? (
-              <div className="flex gap-3 items-center justify-end">
+              <div className="flex gap-3 items-center justify-end md:pr-0 pr-3">
                 <div className="flex items-center justify-center gap-3 pr-3">
                   <AnimateIcon animateOnHover>
                     <IconButton

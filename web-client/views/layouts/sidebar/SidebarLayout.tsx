@@ -17,13 +17,15 @@ import {
 } from '@/components/animate-ui/primitives/base/tabs';
 import { useState } from 'react';
 import UserCard from '@/components/UserCard';
+import useViewport from '@/hooks/use-view-port';
 
 const SidebarLayout = () => {
   const { t } = useTranslation('layout');
   const [activeTab, setActiveTab] = useState('primary');
+  const { width } = useViewport();
 
   return (
-    <div className="hidden lg:block w-72 shrink-0">
+    <div className="hidden lg:block lg:w-72 shrink-0">
       <div className="h-full flex flex-col justify-start items-start gap-7 w-full">
         <div className="w-full">
           <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto bg-white rounded-lg">
