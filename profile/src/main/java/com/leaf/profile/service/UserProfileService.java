@@ -23,7 +23,7 @@ public class UserProfileService {
     UserProfileRepository userProfileRepository;
 
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {
-        UserProfile userProfile = UserProfile.builder().userId(req.getUserId()).build();
+        UserProfile userProfile = UserProfile.builder().userId(req.getUserId()).fullname(req.getFullname()).build();
 
         var UserProfile = userProfileRepository.save(userProfile);
         return UserProfileResponse.toUserProfileResponse(UserProfile);
@@ -50,6 +50,14 @@ public class UserProfileService {
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
 
+        UserProfile userProfile = userProfileRepository
+            .findByUserId(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        return UserProfileResponse.toUserProfileResponse(userProfile);
+    }
+
+    public UserProfileResponse getUserProfile(String username) {
         UserProfile userProfile = userProfileRepository
             .findByUserId(username)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));

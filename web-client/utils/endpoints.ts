@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
   },
   PROFILE: {
     ME: `${BASE_URL}/user-profile/me`,
+    GET_USER_PROFILE: `${BASE_URL}/user-profile/profile/{username}`,
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: `${BASE_URL}/notifications/verify-email`,

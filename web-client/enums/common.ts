@@ -7,6 +7,7 @@ export enum Viewport {
 }
 
 export enum Status {
+  UNAUTHENTICATED = 'status.unauthenticated',
   UPDATE_SUCCESS = 'status.update_success',
   UPDATE_FAILED = 'status.update_failed',
   ADD_SUCCESS = 'status.add_success',

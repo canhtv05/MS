@@ -10,4 +10,5 @@ service UserProfileGrpcService {
 
 message UserProfileDTO {
     string userId = 1;
+    string fullname = 2;
 }

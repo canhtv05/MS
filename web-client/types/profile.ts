@@ -9,6 +9,7 @@ export interface IUserProfileDTO {
   bio?: string;
   coverUrl?: string;
   phoneNumber?: string;
+  fullname: string;
   avatarUrl?: string;
   socialLinks?: string[];
   profileVisibility: PrivacyLevel;

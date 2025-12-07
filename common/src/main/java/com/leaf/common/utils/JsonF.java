@@ -34,6 +34,9 @@ public class JsonF {
     }
 
     public static <T> T jsonToObject(String str, Class<T> clazz) {
+        if (str == null) {
+            return null;
+        }
         try {
             return objectMapper.readValue(str, clazz);
         } catch (Exception e) {
@@ -43,6 +46,9 @@ public class JsonF {
     }
 
     public static <T> T jsonToObject(String str, TypeReference<T> type) {
+        if (str == null) {
+            return null;
+        }
         try {
             return objectMapper.readValue(str, type);
         } catch (Exception e) {

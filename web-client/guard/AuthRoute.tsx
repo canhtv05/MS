@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import LoadingPage from '@/views/pages/loading';
 import { useAuthQuery } from '@/services/queries/auth';
-import { useUserProfileQuery } from '@/services/queries/profile';
+import { useMyProfileQuery } from '@/services/queries/profile';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth';
 import cookieUtils from '@/utils/cookieUtils';
@@ -16,24 +16,24 @@ const AuthRoute = ({ children }: IAuthRoute) => {
   const queryClient = useQueryClient();
   const setUser = useAuthStore(state => state.setUser);
   const { isLoading: loadingAuth, user: userData } = useAuthQuery(true);
-  const { isLoading: loadingProfile, userProfile } = useUserProfileQuery(true);
+  const { meQuery } = useMyProfileQuery(true);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loadingAuth && !loadingProfile && loading) {
+    if (!loadingAuth && !meQuery.isLoading && loading) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
     }
-  }, [loadingAuth, loadingProfile, loading]);
+  }, [loadingAuth, meQuery.isLoading, loading]);
 
   useEffect(() => {
-    if ((!userData || !userProfile) && !loading) {
+    if ((!userData || !meQuery.data) && !loading) {
       setUser(undefined);
       queryClient.clear();
       cookieUtils.deleteStorage();
     }
-  }, [queryClient, userData, userProfile, loading, setUser]);
+  }, [queryClient, userData, meQuery.data, loading, setUser]);
 
   if (loading) {
     return <LoadingPage />;

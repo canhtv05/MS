@@ -1,11 +1,11 @@
 import { withAuth } from '@/guard/withAuth';
 import ProfilePage from '@/views/pages/profile/ProfilePage';
 
-interface IParams {
+export interface IProfileParams {
   username: string;
 }
 
-const Profile = ({ params }: { params: Promise<IParams> }) => {
+const Profile = ({ params }: { params: Promise<IProfileParams> }) => {
   return <ProfilePage params={params} />;
 };
 

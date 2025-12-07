@@ -15,12 +15,11 @@ import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
-import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
-import com.leaf.common.service.RedisService;
+// import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +46,7 @@ import org.springframework.util.ObjectUtils;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
-    RedisService redisService;
+    // RedisService redisService;
     CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
@@ -65,15 +64,12 @@ public class AuthService {
         try {
             AuthenticationContext.setChannel(loginRequest.getChannel());
 
-            UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
-                );
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            );
 
-            Authentication authentication = authenticationManagerBuilder
-                .getObject()
-                .authenticate(authenticationToken);
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return tokenProvider.createToken(
@@ -149,14 +145,13 @@ public class AuthService {
         this.mappingUserPermissions(userProfileDTO, user.get());
 
         // Get user session from Redis using channel
-        UserSessionDTO userSessionDTO = redisService.getUser(
-            username,
-            AuthenticationContext.getChannel()
-        );
-        if (userSessionDTO != null) {
-            userProfileDTO.setChannel(userSessionDTO.getChannel());
-            userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
-        }
+        // UserSessionDTO userSessionDTO = redisService.getUser(
+        // username,
+        // SecurityUtils.getCurrentUserChannel().orElse(null));
+        // if (userSessionDTO != null) {
+        // userProfileDTO.setChannel(userSessionDTO.getChannel());
+        // userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
+        // }
 
         if (Objects.nonNull(cache)) {
             cache.put(username, userProfileDTO);
@@ -174,9 +169,7 @@ public class AuthService {
             .filter(Objects::nonNull)
             .map(Permission::getCode)
             .collect(Collectors.toSet());
-        List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(
-            user.getId()
-        );
+        List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(user.getId());
         if (!userPermissions.isEmpty()) {
             permissions.addAll(
                 userPermissions

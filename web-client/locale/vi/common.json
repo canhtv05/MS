@@ -10,7 +10,9 @@
     "logout_failed": "Đăng xuất thất bại",
     "logout_success": "Đăng xuất thành công",
     "register_failed": "Đăng ký thất bại",
-    "register_success": "Đăng ký thành công"
+    "register_success": "Đăng ký thành công",
+    "unauthenticated": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại",
+    "unauthorized": "Bạn không có quyền truy cập"
   },
   "button": {
     "accept": "Đồng ý",

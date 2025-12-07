@@ -18,11 +18,14 @@ import {
 import { useState } from 'react';
 import UserCard from '@/components/UserCard';
 import useViewport from '@/hooks/use-view-port';
+import { Viewport } from '@/enums/common';
 
 const SidebarLayout = () => {
   const { t } = useTranslation('layout');
   const [activeTab, setActiveTab] = useState('primary');
   const { width } = useViewport();
+
+  if (!width) return null; // Wait for width to be available (client-side)
 
   return (
     <div className="hidden lg:block lg:w-72 shrink-0">

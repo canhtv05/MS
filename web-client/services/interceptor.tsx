@@ -43,11 +43,15 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
         const ctx = await getClientContext();
         const accessToken = cookieUtils.getStorage()?.accessToken;
 
-        if (
-          accessToken &&
-          isTokenValid(accessToken) &&
-          !PREFIX_PUBLIC_ENDPOINTS.some(route => config.url?.includes(route))
-        ) {
+        const isPublicEndpoint = PREFIX_PUBLIC_ENDPOINTS.some(pattern => {
+          if (pattern.endsWith('/**')) {
+            const baseRoute = pattern.replace('/**', '');
+            return config.url?.startsWith(baseRoute);
+          }
+          return config.url === pattern;
+        });
+
+        if (accessToken && isTokenValid(accessToken) && !isPublicEndpoint) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
 

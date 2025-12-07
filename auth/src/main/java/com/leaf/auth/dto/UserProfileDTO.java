@@ -37,9 +37,7 @@ public class UserProfileDTO implements Serializable {
             .username(user.getUsername())
             .isGlobal(user.getIsGlobal())
             .roles(user.getRoles().stream().map(Role::getCode).collect(Collectors.toList()))
-            .roleLabels(
-                user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList())
-            )
+            .roleLabels(user.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()))
             .fullName(user.getFullName())
             .email(user.getEmail())
             .build();

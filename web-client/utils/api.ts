@@ -27,9 +27,11 @@ export const AUTH_PUBLIC_ENDPOINTS: string[] = [
   '/me/p/verify-forgot-password-otp',
 ];
 export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email', '/resend-verify-email'];
+export const PROFILE_PUBLIC_ENDPOINTS: string[] = ['/profile/**'];
 export const PREFIX_PUBLIC_ENDPOINTS = [
   ...AUTH_PUBLIC_ENDPOINTS.map(endpoint => `/auth${endpoint}`),
   ...NOTIFICATION_PUBLIC_ENDPOINTS.map(endpoint => `/notifications${endpoint}`),
+  ...PROFILE_PUBLIC_ENDPOINTS.map(endpoint => `/user-profile${endpoint}`),
 ];
 
 export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {

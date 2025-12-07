@@ -42,11 +42,7 @@ public class UserJWTController {
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
     ) {
-        String jwt = authService.authenticate(
-            loginRequest,
-            httpServletRequest,
-            httpServletResponse
-        );
+        String jwt = authService.authenticate(loginRequest, httpServletRequest, httpServletResponse);
         return new ResponseEntity<>(new TokenResponse(jwt), HttpStatus.OK);
     }
 
@@ -58,9 +54,7 @@ public class UserJWTController {
         HttpServletResponse response
     ) {
         return ResponseEntity.ok(
-            ResponseObject.success(
-                authService.refreshToken(cookieValue, channel, httpServletRequest, response)
-            )
+            ResponseObject.success(authService.refreshToken(cookieValue, channel, httpServletRequest, response))
         );
     }
 
@@ -68,9 +62,7 @@ public class UserJWTController {
     public ResponseEntity<ResponseObject<VerifyTokenResponse>> verifyToken(
         @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue
     ) {
-        return ResponseEntity.ok(
-            ResponseObject.success(authService.verifyToken(cookieValue, false))
-        );
+        return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue, false)));
     }
 
     @PostMapping("/c/create")
@@ -80,9 +72,7 @@ public class UserJWTController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(
-        HttpServletRequest request
-    ) {
+    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(HttpServletRequest request) {
         return ResponseEntity.ok(ResponseObject.success(authService.getProfile(request)));
     }
 
@@ -97,33 +87,25 @@ public class UserJWTController {
     }
 
     @PostMapping("/p/reset-password")
-    public ResponseEntity<ResponseObject<Boolean>> resetPassword(
-        @Valid @RequestBody ResetPasswordReq req
-    ) {
+    public ResponseEntity<ResponseObject<Boolean>> resetPassword(@Valid @RequestBody ResetPasswordReq req) {
         userService.resetPassword(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/forgot-password")
-    public ResponseEntity<ResponseObject<Boolean>> forgotPassword(
-        @Valid @RequestBody ForgotPasswordReq req
-    ) {
+    public ResponseEntity<ResponseObject<Boolean>> forgotPassword(@Valid @RequestBody ForgotPasswordReq req) {
         userService.forgotPasswordRequest(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/verify-forgot-password-otp")
-    public ResponseEntity<ResponseObject<Boolean>> verifyForgotPasswordOTP(
-        @Valid @RequestBody VerifyOTPReq req
-    ) {
+    public ResponseEntity<ResponseObject<Boolean>> verifyForgotPasswordOTP(@Valid @RequestBody VerifyOTPReq req) {
         userService.verifyForgotPasswordOTP(req);
         return ResponseEntity.ok(ResponseObject.success());
     }
 
     @PostMapping("/p/update")
-    public ResponseEntity<ResponseObject<Boolean>> updateUserProfile(
-        @RequestBody UserProfileDTO req
-    ) {
+    public ResponseEntity<ResponseObject<Boolean>> updateUserProfile(@RequestBody UserProfileDTO req) {
         userService.updateUserProfile(req);
         return ResponseEntity.ok(ResponseObject.success());
     }

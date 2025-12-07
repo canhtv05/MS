@@ -39,6 +39,7 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     @Property("user_id")
     String userId;
 
+    String fullname;
     LocalDate dob;
     String city;
     Gender gender;

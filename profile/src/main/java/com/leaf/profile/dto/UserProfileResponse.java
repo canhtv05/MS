@@ -28,6 +28,8 @@ public class UserProfileResponse {
     Gender gender;
     String bio;
     String coverUrl;
+    String fullname;
+    Instant createdDate;
     String phoneNumber;
     String avatarUrl;
     List<String> socialLinks;

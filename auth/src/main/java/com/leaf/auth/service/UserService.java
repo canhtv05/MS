@@ -64,6 +64,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class UserService {
 
     private final ValidatorFactory validator = Validation.buildDefaultValidatorFactory();
@@ -113,24 +114,19 @@ public class UserService {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(List.of("ROLE_USER"))));
         }
 
-        User res = null;
+        User res = userRepository.save(user);
         try {
             if ((isAdmin && !request.isActivated()) || !isAdmin) {
                 kafkaProducerService.send(
                     EventConstants.VERIFICATION_EMAIL_TOPIC,
-                    VerificationEmailEvent.builder()
-                        .to(request.getEmail())
-                        .username(request.getUsername())
-                        .build()
+                    VerificationEmailEvent.builder().to(request.getEmail()).username(request.getUsername()).build()
                 );
             } else if (isAdmin && request.isActivated()) {
-                com.leaf.common.grpc.UserProfileDTO userProfileDTO =
-                    com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                        .setUserId(user.getUsername())
-                        .build();
+                com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+                    .setUserId(user.getUsername())
+                    .build();
                 userProfileClient.createUserProfile(userProfileDTO);
             }
-            res = userRepository.save(user);
         } catch (Exception e) {
             throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
         }
@@ -156,9 +152,7 @@ public class UserService {
     }
 
     public void changeLockUser(Long id, boolean isLocked) {
-        User user = userRepository
-            .findById(id)
-            .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setLocked(isLocked);
         userRepository.save(user);
     }
@@ -174,14 +168,13 @@ public class UserService {
         user.setActivated(true);
         userRepository.save(user);
 
-        com.leaf.common.grpc.UserProfileDTO userProfileDTO =
-            com.leaf.common.grpc.UserProfileDTO.newBuilder().setUserId(user.getUsername()).build();
+        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
+            .setUserId(user.getUsername())
+            .setFullname(user.getFullName())
+            .build();
         userProfileClient.createUserProfile(userProfileDTO);
 
-        return VerifyEmailTokenDTO.newBuilder()
-            .setUsername(user.getUsername())
-            .setEmail(request.getEmail())
-            .build();
+        return VerifyEmailTokenDTO.newBuilder().setUsername(user.getUsername()).setEmail(request.getEmail()).build();
     }
 
     public void forgotPasswordRequest(ForgotPasswordReq request) {
@@ -200,10 +193,7 @@ public class UserService {
 
         kafkaProducerService.send(
             EventConstants.FORGOT_PASSWORD_TOPIC,
-            ForgotPasswordEvent.builder()
-                .to(request.getEmail())
-                .username(user.getUsername())
-                .build()
+            ForgotPasswordEvent.builder().to(request.getEmail()).username(user.getUsername()).build()
         );
     }
 
@@ -257,11 +247,7 @@ public class UserService {
         }
     }
 
-    public void changePassword(
-        String cookieValue,
-        ChangePasswordReq req,
-        HttpServletResponse response
-    ) {
+    public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
         if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
@@ -311,14 +297,8 @@ public class UserService {
             if (StringUtils.isNotBlank(criteria.searchText())) {
                 predicates.add(
                     cb.or(
-                        cb.like(
-                            cb.lower(root.get("username")),
-                            "%" + criteria.searchText().toLowerCase() + "%"
-                        ),
-                        cb.like(
-                            cb.lower(root.get("username")),
-                            "%" + criteria.searchText().toLowerCase() + "%"
-                        )
+                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%"),
+                        cb.like(cb.lower(root.get("username")), "%" + criteria.searchText().toLowerCase() + "%")
                     )
                 );
             }
@@ -331,10 +311,7 @@ public class UserService {
         Specification<User> spec = createSpecification(request);
         List<User> data = userRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "id"));
         List<String> headers = List.of("#", "Tên đăng nhập", "Email", "Trạng thái", "Ngày tạo");
-        try (
-            XSSFWorkbook wb = new XSSFWorkbook();
-            ByteArrayOutputStream out = new ByteArrayOutputStream()
-        ) {
+        try (XSSFWorkbook wb = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = wb.createSheet("Data");
             CellStyle headerStyle = ExcelBuilder.createHeaderStyle(wb);
             ExcelBuilder.createHeaderRow(sheet, headerStyle, headers);
@@ -346,9 +323,7 @@ public class UserService {
                 stt.setCellStyle(headerStyle);
 
                 row.createCell(1).setCellValue(item.getUsername());
-                row
-                    .createCell(2)
-                    .setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
+                row.createCell(2).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
                 row.createCell(3).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
                 r++;
             }
@@ -375,13 +350,7 @@ public class UserService {
             .build();
         config
             .getListValidations()
-            .add(
-                ExcelTemplateConfig.ExcelValidation.builder()
-                    .rangeName("_ROLE")
-                    .rowIndex(3)
-                    .data(roleCodes)
-                    .build()
-            );
+            .add(ExcelTemplateConfig.ExcelValidation.builder().rangeName("_ROLE").rowIndex(3).data(roleCodes).build());
         return ExcelBuilder.buildFileTemplate(config);
     }
 
@@ -392,11 +361,7 @@ public class UserService {
             new RowHeader("Vai trò", "role", 2)
         );
         ReadExcelResult mapData = ExcelBuilder.readFileExcel(file, rowHeaders);
-        List<ImportUserDTO> fileData = mapData
-            .getData()
-            .stream()
-            .map(ImportUserDTO::fromExcelData)
-            .toList();
+        List<ImportUserDTO> fileData = mapData.getData().stream().map(ImportUserDTO::fromExcelData).toList();
         result.getHeaders().addAll(rowHeaders);
         List<String> usernames = fileData
             .stream()
@@ -407,16 +372,11 @@ public class UserService {
         IntStream.range(0, fileData.size()).forEach(i -> {
             ImportUserDTO dto = fileData.get(i);
             RowData<ImportUserDTO> rowError = new RowData<>(dto);
-            Set<ConstraintViolation<ImportUserDTO>> violations = validator
-                .getValidator()
-                .validate(dto);
+            Set<ConstraintViolation<ImportUserDTO>> violations = validator.getValidator().validate(dto);
             for (var v : violations) {
                 rowError.addFieldError(v.getPropertyPath().toString(), v.getMessage());
             }
-            if (
-                StringUtils.isNotBlank(dto.getUsername()) &&
-                existingData.contains(dto.getUsername())
-            ) {
+            if (StringUtils.isNotBlank(dto.getUsername()) && existingData.contains(dto.getUsername())) {
                 rowError.addFieldError("username", "Tên đăng nhập đã tồn tại.");
             }
             if (rowError.hasErrors()) {
@@ -445,11 +405,7 @@ public class UserService {
 
     public Map<String, PermissionAction> getUserPermissions(Long userId) {
         List<UserPermission> data = userPermissionRepository.findAllByUserId(userId);
-        return data
-            .stream()
-            .collect(
-                Collectors.toMap(UserPermission::getPermissionCode, UserPermission::getAction)
-            );
+        return data.stream().collect(Collectors.toMap(UserPermission::getPermissionCode, UserPermission::getAction));
     }
 
     @Transactional

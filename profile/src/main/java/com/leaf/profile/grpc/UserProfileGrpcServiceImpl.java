@@ -11,27 +11,20 @@ import net.devh.boot.grpc.server.service.GrpcService;
 
 @GrpcService
 @RequiredArgsConstructor
-public class UserProfileGrpcServiceImpl
-    extends UserProfileGrpcServiceGrpc.UserProfileGrpcServiceImplBase {
+public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserProfileGrpcServiceImplBase {
 
     private final UserProfileService userProfileService;
 
     @Override
-    public void createUserProfile(
-        UserProfileDTO request,
-        StreamObserver<UserProfileDTO> responseObserver
-    ) {
+    public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
         try {
             UserProfileCreationReq userProfileCreationReq = UserProfileCreationReq.builder()
                 .userId(request.getUserId())
+                .fullname(request.getFullname())
                 .build();
 
-            UserProfileResponse newUserProfile = userProfileService.createUserProfile(
-                userProfileCreationReq
-            );
-            UserProfileDTO response = UserProfileDTO.newBuilder()
-                .setUserId(newUserProfile.getUserId())
-                .build();
+            UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
+            UserProfileDTO response = UserProfileDTO.newBuilder().setUserId(newUserProfile.getUserId()).build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {

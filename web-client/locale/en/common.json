@@ -10,7 +10,9 @@
     "logout_failed": "Logout failed",
     "logout_success": "Logout successful",
     "register_failed": "Registration failed",
-    "register_success": "Registration successful"
+    "register_success": "Registration successful",
+    "unauthenticated": "Session expired. Please login again",
+    "unauthorized": "You do not have permission to access"
   },
   "button": {
     "accept": "Accept",
