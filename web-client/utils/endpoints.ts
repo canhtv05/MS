@@ -1,4 +1,5 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1000/api/v1';
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'https://unspilt-enthusedly-shantell.ngrok-free.dev/api/v1';
 
 export const API_ENDPOINTS = {
   AUTH: {
