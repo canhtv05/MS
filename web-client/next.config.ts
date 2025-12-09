@@ -6,10 +6,13 @@ const nextConfig: NextConfig = {
     domains: ['avatars.githubusercontent.com', 'thumbs.dreamstime.com'], // thêm domain avatar GitHub
   },
   async rewrites() {
+    const apiBackendUrl = process.env.NEXT_PUBLIC_API_BACKEND_URL || 'http://localhost:1000/api/v1';
+    const apiFrontendUrl = process.env.NEXT_PUBLIC_API_FRONTEND_URL || '/api/proxy';
+
     return [
       {
-        source: '/api/proxy/:path*',
-        destination: 'http://localhost:1000/api/v1/:path*',
+        source: `${apiFrontendUrl}/:path*`,
+        destination: `${apiBackendUrl}/:path*`,
       },
     ];
   },
