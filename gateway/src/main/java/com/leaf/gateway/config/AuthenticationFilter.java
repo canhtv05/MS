@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -36,6 +37,7 @@ import reactor.core.publisher.Mono;
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private final GrpcAuthClient grpcAuthClient;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @Value("${app.api-prefix}")
     private String API_PREFIX;
@@ -54,10 +56,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         String token = null;
         if (CollectionUtils.isEmpty(authHeader) || Objects.isNull(authHeader)) {
-            HttpCookie cookie = exchange
-                .getRequest()
-                .getCookies()
-                .getFirst(CommonConstants.COOKIE_NAME);
+            HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
             if (Objects.nonNull(cookie)) {
                 String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
                 Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
@@ -90,7 +89,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private boolean isPublicEndpoint(ServerHttpRequest request) {
         String path = request.getURI().getPath();
         return Arrays.stream(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).anyMatch(s ->
-            path.matches(API_PREFIX + s)
+            pathMatcher.match(API_PREFIX + s, path)
         );
     }
 

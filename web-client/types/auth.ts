@@ -1,3 +1,5 @@
+import { Gender, PrivacyLevel } from '@/enums/common';
+
 export interface IUserProfileDTO {
   username: string;
   fullName: string;
@@ -8,6 +10,23 @@ export interface IUserProfileDTO {
   permissions: string[];
   secretKey: string;
   channel: string;
+
+  // profile service
+  dob: string;
+  city: string;
+  bio: string;
+  coverUrl: string;
+  avatarUrl: string;
+  gender: Gender;
+  phoneNumber: string;
+  createdDate: string;
+  lastOnlineAt: string;
+  socialLinks: string[];
+  profileVisibility: PrivacyLevel;
+  friendsVisibility: PrivacyLevel;
+  postsVisibility: PrivacyLevel;
+  followersCount: number;
+  followingCount: number;
 }
 
 export interface ILoginResponse {

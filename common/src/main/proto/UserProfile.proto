@@ -1,14 +1,55 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
 option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "UserProfile";
 
 service UserProfileGrpcService {
     rpc createUserProfile(UserProfileDTO) returns (UserProfileDTO);
+    rpc getUserProfile(UserProfileIdRequest) returns (UserProfileResponse);
 }
 
 message UserProfileDTO {
     string userId = 1;
     string fullname = 2;
+}
+
+message UserProfileIdRequest {
+    string userId = 1;
+}
+
+message UserProfileResponse {
+    string userId = 1;
+    google.protobuf.Timestamp dob = 2;
+    string city = 3;
+    Gender gender = 4;
+    string bio = 5;
+    string coverUrl = 6;
+    string fullname = 7;
+    google.protobuf.Timestamp createdDate = 8;
+    string phoneNumber = 9;
+    string avatarUrl = 10;
+    repeated string socialLinks = 11;
+    PrivacyLevel profileVisibility = 12;
+    PrivacyLevel friendsVisibility = 13;
+    PrivacyLevel postsVisibility = 14;
+    google.protobuf.Timestamp lastOnlineAt = 15;
+    int64 followersCount = 16;
+    int64 followingCount = 17;
+}
+
+enum Gender {
+    GENDER_UNSPECIFIED = 0;
+    MALE = 1;
+    FEMALE = 2;
+    OTHER = 3;
+}
+
+enum PrivacyLevel {
+    PRIVACY_LEVEL_UNSPECIFIED = 0;
+    PUBLIC = 1;
+    PRIVATE = 2;
+    CUSTOM = 3;
+    FRIEND_ONLY = 4;
 }

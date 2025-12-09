@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { BASE_URL } from './endpoints';
+import { BASE_URL } from '../configs/endpoints';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';

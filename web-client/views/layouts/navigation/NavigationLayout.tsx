@@ -13,7 +13,6 @@ import {
 } from '@/components/animate-ui/icons/common';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { routes } from '@/utils/routes';
 import { usePathname, useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 import {
@@ -23,6 +22,7 @@ import {
 } from '@/components/animate-ui/components/base/tooltip';
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
+import { APP_CONFIGS } from '@/configs';
 
 interface IMenuNavigation {
   title: string;
@@ -34,23 +34,23 @@ interface IMenuNavigation {
 const menu: IMenuNavigation[] = [
   {
     title: 'navigation.home',
-    href: routes.home,
+    href: APP_CONFIGS.ROUTES.home,
     icon: <HouseIcon className="size-5 text-foreground/70 stroke-[2.5px]" />,
     isActive: true,
   },
   {
     title: 'navigation.friends',
-    href: routes.friends,
+    href: APP_CONFIGS.ROUTES.friends,
     icon: <FriendsIcon className="text-foreground/70 size-5 stroke-2" />,
   },
   {
     title: 'navigation.photos',
-    href: routes.photos,
+    href: APP_CONFIGS.ROUTES.photos,
     icon: <ImageIcon className="size-5 text-foreground/70 stroke-2" />,
   },
   {
     title: 'navigation.new_feed',
-    href: routes.newFeed,
+    href: APP_CONFIGS.ROUTES.newFeed,
     icon: <CalendarIcon className="size-5 text-foreground/70 stroke-2" />,
   },
 ];

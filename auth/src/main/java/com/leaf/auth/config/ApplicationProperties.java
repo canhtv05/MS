@@ -18,5 +18,6 @@ public class ApplicationProperties {
         private String base64Secret;
         private Long validDurationInSeconds;
         private Long refreshDurationInSeconds;
+        private String cookieDomain;
     }
 }

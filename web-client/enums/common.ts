@@ -30,3 +30,9 @@ export enum VerificationStatus {
   INVALID = 'INVALID',
   EXPIRED = 'EXPIRED',
 }
+
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}

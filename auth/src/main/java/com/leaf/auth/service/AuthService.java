@@ -10,6 +10,7 @@ import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
 import com.leaf.auth.exception.CustomAuthenticationException;
+import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
@@ -18,9 +19,13 @@ import com.leaf.common.constant.CacheConstants;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.grpc.UserProfileIdRequest;
+import com.leaf.common.grpc.UserProfileResponse;
 import com.leaf.common.security.SecurityUtils;
+import com.leaf.common.utils.ConvertProto;
 // import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
+import io.grpc.StatusRuntimeException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,6 +59,7 @@ public class AuthService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
     RedisCacheManager redisCacheManager;
+    GrpcUserProfileClient userProfileClient;
 
     @Transactional
     public String authenticate(
@@ -143,6 +149,41 @@ public class AuthService {
         }
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
+
+        UserProfileResponse userProfileResponse = null;
+        try {
+            userProfileResponse = userProfileClient.getUserProfile(
+                UserProfileIdRequest.newBuilder().setUserId(username).build()
+            );
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
+                throw new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND);
+            }
+        }
+
+        if (Objects.nonNull(userProfileResponse)) {
+            userProfileDTO.setDob(ConvertProto.convertTimestampToLocalDate(userProfileResponse.getDob()));
+            userProfileDTO.setCity(userProfileResponse.getCity());
+            userProfileDTO.setBio(userProfileResponse.getBio());
+            userProfileDTO.setCoverUrl(userProfileResponse.getCoverUrl());
+            userProfileDTO.setAvatarUrl(userProfileResponse.getAvatarUrl());
+            userProfileDTO.setGender(userProfileResponse.getGender());
+            userProfileDTO.setPhoneNumber(userProfileResponse.getPhoneNumber());
+            userProfileDTO.setCreatedDate(ConvertProto.convertTimestampToInstant(userProfileResponse.getCreatedDate()));
+            userProfileDTO.setLastOnlineAt(
+                ConvertProto.convertTimestampToInstant(userProfileResponse.getLastOnlineAt())
+            );
+            userProfileDTO.setSocialLinks(
+                userProfileResponse.getSocialLinksList() != null
+                    ? userProfileResponse.getSocialLinksList()
+                    : Collections.emptyList()
+            );
+            userProfileDTO.setProfileVisibility(userProfileResponse.getProfileVisibility());
+            userProfileDTO.setFriendsVisibility(userProfileResponse.getFriendsVisibility());
+            userProfileDTO.setPostsVisibility(userProfileResponse.getPostsVisibility());
+            userProfileDTO.setFollowersCount(userProfileResponse.getFollowersCount());
+            userProfileDTO.setFollowingCount(userProfileResponse.getFollowingCount());
+        }
 
         // Get user session from Redis using channel
         // UserSessionDTO userSessionDTO = redisService.getUser(

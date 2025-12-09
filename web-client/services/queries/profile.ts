@@ -4,7 +4,7 @@ import { IUserProfileDTO } from '@/types/profile';
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
-import { API_ENDPOINTS } from '@/utils/endpoints';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
 

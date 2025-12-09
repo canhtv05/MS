@@ -4,7 +4,7 @@ import { VerificationStatus } from '@/enums/common';
 import { IResponseObject } from '@/types/common';
 import { IVerifyEmailTokenResponse } from '@/types/notification';
 import { api, apiHandler } from '@/utils/api';
-import { API_ENDPOINTS } from '@/utils/endpoints';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -3,7 +3,7 @@
 import { IResponseObject } from '@/types/common';
 import { IVerificationEmailEvent } from '@/types/notification';
 import { api } from '@/utils/api';
-import { API_ENDPOINTS } from '@/utils/endpoints';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';

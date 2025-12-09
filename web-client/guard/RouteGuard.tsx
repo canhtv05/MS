@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuthQuery } from '@/services/queries/auth';
-import { useMyProfileQuery } from '@/services/queries/profile';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -11,18 +10,18 @@ interface IRouteGuard {
 
 const RouteGuard = ({ children }: IRouteGuard) => {
   const { user } = useAuthQuery(true);
-  const { userProfile } = useMyProfileQuery(true);
+  // const { userProfile } = useMyProfileQuery(true);
 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (pathname === '/sign-up' || pathname === '/sign-in') {
-      if (user && userProfile) {
+      if (user) {
         router.push('/home');
       }
     }
-  }, [pathname, router, user, userProfile]);
+  }, [pathname, router, user]);
 
   return <>{children}</>;
 };

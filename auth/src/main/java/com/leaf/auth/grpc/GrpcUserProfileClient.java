@@ -4,6 +4,8 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
+import com.leaf.common.grpc.UserProfileIdRequest;
+import com.leaf.common.grpc.UserProfileResponse;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,17 @@ public class GrpcUserProfileClient {
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
                 throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
+            }
+        }
+        return null;
+    }
+
+    public UserProfileResponse getUserProfile(UserProfileIdRequest req) {
+        try {
+            return stub.getUserProfile(req);
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
+                throw new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND);
             }
         }
         return null;

@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -22,10 +23,7 @@ public class CookieUtil {
     private final ApplicationProperties properties;
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
-        CookieValue cookieValue = CookieValue.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .build();
+        CookieValue cookieValue = CookieValue.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
         String jsonData = JsonF.toJson(cookieValue);
 
@@ -41,7 +39,9 @@ public class CookieUtil {
         cookie.setMaxAge(properties.getSecurity().getRefreshDurationInSeconds().intValue()); // 2 weeks
         cookie.setPath("/");
         cookie.setSecure(true); // true nếu chỉ cho gửi qua HTTPS
-        cookie.setDomain("localhost");
+        String domain = properties.getSecurity().getCookieDomain();
+        if (StringUtils.hasText(domain)) cookie.setDomain(domain);
+
         return cookie;
     }
 
@@ -51,7 +51,8 @@ public class CookieUtil {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setSecure(true);
-        cookie.setDomain("localhost");
+        String domain = properties.getSecurity().getCookieDomain();
+        if (StringUtils.hasText(domain)) cookie.setDomain(domain);
         response.addCookie(cookie);
     }
 

@@ -2,8 +2,12 @@ package com.leaf.auth.dto;
 
 import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
+import com.leaf.common.grpc.Gender;
+import com.leaf.common.grpc.PrivacyLevel;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -31,6 +35,23 @@ public class UserProfileDTO implements Serializable {
     private List<String> permissions;
     private String secretKey;
     private String channel;
+
+    // profile service
+    private LocalDate dob;
+    private String city;
+    private String bio;
+    private String coverUrl;
+    private String avatarUrl;
+    private Gender gender;
+    private String phoneNumber;
+    private Instant createdDate;
+    private Instant lastOnlineAt;
+    private List<String> socialLinks;
+    private PrivacyLevel profileVisibility;
+    private PrivacyLevel friendsVisibility;
+    private PrivacyLevel postsVisibility;
+    private Long followersCount;
+    private Long followingCount;
 
     public static UserProfileDTO fromEntity(User user) {
         return UserProfileDTO.builder()

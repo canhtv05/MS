@@ -14,7 +14,7 @@ import {
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
-import { API_ENDPOINTS } from '@/utils/endpoints';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
