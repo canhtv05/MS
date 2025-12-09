@@ -14,7 +14,7 @@ import { AddUserIcon, Mail2Icon } from '@/components/animate-ui/icons/common';
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
-  const { data } = useProfile({ params });
+  const { data } = useProfile({ username: decodedUsername });
 
   if (!decodedUsername.startsWith('@')) {
     return (

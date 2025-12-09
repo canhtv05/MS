@@ -1,13 +1,9 @@
 'use client';
 
-import { use } from 'react';
-import { IProfileParams } from '@/app/(home)/[username]/page';
 import { useUserProfileQuery } from '@/services/queries/profile';
 
-const useProfile = ({ params }: { params: Promise<IProfileParams> }) => {
-  const { username } = use(params);
-  const decodedUsername = decodeURIComponent(username);
-  const { data } = useUserProfileQuery(decodedUsername);
+const useProfile = ({ username }: { username: string }) => {
+  const { data } = useUserProfileQuery(username);
 
   return { data };
 };

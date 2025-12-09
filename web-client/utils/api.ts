@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { BASE_URL } from '../configs/endpoints';
+import { API_FRONTEND_URL } from '../configs/endpoints';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';
 
 export const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_FRONTEND_URL,
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': 'true',
