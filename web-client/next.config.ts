@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import { API_BACKEND_URL, API_FRONTEND_URL } from './configs/endpoints';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -9,8 +8,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: `${API_FRONTEND_URL}/:path*`,
-        destination: `${API_BACKEND_URL}/:path*`,
+        source: '/api/proxy/:path*',
+        destination: 'http://localhost:1000/api/v1/:path*',
       },
     ];
   },
