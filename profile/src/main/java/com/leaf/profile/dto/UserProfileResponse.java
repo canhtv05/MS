@@ -1,5 +1,8 @@
 package com.leaf.profile.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leaf.common.utils.json.InstantToStringSerializer;
+import com.leaf.common.utils.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.enums.Gender;
 import com.leaf.profile.enums.PrivacyLevel;
@@ -23,13 +26,19 @@ public class UserProfileResponse {
 
     String id;
     String userId;
+
+    @JsonSerialize(using = LocalDateToStringSerializer.class)
     LocalDate dob;
+
     String city;
     Gender gender;
     String bio;
     String coverUrl;
     String fullname;
+
+    @JsonSerialize(using = InstantToStringSerializer.class)
     Instant createdDate;
+
     String phoneNumber;
     String avatarUrl;
     List<String> socialLinks;

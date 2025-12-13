@@ -58,7 +58,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         StompHeaderAccessor.class
                     );
 
-                    if (StompCommand.CONNECT.equals(accessor.getCommand()) && Objects.nonNull(accessor)) {
+                    assert accessor != null;
+                    if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                         String authorizationHeader = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
                         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                             authorizationHeader = authorizationHeader.substring(7);

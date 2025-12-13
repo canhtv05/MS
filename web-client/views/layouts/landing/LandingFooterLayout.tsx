@@ -23,7 +23,7 @@ const LandingFooterLayout = () => {
                   id="email_"
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-full bg-gray-600 border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary transition-colors duration-200"
+                  className="flex-1 px-4 py-2 rounded-full bg-gray-600 border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary"
                 />
                 <IconButton
                   variant={'accent'}
@@ -39,42 +39,27 @@ const LandingFooterLayout = () => {
             <h4 className="text-white font-bold mb-4">Product</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Features
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Pricing
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Security
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Enterprise
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Mobile App
                 </a>
               </li>
@@ -84,42 +69,27 @@ const LandingFooterLayout = () => {
             <h4 className="text-white font-bold mb-4">Company</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   About Us
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Careers
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Blog
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Press Kit
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Contact
                 </a>
               </li>
@@ -129,42 +99,27 @@ const LandingFooterLayout = () => {
             <h4 className="text-white font-bold mb-4">Resources</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Help Center
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Community
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Developers
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   API Docs
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Status
                 </a>
               </li>
@@ -174,34 +129,22 @@ const LandingFooterLayout = () => {
             <h4 className="text-white font-bold mb-4">Legal</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Cookie Policy
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-white transition-colors duration-200"
-                >
+                <a href="#" className="text-gray-600 hover:text-white">
                   Licenses
                 </a>
               </li>
@@ -227,7 +170,7 @@ const LandingFooterLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-facebook w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-facebook w-5 h-5 text-gray-400 group-hover:text-white"
                   aria-hidden="true"
                 >
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
@@ -248,7 +191,7 @@ const LandingFooterLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-twitter w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-twitter w-5 h-5 text-gray-400 group-hover:text-white"
                   aria-hidden="true"
                 >
                   <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
@@ -269,7 +212,7 @@ const LandingFooterLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-instagram w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-instagram w-5 h-5 text-gray-400 group-hover:text-white"
                   aria-hidden="true"
                 >
                   <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
@@ -292,7 +235,7 @@ const LandingFooterLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-linkedin w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-linkedin w-5 h-5 text-gray-400 group-hover:text-white"
                   aria-hidden="true"
                 >
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
@@ -315,7 +258,7 @@ const LandingFooterLayout = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-youtube w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200"
+                  className="lucide lucide-youtube w-5 h-5 text-gray-400 group-hover:text-white"
                   aria-hidden="true"
                 >
                   <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>

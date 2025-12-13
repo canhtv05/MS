@@ -11,18 +11,32 @@ import { AtSignIcon } from '@/components/animate-ui/icons/at-sign';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { AddUserIcon, Mail2Icon } from '@/components/animate-ui/icons/common';
 import { Skeleton } from '@/components/customs/skeleton';
+import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
+import { detectLanguage } from '@/utils/common';
+import { AxiosError } from 'axios';
+import { ErrorMessage } from '@/enums/error-message';
+import { IconButton } from '@/components/animate-ui/components/buttons/icon';
+import {
+  Tooltip,
+  TooltipPanel,
+  TooltipTrigger,
+} from '@/components/animate-ui/components/base/tooltip';
+import { useTranslation } from 'react-i18next';
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
-  const { data, isLoading } = useProfile({ username: decodedUsername });
+  const { data, isLoading, error } = useProfile({ username: decodedUsername });
+  const { t } = useTranslation('profile');
 
   if (!decodedUsername.startsWith('@')) {
     return (
       <div className="p-4">
-        <h1 className="text-red-500 font-bold">Profile Not Found</h1>
-        <p>You tried to access: {decodedUsername}</p>
-        <p>We expected a username starting with @</p>
+        <h1 className="text-red-500 font-bold">{t('profile_not_found')}</h1>
+        <p>
+          {t('you_tried_to_access')} {decodedUsername}
+        </p>
+        <p>{t('expected_username_starting_with')}</p>
         <pre className="bg-gray-100 dark:bg-gray-700 p-2 rounded mt-2 text-xs">
           DEBUG INFO: params.username: {decodedUsername}
           decoded: {decodedUsername}
@@ -31,23 +45,30 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
     );
   }
 
+  if (error instanceof AxiosError) {
+    if (error!.response!.data.code == ErrorMessage.USER_PROFILE_NOT_FOUND) {
+      return <div>{t('user_not_found')}</div>;
+    }
+  }
+
   return (
-    <div className="dark:bg-gray-800 h-full mb-8 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex flex-col lg:w-full bg-white rounded-lg overflow-hidden">
-      <div className="relative w-full h-[200px]">
+    <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white dark:bg-gray-800 flex-col lg:w-full rounded-lg">
+      <div className="relative w-full h-[200px]!">
         <Image
           src={
             'https://thumbs.dreamstime.com/b/incredibly-beautiful-sunset-sun-lake-sunrise-landscape-panorama-nature-sky-amazing-colorful-clouds-fantasy-design-115177001.jpg'
           }
           alt="bg"
           fill
-          className="object-cover"
+          className="object-cover rounded-t-md"
           loading="eager"
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         />
       </div>
 
-      <div className="px-6 pb-6">
+      <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-md">
         <div className="flex items-end gap-5 -mt-16">
-          {isLoading ? (
+          {isLoading && !data?.data ? (
             <div className="w-32 h-32 rounded-full shrink-0 bg-background border-4 border-white dark:border-gray-800 shadow-lg">
               <Skeleton className="w-full h-full rounded-full" />
             </div>
@@ -67,28 +88,60 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           )}
 
           <div className="flex items-center gap-2 ml-auto mb-2">
-            {isLoading ? (
+            {isLoading && !data?.data ? (
               <>
-                <Skeleton className="h-10 w-[110px] rounded-md" />
-                <Skeleton className="h-10 w-[100px] rounded-md" />
+                <div className="md:flex hidden items-center justify-center gap-2">
+                  <Skeleton className="h-10 w-[110px] rounded-md" />
+                  <Skeleton className="h-10 w-[100px] rounded-md" />
+                </div>
+                <div className="md:hidden flex items-center justify-center gap-2">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                </div>
               </>
             ) : (
               <>
-                <Button variant="outline" className="gap-2">
-                  <Mail2Icon />
-                  Message
-                </Button>
-                <Button variant="default" className="gap-2">
-                  <AddUserIcon />
-                  Follow
-                </Button>
+                <div className="md:flex hidden items-center justify-center gap-2">
+                  <Button variant="outline" className="gap-2">
+                    <Mail2Icon />
+                    {t('message')}
+                  </Button>
+                  <Button variant="default" className="gap-2">
+                    <AddUserIcon />
+                    {t('follow')}
+                  </Button>
+                </div>
+
+                <div className="md:hidden flex items-center justify-center gap-2">
+                  {[
+                    { icon: Mail2Icon, variant: 'outline' as const, text: t('message') },
+                    { icon: AddUserIcon, variant: 'default' as const, text: t('follow') },
+                  ].map(({ icon: Icon, variant, text }, index) => (
+                    <Tooltip key={index}>
+                      <TooltipTrigger asChild>
+                        <IconButton className="cursor-pointer shadow-none" variant={variant}>
+                          <Icon />
+                        </IconButton>
+                      </TooltipTrigger>
+                      <TooltipPanel
+                        side={'top'}
+                        transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <span className="text-white/70">{text}</span>
+                      </TooltipPanel>
+                    </Tooltip>
+                  ))}
+                </div>
               </>
             )}
           </div>
         </div>
 
         <div className="mt-4 space-y-2">
-          {isLoading ? (
+          {isLoading && !data?.data ? (
             <Skeleton className="h-7 w-[200px]" />
           ) : (
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white leading-7 truncate">
@@ -96,7 +149,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             </h2>
           )}
 
-          {isLoading ? (
+          {isLoading && !data?.data ? (
             <Skeleton className="h-5 w-[150px]" />
           ) : (
             <div className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
@@ -105,7 +158,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             </div>
           )}
 
-          {isLoading ? (
+          {isLoading && !data?.data ? (
             <Skeleton className="h-5 w-[120px]" />
           ) : (
             <div className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
@@ -115,16 +168,20 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           )}
         </div>
 
-        <div className="mt-6">
-          {isLoading ? (
+        <div className="mt-3">
+          {isLoading || !data?.data?.bio || data.data.bio.trim() === '' ? (
             <div className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-[80%]" />
+              <Skeleton className="h-14 w-full" />
             </div>
           ) : (
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed line-clamp-3">
-              {data?.data?.bio}
-            </p>
+            <Code code={data.data.bio}>
+              <CodeBlock
+                className="max-h-[200px]"
+                cursor={false}
+                lang={detectLanguage(data.data.bio)}
+                writing={false}
+              />
+            </Code>
           )}
         </div>
       </div>

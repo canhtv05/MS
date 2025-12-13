@@ -38,12 +38,7 @@ public class SecurityConfig {
     private final AuthUtil authUtil;
     private final CorsFilter corsFilter;
 
-    public SecurityConfig(
-        TokenProvider tokenProvider,
-        CorsFilter corsFilter,
-        ApplicationProperties applicationProperties,
-        AuthUtil authUtil
-    ) {
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, AuthUtil authUtil) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.authUtil = authUtil;

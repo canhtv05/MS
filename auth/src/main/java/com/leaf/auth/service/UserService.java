@@ -99,7 +99,7 @@ public class UserService {
 
         User user = User.builder()
             .username(request.getUsername())
-            .activated(isAdmin ? request.isActivated() : false)
+            .activated(isAdmin && request.isActivated())
             .isGlobal(isAdmin ? request.getIsGlobal() : false)
             .isLocked(false)
             .email(request.getEmail())
@@ -116,12 +116,12 @@ public class UserService {
 
         User res = userRepository.save(user);
         try {
-            if ((isAdmin && !request.isActivated()) || !isAdmin) {
+            if (!isAdmin || !request.isActivated()) {
                 kafkaProducerService.send(
                     EventConstants.VERIFICATION_EMAIL_TOPIC,
                     VerificationEmailEvent.builder().to(request.getEmail()).username(request.getUsername()).build()
                 );
-            } else if (isAdmin && request.isActivated()) {
+            } else {
                 com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
                     .setUserId(user.getUsername())
                     .build();

@@ -41,7 +41,7 @@ const queryClient = new QueryClient({
       console.log('Query Key:', query.queryKey);
 
       if (error instanceof AxiosError) {
-        if (error?.response?.status === 401) {
+        if (error.status === 401) {
           console.log('Handling 401 in QueryCache');
           cookieUtils.deleteStorage();
           queryClient.setQueryData(['auth', 'me'], undefined);

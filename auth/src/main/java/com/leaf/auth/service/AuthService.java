@@ -173,11 +173,7 @@ public class AuthService {
             userProfileDTO.setLastOnlineAt(
                 ConvertProto.convertTimestampToInstant(userProfileResponse.getLastOnlineAt())
             );
-            userProfileDTO.setSocialLinks(
-                userProfileResponse.getSocialLinksList() != null
-                    ? userProfileResponse.getSocialLinksList()
-                    : Collections.emptyList()
-            );
+            userProfileDTO.setSocialLinks(userProfileResponse.getSocialLinksList());
             userProfileDTO.setProfileVisibility(userProfileResponse.getProfileVisibility());
             userProfileDTO.setFriendsVisibility(userProfileResponse.getFriendsVisibility());
             userProfileDTO.setPostsVisibility(userProfileResponse.getPostsVisibility());

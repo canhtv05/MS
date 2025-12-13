@@ -40,7 +40,14 @@ function TooltipTrigger({ ...props }: TooltipTriggerProps) {
 
 type TooltipPanelProps = TooltipPositionerPrimitiveProps & TooltipPopupPrimitiveProps;
 
-function TooltipPanel({ className, sideOffset = 4, children, style, ...props }: TooltipPanelProps) {
+function TooltipPanel({
+  className,
+  sideOffset = 4,
+  children,
+  style,
+  transition,
+  ...props
+}: TooltipPanelProps) {
   return (
     <TooltipPortalPrimitive>
       <TooltipPositionerPrimitive sideOffset={sideOffset} className="z-50" {...props}>
@@ -50,6 +57,7 @@ function TooltipPanel({ className, sideOffset = 4, children, style, ...props }: 
             className,
           )}
           style={style}
+          transition={transition}
         >
           {children}
           <TooltipArrowPrimitive className="bg-primary fill-primary z-50 size-2.5 data-[side='bottom']:-top-[4px] data-[side='right']:-left-[4px] data-[side='left']:-right-[4px] data-[side='inline-start']:-right-[4px] data-[side='inline-end']:-left-[4px] rotate-45 rounded-[2px]" />

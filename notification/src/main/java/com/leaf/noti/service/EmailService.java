@@ -83,10 +83,7 @@ public class EmailService {
             Context context = new Context();
             context.setVariable("username", event.getUsername());
             context.setVariable("token", token);
-            context.setVariable(
-                "verificationUrl",
-                new StringBuilder(emailProperties.getVerifyUrl()).append("?token=").append(token).toString()
-            );
+            context.setVariable("verificationUrl", emailProperties.getVerifyUrl() + "?token=" + token);
 
             String body = templateEngine.process("email-verification", context);
 

@@ -157,10 +157,7 @@ const SignUpPage = () => {
       <div id="signup-link" className="text-center mt-8 section-clickable">
         <p className="text-foreground/70 text-sm">
           {t('sign_up.already_have_account')}
-          <Link
-            href="/sign-in"
-            className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium transition-colors"
-          >
+          <Link href="/sign-in" className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium">
             {t('sign_up.sign_in_here')}
           </Link>
         </p>

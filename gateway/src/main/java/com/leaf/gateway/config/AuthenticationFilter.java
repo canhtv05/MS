@@ -55,7 +55,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         String token = null;
-        if (CollectionUtils.isEmpty(authHeader) || Objects.isNull(authHeader)) {
+        if (CollectionUtils.isEmpty(authHeader)) {
             HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
             if (Objects.nonNull(cookie)) {
                 String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);

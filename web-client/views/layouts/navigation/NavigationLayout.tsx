@@ -139,7 +139,7 @@ const NavigationMenu = () => {
                 key={index}
                 href={item.href}
                 className={cn(
-                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start gap-3`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                 )}
               >
@@ -152,7 +152,7 @@ const NavigationMenu = () => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 hover:transition-colors hover:duration-300 items-center justify-start gap-3`,
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start gap-3`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                 )}
               >

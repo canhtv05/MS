@@ -15,8 +15,6 @@ class GrpcSecurityConfig {
 
     @Bean
     GrpcAuthenticationReader grpcAuthenticationReader() {
-        return new BearerAuthenticationReader(token -> {
-            return tokenProvider.getAuthentication(token);
-        });
+        return new BearerAuthenticationReader(tokenProvider::getAuthentication);
     }
 }

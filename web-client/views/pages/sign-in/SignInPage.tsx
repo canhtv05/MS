@@ -77,7 +77,7 @@ const SignInPage = () => {
             <CheckBox content={t('sign_in.remember_me')} tabIndex={-1} />
             <Link
               href="/forgot-password"
-              className="text-cyan-300 text-sm hover:text-cyan-200 transition-colors"
+              className="text-cyan-300 text-sm hover:text-cyan-200"
               tabIndex={-1}
             >
               {t('sign_in.forgot_password')}
@@ -107,10 +107,7 @@ const SignInPage = () => {
         <div id="signup-link" className="text-center mt-8 section-clickable">
           <p className="text-foreground/70 text-sm">
             {t('sign_in.no_account')}
-            <Link
-              href="/sign-up"
-              className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium transition-colors"
-            >
+            <Link href="/sign-up" className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium">
               {t('sign_in.sign_up_here')}
             </Link>
           </p>

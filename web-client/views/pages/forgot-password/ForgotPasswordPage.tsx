@@ -162,7 +162,7 @@ const ForgotPasswordPage = () => {
         <div id="social-sign-in" className="space-y-4 pt-5 section-clickable">
           <AnimateIcon animateOnHover>
             <Button
-              className="w-full text-cyan-300 text-sm hover:text-cyan-200 transition-colors"
+              className="w-full text-cyan-300 text-sm hover:text-cyan-200"
               size={'lg'}
               variant={'ghost'}
               onClick={navigateSignIn}

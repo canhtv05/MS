@@ -7,3 +7,95 @@ export function genUUID(): string {
 }
 
 export const PUBLIC_ROUTERS = ['/sign-in', '/sign-up', '/landing', '/verify-email'];
+
+export const detectLanguage = (content: string = ''): string => {
+  const code = content?.trim();
+
+  if (!code) return 'text';
+
+  if (/^<!DOCTYPE html>/i.test(code) || /<\/?[a-z][\s\S]*>/i.test(code)) {
+    return 'html';
+  }
+
+  if (/^[a-z0-9\s.#\-_]+\{[^}]+}/i.test(code) && !/(=>|\$)/.test(code)) {
+    return 'css';
+  }
+
+  if (
+    /def\s+\w+/.test(code) ||
+    /if\s+__name__\s*==\s*['"]__main__['"]:/.test(code) ||
+    /import\s+[\w.]+\s+as\s+\w+/.test(code) ||
+    /from\s+[\w.]+\s+import/.test(code) ||
+    (/print\s*\(/.test(code) && !/;/g.test(code) && !/\{/.test(code))
+  ) {
+    return 'python';
+  }
+
+  if (
+    /\b(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\b/i.test(code) &&
+    /\b(FROM|INTO|TABLE|WHERE|VALUES)\b/i.test(code)
+  ) {
+    return 'sql';
+  }
+
+  if (code.startsWith('#!') || /\b(sudo|npm|yarn|docker|git|ls|cd|echo)\b/.test(code)) {
+    return 'bash';
+  }
+
+  if (
+    (code.startsWith('{') && code.endsWith('}')) ||
+    (code.startsWith('[') && code.endsWith(']'))
+  ) {
+    if (/"\w+"\s*:/.test(code)) return 'json';
+  }
+
+  if (
+    /package\s+main/.test(code) ||
+    /func\s+\w+\(/.test(code) ||
+    /fmt\.P/.test(code) ||
+    /:=\s/.test(code)
+  ) {
+    return 'go';
+  }
+
+  if (
+    /#include\s+<[\w.]+>/.test(code) ||
+    /std::/.test(code) ||
+    /cout\s*<</.test(code) ||
+    /int\s+main\s*\(/.test(code)
+  ) {
+    return 'cpp';
+  }
+
+  if (
+    /public\s+class/.test(code) ||
+    /System\.out/.test(code) ||
+    /public\s+static\s+void/.test(code) ||
+    /ArrayList<|List</.test(code)
+  ) {
+    return 'java';
+  }
+
+  if (
+    /import\s+.*\s+from/.test(code) ||
+    /export\s+(default|const|class|function)/.test(code) ||
+    /const\s+\w+/.test(code) ||
+    /let\s+\w+/.test(code) ||
+    /console\.log/.test(code) ||
+    /=>/.test(code) ||
+    /interface\s+\w+/.test(code) ||
+    /<\w+\s*\/>/.test(code)
+  ) {
+    return 'tsx';
+  }
+
+  if (
+    /\b(if|while|for|switch|catch)\s*\(/.test(code) ||
+    /\{[\s\S]*\}/.test(code) ||
+    /(\+\+|--|&&|\|\||===|!==)/.test(code)
+  ) {
+    return 'java';
+  }
+
+  return 'text';
+};

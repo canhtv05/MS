@@ -133,14 +133,10 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
           }
 
           isRefreshing = false;
+          setUser(undefined);
           cookieUtils.deleteStorage();
           handleRedirectLogin(router, pathname);
           return Promise.reject(error);
-        }
-
-        if (error.response?.status === 401) {
-          cookieUtils.deleteStorage();
-          handleRedirectLogin(router, pathname);
         }
 
         return Promise.reject(error);

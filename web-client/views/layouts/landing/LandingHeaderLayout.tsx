@@ -46,7 +46,7 @@ const ResourceCard = (props: IResourceCardProps) => {
       <Link
         target="_blank"
         href={url}
-        className="flex gap-2 justify-between md:items-start items-center hover:bg-muted-foreground/10 transition-colors duration-200 ease-in p-2 rounded-sm cursor-pointer"
+        className="flex gap-2 justify-between md:items-start items-center hover:bg-muted-foreground/10 p-2 rounded-sm cursor-pointer"
       >
         <div
           className={cn(

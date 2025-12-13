@@ -26,8 +26,17 @@ export const useAuthQuery = (enabled: boolean = true) => {
     refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
   });
 
+  if (!token) {
+    return {
+      user: undefined,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
+  }
+
   return {
-    user: query.data,
+    user: query.data?.data,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,

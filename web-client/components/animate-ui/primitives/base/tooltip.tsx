@@ -66,9 +66,11 @@ function Tooltip({
   );
 }
 
-type TooltipTriggerProps = React.ComponentProps<typeof TooltipPrimitive.Trigger>;
+type TooltipTriggerProps = React.ComponentProps<typeof TooltipPrimitive.Trigger> & {
+  asChild?: boolean;
+};
 
-function TooltipTrigger({ onMouseMove, ...props }: TooltipTriggerProps) {
+function TooltipTrigger({ onMouseMove, asChild, children, ...props }: TooltipTriggerProps) {
   const { x, y, followCursor } = useTooltip();
 
   const handleMouseMove = (
@@ -91,13 +93,14 @@ function TooltipTrigger({ onMouseMove, ...props }: TooltipTriggerProps) {
     }
   };
 
-  return (
-    <TooltipPrimitive.Trigger
-      data-slot="tooltip-trigger"
-      onMouseMove={handleMouseMove}
-      {...props}
-    />
-  );
+  const triggerProps = {
+    'data-slot': 'tooltip-trigger',
+    onMouseMove: handleMouseMove,
+    ...(asChild ? { asChild: true as const } : {}),
+    ...props,
+  };
+
+  return <TooltipPrimitive.Trigger {...triggerProps}>{children}</TooltipPrimitive.Trigger>;
 }
 
 type TooltipPortalProps = Omit<React.ComponentProps<typeof TooltipPrimitive.Portal>, 'keepMounted'>;
@@ -124,11 +127,18 @@ type TooltipPopupProps = Omit<React.ComponentProps<typeof TooltipPrimitive.Popup
 function TooltipPopup({
   transition = { type: 'spring', stiffness: 300, damping: 25 },
   style,
+  initial,
+  animate,
+  exit,
   ...props
 }: TooltipPopupProps) {
   const { x, y, followCursor, followCursorSpringOptions } = useTooltip();
   const translateX = useSpring(x, followCursorSpringOptions);
   const translateY = useSpring(y, followCursorSpringOptions);
+
+  const defaultInitial = initial ?? { opacity: 0, scale: 0.5 };
+  const defaultAnimate = animate ?? { opacity: 1, scale: 1 };
+  const defaultExit = exit ?? { opacity: 0, scale: 0.5 };
 
   return (
     <TooltipPrimitive.Popup
@@ -136,9 +146,9 @@ function TooltipPopup({
         <motion.div
           key="tooltip-popup"
           data-slot="tooltip-popup"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
+          initial={defaultInitial}
+          animate={defaultAnimate}
+          exit={defaultExit}
           transition={transition}
           style={{
             x: followCursor === 'x' || followCursor === true ? translateX : undefined,

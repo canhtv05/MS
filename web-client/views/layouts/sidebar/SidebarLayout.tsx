@@ -60,7 +60,7 @@ const SidebarLayout = () => {
                           <TabsHighlightItemPrimitive value="primary">
                             <TabsTabPrimitive
                               value="primary"
-                              className="relative transition-none py-2 px-0 z-10 flex justify-center text-sm font-medium text-muted-foreground transition-colors data-[active=true]:font-bold data-[active=true]:text-foreground bg-transparent cursor-pointer"
+                              className="relative transition-none py-2 px-0 z-10 flex justify-center text-sm font-medium text-muted-foreground data-[active=true]:font-bold data-[active=true]:text-foreground bg-transparent cursor-pointer"
                             >
                               Primary
                             </TabsTabPrimitive>
@@ -68,7 +68,7 @@ const SidebarLayout = () => {
                           <TabsHighlightItemPrimitive value="general">
                             <TabsTabPrimitive
                               value="general"
-                              className="relative transition-none py-2 px-0 z-10 flex justify-center text-sm font-medium text-muted-foreground transition-colors data-[active=true]:font-bold data-[active=true]:text-foreground bg-transparent cursor-pointer"
+                              className="relative transition-none py-2 px-0 z-10 flex justify-center text-sm font-medium text-muted-foreground data-[active=true]:font-bold data-[active=true]:text-foreground bg-transparent cursor-pointer"
                             >
                               General
                             </TabsTabPrimitive>
@@ -85,7 +85,7 @@ const SidebarLayout = () => {
                       {Array.from({ length: 6 }, (_, index) => (
                         <div
                           key={index}
-                          className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 transition-colors duration-300 cursor-pointer px-4 py-2"
+                          className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer px-4 py-2"
                         >
                           <UserCard
                             name="John Doe"
@@ -99,7 +99,7 @@ const SidebarLayout = () => {
                       {Array.from({ length: 6 }, (_, index) => (
                         <div
                           key={index}
-                          className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 transition-colors duration-300 cursor-pointer px-4 py-2"
+                          className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer px-4 py-2"
                         >
                           <UserCard
                             name="John Doe"

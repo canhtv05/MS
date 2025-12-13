@@ -114,7 +114,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
     >
-      <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer rounded-lg transition-colors duration-300">
+      <div className="p-2 flex group items-center gap-2 justify-start mx-2 mt-2 dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer rounded-lg">
         <IconButton
           className="rounded-full bg-transparent flex cursor-pointer shadow-none transition-all duration-300"
           variant={'accent'}
@@ -199,8 +199,8 @@ const HomeHeaderDropdown = ({
             </div>
             <Switch
               className={cn(
-                'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border transition-colors',
-                'data-[state=checked]:bg-emerald-500 bg-foreground',
+                'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border-none',
+                'data-[state=checked]:bg-emerald-500 bg-foreground pl-0.5',
               )}
               checked={theme === 'dark'}
               onTap={() => {
@@ -209,10 +209,10 @@ const HomeHeaderDropdown = ({
             >
               <SwitchThumb
                 className={cn(
-                  'h-full aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
+                  'h-5 w-5 aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
                   'group-data-[state=checked]:translate-x-4',
                 )}
-                pressedAnimation={{ width: 22 }}
+                pressedAnimation={{ width: 20 }}
               />
             </Switch>
           </div>
@@ -493,7 +493,7 @@ const HeaderLayout = () => {
                     />
                     <DropdownMenuSeparator />
                     <AnimateIcon animateOnHover>
-                      <DropdownMenuItem onClick={() => setOpenLogout(true)}>
+                      <DropdownMenuItem variant={'destructive'} onClick={() => setOpenLogout(true)}>
                         <div className="flex items-center justify-center gap-2">
                           <LogOut />
                           <span className="text-sm">{t('header.logout')}</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuthQuery } from '@/services/queries/auth';
+import cookieUtils from '@/utils/cookieUtils';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -17,7 +18,8 @@ const RouteGuard = ({ children }: IRouteGuard) => {
 
   useEffect(() => {
     if (pathname === '/sign-up' || pathname === '/sign-in') {
-      if (user) {
+      const token = cookieUtils.getStorage()?.accessToken;
+      if (user && token) {
         router.push('/home');
       }
     }

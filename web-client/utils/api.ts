@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { API_FRONTEND_URL } from '../configs/endpoints';
+import { API_FRONTEND_URL } from '@/configs/endpoints';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';
@@ -37,7 +37,7 @@ export const PREFIX_PUBLIC_ENDPOINTS = [
 
 export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {
   if (!PUBLIC_ROUTERS.includes(pathname)) {
-    nextRouter.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
+    nextRouter.replace('/sign-in');
   }
   cookieUtils.deleteStorage();
 };

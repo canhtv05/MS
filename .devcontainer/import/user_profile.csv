@@ -1,3 +1,3 @@
-id,user_id,username,created_by,modified_by
-"1-1",admin,admin,system,system
-"2-2",user,user,system,system
+id,user_id,fullname,dob,city,gender,bio,cover_url,phone_number,avatar_url,social_links,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date
+"1-1",admin,"Nguyen Van Admin",1995-01-01,Ha Noi,MALE,"Admin he thong",,"0987654321",,"fb.com/admin;github.com/admin",PUBLIC,PUBLIC,PUBLIC,0,0,system,system,2025-01-01T10:00:00Z
+"2-2",user,"Le Thi User",2000-05-20,Ho Chi Minh,FEMALE,"Yeu mau hong",,"0123456789",,"fb.com/user",PUBLIC,FRIENDS_ONLY,PUBLIC,0,0,system,system,2025-01-01T11:00:00Z

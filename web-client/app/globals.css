@@ -125,6 +125,33 @@
     @apply bg-background text-foreground/70 font-nunito;
   }
 
+  html.changing-theme,
+  html.changing-theme *,
+  html.changing-theme *::before,
+  html.changing-theme *::after {
+    transition: none;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role='button'],
+  [data-slot='tooltip-arrow'],
+  .transition-global {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -137,7 +164,8 @@
   ::-webkit-scrollbar-thumb {
     background: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent);
     border-radius: 10px;
-    transition: all 0.3s ease;
+    /* Scrollbar transition specific */
+    transition: background-color 0.3s ease;
     background-clip: padding-box;
     border: 2px solid transparent;
   }
@@ -174,7 +202,7 @@
 }
 
 @utility linear-1 {
-  @apply bg-linear-to-r from-purple-500 to-cyan-500 
+  @apply bg-linear-to-r from-purple-500 to-cyan-500
         shadow-lg border hover:opacity-90 hover:shadow-primary hover:shadow-lg
       hover:border-white/80;
 }
