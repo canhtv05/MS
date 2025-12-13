@@ -51,10 +51,7 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (
-                authentication == null ||
-                !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)
-            ) {
+            if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
                 throw new CustomAuthenticationException("Unauthorized", HttpStatus.UNAUTHORIZED);
             }
             String path = request.getRequestURI();
@@ -85,20 +82,12 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
                     .filter(p -> p.code().equalsIgnoreCase(authority.getAuthority()))
                     .findFirst()
                     .orElse(null);
-                if (
-                    permission != null &&
-                    match(permission.method(), permission.pathPattern(), method, path)
-                ) {
+                if (permission != null && match(permission.method(), permission.pathPattern(), method, path)) {
                     hasPermission.set(true);
                 }
             });
         if (!hasPermission.get()) {
-            log.error(
-                "User {} does not have permission to access {} on {}",
-                userDetails.getUsername(),
-                method,
-                path
-            );
+            log.error("User {} does not have permission to access {} on {}", userDetails.getUsername(), method, path);
             throw new CustomAuthenticationException("Missing permission!", HttpStatus.FORBIDDEN);
         }
     }
@@ -131,9 +120,7 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
         String requestPath
     ) {
         boolean methodMatch =
-            permissionMethod == null ||
-            permissionMethod.isEmpty() ||
-            permissionMethod.equalsIgnoreCase(requestMethod);
+            permissionMethod == null || permissionMethod.isEmpty() || permissionMethod.equalsIgnoreCase(requestMethod);
         boolean pathMatch = pathMatcher.match(permissionPath, requestPath);
         return methodMatch && pathMatch;
     }

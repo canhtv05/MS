@@ -11,8 +11,6 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(ApiException ex) {
-        return ResponseEntity.badRequest().body(
-            ResponseObject.error(ex.getErrorMessage(), ex.getMessage())
-        );
+        return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
     }
 }

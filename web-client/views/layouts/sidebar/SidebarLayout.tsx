@@ -23,7 +23,7 @@ const SidebarLayout = () => {
   const [activeTab, setActiveTab] = useState('primary');
 
   return (
-    <div className="hidden lg:block lg:w-72 shrink-0">
+    <div className="hidden lg:block xl:w-72 lg:w-64">
       <div className="h-full flex flex-col justify-start items-start gap-7 w-full">
         <div className="w-full">
           <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto bg-white rounded-lg">

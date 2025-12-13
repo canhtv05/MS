@@ -26,10 +26,7 @@ public class KafkaConsumerConfig {
 
     private Map<String, Object> stringConsumerProps(String groupId) {
         Map<String, Object> props = new HashMap<>();
-        props.put(
-            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-            kafkaConsumerProperties.getBootstrapServers()
-        );
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConsumerProperties.getBootstrapServers());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
@@ -39,26 +36,19 @@ public class KafkaConsumerConfig {
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
             kafkaConsumerProperties.getConsumer().getValueDeserializer()
         );
-        props.put(
-            JsonDeserializer.TRUSTED_PACKAGES,
-            kafkaConsumerProperties.getConsumer().getTrustedPackages()
-        );
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, kafkaConsumerProperties.getConsumer().getTrustedPackages());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         return props;
     }
 
-    private <T> ConcurrentKafkaListenerContainerFactory<String, T> buildFactory(
-        Class<T> clazz,
-        String groupId
-    ) {
+    private <T> ConcurrentKafkaListenerContainerFactory<String, T> buildFactory(Class<T> clazz, String groupId) {
         DefaultKafkaConsumerFactory<String, T> consumerFactory = new DefaultKafkaConsumerFactory<>(
             stringConsumerProps(groupId),
             new StringDeserializer(),
             new JsonDeserializer<>(clazz, false)
         );
-        ConcurrentKafkaListenerContainerFactory<String, T> factory =
-            new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setCommonErrorHandler(errorHandler());
         return factory;
@@ -84,9 +74,6 @@ public class KafkaConsumerConfig {
         String,
         VerificationEmailEvent
     > verificationEmailKafkaListenerContainerFactory() {
-        return buildFactory(
-            VerificationEmailEvent.class,
-            EventConstants.VERIFICATION_EMAIL_GROUP_ID
-        );
+        return buildFactory(VerificationEmailEvent.class, EventConstants.VERIFICATION_EMAIL_GROUP_ID);
     }
 }

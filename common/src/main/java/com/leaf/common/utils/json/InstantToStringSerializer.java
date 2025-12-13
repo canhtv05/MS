@@ -11,8 +11,7 @@ import java.time.ZoneId;
 public class InstantToStringSerializer extends JsonSerializer<Instant> {
 
     @Override
-    public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers)
-        throws IOException {
+    public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeString(DateUtils.sdf.format(value.atZone(ZoneId.systemDefault())));
     }
 }

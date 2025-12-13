@@ -19,8 +19,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication)
-        throws CustomAuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws CustomAuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails user = userDetailsService.loadUserByUsername(username);

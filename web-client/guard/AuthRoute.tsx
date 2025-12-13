@@ -13,26 +13,26 @@ interface IAuthRoute {
 
 const AuthRoute = ({ children }: IAuthRoute) => {
   const queryClient = useQueryClient();
-  const setUser = useAuthStore(state => state.setUser);
+  const { setUser, user } = useAuthStore();
   const { isLoading: loadingAuth, user: userData } = useAuthQuery(true);
   // const { meQuery } = useMyProfileQuery(true);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loadingAuth && loading) {
+    if (!loadingAuth && !user && loading) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
     }
-  }, [loadingAuth, loading]);
+  }, [loadingAuth, loading, user]);
 
   useEffect(() => {
-    if (!userData && !loading) {
+    if ((!userData || !user) && !loading) {
       setUser(undefined);
       queryClient.clear();
       cookieUtils.deleteStorage();
     }
-  }, [queryClient, userData, loading, setUser]);
+  }, [queryClient, userData, loading, setUser, user]);
 
   if (loading) {
     return <LoadingPage />;

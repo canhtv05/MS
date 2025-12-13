@@ -49,10 +49,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private CustomUserDetails createSpringSecurityUser(String lowercaseLogin, User user) {
         if (user.isLocked()) {
-            throw new CustomAuthenticationException(
-                "User " + lowercaseLogin + " was locked",
-                HttpStatus.UNAUTHORIZED
-            );
+            throw new CustomAuthenticationException("User " + lowercaseLogin + " was locked", HttpStatus.UNAUTHORIZED);
         }
 
         if (!user.isActivated()) {

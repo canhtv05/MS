@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ExcelBuilder {
 
     public static byte[] buildFileTemplate(ExcelTemplateConfig config) {
-        try (
-            XSSFWorkbook wb = new XSSFWorkbook();
-            ByteArrayOutputStream out = new ByteArrayOutputStream()
-        ) {
+        try (XSSFWorkbook wb = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet main = wb.createSheet("DataImport");
 
             CellStyle headerStyle = ExcelBuilder.createHeaderStyle(wb);
@@ -67,24 +64,14 @@ public class ExcelBuilder {
                     ExcelBuilder.fillListColumn(hidden, i, dto.getData()); // cột A
 
                     // 2) Tạo Named Range cho từng danh sách
-                    ExcelBuilder.createNamedRange(
-                        wb,
-                        dto.getRangeName(),
-                        getRefRange(i, dto.getData().size())
-                    );
+                    ExcelBuilder.createNamedRange(wb, dto.getRangeName(), getRefRange(i, dto.getData().size()));
 
                     // 3) Gán Data Validation cho các cột
                     int firstRow = 1,
                         lastRow = 100;
 
                     // 3.1 Dropdown Loại KH cho cột PlanType
-                    ExcelBuilder.addNamedListValidation(
-                        main,
-                        firstRow,
-                        lastRow,
-                        dto.getRowIndex(),
-                        dto.getRangeName()
-                    );
+                    ExcelBuilder.addNamedListValidation(main, firstRow, lastRow, dto.getRowIndex(), dto.getRangeName());
                 });
 
                 // 5) Ẩn sheet nguồn
@@ -129,10 +116,7 @@ public class ExcelBuilder {
             if (e instanceof ApiException ex) {
                 throw ex;
             }
-            throw new ApiException(
-                ErrorMessage.IMPORT_EXCEL_ERROR,
-                "Lỗi xử lý file lỗi: " + e.getMessage()
-            );
+            throw new ApiException(ErrorMessage.IMPORT_EXCEL_ERROR, "Lỗi xử lý file lỗi: " + e.getMessage());
         }
         return result;
     }
@@ -174,13 +158,7 @@ public class ExcelBuilder {
         named.setRefersToFormula(ref);
     }
 
-    private static void addNamedListValidation(
-        Sheet sheet,
-        int firstRow,
-        int lastRow,
-        int col,
-        String namedRange
-    ) {
+    private static void addNamedListValidation(Sheet sheet, int firstRow, int lastRow, int col, String namedRange) {
         XSSFDataValidationHelper helper = new XSSFDataValidationHelper((XSSFSheet) sheet);
         DataValidationConstraint constraint = helper.createFormulaListConstraint(namedRange);
         CellRangeAddressList range = new CellRangeAddressList(firstRow, lastRow, col, col);
@@ -226,11 +204,7 @@ public class ExcelBuilder {
             case STRING -> cell.getStringCellValue();
             case NUMERIC -> {
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    var ld = cell
-                        .getDateCellValue()
-                        .toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
+                    var ld = cell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     yield ld.toString();
                 } else {
                     yield String.valueOf(cell.getNumericCellValue());

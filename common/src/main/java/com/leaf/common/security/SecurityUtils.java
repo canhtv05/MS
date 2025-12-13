@@ -36,9 +36,7 @@ public final class SecurityUtils {
             authentication != null &&
             authentication.getPrincipal() instanceof UserPrincipal &&
             ((UserPrincipal) authentication.getPrincipal()).isGlobal() &&
-            ((UserPrincipal) authentication.getPrincipal()).getRole().contains(
-                AuthoritiesConstants.SUPER_ADMIN
-            )
+            ((UserPrincipal) authentication.getPrincipal()).getRole().contains(AuthoritiesConstants.SUPER_ADMIN)
         );
     }
 

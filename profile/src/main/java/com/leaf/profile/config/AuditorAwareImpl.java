@@ -11,9 +11,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     @NonNull
     public Optional<String> getCurrentAuditor() {
         String username = "system";
-        Optional<String> currentUser = SecurityUtils.getCurrentUserLogin().filter(s ->
-            !s.isBlank()
-        );
+        Optional<String> currentUser = SecurityUtils.getCurrentUserLogin().filter(s -> !s.isBlank());
         if (currentUser.isPresent()) {
             username = currentUser.get();
         }

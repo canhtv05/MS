@@ -3,9 +3,9 @@
 import { useUserProfileQuery } from '@/services/queries/profile';
 
 const useProfile = ({ username }: { username: string }) => {
-  const { data } = useUserProfileQuery(username);
+  const { data, isLoading, isError } = useUserProfileQuery(username);
 
-  return { data };
+  return { data, isLoading, isError };
 };
 
 export default useProfile;

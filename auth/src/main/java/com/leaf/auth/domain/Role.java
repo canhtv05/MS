@@ -37,9 +37,7 @@ public class Role extends AbstractAuditingPostgresEntity {
     @JoinTable(
         name = "role_permissions",
         joinColumns = { @JoinColumn(name = "role_code", referencedColumnName = "code") },
-        inverseJoinColumns = {
-            @JoinColumn(name = "permission_code", referencedColumnName = "code"),
-        }
+        inverseJoinColumns = { @JoinColumn(name = "permission_code", referencedColumnName = "code") }
     )
     @Builder.Default
     private Set<Permission> permissions = new HashSet<>();

@@ -32,25 +32,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    public void registerStompEndpoints(
-        @org.springframework.lang.NonNull StompEndpointRegistry registry
-    ) {
+    public void registerStompEndpoints(@org.springframework.lang.NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
-    public void configureMessageBroker(
-        @org.springframework.lang.NonNull MessageBrokerRegistry registry
-    ) {
+    public void configureMessageBroker(@org.springframework.lang.NonNull MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
         registry.enableSimpleBroker("/queue");
     }
 
     @Override
-    public void configureClientInboundChannel(
-        @org.springframework.lang.NonNull ChannelRegistration registration
-    ) {
+    public void configureClientInboundChannel(@org.springframework.lang.NonNull ChannelRegistration registration) {
         registration.interceptors(
             new ChannelInterceptor() {
                 @SuppressWarnings("null")
@@ -64,25 +58,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         StompHeaderAccessor.class
                     );
 
-                    if (
-                        StompCommand.CONNECT.equals(accessor.getCommand()) &&
-                        Objects.nonNull(accessor)
-                    ) {
-                        String authorizationHeader = accessor.getFirstNativeHeader(
-                            HttpHeaders.AUTHORIZATION
-                        );
-                        if (
-                            authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-                        ) {
+                    if (StompCommand.CONNECT.equals(accessor.getCommand()) && Objects.nonNull(accessor)) {
+                        String authorizationHeader = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
+                        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                             authorizationHeader = authorizationHeader.substring(7);
                             if (tokenProvider.validateToken(authorizationHeader)) {
-                                Authentication authentication = tokenProvider.getAuthentication(
-                                    authorizationHeader
-                                );
+                                Authentication authentication = tokenProvider.getAuthentication(authorizationHeader);
                                 accessor.setUser(authentication);
-                                SecurityContextHolder.getContext().setAuthentication(
-                                    authentication
-                                );
+                                SecurityContextHolder.getContext().setAuthentication(authentication);
                             }
                         }
                     }

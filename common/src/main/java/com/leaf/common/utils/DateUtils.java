@@ -26,9 +26,7 @@ public class DateUtils {
     }
 
     public static String getCurrentDate() {
-        return DateTimeFormatter.ofPattern("ddMMyyyy").format(
-            Instant.now().atZone(ZoneId.systemDefault())
-        );
+        return DateTimeFormatter.ofPattern("ddMMyyyy").format(Instant.now().atZone(ZoneId.systemDefault()));
     }
 
     public static Instant parseDateOnly(String dateString) {

@@ -18,12 +18,7 @@ public record SearchRequest(
         int safePage = (page == null || page < 1) ? 0 : page - 1;
         int safeSize = (size == null || size < 1) ? 20 : size;
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortOrder)) {
-            return PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.Direction.fromString(sortOrder),
-                sortField
-            );
+            return PageRequest.of(safePage, safeSize, Sort.Direction.fromString(sortOrder), sortField);
         }
         return PageRequest.of(safePage, safeSize);
     }
@@ -32,12 +27,7 @@ public record SearchRequest(
         int safePage = (page == null || page < 1) ? 0 : page - 1;
         int safeSize = (size == null || size < 1) ? 20 : size;
         if (StringUtils.hasText(sortField) && StringUtils.hasText(sortOrder)) {
-            return PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.Direction.fromString(sortOrder),
-                sortField
-            );
+            return PageRequest.of(safePage, safeSize, Sort.Direction.fromString(sortOrder), sortField);
         }
         if (sort != null && StringUtils.hasText(sortDefault)) {
             return PageRequest.of(safePage, safeSize, sort, sortDefault);

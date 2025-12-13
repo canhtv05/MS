@@ -15,7 +15,7 @@ const HomeLayout = ({ children }: IHomeLayoutProps) => {
         <div className="lg:block fixed md:static md:translate-x-0 -translate-x-1/2 md:left-0 left-1/2 md:bottom-auto bottom-0 lg:w-auto w-auto z-40">
           <NavigationLayout />
         </div>
-        <div className="w-full flex-1 xl:px-7 lg:pl-6 lg:pr-1 pr-1 md:pl-4 px-2 h-full lg:pb-8 pb-4">
+        <div className="w-full flex-1 xl:px-7 lg:px-6 pr-1 md:pl-4 px-2 h-full lg:pb-8 pb-4">
           {children}
         </div>
         <SidebarLayout />

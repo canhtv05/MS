@@ -50,9 +50,7 @@ public class EmailService {
 
             String token = tokenUtil.generateToken(event, expiredAt);
             redisService.saveEmailToken(token, event.getUsername());
-            EmailVerificationLogs logs = emailVerificationLogsRepository
-                .findByUserId(event.getUsername())
-                .orElse(null);
+            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
 
             String jti = Jwts.parserBuilder()
                 .setSigningKey(tokenUtil.getSigningKey())
@@ -87,10 +85,7 @@ public class EmailService {
             context.setVariable("token", token);
             context.setVariable(
                 "verificationUrl",
-                new StringBuilder(emailProperties.getVerifyUrl())
-                    .append("?token=")
-                    .append(token)
-                    .toString()
+                new StringBuilder(emailProperties.getVerifyUrl()).append("?token=").append(token).toString()
             );
 
             String body = templateEngine.process("email-verification", context);

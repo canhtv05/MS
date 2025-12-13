@@ -9,6 +9,7 @@ import { IResponseObject } from '@/types/common';
 import { isTokenValid } from '../utils/api';
 import { getClientContext } from '@/utils/client-context';
 import { useEffect } from 'react';
+import { useAuthStore } from '@/stores/auth';
 
 interface IApiInterceptor {
   children: React.ReactNode;
@@ -36,6 +37,7 @@ const processQueue = (error: AxiosError | null, token: string | null = null) => 
 const ApiInterceptor = ({ children }: IApiInterceptor) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { setUser } = useAuthStore();
 
   useEffect(() => {
     const reqInterceptor = api.interceptors.request.use(
@@ -120,6 +122,7 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
               originalRequest.headers.Authorization = `Bearer ${accessToken}`;
               return api(originalRequest);
             } catch (refreshError) {
+              setUser(undefined);
               processQueue(refreshError as AxiosError, null);
               cookieUtils.deleteStorage();
               handleRedirectLogin(router, pathname);
@@ -148,6 +151,7 @@ const ApiInterceptor = ({ children }: IApiInterceptor) => {
       api.interceptors.request.eject(reqInterceptor);
       api.interceptors.response.eject(resInterceptor);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, router]);
 
   return <>{children}</>;

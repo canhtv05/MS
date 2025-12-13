@@ -82,14 +82,8 @@ public class TokenProvider {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-        this.tokenValidityDuration = cookieUtil
-            .getProperties()
-            .getSecurity()
-            .getValidDurationInSeconds();
-        this.refreshTokenValidityDuration = cookieUtil
-            .getProperties()
-            .getSecurity()
-            .getRefreshDurationInSeconds();
+        this.tokenValidityDuration = cookieUtil.getProperties().getSecurity().getValidDurationInSeconds();
+        this.refreshTokenValidityDuration = cookieUtil.getProperties().getSecurity().getRefreshDurationInSeconds();
     }
 
     public String createToken(
@@ -114,11 +108,7 @@ public class TokenProvider {
                 .timestamp(Instant.now())
                 .username(userDetails.getUsername())
                 .build();
-            messagingTemplate.convertAndSendToUser(
-                userDetails.getUsername(),
-                "/queue/force-logout",
-                payload
-            );
+            messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
 
             // Revoke old session: delete tokens and clear refresh token
             // Note: tokenExisting is a hash, not the actual JWT, so we can't parse it
@@ -130,18 +120,8 @@ public class TokenProvider {
             redisService.deleteToken(jwtName, channel);
         }
 
-        String token = this.generateToken(
-            authentication,
-            this.tokenValidityDuration,
-            request,
-            channel
-        );
-        String refreshToken = this.generateToken(
-            authentication,
-            this.refreshTokenValidityDuration,
-            request,
-            channel
-        );
+        String token = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
+        String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, request, channel);
 
         redisService.cacheUser(jwtName, channel, sessionId, AESUtils.generateSecretKey());
         redisService.cacheToken(jwtName, channel, token);
@@ -178,19 +158,11 @@ public class TokenProvider {
             .findByUsername(username)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
 
-        if (
-            !Objects.equals(user.getRefreshToken(), refreshToken) ||
-            StringUtils.isBlank(user.getRefreshToken())
-        ) {
+        if (!Objects.equals(user.getRefreshToken(), refreshToken) || StringUtils.isBlank(user.getRefreshToken())) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
 
-        String newToken = this.generateToken(
-            authentication,
-            this.tokenValidityDuration,
-            request,
-            channel
-        );
+        String newToken = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
         String newRefreshToken = this.generateToken(
             authentication,
             this.refreshTokenValidityDuration,
@@ -208,10 +180,7 @@ public class TokenProvider {
         Cookie cookie = cookieUtil.setTokenCookie(newToken, newRefreshToken);
         response.addCookie(cookie);
 
-        return RefreshTokenResponse.builder()
-            .accessToken(newToken)
-            .refreshToken(newRefreshToken)
-            .build();
+        return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
     }
 
     public Authentication getAuthentication(String token) {
@@ -246,12 +215,7 @@ public class TokenProvider {
             }
 
             return redisService.isTokenValid(username, channel, authToken);
-        } catch (
-            ExpiredJwtException
-            | UnsupportedJwtException
-            | MalformedJwtException
-            | SignatureException e
-        ) {
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException e) {
             log.trace(INVALID_JWT_TOKEN, e);
         } catch (IllegalArgumentException e) {
             log.error("Token validation error {}", e.getMessage());

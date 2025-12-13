@@ -4,5 +4,5 @@ public enum PrivacyLevel {
     PUBLIC,
     PRIVATE,
     CUSTOM,
-    FRIENDS_ONLY,
+    FRIENDS_ONLY
 }

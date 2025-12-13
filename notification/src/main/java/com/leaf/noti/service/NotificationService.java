@@ -90,10 +90,7 @@ public class NotificationService {
 
             if (
                 !Objects.equals(username, tokenDTO.getUsername()) ||
-                !Objects.equals(
-                    logs.getExpiredAt().getEpochSecond(),
-                    tokenDTO.getExpiredAt().getSeconds()
-                ) ||
+                !Objects.equals(logs.getExpiredAt().getEpochSecond(), tokenDTO.getExpiredAt().getSeconds()) ||
                 !Objects.equals(logs.getJti(), tokenDTO.getJti()) ||
                 !Objects.equals(logs.getEmail(), tokenDTO.getEmail())
             ) {
@@ -138,10 +135,7 @@ public class NotificationService {
         if (verificationStatus == VerificationStatus.VERIFIED) {
             throw new ApiException(ErrorMessage.EMAIL_VERIFIED);
         }
-        if (
-            verificationStatus == VerificationStatus.INVALID ||
-            verificationStatus == VerificationStatus.EXPIRED
-        ) {
+        if (verificationStatus == VerificationStatus.INVALID || verificationStatus == VerificationStatus.EXPIRED) {
             try {
                 redisService.deleteEmailToken(logs.getToken());
                 request.setTo(logs.getEmail());

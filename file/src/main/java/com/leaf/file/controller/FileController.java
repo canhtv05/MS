@@ -29,12 +29,8 @@ public class FileController {
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<ResponseObject<FileResponse>> getFileById(
-        @PathVariable("fileId") String fileId
-    ) {
-        return ResponseEntity.ok(
-            ResponseObject.<FileResponse>builder().data(fileService.getFileById(fileId)).build()
-        );
+    public ResponseEntity<ResponseObject<FileResponse>> getFileById(@PathVariable("fileId") String fileId) {
+        return ResponseEntity.ok(ResponseObject.<FileResponse>builder().data(fileService.getFileById(fileId)).build());
     }
 
     @PostMapping(
@@ -42,32 +38,22 @@ public class FileController {
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<ResponseObject<FileResponse>> uploadMedia(
-        @RequestPart("files") MultipartFile[] files
-    ) throws IOException {
-        return ResponseEntity.ok(
-            ResponseObject.<FileResponse>builder().data(fileService.upload(files)).build()
-        );
+    public ResponseEntity<ResponseObject<FileResponse>> uploadMedia(@RequestPart("files") MultipartFile[] files)
+        throws IOException {
+        return ResponseEntity.ok(ResponseObject.<FileResponse>builder().data(fileService.upload(files)).build());
     }
 
     @GetMapping("/batch")
-    public ResponseEntity<ResponseObject<List<FileResponse>>> getFilesByIds(
-        @RequestParam List<String> ids
-    ) {
+    public ResponseEntity<ResponseObject<List<FileResponse>>> getFilesByIds(@RequestParam List<String> ids) {
         return ResponseEntity.ok(
-            ResponseObject.<List<FileResponse>>builder()
-                .data(fileService.getFilesByIds(ids))
-                .build()
+            ResponseObject.<List<FileResponse>>builder().data(fileService.getFilesByIds(ids)).build()
         );
     }
 
     @DeleteMapping("/{fileId}")
     public ResponseEntity<ResponseObject<Void>> deleteById(@PathVariable String fileId) {
         return ResponseEntity.ok(
-            ResponseObject.<Void>builder()
-                .data(fileService.deleteById(fileId))
-                .message("deleted")
-                .build()
+            ResponseObject.<Void>builder().data(fileService.deleteById(fileId)).message("deleted").build()
         );
     }
 }

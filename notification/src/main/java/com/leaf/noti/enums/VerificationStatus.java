@@ -4,5 +4,5 @@ public enum VerificationStatus {
     PENDING,
     VERIFIED,
     EXPIRED,
-    INVALID,
+    INVALID
 }

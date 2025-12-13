@@ -118,22 +118,14 @@ public class FileService {
                             "folder",
                             videoString,
                             "eager",
-                            List.of(
-                                new EagerTransformation()
-                                    .width(320)
-                                    .height(240)
-                                    .crop("thumb")
-                                    .fetchFormat("jpg")
-                            )
+                            List.of(new EagerTransformation().width(320).height(240).crop("thumb").fetchFormat("jpg"))
                         )
                     );
 
                 String videoUrl = videoResult.get(secureUrl).toString();
                 String videoPublicId = videoResult.get(publicId).toString();
                 @SuppressWarnings("unchecked")
-                String thumbnailUrl = ((List<Map<String, String>>) videoResult.get(
-                        "eager"
-                    )).getFirst().get(secureUrl);
+                String thumbnailUrl = ((List<Map<String, String>>) videoResult.get("eager")).getFirst().get(secureUrl);
 
                 videoResponses.add(
                     VideoResponse.builder()
@@ -204,15 +196,8 @@ public class FileService {
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
 
-        Pageable pageable = PageRequest.of(
-            Math.max(0, page - 1),
-            size,
-            Sort.by(Sort.Order.desc("createdAt"))
-        );
-        Page<com.leaf.file.domain.File> pageResponse = fileRepository.findAllByOwnerId(
-            userId,
-            pageable
-        );
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, Sort.by(Sort.Order.desc("createdAt")));
+        Page<com.leaf.file.domain.File> pageResponse = fileRepository.findAllByOwnerId(userId, pageable);
 
         var result = pageResponse.getContent().stream().map(FileResponse::toFileResponse).toList();
 
@@ -231,17 +216,11 @@ public class FileService {
     }
 
     public FileResponse getFileById(String id) {
-        return fileRepository
-            .getFileById(id)
-            .orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
+        return fileRepository.getFileById(id).orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
     }
 
     public List<FileResponse> getFilesByIds(List<String> ids) {
-        return fileRepository
-            .findAllByIdIn(ids)
-            .stream()
-            .map(FileResponse::toFileResponse)
-            .toList();
+        return fileRepository.findAllByIdIn(ids).stream().map(FileResponse::toFileResponse).toList();
     }
 
     private String formatDuration(long millis) {

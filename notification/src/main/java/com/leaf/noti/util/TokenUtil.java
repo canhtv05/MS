@@ -38,18 +38,11 @@ public class TokenUtil {
     }
 
     public VerifyEmailTokenDTO parseToken(String token) {
-        var body = Jwts.parserBuilder()
-            .setSigningKey(getSigningKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+        var body = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
 
         Date exp = body.getExpiration();
 
-        Timestamp expiredAt = Timestamp.newBuilder()
-            .setSeconds(exp.getTime() / 1000)
-            .setNanos(0)
-            .build();
+        Timestamp expiredAt = Timestamp.newBuilder().setSeconds(exp.getTime() / 1000).setNanos(0).build();
 
         return VerifyEmailTokenDTO.newBuilder()
             .setUsername(body.getSubject())

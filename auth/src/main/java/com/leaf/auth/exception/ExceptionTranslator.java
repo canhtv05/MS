@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionTranslator {
 
     @ExceptionHandler(CustomAuthenticationException.class)
-    public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(
-        CustomAuthenticationException ex
-    ) {
+    public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(CustomAuthenticationException ex) {
         return ResponseEntity.badRequest().body(
             ResponseObject.error(String.valueOf(HttpStatus.BAD_REQUEST.value()), ex.getMessage())
         );
@@ -27,8 +25,6 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(ApiException ex) {
-        return ResponseEntity.badRequest().body(
-            ResponseObject.error(ex.getErrorMessage(), ex.getMessage())
-        );
+        return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
     }
 }

@@ -18,10 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @SuperBuilder
 @NoArgsConstructor
-@JsonIgnoreProperties(
-    value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" },
-    allowGetters = true
-)
+@JsonIgnoreProperties(value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" }, allowGetters = true)
 public abstract class AbstractAuditingNeo4jEntity implements Serializable {
 
     @Serial

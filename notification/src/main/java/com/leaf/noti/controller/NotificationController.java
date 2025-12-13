@@ -22,18 +22,12 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/verify-email")
-    public ResponseEntity<ResponseObject<VerifyEmailTokenResponse>> verifyEmail(
-        @RequestParam String token
-    ) {
-        return ResponseEntity.ok(
-            ResponseObject.success(notificationService.verifyEmailToken(token))
-        );
+    public ResponseEntity<ResponseObject<VerifyEmailTokenResponse>> verifyEmail(@RequestParam String token) {
+        return ResponseEntity.ok(ResponseObject.success(notificationService.verifyEmailToken(token)));
     }
 
     @PostMapping("/resend-verify-email")
-    public ResponseEntity<ResponseObject<Void>> resendEmailToken(
-        @RequestBody VerificationEmailEvent event
-    ) {
+    public ResponseEntity<ResponseObject<Void>> resendEmailToken(@RequestBody VerificationEmailEvent event) {
         notificationService.resendEmailToken(event);
         return ResponseEntity.ok(ResponseObject.success());
     }

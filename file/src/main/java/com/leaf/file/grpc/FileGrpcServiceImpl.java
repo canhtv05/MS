@@ -18,10 +18,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     private final FileService fileService;
 
     @Override
-    public void deleteById(
-        DeleteByIdRequest request,
-        StreamObserver<DeleteByIdResponse> responseObserver
-    ) {
+    public void deleteById(DeleteByIdRequest request, StreamObserver<DeleteByIdResponse> responseObserver) {
         try {
             fileService.deleteById(request.getFileId());
 
@@ -35,14 +32,9 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void getFileByIds(
-        GetFilesByIdsRequest request,
-        StreamObserver<GetFilesByIdsResponse> responseObserver
-    ) {
+    public void getFileByIds(GetFilesByIdsRequest request, StreamObserver<GetFilesByIdsResponse> responseObserver) {
         try {
-            List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(
-                request.getIdsList()
-            );
+            List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(request.getIdsList());
 
             GetFilesByIdsResponse.Builder builder = GetFilesByIdsResponse.newBuilder();
             files.forEach(f -> builder.addFiles(FileProtoMapper.toProto(f)));
@@ -55,10 +47,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void uploadFiles(
-        UploadFilesRequest request,
-        StreamObserver<FileResponse> responseObserver
-    ) {
+    public void uploadFiles(UploadFilesRequest request, StreamObserver<FileResponse> responseObserver) {
         try {
             // ✅ lấy đúng list bytes
             List<ByteString> bytesList = request.getFilesList();
@@ -80,20 +69,12 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     private MultipartFile[] convertFromGrpc(List<ByteString> filesList) {
-        return filesList
-            .stream()
-            .map(FileGrpcServiceImpl::toMultipartFile)
-            .toArray(MultipartFile[]::new);
+        return filesList.stream().map(FileGrpcServiceImpl::toMultipartFile).toArray(MultipartFile[]::new);
     }
 
     private static MultipartFile toMultipartFile(ByteString bs) {
         try {
-            return new MockMultipartFile(
-                "file",
-                "file",
-                "application/octet-stream",
-                bs.toByteArray()
-            );
+            return new MockMultipartFile("file", "file", "application/octet-stream", bs.toByteArray());
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert gRPC bytes to MultipartFile", e);
         }

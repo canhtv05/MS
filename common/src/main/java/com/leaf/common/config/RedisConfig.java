@@ -67,11 +67,8 @@ public class RedisConfig {
             Instant.class,
             new JsonSerializer<Instant>() {
                 @Override
-                public void serialize(
-                    Instant value,
-                    JsonGenerator gen,
-                    SerializerProvider serializers
-                ) throws IOException {
+                public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers)
+                    throws IOException {
                     gen.writeString(formatter.format(value));
                 }
             }
@@ -81,8 +78,7 @@ public class RedisConfig {
             Instant.class,
             new JsonDeserializer<Instant>() {
                 @Override
-                public Instant deserialize(JsonParser p, DeserializationContext ctxt)
-                    throws IOException {
+                public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                     String text = p.getText();
                     return Instant.from(formatter.parse(text));
                 }
@@ -97,22 +93,16 @@ public class RedisConfig {
             JsonTypeInfo.As.PROPERTY
         );
 
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(
-            objectMapper
-        );
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
         return RedisCacheConfiguration.defaultCacheConfig()
             .entryTtl(Duration.ofMinutes(60))
             .disableCachingNullValues()
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(serializer)
-            );
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
 
     @Bean
     RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        return RedisCacheManager.builder(connectionFactory)
-            .cacheDefaults(cacheConfiguration())
-            .build();
+        return RedisCacheManager.builder(connectionFactory).cacheDefaults(cacheConfiguration()).build();
     }
 }

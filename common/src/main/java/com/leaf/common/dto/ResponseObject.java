@@ -52,10 +52,7 @@ public class ResponseObject<T> implements Serializable {
     }
 
     public static <T> ResponseObject<T> error(ErrorMessage errorMessage) {
-        return ResponseObject.<T>builder()
-            .code(errorMessage.getCode())
-            .message(errorMessage.getMessage())
-            .build();
+        return ResponseObject.<T>builder().code(errorMessage.getCode()).message(errorMessage.getMessage()).build();
     }
 
     public static <T> ResponseObject<T> error(ErrorMessage errorMessage, String message) {

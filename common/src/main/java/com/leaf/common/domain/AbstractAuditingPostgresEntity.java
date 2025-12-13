@@ -24,10 +24,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(
-    value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" },
-    allowGetters = true
-)
+@JsonIgnoreProperties(value = { "createdBy", "createdDate", "modifiedBy", "modifiedDate" }, allowGetters = true)
 public abstract class AbstractAuditingPostgresEntity implements Serializable {
 
     @Serial

@@ -6,13 +6,36 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 0, // Tắt retry để lỗi được throw ngay
-      throwOnError: true, // Đảm bảo lỗi được throw lên
+      // Chỉ throw error cho server errors (5xx) và network errors
+      // 4xx errors (như 404) sẽ để component tự handle
+      throwOnError: error => {
+        if (error instanceof AxiosError) {
+          // Throw cho server errors (500, 502, 503, etc.)
+          if (error.response && error.response.status >= 500) {
+            return true;
+          }
+          // Throw cho network errors (không có response)
+          if (!error.response) {
+            return true;
+          }
+          // Không throw cho client errors (400, 401, 404, etc.)
+          return false;
+        }
+        // Throw cho các error khác
+        return true;
+      },
     },
     mutations: {
       retry: 0,
     },
   },
   queryCache: new QueryCache({
+    onSuccess(data, query) {
+      console.log('✅ QueryCache Success:', {
+        queryKey: query.queryKey,
+        hasData: !!data,
+      });
+    },
     onError(error, query) {
       console.log('🔴 QueryCache Error:', error);
       console.log('Query Key:', query.queryKey);
@@ -25,6 +48,14 @@ const queryClient = new QueryClient({
           queryClient.setQueryData(['profile', 'me'], undefined);
         }
       }
+    },
+    onSettled(data, error, query) {
+      console.log('🏁 QueryCache Settled:', {
+        queryKey: query.queryKey,
+        hasData: !!data,
+        hasError: !!error,
+        state: query.state,
+      });
     },
   }),
   mutationCache: new MutationCache({

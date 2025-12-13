@@ -36,10 +36,7 @@ public interface UserProfileRepository extends Neo4jRepository<UserProfile, Stri
         	fq.status AS status
         """
     )
-    SendFriendRequestDTO sendFriendRequest(
-        @Param("senderId") String senderId,
-        @Param("receiverId") String receiverId
-    );
+    SendFriendRequestDTO sendFriendRequest(@Param("senderId") String senderId, @Param("receiverId") String receiverId);
 
     @Query(
         """
@@ -47,8 +44,5 @@ public interface UserProfileRepository extends Neo4jRepository<UserProfile, Stri
         return COUNT(r) > 0
         """
     )
-    boolean isSent(
-        @Param(value = "senderId") String senderId,
-        @Param("receiverId") String receiverId
-    );
+    boolean isSent(@Param(value = "senderId") String senderId, @Param("receiverId") String receiverId);
 }

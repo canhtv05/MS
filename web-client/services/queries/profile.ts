@@ -50,7 +50,7 @@ export const useUserProfileQuery = (username: string, enabled: boolean = true) =
       const res = await api.get(API_ENDPOINTS.PROFILE.GET_USER_PROFILE.replace('{username}', us));
       return res.data;
     },
-    enabled: enabled,
+    enabled: enabled && !!us,
     retry: 1,
     // staleTime: 5 * 60 * 1000, // Cache 5 phút
     // gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút

@@ -20,13 +20,12 @@ public class FileProtoMapper {
             .map(FileProtoMapper::mapVideo)
             .toList();
 
-        com.leaf.common.grpc.FileResponse fileResponse =
-            com.leaf.common.grpc.FileResponse.newBuilder()
-                .setOwnerId(response.getOwnerId())
-                .setTotalSize(response.getTotalSize())
-                .addAllImages(images)
-                .addAllVideos(videos)
-                .build();
+        com.leaf.common.grpc.FileResponse fileResponse = com.leaf.common.grpc.FileResponse.newBuilder()
+            .setOwnerId(response.getOwnerId())
+            .setTotalSize(response.getTotalSize())
+            .addAllImages(images)
+            .addAllVideos(videos)
+            .build();
 
         return fileResponse;
     }

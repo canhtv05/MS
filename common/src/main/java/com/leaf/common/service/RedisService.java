@@ -76,16 +76,11 @@ public class RedisService {
 
     public UserSessionDTO getUser(String username, String channel) {
         String userKey = this.getKeyUser(username, channel);
-        return JsonF.jsonToObject(
-            (String) redisTemplate.opsForValue().get(userKey),
-            UserSessionDTO.class
-        );
+        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey), UserSessionDTO.class);
     }
 
     public void saveEmailToken(String token, String username) {
-        redisTemplate
-            .opsForValue()
-            .set(getKeyVerification(token), username, Duration.ofMinutes(10));
+        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
     }
 
     public String getUsernameIfEmailTokenAlive(String token) {

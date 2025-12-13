@@ -15,9 +15,7 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(ApiException ex) {
-        return ResponseEntity.badRequest().body(
-            ResponseObject.error(ex.getErrorMessage(), ex.getMessage())
-        );
+        return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage(), ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -29,8 +27,6 @@ public class ExceptionTranslator {
             .getBindingResult()
             .getFieldErrors()
             .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(
-            ResponseObject.error(ErrorMessage.VALIDATION_ERROR, errors)
-        );
+        return ResponseEntity.badRequest().body(ResponseObject.error(ErrorMessage.VALIDATION_ERROR, errors));
     }
 }

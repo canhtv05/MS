@@ -28,9 +28,7 @@ public class UserResource {
     private final UserService userService;
 
     @PostMapping("/users/r/search-datatable")
-    public ResponseEntity<ResponseObject<SearchResponse<UserDTO>>> search(
-        @ModelAttribute SearchRequest criteria
-    ) {
+    public ResponseEntity<ResponseObject<SearchResponse<UserDTO>>> search(@ModelAttribute SearchRequest criteria) {
         SearchResponse<UserDTO> result = userService.searchDatatable(criteria);
         return ResponseEntity.ok(ResponseObject.success(result));
     }
@@ -71,11 +69,7 @@ public class UserResource {
         byte[] file = userService.exportUser(request);
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-            .contentType(
-                MediaType.parseMediaType(
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-            )
+            .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
             .body(file);
     }
 
@@ -85,11 +79,7 @@ public class UserResource {
         byte[] file = userService.downloadTemplate();
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-            .contentType(
-                MediaType.parseMediaType(
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-            )
+            .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
             .body(file);
     }
 
@@ -102,9 +92,7 @@ public class UserResource {
     }
 
     @GetMapping("/user-permission/r/{id}")
-    public ResponseEntity<ResponseObject<Map<String, PermissionAction>>> getUserPermission(
-        @PathVariable Long id
-    ) {
+    public ResponseEntity<ResponseObject<Map<String, PermissionAction>>> getUserPermission(@PathVariable Long id) {
         Map<String, PermissionAction> result = userService.getUserPermissions(id);
         return ResponseEntity.ok(ResponseObject.success(result));
     }

@@ -18,32 +18,22 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
     private final UserService userService;
 
     @Override
-    public void verifyToken(
-        VerifyTokenRequest request,
-        StreamObserver<VerifyTokenResponse> responseObserver
-    ) {
+    public void verifyToken(VerifyTokenRequest request, StreamObserver<VerifyTokenResponse> responseObserver) {
         var valid = authService.verifyToken(request.getToken(), true);
 
-        VerifyTokenResponse response = VerifyTokenResponse.newBuilder()
-            .setValid(valid.getValid())
-            .build();
+        VerifyTokenResponse response = VerifyTokenResponse.newBuilder().setValid(valid.getValid()).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void verifyEmailToken(
-        VerifyEmailTokenDTO request,
-        StreamObserver<VerifyEmailTokenDTO> responseObserver
-    ) {
+    public void verifyEmailToken(VerifyEmailTokenDTO request, StreamObserver<VerifyEmailTokenDTO> responseObserver) {
         try {
             var response = userService.activeUserByUserName(request);
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(
-                io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException()
-            );
+            responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
         }
     }
 }

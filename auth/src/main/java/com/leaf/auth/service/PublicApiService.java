@@ -40,11 +40,7 @@ public class PublicApiService {
     }
 
     public List<RoleSelect> getRoleSelect() {
-        List<RoleSelect> roles = roleRepository
-            .findAll()
-            .stream()
-            .map(RoleSelect::fromEntity)
-            .toList();
+        List<RoleSelect> roles = roleRepository.findAll().stream().map(RoleSelect::fromEntity).toList();
         if (!SecurityUtils.isGlobalSuperAdmin()) {
             return roles
                 .stream()

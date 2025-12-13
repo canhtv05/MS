@@ -55,14 +55,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-        HttpSecurity http,
-        CustomAuthenticationProvider customProvider
-    ) throws Exception {
-        return http
-            .getSharedObject(AuthenticationManagerBuilder.class)
-            .authenticationProvider(customProvider)
-            .build();
+    public AuthenticationManager authenticationManager(HttpSecurity http, CustomAuthenticationProvider customProvider)
+        throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class).authenticationProvider(customProvider).build();
     }
 
     @Bean
@@ -106,10 +101,7 @@ public class SecurityConfig {
                     .write(
                         Objects.requireNonNull(
                             JsonF.toJson(
-                                ResponseObject.error(
-                                    String.valueOf(ex.getHttpStatus().value()),
-                                    ex.getMessage()
-                                )
+                                ResponseObject.error(String.valueOf(ex.getHttpStatus().value()), ex.getMessage())
                             )
                         )
                     );
@@ -118,9 +110,7 @@ public class SecurityConfig {
                 response
                     .getWriter()
                     .write(
-                        Objects.requireNonNull(
-                            JsonF.toJson(ResponseObject.error("401", authException.getMessage()))
-                        )
+                        Objects.requireNonNull(JsonF.toJson(ResponseObject.error("401", authException.getMessage())))
                     );
             }
         };
@@ -135,9 +125,7 @@ public class SecurityConfig {
                 .getWriter()
                 .write(
                     Objects.requireNonNull(
-                        JsonF.toJson(
-                            ResponseObject.error("403", accessDeniedException.getMessage())
-                        )
+                        JsonF.toJson(ResponseObject.error("403", accessDeniedException.getMessage()))
                     )
                 );
         };

@@ -8,9 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication(scanBasePackages = { "com.leaf", "com.leaf.common" })
-@EnableConfigurationProperties(
-    { KafkaConsumerProperties.class, EmailProperties.class, NotificationProperties.class }
-)
+@EnableConfigurationProperties({ KafkaConsumerProperties.class, EmailProperties.class, NotificationProperties.class })
 public class NotificationApplication {
 
     public static void main(String[] args) {
