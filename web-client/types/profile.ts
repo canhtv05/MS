@@ -11,7 +11,9 @@ export interface IUserProfileDTO {
   phoneNumber?: string;
   fullname: string;
   avatarUrl?: string;
-  socialLinks?: string[];
+  tiktokUrl?: string;
+  fbUrl?: string;
+  createdDate: string;
   profileVisibility: PrivacyLevel;
   friendsVisibility: PrivacyLevel;
   postsVisibility: PrivacyLevel;

@@ -22,6 +22,10 @@ import {
 } from '@/components/animate-ui/components/base/tooltip';
 import { useTranslation } from 'react-i18next';
 import { detectLanguage } from '@/utils/common';
+import Link from 'next/link';
+import { LinkIcon } from '@/components/animate-ui/icons/link';
+import { AnimateIcon } from '@/components/animate-ui/icons/icon';
+import { CalendarDaysIcon } from '@/components/animate-ui/icons/calendar-day';
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
@@ -140,30 +144,79 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           </div>
         </div>
 
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-3">
           {isLoading && !data?.data ? (
             <Skeleton className="h-7 w-[200px]" />
           ) : (
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white leading-7 truncate">
-              {data?.data?.fullname}
-            </h2>
-          )}
-
-          {isLoading && !data?.data ? (
-            <Skeleton className="h-5 w-[150px]" />
-          ) : (
-            <div className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-              <AtSignIcon size={14} className="shrink-0" />
-              <p className="leading-5 truncate">{data?.data?.userId}</p>
+            <div className="flex items-end justify-start gap-2">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white leading-7">
+                {data?.data?.fullname}
+              </h2>
+              <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                <AtSignIcon size={14} className="shrink-0" />
+                <p className="leading-5">{data?.data?.userId}</p>
+              </div>
             </div>
           )}
 
-          {isLoading && !data?.data ? (
-            <Skeleton className="h-5 w-[120px]" />
-          ) : (
-            <div className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-              <MapPinIcon size={14} className="shrink-0" />
-              <p className="leading-5 truncate">{data?.data?.city}</p>
+          {!isLoading &&
+            (data?.data?.city ||
+              data?.data?.tiktokUrl ||
+              data?.data?.fbUrl ||
+              data?.data?.createdDate) && (
+              <div className="flex flex-wrap flex-col items-start gap-x-4 gap-y-1 pt-1">
+                <div className="flex gap-2 group items-center flex-wrap justify-start">
+                  {data?.data?.city && (
+                    <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                      <MapPinIcon size={14} className="shrink-0" />
+                      <p className="leading-5 max-w-[150px] text-sm truncate">{data.data.city}</p>
+                    </div>
+                  )}
+
+                  {data?.data?.createdDate && (
+                    <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                      <CalendarDaysIcon size={14} className="shrink-0]" />
+                      <p className="leading-5 text-sm">{data.data.createdDate.substring(0, 10)}</p>
+                    </div>
+                  )}
+                </div>
+
+                {data?.data?.tiktokUrl && (
+                  <AnimateIcon animateOnHover>
+                    <Link
+                      target="_blank"
+                      href={data.data.tiktokUrl}
+                      className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
+                    >
+                      <LinkIcon size={14} className="shrink-0" />
+                      <span className="leading-5 max-w-[200px] truncate">
+                        {data.data.tiktokUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                      </span>
+                    </Link>
+                  </AnimateIcon>
+                )}
+
+                {data?.data?.fbUrl && (
+                  <AnimateIcon animateOnHover>
+                    <Link
+                      target="_blank"
+                      href={data.data.fbUrl}
+                      className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
+                    >
+                      <LinkIcon size={14} className="shrink-0" />
+                      <span className="leading-5 max-w-[200px] truncate">
+                        {data.data.fbUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                      </span>
+                    </Link>
+                  </AnimateIcon>
+                )}
+              </div>
+            )}
+          {isLoading && (
+            <div className="flex flex-wrap items-center gap-4 pt-1">
+              <Skeleton className="h-5 w-[120px]" />
+              <Skeleton className="h-5 w-[150px]" />
+              <Skeleton className="h-5 w-[100px]" />
             </div>
           )}
         </div>
