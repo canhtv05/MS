@@ -74,7 +74,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
       <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-lg">
         <div className="flex items-end gap-5 -mt-16">
           {isLoading && !data?.data ? (
-            <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
+            <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 shadow-lg before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
               <Skeleton className="w-full h-full rounded-full relative z-10" />
             </div>
           ) : (
@@ -280,7 +280,6 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             </>
           )}
         </div>
-        <div className="p-10 h-[500px]"> ko</div>
       </div>
     </div>
   );
