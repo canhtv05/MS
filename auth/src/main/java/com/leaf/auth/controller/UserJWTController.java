@@ -48,7 +48,7 @@ public class UserJWTController {
 
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
-        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+        @CookieValue(name = CommonConstants.COOKIE_NAME, required = false) String cookieValue,
         @RequestBody String channel,
         HttpServletRequest httpServletRequest,
         HttpServletResponse response

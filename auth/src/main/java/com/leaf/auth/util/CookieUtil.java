@@ -38,7 +38,7 @@ public class CookieUtil {
         cookie.setHttpOnly(false);
         cookie.setMaxAge(properties.getSecurity().getRefreshDurationInSeconds().intValue()); // 2 weeks
         cookie.setPath("/");
-        cookie.setSecure(true); // true nếu chỉ cho gửi qua HTTPS
+        cookie.setSecure(false); // false for localhost development
         String domain = properties.getSecurity().getCookieDomain();
         if (StringUtils.hasText(domain)) cookie.setDomain(domain);
 

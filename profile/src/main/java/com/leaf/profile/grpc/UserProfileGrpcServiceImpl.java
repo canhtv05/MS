@@ -61,16 +61,12 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
 
             if (Objects.nonNull(userProfile.getLastOnlineAt())) {
                 Timestamp lastOnlineAtTimestamp = ConvertProto.convertInstantToTimestamp(userProfile.getLastOnlineAt());
-                if (lastOnlineAtTimestamp != null) {
-                    responseBuilder.setLastOnlineAt(lastOnlineAtTimestamp);
-                }
+                responseBuilder.setLastOnlineAt(lastOnlineAtTimestamp);
             }
 
             if (Objects.nonNull(userProfile.getCreatedDate())) {
                 Timestamp createdDateTimestamp = ConvertProto.convertInstantToTimestamp(userProfile.getCreatedDate());
-                if (createdDateTimestamp != null) {
-                    responseBuilder.setCreatedDate(createdDateTimestamp);
-                }
+                responseBuilder.setCreatedDate(createdDateTimestamp);
             }
 
             if (Objects.nonNull(userProfile.getCity())) {

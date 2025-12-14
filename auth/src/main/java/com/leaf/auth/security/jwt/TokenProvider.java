@@ -1,6 +1,7 @@
 package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.config.ApplicationProperties;
+import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.NotificationPayload;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
@@ -146,8 +147,19 @@ public class TokenProvider {
         String channel
     ) {
         Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
+        String refreshToken = "";
 
-        String refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+        if (Objects.nonNull(tokenData)) {
+            refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+        }
+
+        if (StringUtils.isBlank(refreshToken)) {
+            String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (StringUtils.isNotBlank(authHeader) && authHeader.startsWith("Bearer ")) {
+                refreshToken = authHeader.substring(7);
+            }
+        }
+
         if (StringUtils.isBlank(refreshToken)) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
@@ -162,14 +174,32 @@ public class TokenProvider {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
 
-        String newToken = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
+        Collection<? extends GrantedAuthority> authorities = user
+            .getRoles()
+            .stream()
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .collect(Collectors.toList());
+
+        String rolesStr = user.getRoles().stream().map(Role::getName).collect(Collectors.joining(","));
+
+        CustomUserDetails userDetails = new CustomUserDetails(
+            user.getUsername(),
+            user.getPassword(),
+            authorities,
+            rolesStr,
+            user.getIsGlobal(),
+            channel
+        );
+
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
+        String newToken = this.generateToken(newAuthentication, this.tokenValidityDuration, request, channel);
         String newRefreshToken = this.generateToken(
-            authentication,
+            newAuthentication,
             this.refreshTokenValidityDuration,
             request,
             channel
         );
-        // save new refresh token
         user.setRefreshToken(newRefreshToken);
         userRepository.save(user);
 
