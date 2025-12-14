@@ -18,18 +18,19 @@ import { API_ENDPOINTS } from '@/configs/endpoints';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 export const useAuthMutation = () => {
   const [showResendEmail, setShowResendEmail] = useState(false);
-
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const router = useRouter();
   const { t } = useTranslation('auth');
   const accessToken = cookieUtils.getStorage()?.accessToken;
+  const returnUrl = searchParams.get('returnUrl');
 
   const setUser = useAuthStore(state => state.setUser);
   const setToken = useAuthStore(state => state.setToken);
@@ -57,7 +58,7 @@ export const useAuthMutation = () => {
         setToken(token);
         await Promise.all([
           queryClient.removeQueries({ queryKey: ['auth', 'me'] }),
-          queryClient.removeQueries({ queryKey: ['profile', 'me'] }),
+          // queryClient.removeQueries({ queryKey: ['profile', 'me'] }),
         ]);
 
         await Promise.all([
@@ -74,21 +75,25 @@ export const useAuthMutation = () => {
             },
           }),
 
-          queryClient.fetchQuery({
-            queryKey: ['profile', 'me'],
-            queryFn: async () => {
-              const profileRes = await api.get(API_ENDPOINTS.PROFILE.ME, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-              setUserProfile(profileRes.data.data);
-              return profileRes.data;
-            },
-          }),
+          // queryClient.fetchQuery({
+          //   queryKey: ['profile', 'me'],
+          //   queryFn: async () => {
+          //     const profileRes = await api.get(API_ENDPOINTS.PROFILE.ME, {
+          //       headers: {
+          //         Authorization: `Bearer ${token}`,
+          //       },
+          //     });
+          //     setUserProfile(profileRes.data.data);
+          //     return profileRes.data;
+          //   },
+          // }),
         ]);
 
-        router.push('/home');
+        if (returnUrl) {
+          router.push(decodeURIComponent(returnUrl));
+        } else {
+          router.push('/home');
+        }
         toast.success(t('sign_in.login_success'), { id: 'login-toast' });
       }
     },
@@ -148,7 +153,7 @@ export const useAuthMutation = () => {
       setUser(undefined);
       setUserProfile(undefined);
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
-      queryClient.removeQueries({ queryKey: ['profile', 'me'] });
+      // queryClient.removeQueries({ queryKey: ['profile', 'me'] });
       cookieUtils.deleteStorage();
       toast.success(t('auth:change_password.change_password_success'), {
         id: 'change-password-toast',

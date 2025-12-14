@@ -20,11 +20,24 @@ export const useAuthQuery = (enabled: boolean = true) => {
       setUser(res.data.data);
       return res.data;
     },
-    enabled: enabled && !!token && !user, // Chỉ fetch khi có token
+    enabled: enabled && !!token && !user,
     retry: 1,
-    refetchOnWindowFocus: false, // Không fetch lại khi focus window
-    refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    networkMode: 'offlineFirst',
   });
+
+  if (user) {
+    return {
+      user,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
+  }
 
   if (!token) {
     return {

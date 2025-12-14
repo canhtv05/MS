@@ -9,7 +9,9 @@ const cookieUtils = {
 
     const jsonData = JSON.stringify(data);
 
-    Cookies.set(APP_KEY, jsonData, { ...options, secure: true, sameSite: 'Strict' });
+    // secure: false for localhost (http), true for production (https)
+    //  Cookies.set(APP_KEY, jsonData, { ...options, secure: true, sameSite: 'Strict' });
+    Cookies.set(APP_KEY, jsonData, { ...options, secure: false, sameSite: 'Lax' });
   },
   getStorage: () => {
     const data = Cookies.get(APP_KEY);
@@ -17,6 +19,11 @@ const cookieUtils = {
   },
   deleteStorage: () => {
     Cookies.remove(APP_KEY);
+  },
+  deleteAccessToken: () => {
+    const data = cookieUtils.getStorage();
+    delete data.accessToken;
+    cookieUtils.setStorage(data);
   },
 };
 

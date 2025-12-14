@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import RouteGuard from '@/guard/RouteGuard';
+import { AuthRefreshProvider } from '@/guard/AuthRefreshContext';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -25,9 +26,11 @@ const AppLayout = ({ children }: AppLayoutProps) => {
       <ThemeProvider attribute="class" defaultTheme="dark" enableColorScheme>
         <ThemeTransitionHandler />
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
-          <ApiInterceptor>
-            <RouteGuard>{children}</RouteGuard>
-          </ApiInterceptor>
+          <AuthRefreshProvider>
+            <ApiInterceptor>
+              <RouteGuard>{children}</RouteGuard>
+            </ApiInterceptor>
+          </AuthRefreshProvider>
         </QueryClientProvider>
         <Toaster richColors position="bottom-right" theme="light" />
       </ThemeProvider>

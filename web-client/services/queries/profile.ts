@@ -24,12 +24,12 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
       setUserProfile(res.data.data);
       return res.data;
     },
-    enabled: enabled && !!token && !userProfile, // Chỉ fetch khi có token
+    enabled: enabled && !!token && !userProfile,
     retry: 1,
-    // staleTime: 5 * 60 * 1000, // Cache 5 phút
-    // gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút
-    refetchOnWindowFocus: false, // Không fetch lại khi focus window
-    refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   return {
@@ -52,8 +52,8 @@ export const useUserProfileQuery = (username: string, enabled: boolean = true) =
     },
     enabled: enabled && !!us,
     retry: 1,
-    // staleTime: 5 * 60 * 1000, // Cache 5 phút
-    // gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút
+    staleTime: 5 * 60 * 1000, // Cache 5 phút
+    gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút
     refetchOnWindowFocus: false, // Không fetch lại khi focus window
     refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
   });

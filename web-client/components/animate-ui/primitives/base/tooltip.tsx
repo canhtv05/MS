@@ -96,9 +96,17 @@ function TooltipTrigger({ onMouseMove, asChild, children, ...props }: TooltipTri
   const triggerProps = {
     'data-slot': 'tooltip-trigger',
     onMouseMove: handleMouseMove,
-    ...(asChild ? { asChild: true as const } : {}),
     ...props,
   };
+
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <TooltipPrimitive.Trigger
+        {...triggerProps}
+        render={children as React.ReactElement<Record<string, unknown>>}
+      />
+    );
+  }
 
   return <TooltipPrimitive.Trigger {...triggerProps}>{children}</TooltipPrimitive.Trigger>;
 }

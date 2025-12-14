@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { API_FRONTEND_URL } from '@/configs/endpoints';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';
 
@@ -26,6 +25,7 @@ export const AUTH_PUBLIC_ENDPOINTS: string[] = [
   '/me/p/forgot-password',
   '/me/p/reset-password',
   '/me/p/verify-forgot-password-otp',
+  '/me/p/refresh-token',
 ];
 export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email', '/resend-verify-email'];
 export const PROFILE_PUBLIC_ENDPOINTS: string[] = ['/profile/**'];
@@ -35,11 +35,17 @@ export const PREFIX_PUBLIC_ENDPOINTS = [
   ...PROFILE_PUBLIC_ENDPOINTS.map(endpoint => `/user-profile${endpoint}`),
 ];
 
-export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: string) => {
-  if (!PUBLIC_ROUTERS.includes(pathname)) {
-    nextRouter.replace('/sign-in');
+export const handleRedirectLogin = (clearStorage = true) => {
+  if (typeof window !== 'undefined') {
+    const currentPath = window.location.pathname + window.location.search;
+    if (PUBLIC_ROUTERS.some(route => currentPath.startsWith(route))) {
+      return;
+    }
+    if (clearStorage) {
+      cookieUtils.deleteStorage();
+    }
+    // window.location.href = `/sign-in?returnUrl=${encodeURIComponent(currentPath)}`;
   }
-  cookieUtils.deleteStorage();
 };
 
 export const isTokenValid = (token: string): boolean => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthQuery } from '@/services/queries/auth';
+import { useAuthStore } from '@/stores/auth';
 import cookieUtils from '@/utils/cookieUtils';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -10,8 +10,7 @@ interface IRouteGuard {
 }
 
 const RouteGuard = ({ children }: IRouteGuard) => {
-  const { user } = useAuthQuery(true);
-  // const { userProfile } = useMyProfileQuery(true);
+  const user = useAuthStore(state => state.user);
 
   const router = useRouter();
   const pathname = usePathname();

@@ -43,7 +43,7 @@ const queryClient = new QueryClient({
       if (error instanceof AxiosError) {
         if (error.status === 401) {
           console.log('Handling 401 in QueryCache');
-          cookieUtils.deleteStorage();
+          cookieUtils.deleteAccessToken();
           queryClient.setQueryData(['auth', 'me'], undefined);
           queryClient.setQueryData(['profile', 'me'], undefined);
         }
@@ -66,9 +66,9 @@ const queryClient = new QueryClient({
       if (error instanceof AxiosError) {
         if (error?.response?.status === 401) {
           console.log('Handling 401 in MutationCache');
-          cookieUtils.deleteStorage();
+          cookieUtils.deleteAccessToken();
           queryClient.setQueryData(['auth', 'me'], undefined);
-          queryClient.setQueryData(['profile', 'me'], undefined);
+          // queryClient.setQueryData(['profile', 'me'], undefined);
         }
       }
     },

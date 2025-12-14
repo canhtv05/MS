@@ -12,7 +12,6 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import { AddUserIcon, Mail2Icon } from '@/components/animate-ui/icons/common';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
-import { detectLanguage } from '@/utils/common';
 import { AxiosError } from 'axios';
 import { ErrorMessage } from '@/enums/error-message';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
@@ -22,6 +21,7 @@ import {
   TooltipTrigger,
 } from '@/components/animate-ui/components/base/tooltip';
 import { useTranslation } from 'react-i18next';
+import { detectLanguage } from '@/utils/common';
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
