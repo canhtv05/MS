@@ -54,9 +54,13 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     @Property("avatar_url")
     String avatarUrl;
 
-    @Property("social_links")
+    @Property("tiktok_url")
     @Builder.Default
-    List<String> socialLinks = new ArrayList<>();
+    String tiktokUrl = "";
+
+    @Property("fb_url")
+    @Builder.Default
+    String fbUrl = "";
 
     @Property("profile_visibility")
     @Builder.Default

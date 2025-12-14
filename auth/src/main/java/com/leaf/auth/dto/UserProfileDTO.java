@@ -46,7 +46,8 @@ public class UserProfileDTO implements Serializable {
     private String phoneNumber;
     private Instant createdDate;
     private Instant lastOnlineAt;
-    private List<String> socialLinks;
+    private String tiktokUrl;
+    private String fbUrl;
     private PrivacyLevel profileVisibility;
     private PrivacyLevel friendsVisibility;
     private PrivacyLevel postsVisibility;

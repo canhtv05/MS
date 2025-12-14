@@ -41,7 +41,8 @@ public class UserProfileResponse {
 
     String phoneNumber;
     String avatarUrl;
-    List<String> socialLinks;
+    String tiktokUrl;
+    String fbUrl;
     PrivacyLevel profileVisibility;
     PrivacyLevel friendsVisibility;
     PrivacyLevel postsVisibility;

@@ -89,15 +89,20 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
                 responseBuilder.setPhoneNumber(userProfile.getPhoneNumber());
             }
 
+            if (Objects.nonNull(userProfile.getTiktokUrl())) {
+                responseBuilder.setPhoneNumber(userProfile.getTiktokUrl());
+            }
+
+            if (Objects.nonNull(userProfile.getFbUrl())) {
+                responseBuilder.setPhoneNumber(userProfile.getFbUrl());
+            }
+
             responseBuilder.setGender(convertGender(userProfile.getGender()));
             responseBuilder.setProfileVisibility(convertPrivacyLevel(userProfile.getProfileVisibility()));
             responseBuilder.setFriendsVisibility(convertPrivacyLevel(userProfile.getFriendsVisibility()));
             responseBuilder.setPostsVisibility(convertPrivacyLevel(userProfile.getPostsVisibility()));
-            responseBuilder.addAllSocialLinks(
-                userProfile.getSocialLinks() != null ? userProfile.getSocialLinks() : Collections.emptyList()
-            );
-            responseBuilder.setFollowersCount(userProfile.getFollowersCount());
-            responseBuilder.setFollowingCount(userProfile.getFollowingCount());
+            responseBuilder.setTiktokUrl(userProfile.getTiktokUrl());
+            responseBuilder.setFbUrl(userProfile.getFbUrl());
             responseObserver.onNext(responseBuilder.build());
             responseObserver.onCompleted();
         } catch (Exception e) {
