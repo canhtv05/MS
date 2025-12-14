@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { LinkIcon } from '@/components/animate-ui/icons/link';
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { CalendarDaysIcon } from '@/components/animate-ui/icons/calendar-day';
+import { formatNumberString } from '@/lib/utils';
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
@@ -70,11 +71,11 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         />
       </div>
 
-      <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-md">
+      <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-lg">
         <div className="flex items-end gap-5 -mt-16">
           {isLoading && !data?.data ? (
-            <div className="w-32 h-32 rounded-full shrink-0 bg-background border-4 border-white dark:border-gray-800 shadow-lg">
-              <Skeleton className="w-full h-full rounded-full" />
+            <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
+              <Skeleton className="w-full h-full rounded-full relative z-10" />
             </div>
           ) : (
             <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800 shadow-lg">
@@ -169,7 +170,9 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
                   {data?.data?.city && (
                     <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
                       <MapPinIcon size={14} className="shrink-0" />
-                      <p className="leading-5 max-w-[150px] text-sm truncate">{data.data.city}</p>
+                      <p className="leading-5 max-w-[250px] md:max-w-full text-sm truncate">
+                        {data.data.city}
+                      </p>
                     </div>
                   )}
 
@@ -237,6 +240,47 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             </Code>
           )}
         </div>
+
+        <div className="flex mt-4 items-center justify-start gap-6">
+          {isLoading ? (
+            <>
+              <div className="flex flex-col items-center justify-start gap-1">
+                <Skeleton className="h-6 w-12" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="flex flex-col items-center justify-start gap-1">
+                <Skeleton className="h-6 w-12" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+              <div className="flex flex-col items-center justify-start gap-1">
+                <Skeleton className="h-6 w-12" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col items-center justify-start">
+                <strong className="font-bold text-gray-800 dark:text-white">
+                  {formatNumberString(0)}
+                </strong>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('posts')}</p>
+              </div>
+              <div className="flex flex-col items-center justify-start">
+                <strong className="font-bold text-gray-800 dark:text-white">
+                  {formatNumberString(0)}
+                </strong>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('followers')}</p>
+              </div>
+              <div className="flex flex-col items-center justify-start">
+                <strong className="font-bold text-gray-800 dark:text-white">
+                  {formatNumberString(0)}
+                </strong>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('following')}</p>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="p-10 h-[500px]"> ko</div>
       </div>
     </div>
   );

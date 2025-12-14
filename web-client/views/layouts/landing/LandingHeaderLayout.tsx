@@ -10,7 +10,7 @@ import { GalleryVerticalEnd } from '@/components/animate-ui/icons/gallery-horizo
 import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { Layers } from '@/components/animate-ui/icons/layers';
 import { Star } from '@/components/animate-ui/icons/star';
-import { cn, formatStars } from '@/lib/utils';
+import { cn, formatNumberString } from '@/lib/utils';
 import { ChevronDown, Github, LucideIcon, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -109,7 +109,7 @@ const Resources = () => {
             <div className="mt-2">
               <ResourceCard
                 hasStar
-                title={`${repos.lib?.full_name} • ${formatStars(Number(repos.lib?.stargazers_count))}`}
+                title={`${repos.lib?.full_name} • ${formatNumberString(Number(repos.lib?.stargazers_count))}`}
                 content={repos.lib?.description ?? 'Xem mã nguồn animate.ui'}
                 icon={Github}
                 url="https://github.com/imskyleen/animate-ui"
@@ -126,7 +126,7 @@ const Resources = () => {
             <div className="mt-2 flex flex-col">
               <ResourceCard
                 hasStar
-                title={`${repos.me?.full_name} • ${formatStars(Number(repos.me?.stargazers_count))}`}
+                title={`${repos.me?.full_name} • ${formatNumberString(Number(repos.me?.stargazers_count))}`}
                 content={repos.me?.description ?? 'Xem mã nguồn của tôi'}
                 icon={Github}
                 imageURL={repos.me?.owner.avatar_url}
@@ -270,7 +270,7 @@ const HeaderMD = () => {
                                   <div className="mt-2">
                                     <ResourceCard
                                       hasStar
-                                      title={`${repos.lib?.full_name} • ${formatStars(
+                                      title={`${repos.lib?.full_name} • ${formatNumberString(
                                         Number(repos.lib?.stargazers_count),
                                       )}`}
                                       content={repos.lib?.description ?? 'Xem mã nguồn animate.ui'}
@@ -289,7 +289,7 @@ const HeaderMD = () => {
                                   <div className="mt-2 flex flex-col">
                                     <ResourceCard
                                       hasStar
-                                      title={`${repos.me?.full_name} • ${formatStars(
+                                      title={`${repos.me?.full_name} • ${formatNumberString(
                                         Number(repos.me?.stargazers_count),
                                       )}`}
                                       content={repos.me?.description ?? 'Xem mã nguồn của tôi'}

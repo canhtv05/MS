@@ -4,5 +4,8 @@
   "expected_username_starting_with": "We expected a username starting with @",
   "user_not_found": "User not found",
   "message": "Message",
-  "follow": "Follow"
+  "follow": "Follow",
+  "posts": "Posts",
+  "followers": "Followers",
+  "following": "Following"
 }

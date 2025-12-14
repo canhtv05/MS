@@ -4,5 +4,8 @@
   "expected_username_starting_with": "Chúng tôi mong đợi tên người dùng bắt đầu bằng @",
   "user_not_found": "Không tìm thấy người dùng",
   "message": "Tin nhắn",
-  "follow": "Theo dõi"
+  "follow": "Theo dõi",
+  "posts": "Bài viết",
+  "followers": "Người theo dõi",
+  "following": "Đang theo dõi"
 }

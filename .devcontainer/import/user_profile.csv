@@ -1,9 +1,9 @@
 id,user_id,fullname,dob,city,gender,bio,cover_url,phone_number,avatar_url,fb_url,tiktok_url,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date
-"1-1",admin,"Nguyen Van Admin",1995-01-01,Ha Noi,MALE,"while(!success) {
+"1-1",admin,"Trần Văn Cảnh",2005-10-17,"Trung Văn, Nam Từ Liêm, Hà Nội",MALE,"while(!success) {
     if (youFail) improvement++;
     if (improvement > fear) success = true;
 }",,"0987654321",,"https://www.facebook.com/rain.857382","https://www.tiktok.com/@rainrain9982",PUBLIC,PUBLIC,PUBLIC,0,0,system,system,2025-01-01T10:00:00Z
-"2-2",user,"Le Thi User",2000-05-20,Ho Chi Minh,FEMALE,"while(!success) {
+"2-2",user,"User",2005-05-20,Ho Chi Minh,FEMALE,"while(!success) {
     if (youFail) improvement++;
     if (improvement > fear) success = true;
 }",,"0123456789",,"https://www.facebook.com/rain.857382","https://www.tiktok.com/@rainrain9982",PUBLIC,FRIENDS_ONLY,PUBLIC,0,0,system,system,2025-01-01T11:00:00Z

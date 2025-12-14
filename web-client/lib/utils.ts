@@ -29,9 +29,13 @@ export async function getInfoRepo(owner: string, repo: string): Promise<IGitHubR
   }
 }
 
-export function formatStars(num: number | null): string {
-  if (!num) return '0';
-  if (num < 1000) return num.toString();
-  const formatted = (num / 1000).toFixed(1);
-  return `${formatted}k`;
+export function formatNumberString(num: number | null | undefined): string {
+  if (num === null || num === undefined || num < 0) {
+    return '0';
+  }
+
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(num);
 }
