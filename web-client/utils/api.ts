@@ -30,6 +30,7 @@ export const handleRedirectLogin = (nextRouter: AppRouterInstance, pathname: str
     pathname !== '/home' &&
     pathname !== '/sign-in' &&
     pathname !== '/sign-up' &&
+    pathname !== '/verify-email' &&
     pathname !== '/landing'
   ) {
     nextRouter.push(`/sign-in?redirect=${encodeURIComponent(pathname)}`);
