@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { AtSignIcon } from './animate-ui/icons/at-sign';
 import { Avatar, AvatarFallback, AvatarImage } from './customs/avatar';
 import Ring from './customs/ring';
+import { Activity } from 'react';
 
 interface IUserProfileCard {
   username: string;
@@ -43,8 +44,7 @@ const UserProfileCard = ({
           </div>
         )}
       </div>
-
-      {!hideInfo && (
+      <Activity mode={hideInfo ? 'hidden' : 'visible'}>
         <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>
           <h3 className="text-sm max-w-[150px] font-bold w-full text-foreground truncate">
             {fullName}
@@ -54,7 +54,7 @@ const UserProfileCard = ({
             {username}
           </span>
         </div>
-      )}
+      </Activity>
     </div>
   );
 };

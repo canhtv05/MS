@@ -4,7 +4,7 @@ import useNavigationLayout from './use-navigation-layout';
 
 import images from '@/public/imgs';
 import Link from 'next/link';
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, Activity } from 'react';
 import {
   CalendarIcon,
   FriendsIcon,
@@ -23,33 +23,7 @@ import {
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
 import { APP_CONFIGS } from '@/configs';
-
-const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="m15 18-6-6 6-6" />
-  </svg>
-);
-const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="m9 18 6-6-6-6" />
-  </svg>
-);
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
 interface IMenuNavigation {
   title: string;
@@ -89,13 +63,13 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   return (
     <div
       className={cn(
-        'dark:bg-gray-800 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white rounded-lg transition-all duration-300',
+        'dark:bg-gray-800 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white rounded-lg transition-all duration-300 ease-in-out',
       )}
     >
       <div
         onClick={() => router.push(`/@${user?.username}`)}
         className={cn(
-          'group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 bg-gray-100 rounded-lg cursor-pointer transition-all duration-300',
+          'group lg:flex flex-col inline-flex lg:items-start items-center justify-center gap-2 bg-gray-100 rounded-lg cursor-pointer transition-all duration-300 ease-in-out',
           isCollapsed
             ? 'p-1 bg-transparent dark:bg-transparent inline-flex h-full'
             : 'lg:p-4 p-0.5 lg:dark:bg-gray-700 dark:bg-gray-800',
@@ -108,25 +82,32 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
           hasRing={false}
           responsive
           hideInfo={isCollapsed}
-          className={cn(isCollapsed && 'justify-end')}
+          className={cn('transition-all duration-300 ease-in-out', isCollapsed && 'justify-end')}
         />
 
-        {!isCollapsed && (
-          <div className="pt-3 text-sm w-full lg:flex hidden gap-2 items-center justify-between">
-            <div className="flex flex-col">
-              <strong className="font-bold">2.3k</strong>
-              <span className="text-xs">Following</span>
-            </div>
-            <div className="flex flex-col">
-              <strong className="font-bold">2.3k</strong>
-              <span className="text-xs">Followers</span>
-            </div>
-            <div className="flex flex-col">
-              <strong className="font-bold">80</strong>
-              <span className="text-xs">Posts</span>
+        <Activity mode={isCollapsed ? 'hidden' : 'visible'}>
+          <div
+            className={cn(
+              'overflow-hidden transition-all duration-300 ease-in-out w-full',
+              isCollapsed ? 'max-h-0 opacity-0 pt-0' : 'max-h-[60px] opacity-100 pt-3',
+            )}
+          >
+            <div className="text-sm w-full lg:flex hidden gap-2 items-center justify-between">
+              <div className="flex flex-col">
+                <strong className="font-bold">2.3k</strong>
+                <span className="text-xs">Following</span>
+              </div>
+              <div className="flex flex-col">
+                <strong className="font-bold">2.3k</strong>
+                <span className="text-xs">Followers</span>
+              </div>
+              <div className="flex flex-col">
+                <strong className="font-bold">80</strong>
+                <span className="text-xs">Posts</span>
+              </div>
             </div>
           </div>
-        )}
+        </Activity>
       </div>
     </div>
   );
@@ -171,7 +152,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <>
               <span
                 className={cn(
-                  'shrink-0 transition-all duration-300',
+                  'shrink-0 transition-all duration-300 ease-in-out',
                   isActive(item.href) ? `[&_svg]:text-primary` : '',
                 )}
               >
@@ -196,7 +177,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 key={index}
                 href={item.href}
                 className={cn(
-                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start transition-all duration-300`,
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start transition-all duration-300 ease-in-out`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                 )}
               >
@@ -209,7 +190,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start transition-all duration-300`,
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start transition-all duration-300 ease-in-out`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                   isCollapsed ? 'justify-start py-[18px]!' : '',
                 )}
@@ -217,7 +198,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex items-center w-full justify-start',
+                    'flex items-center w-full justify-start transition-all duration-300 ease-in-out',
                     isCollapsed ? 'pl-[2px]' : '',
                   )}
                 >
@@ -244,26 +225,38 @@ const NavigationLayout = () => {
   return (
     <div
       className={cn(
-        'w-auto transition-all duration-300 relative',
+        'w-auto transition-all duration-300 ease-in-out relative',
         isCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
       )}
     >
       <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start lg:gap-7 gap-4 w-full">
-        <div className={cn('md:block hidden', isCollapsed ? 'w-auto' : 'w-full')}>
+        <div className="md:block hidden w-full">
           <NavigationHeader isCollapsed={isCollapsed} />
         </div>
         <div className="md:order-2 order-1 md:relative md:bottom-auto fixed bottom-0 z-50 md:z-auto w-full">
           <NavigationMenu isCollapsed={isCollapsed} />
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden cursor-pointer lg:flex absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-md items-center justify-center text-gray-500 hover:text-primary transition-colors z-50"
-          >
-            {isCollapsed ? (
-              <ChevronRightIcon className="size-4" />
-            ) : (
-              <ChevronLeftIcon className="size-4" />
-            )}
-          </button>
+
+          <div className="hidden lg:block absolute -right-4 top-1/2 -translate-y-1/2">
+            <div
+              className="absolute inset-0 w-8 h-8"
+              style={{ filter: 'drop-shadow(1px 0 3px rgba(0,0,0,0.05))' }}
+            >
+              <div
+                className="w-full h-full bg-white dark:bg-gray-800"
+                style={{ clipPath: "path('M 16,0 A 16,16 0 0,1 16,32 L 16,0 Z')" }}
+              />
+            </div>
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="relative z-10 w-8 h-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-primary transition-colors cursor-pointer"
+            >
+              {isCollapsed ? (
+                <ChevronRightIcon className="size-4" />
+              ) : (
+                <ChevronLeftIcon className="size-4" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
