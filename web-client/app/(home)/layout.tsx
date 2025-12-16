@@ -16,7 +16,7 @@ const HomeLayout = ({ children }: IHomeLayoutProps) => {
           <NavigationLayout />
         </div>
         <div className="fixed top-[60px] left-0 right-0 bottom-0 lg:h-7 h-4 z-50 bg-[#F9FBFC] dark:bg-gray-900 w-full"></div>
-        <div className="relative lg:mt-0 md:mt-0 mt-2 w-full flex-1 xl:px-7 lg:px-6 pr-0 md:pb-4 pb-20 md:pl-4 pl-1 px-2 lg:pb-8">
+        <div className="relative lg:mt-0 w-full flex-1 xl:px-7 lg:px-6 pr-0 md:pb-4 pb-20 md:pl-4 pl-1 px-2 lg:pb-8">
           {children}
         </div>
         <div className="sticky top-22 hidden lg:block xl:w-72 lg:w-64 self-start">

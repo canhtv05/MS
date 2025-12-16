@@ -15,8 +15,6 @@ import com.leaf.file.dto.ImageResponse;
 import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +24,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.mp4parser.IsoFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,11 +47,6 @@ public class FileService {
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
 
-        String imageString = "image";
-        String videoString = "video";
-        String secureUrl = "secure_url";
-        String publicId = "public_id";
-
         List<ImageResponse> imageResponses = new ArrayList<>();
         List<VideoResponse> videoResponses = new ArrayList<>();
         long totalSize = 0L;
@@ -65,83 +57,83 @@ public class FileService {
 
             totalSize += file.getSize();
 
-            if (contentType.startsWith(imageString)) {
-                var imageResult = cloudinary
-                    .uploader()
-                    .upload(
-                        file.getBytes(),
-                        ObjectUtils.asMap(
-                            "resource_type",
-                            imageString,
-                            "upload_preset",
-                            "social-media",
-                            "folder",
-                            imageString
-                        )
-                    );
-                String imageUrl = imageResult.get(secureUrl).toString();
-                String imagePublicId = imageResult.get(publicId).toString();
-
-                imageResponses.add(
-                    ImageResponse.builder()
-                        .contentType(file.getContentType())
-                        .imageUrl(imageUrl)
-                        .fileSize(file.getSize())
-                        .originFileName(file.getOriginalFilename())
-                        .publicId(imagePublicId)
-                        .build()
-                );
-            } else if (contentType.startsWith(videoString)) {
-                File tmpFile = File.createTempFile("upload-", ".mp4");
-                tmpFile.deleteOnExit();
-                try (FileOutputStream os = new FileOutputStream(tmpFile)) {
-                    os.write(file.getBytes());
-                }
-
-                IsoFile isoFile = new IsoFile(tmpFile.getAbsolutePath());
-                long duration = isoFile.getMovieBox().getMovieHeaderBox().getDuration();
-                long timescale = isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
-                isoFile.close();
-
-                long durationMillis = (duration * 1000) / timescale;
-                double durationSec = durationMillis / 1000.0;
-
-                var videoResult = cloudinary
-                    .uploader()
-                    .upload(
-                        file.getBytes(),
-                        ObjectUtils.asMap(
-                            "resource_type",
-                            videoString,
-                            "upload_preset",
-                            "social-media",
-                            "folder",
-                            videoString,
-                            "eager",
-                            List.of(new EagerTransformation().width(320).height(240).crop("thumb").fetchFormat("jpg"))
-                        )
-                    );
-
-                String videoUrl = videoResult.get(secureUrl).toString();
-                String videoPublicId = videoResult.get(publicId).toString();
-                @SuppressWarnings("unchecked")
-                String thumbnailUrl = ((List<Map<String, String>>) videoResult.get("eager")).getFirst().get(secureUrl);
-
-                videoResponses.add(
-                    VideoResponse.builder()
-                        .contentType(file.getContentType())
-                        .videoUrl(videoUrl)
-                        .thumbnailUrl(thumbnailUrl)
-                        .playtimeSeconds(durationSec)
-                        .playtimeString(formatDuration(durationMillis))
-                        .fileSize(file.getSize())
-                        .originFileName(file.getOriginalFilename())
-                        .publicId(videoPublicId)
-                        .build()
-                );
+            if (contentType.startsWith("image")) {
+                imageResponses.add(processImageUpload(file));
+            } else if (contentType.startsWith("video")) {
+                videoResponses.add(processVideoUpload(file));
             }
         }
 
+        return saveFileMetadata(userId, totalSize, imageResponses, videoResponses);
+    }
+
+    private ImageResponse processImageUpload(MultipartFile file) throws IOException {
+        var result = cloudinary
+            .uploader()
+            .upload(
+                file.getBytes(),
+                ObjectUtils.asMap("resource_type", "image", "upload_preset", "social-media", "folder", "image")
+            );
+
+        return ImageResponse.builder()
+            .contentType(file.getContentType())
+            .imageUrl(result.get("secure_url").toString())
+            .fileSize(file.getSize())
+            .originFileName(file.getOriginalFilename())
+            .publicId(result.get("public_id").toString())
+            .build();
+    }
+
+    private VideoResponse processVideoUpload(MultipartFile file) throws IOException {
+        var videoResult = cloudinary
+            .uploader()
+            .upload(
+                file.getBytes(),
+                ObjectUtils.asMap(
+                    "resource_type",
+                    "video",
+                    "upload_preset",
+                    "social-media",
+                    "folder",
+                    "video",
+                    "eager",
+                    List.of(
+                        new EagerTransformation().width(320).height(240).crop("thumb").fetchFormat("jpg"),
+                        new EagerTransformation().width(160).crop("scale").fetchFormat("vtt")
+                    )
+                )
+            );
+
+        double durationSec = Double.parseDouble(videoResult.get("duration").toString());
+        long durationMillis = (long) (durationSec * 1000);
+
+        String videoUrl = videoResult.get("secure_url").toString();
+        String videoPublicId = videoResult.get("public_id").toString();
+
+        @SuppressWarnings("unchecked")
+        String thumbnailUrl = ((List<Map<String, String>>) videoResult.get("eager")).getFirst().get("secure_url");
+        @SuppressWarnings("unchecked")
+        String previewVttUrl = ((List<Map<String, String>>) videoResult.get("eager")).get(1).get("secure_url");
+
+        return VideoResponse.builder()
+            .contentType(file.getContentType())
+            .videoUrl(videoUrl)
+            .thumbnailUrl(thumbnailUrl)
+            .playtimeSeconds(durationSec)
+            .playtimeString(formatDuration(durationMillis))
+            .fileSize(file.getSize())
+            .originFileName(file.getOriginalFilename())
+            .publicId(videoPublicId)
+            .previewVttUrl(previewVttUrl)
+            .build();
+    }
+
+    private FileResponse saveFileMetadata(
+        String userId,
+        long totalSize,
+        List<ImageResponse> imageResponses,
+        List<VideoResponse> videoResponses
+    ) {
         String id = UUID.randomUUID().toString();
 
         com.leaf.file.domain.File fileEntity = com.leaf.file.domain.File.builder()
@@ -180,6 +172,7 @@ public class FileService {
                     .toList()
             )
             .build();
+
         fileRepository.save(fileEntity);
 
         return FileResponse.builder()

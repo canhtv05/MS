@@ -11,6 +11,8 @@ interface IUserProfileCard {
   fullName: string;
   hasRing?: boolean;
   responsive?: boolean;
+  hideInfo?: boolean;
+  className?: string;
 }
 
 const UserProfileCard = ({
@@ -19,9 +21,11 @@ const UserProfileCard = ({
   fullName,
   hasRing = true,
   responsive = false,
+  hideInfo = false,
+  className,
 }: IUserProfileCard) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className={cn('flex items-center gap-2', className)}>
       <div className="relative">
         <Avatar className="relative">
           <AvatarImage
@@ -40,15 +44,17 @@ const UserProfileCard = ({
         )}
       </div>
 
-      <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>
-        <h3 className="text-sm max-w-[150px] font-bold w-full text-foreground truncate">
-          {fullName}
-        </h3>
-        <span className="text-xs flex items-center gap-0.5 max-w-[150px] w-full text-foreground/70 truncate">
-          <AtSignIcon size={12} className="group-hover:animate-icon" />
-          {username}
-        </span>
-      </div>
+      {!hideInfo && (
+        <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>
+          <h3 className="text-sm max-w-[150px] font-bold w-full text-foreground truncate">
+            {fullName}
+          </h3>
+          <span className="text-xs flex items-center gap-0.5 max-w-[150px] w-full text-foreground/70 truncate">
+            <AtSignIcon size={12} className="group-hover:animate-icon" />
+            {username}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

@@ -18,6 +18,7 @@ public class VideoResponse implements Serializable {
     String contentType;
     String videoUrl;
     String thumbnailUrl;
+    String previewVttUrl;
     Long fileSize;
     String originFileName;
     String publicId;
