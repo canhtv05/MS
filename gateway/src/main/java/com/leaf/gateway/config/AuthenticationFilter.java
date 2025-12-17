@@ -59,6 +59,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
             if (Objects.nonNull(cookie)) {
                 String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                @SuppressWarnings("unchecked")
                 Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
                 if (!CollectionUtils.isEmpty(tokenData)) {
                     token = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());

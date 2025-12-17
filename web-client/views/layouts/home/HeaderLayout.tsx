@@ -32,7 +32,6 @@ import { LockIcon } from '@/components/animate-ui/icons/lock';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import { Bell } from '@/components/animate-ui/icons/bell';
-import { BookmarkIcon } from '@/components/animate-ui/icons/bookmark';
 import UserProfileCard from '@/components/UserProfileCard';
 import { useProfileStore } from '@/stores/profile';
 import { useRouter } from 'next/navigation';
@@ -93,7 +92,7 @@ const HeaderLayout = () => {
                     isLoading ? (
                       <Loader2 className="animate-spin size-5 p-0.5" />
                     ) : (
-                      <div className="text-xs font-medium dark:bg-gray-600 bg-white p-1 px-2 rounded-md">
+                      <div className="text-xs md:block hidden font-medium dark:bg-gray-600 bg-white p-1 px-2 rounded-md">
                         <p className="font-medium">⌘K</p>
                       </div>
                     )
@@ -124,12 +123,12 @@ const HeaderLayout = () => {
                       <span className="absolute top-2 right-2.5 dark:border-gray-600 border border-gray-100 bg-red-500 text-xs rounded-full w-2 h-2 flex items-center justify-center"></span>
                     </IconButton>
                   </AnimateIcon>
-                  <IconButton
+                  {/* <IconButton
                     className="bg-gray-100 dark:bg-gray-700 border-gray-100 group rounded-lg hover:opacity-80 transition-opacity duration-300 dark:hover:opacity-80 cursor-pointer shadow-none"
                     variant={'accent'}
                   >
                     <BookmarkIcon className="text-foreground/70 group-hover:animate-icon" />
-                  </IconButton>
+                  </IconButton> */}
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger>

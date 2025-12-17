@@ -2,6 +2,8 @@ package com.leaf.file.controller;
 
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.file.dto.FileResponse;
+import com.leaf.file.dto.ImageResponse;
+import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.service.FileService;
 import java.io.IOException;
 import java.util.List;
@@ -34,13 +36,37 @@ public class FileController {
     }
 
     @PostMapping(
-        value = "/media/upload",
+        value = "/media/upload-many",
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<ResponseObject<FileResponse>> uploadMedia(@RequestPart("files") MultipartFile[] files)
+    public ResponseEntity<ResponseObject<FileResponse>> uploadMediaMany(@RequestPart("files") MultipartFile[] files)
         throws IOException {
         return ResponseEntity.ok(ResponseObject.<FileResponse>builder().data(fileService.upload(files)).build());
+    }
+
+    @PostMapping(
+        value = "/media/upload-one/image",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<ResponseObject<ImageResponse>> uploadMediaImage(@RequestPart("files") MultipartFile file)
+        throws IOException {
+        return ResponseEntity.ok(
+            ResponseObject.<ImageResponse>builder().data(fileService.processImageUpload(file)).build()
+        );
+    }
+
+    @PostMapping(
+        value = "/media/upload-one/video",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<ResponseObject<VideoResponse>> uploadMediaVideo(@RequestPart("files") MultipartFile file)
+        throws IOException {
+        return ResponseEntity.ok(
+            ResponseObject.<VideoResponse>builder().data(fileService.processVideoUpload(file)).build()
+        );
     }
 
     @GetMapping("/batch")

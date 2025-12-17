@@ -67,7 +67,7 @@ public class FileService {
         return saveFileMetadata(userId, totalSize, imageResponses, videoResponses);
     }
 
-    private ImageResponse processImageUpload(MultipartFile file) throws IOException {
+    public ImageResponse processImageUpload(MultipartFile file) throws IOException {
         var result = cloudinary
             .uploader()
             .upload(
@@ -84,7 +84,7 @@ public class FileService {
             .build();
     }
 
-    private VideoResponse processVideoUpload(MultipartFile file) throws IOException {
+    public VideoResponse processVideoUpload(MultipartFile file) throws IOException {
         var videoResult = cloudinary
             .uploader()
             .upload(
@@ -268,6 +268,7 @@ public class FileService {
     public void deleteFile(String publicId, String mimeType) {
         try {
             String resourceType = mimeType.startsWith("video") ? "video" : "image";
+            @SuppressWarnings("unchecked")
             Map<String, Object> options = ObjectUtils.asMap("resource_type", resourceType);
             cloudinary.uploader().destroy(publicId, options);
         } catch (IOException e) {

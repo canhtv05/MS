@@ -8,7 +8,6 @@ import com.leaf.profile.enums.Gender;
 import com.leaf.profile.enums.PrivacyLevel;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

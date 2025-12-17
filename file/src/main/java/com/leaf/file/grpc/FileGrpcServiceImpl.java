@@ -49,16 +49,9 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     @Override
     public void uploadFiles(UploadFilesRequest request, StreamObserver<FileResponse> responseObserver) {
         try {
-            // ✅ lấy đúng list bytes
             List<ByteString> bytesList = request.getFilesList();
-
-            // ✅ convert to MultipartFile[]
             MultipartFile[] files = convertFromGrpc(bytesList);
-
-            // ✅ xử lý upload
             com.leaf.file.dto.FileResponse dto = fileService.upload(files);
-
-            // ✅ convert sang proto response
             FileResponse protoResponse = FileProtoMapper.toProto(dto);
 
             responseObserver.onNext(protoResponse);
@@ -66,6 +59,38 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
         } catch (Exception e) {
             responseObserver.onError(e);
         }
+    }
+
+    @Override
+    public void uploadImage(UploadOneImageRequest request, StreamObserver<ImageResponse> responseObserver) {
+        try {
+            MultipartFile file = convertFromGrpc(request.getFile());
+            com.leaf.file.dto.ImageResponse dto = fileService.processImageUpload(file);
+            ImageResponse protoResponse = FileProtoMapper.mapImage(dto);
+
+            responseObserver.onNext(protoResponse);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
+
+    @Override
+    public void uploadVideo(UploadOneVideoRequest request, StreamObserver<VideoResponse> responseObserver) {
+        try {
+            MultipartFile file = convertFromGrpc(request.getFile());
+            com.leaf.file.dto.VideoResponse dto = fileService.processVideoUpload(file);
+            VideoResponse protoResponse = FileProtoMapper.mapVideo(dto);
+
+            responseObserver.onNext(protoResponse);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
+
+    private MultipartFile convertFromGrpc(ByteString file) {
+        return toMultipartFile(file);
     }
 
     private MultipartFile[] convertFromGrpc(List<ByteString> filesList) {

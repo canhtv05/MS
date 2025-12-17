@@ -30,7 +30,7 @@ public class FileProtoMapper {
         return fileResponse;
     }
 
-    private static com.leaf.common.grpc.VideoResponse mapVideo(VideoResponse v) {
+    public static com.leaf.common.grpc.VideoResponse mapVideo(VideoResponse v) {
         return com.leaf.common.grpc.VideoResponse.newBuilder()
             .setPlaytimeSeconds(v.getPlaytimeSeconds())
             .setPlaytimeString(v.getPlaytimeString())
@@ -43,7 +43,7 @@ public class FileProtoMapper {
             .build();
     }
 
-    private static com.leaf.common.grpc.ImageResponse mapImage(ImageResponse i) {
+    public static com.leaf.common.grpc.ImageResponse mapImage(ImageResponse i) {
         return com.leaf.common.grpc.ImageResponse.newBuilder()
             .setContentType(i.getContentType())
             .setImageUrl(i.getImageUrl())

@@ -88,27 +88,6 @@ const fakeLiked = [
   },
 ];
 
-const fakeSaved = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=400&fit=crop',
-    likes: 456,
-    comments: 23,
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=400&fit=crop',
-    likes: 789,
-    comments: 56,
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1682695794816-7b9da18ed470?w=400&h=400&fit=crop',
-    likes: 321,
-    comments: 12,
-  },
-];
-
 interface PostCardProps {
   post: {
     id: number;
@@ -181,7 +160,7 @@ const ProfilePageTabs = () => {
       case 'liked':
         return fakeLiked;
       case 'saved':
-        return fakeSaved;
+        return [];
       default:
         return fakePosts;
     }

@@ -132,7 +132,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileDTO getProfile(HttpServletRequest request) {
+    public UserProfileDTO getProfile() {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
         );
@@ -233,6 +233,7 @@ public class AuthService {
             return cookieValueOrTokenString;
         }
         try {
+            @SuppressWarnings("unchecked")
             Map<String, String> tokenData = JsonF.jsonToObject(cookieValueOrTokenString, Map.class);
             if (CollectionUtils.isEmpty(tokenData)) {
                 return cookieValueOrTokenString;

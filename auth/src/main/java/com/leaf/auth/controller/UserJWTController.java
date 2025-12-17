@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,11 +68,6 @@ public class UserJWTController {
     public ResponseEntity<ResponseObject<UserDTO>> createUser(@Valid @RequestBody UserDTO userDTO) {
         UserDTO newUserDTO = userService.createUser(userDTO, false);
         return ResponseEntity.ok(ResponseObject.success(newUserDTO));
-    }
-
-    @GetMapping
-    public ResponseEntity<ResponseObject<UserProfileDTO>> getUserProfile(HttpServletRequest request) {
-        return ResponseEntity.ok(ResponseObject.success(authService.getProfile(request)));
     }
 
     @PostMapping("/p/change-password")

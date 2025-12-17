@@ -146,6 +146,7 @@ public class TokenProvider {
         HttpServletResponse response,
         String channel
     ) {
+        @SuppressWarnings("unchecked")
         Map<String, String> tokenData = JsonF.jsonToObject(cookieValue, Map.class);
         String refreshToken = "";
 

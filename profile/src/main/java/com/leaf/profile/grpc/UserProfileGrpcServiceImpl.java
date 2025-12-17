@@ -9,7 +9,6 @@ import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.service.UserProfileService;
 import io.grpc.stub.StreamObserver;
-import java.util.Collections;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;

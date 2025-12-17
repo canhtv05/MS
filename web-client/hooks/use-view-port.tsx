@@ -9,12 +9,15 @@ interface ViewportType {
 
 export default function useViewport() {
   const [viewPort, setViewPort] = useState<ViewportType>({
-    width: (typeof window !== 'undefined' && window?.innerWidth) || 0,
-    height: (typeof window !== 'undefined' && window?.innerHeight) || 0,
+    width: 0,
+    height: 0,
   });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setViewPort({ width: window.innerWidth, height: window.innerHeight });
+
       const handleResize = () =>
         setViewPort({ width: window.innerWidth, height: window.innerHeight });
 

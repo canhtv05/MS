@@ -6,8 +6,18 @@ option java_outer_classname = "FileProto";
 
 service FileGrpcService {
     rpc uploadFiles(UploadFilesRequest) returns (FileResponse);
+    rpc uploadImage(UploadOneImageRequest) returns (ImageResponse);
+    rpc uploadVideo(UploadOneVideoRequest) returns (VideoResponse);
     rpc getFileByIds(GetFilesByIdsRequest) returns (GetFilesByIdsResponse);
-    rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
+    rpc deleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
+}
+
+message UploadOneImageRequest {
+    bytes file = 1;
+}
+
+message UploadOneVideoRequest {
+    bytes file = 1;
 }
 
 message UploadFilesRequest {

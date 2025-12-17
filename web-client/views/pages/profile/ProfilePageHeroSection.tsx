@@ -10,8 +10,74 @@ import { Skeleton } from '@/components/customs/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import images from '@/public/imgs';
 import { IProfilePageProps } from './ProfilePage';
+import { useAuthStore } from '@/stores/auth';
+import { SettingsIcon } from '@/components/animate-ui/icons/settings';
+import { AnimateIcon } from '@/components/animate-ui/icons/icon';
+
+const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
+  return (
+    <>
+      <div className="md:flex hidden items-center justify-center gap-2">
+        <Button variant="outline" className="gap-2">
+          <Mail2Icon />
+          {t?.('message')}
+        </Button>
+        <Button variant="default" className="gap-2">
+          <AddUserIcon />
+          {t?.('follow')}
+        </Button>
+      </div>
+
+      <div className="md:hidden flex items-center justify-center gap-2">
+        <Button variant="outline" className="gap-2">
+          <Mail2Icon />
+          {t?.('message')}
+        </Button>
+        {[{ icon: AddUserIcon, variant: 'default' as const, text: t?.('follow') }].map(
+          ({ icon: Icon, variant, text }, index) => (
+            <Tooltip key={index}>
+              <TooltipTrigger asChild>
+                <IconButton className="cursor-pointer shadow-none" variant={variant}>
+                  <Icon />
+                </IconButton>
+              </TooltipTrigger>
+              <TooltipPanel
+                side={'top'}
+                transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <span className="text-white/70">{text}</span>
+              </TooltipPanel>
+            </Tooltip>
+          ),
+        )}
+      </div>
+    </>
+  );
+};
+
+const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
+  return (
+    <>
+      <div className="flex items-center justify-center gap-2">
+        <Button variant="default" className="gap-2">
+          {t?.('edit_profile')}
+        </Button>
+        <IconButton variant="outline" className="cursor-pointer">
+          <AnimateIcon animateOnHover className="flex items-center justify-center w-full h-full">
+            <SettingsIcon />
+          </AnimateIcon>
+        </IconButton>
+      </div>
+    </>
+  );
+};
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
+  const user = useAuthStore(state => state.user);
+
   return (
     <>
       {isLoading && !data?.data ? (
@@ -47,40 +113,11 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           </>
         ) : (
           <>
-            <div className="md:flex hidden items-center justify-center gap-2">
-              <Button variant="outline" className="gap-2">
-                <Mail2Icon />
-                {t?.('message')}
-              </Button>
-              <Button variant="default" className="gap-2">
-                <AddUserIcon />
-                {t?.('follow')}
-              </Button>
-            </div>
-
-            <div className="md:hidden flex items-center justify-center gap-2">
-              {[
-                { icon: Mail2Icon, variant: 'outline' as const, text: t?.('message') },
-                { icon: AddUserIcon, variant: 'default' as const, text: t?.('follow') },
-              ].map(({ icon: Icon, variant, text }, index) => (
-                <Tooltip key={index}>
-                  <TooltipTrigger asChild>
-                    <IconButton className="cursor-pointer shadow-none" variant={variant}>
-                      <Icon />
-                    </IconButton>
-                  </TooltipTrigger>
-                  <TooltipPanel
-                    side={'top'}
-                    transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <span className="text-white/70">{text}</span>
-                  </TooltipPanel>
-                </Tooltip>
-              ))}
-            </div>
+            {user?.username === data?.data?.userId ? (
+              <MeProfilePageHeroSectionButton t={t} />
+            ) : (
+              <ProfilePageHeroSectionButton t={t} />
+            )}
           </>
         )}
       </div>
