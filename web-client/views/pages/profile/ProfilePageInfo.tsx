@@ -10,6 +10,26 @@ import { AtSignIcon } from '@/components/animate-ui/icons/at-sign';
 import { MapPinIcon } from '@/components/animate-ui/icons/map-pin';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 
+interface StatItemProps {
+  value: number;
+  label: string;
+  isLoading?: boolean;
+}
+
+const StatItem = ({ value, label, isLoading }: StatItemProps) => {
+  if (isLoading) {
+    return <Skeleton className="h-5 w-20" />;
+  }
+  return (
+    <span className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-white transition-colors">
+      <strong className="font-bold text-gray-800 dark:text-white">
+        {formatNumberString(value)}
+      </strong>{' '}
+      <span className="text-gray-500 dark:text-gray-400">{label}</span>
+    </span>
+  );
+};
+
 const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
   return (
     <>
@@ -92,6 +112,14 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
         )}
       </div>
 
+      <div className="flex flex-wrap items-center md:gap-4 gap-1 mt-2">
+        <StatItem value={80} label={t?.('posts') || 'posts'} isLoading={isLoading} />
+        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <StatItem value={2300} label={t?.('followers') || 'followers'} isLoading={isLoading} />
+        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <StatItem value={150} label={t?.('following') || 'following'} isLoading={isLoading} />
+      </div>
+
       <div className="mt-3">
         {isLoading || !data?.data?.bio || data.data.bio.trim() === '' ? (
           <div className="space-y-2">
@@ -106,46 +134,6 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
               writing={false}
             />
           </Code>
-        )}
-      </div>
-
-      <div className="flex mt-4 items-center justify-start gap-6">
-        {isLoading ? (
-          <>
-            <div className="flex flex-col items-center justify-start gap-1">
-              <Skeleton className="h-6 w-12" />
-              <Skeleton className="h-4 w-16" />
-            </div>
-            <div className="flex flex-col items-center justify-start gap-1">
-              <Skeleton className="h-6 w-12" />
-              <Skeleton className="h-4 w-20" />
-            </div>
-            <div className="flex flex-col items-center justify-start gap-1">
-              <Skeleton className="h-6 w-12" />
-              <Skeleton className="h-4 w-20" />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex flex-col items-center justify-start">
-              <strong className="font-bold text-gray-800 dark:text-white">
-                {formatNumberString(0)}
-              </strong>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t?.('posts')}</p>
-            </div>
-            <div className="flex flex-col items-center justify-start">
-              <strong className="font-bold text-gray-800 dark:text-white">
-                {formatNumberString(0)}
-              </strong>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t?.('followers')}</p>
-            </div>
-            <div className="flex flex-col items-center justify-start">
-              <strong className="font-bold text-gray-800 dark:text-white">
-                {formatNumberString(0)}
-              </strong>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t?.('following')}</p>
-            </div>
-          </>
         )}
       </div>
     </>

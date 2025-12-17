@@ -11,7 +11,7 @@ const HomeLayout = ({ children }: IHomeLayoutProps) => {
   return (
     <div className="min-h-screen">
       <HeaderLayout />
-      <div className="flex relative items-start justify-center bg-[#F9FBFC] lg:px-6 lg:pt-22 pt-19 px-3 dark:bg-gray-900 min-h-screen w-full">
+      <div className="flex relative items-start justify-center bg-[#F9FBFC] lg:px-6 lg:pt-22 pt-19 px-4 dark:bg-gray-900 min-h-screen w-full">
         <div className="lg:block fixed md:sticky lg:top-22 md:top-19 top-20 md:translate-x-0 -translate-x-1/2 md:left-0 left-1/2 md:bottom-auto bottom-0 lg:w-auto w-auto z-40">
           <NavigationLayout />
         </div>

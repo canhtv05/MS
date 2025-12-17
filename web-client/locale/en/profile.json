@@ -7,5 +7,10 @@
   "follow": "Follow",
   "posts": "Posts",
   "followers": "Followers",
-  "following": "Following"
+  "following": "Following",
+  "liked": "Liked",
+  "saved": "Saved",
+  "no_posts": "No posts yet",
+  "no_liked": "No liked posts yet",
+  "no_saved": "No saved posts yet"
 }

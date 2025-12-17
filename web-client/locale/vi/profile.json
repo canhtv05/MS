@@ -7,5 +7,10 @@
   "follow": "Theo dõi",
   "posts": "Bài viết",
   "followers": "Người theo dõi",
-  "following": "Đang theo dõi"
+  "following": "Đang theo dõi",
+  "liked": "Đã thích",
+  "saved": "Đã lưu",
+  "no_posts": "Chưa có bài viết nào",
+  "no_liked": "Chưa có bài viết nào đã thích",
+  "no_saved": "Chưa có bài viết nào đã lưu"
 }

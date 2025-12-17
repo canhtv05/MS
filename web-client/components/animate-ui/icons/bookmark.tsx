@@ -4,7 +4,7 @@ import type { Variants } from 'motion/react';
 import type { HTMLAttributes } from 'react';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import { motion, useAnimation } from 'motion/react';
-
+import { useAnimateIconContext } from '@/components/animate-ui/icons/icon';
 import { cn } from '@/lib/utils';
 
 export interface BookmarkIconHandle {
@@ -35,6 +35,8 @@ const BookmarkIcon = forwardRef<BookmarkIconHandle, BookmarkIconProps>(
     const divRef = useRef<HTMLDivElement>(null);
     const isControlledRef = useRef(false);
 
+    const context = useAnimateIconContext();
+
     useImperativeHandle(ref, () => {
       isControlledRef.current = true;
       return {
@@ -43,12 +45,20 @@ const BookmarkIcon = forwardRef<BookmarkIconHandle, BookmarkIconProps>(
       };
     });
 
-    // Detect parent hover via group-hover class
+    useEffect(() => {
+      if (context.active) {
+        svgControls.start('animate');
+        pathControls.start('animate');
+      } else {
+        svgControls.start('normal');
+        pathControls.start('normal');
+      }
+    }, [context.active, svgControls, pathControls]);
+
     useEffect(() => {
       const element = divRef.current;
       if (!element) return;
 
-      // Find parent with 'group' class
       const parent = element.closest('.group');
       if (!parent) return;
 

@@ -12,58 +12,13 @@ import { IResponseObject } from '@/types/common';
 import { IUserProfileDTO } from '@/types/profile';
 import ProfilePageInfo from './ProfilePageInfo';
 import ProfilePageHeroSection from './ProfilePageHeroSection';
-import { useState } from 'react';
+import ProfilePageTabs from './ProfilePageTabs';
 
 export interface IProfilePageProps {
   isLoading: boolean;
   t?: TFunction<'translation', undefined>;
   data?: IResponseObject<IUserProfileDTO>;
 }
-
-const tabs = [
-  { id: 'posts', label: 'Posts' },
-  { id: 'videos', label: 'Videos' },
-  { id: 'images', label: 'Images' },
-  { id: 'saved', label: 'Saved' },
-  { id: 'liked', label: 'Liked' },
-];
-
-const ProfilePageTabs = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-
-  const indicatorIndex = hoverIndex !== null ? hoverIndex : activeTab;
-
-  return (
-    <div className="relative mt-10">
-      <div className="flex">
-        {tabs.map((tab, index) => (
-          <button
-            key={tab.id}
-            className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer
-              ${
-                activeTab === index ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            onClick={() => setActiveTab(index)}
-            onMouseEnter={() => setHoverIndex(index)}
-            onMouseLeave={() => setHoverIndex(null)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-border" />
-      <div
-        className="absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-out"
-        style={{
-          width: `${100 / tabs.length}%`,
-          transform: `translateX(${indicatorIndex * 100}%)`,
-        }}
-      />
-    </div>
-  );
-};
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);

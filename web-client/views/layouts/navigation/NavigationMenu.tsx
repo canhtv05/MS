@@ -78,17 +78,22 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
   }, [width, isCollapsed]);
 
   return (
-    <div className="lg:flex inline-flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
+    <div className="lg:flex flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
       <div
         className={cn(
-          'w-auto dark:bg-gray-800 bg-white md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] inline-flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
-          isCollapsed ? 'w-full' : 'w-full md:p-3',
+          'md:w-full w-[220px] dark:bg-gray-800 bg-white md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
+          isCollapsed ? 'w-full' : 'md:p-3 md:w-full w-[220px]',
         )}
       >
         {menu.map((item, index) => {
           const linkContent = (
             <>
-              <span className={cn('shrink-0', isActive(item.href) ? `[&_svg]:text-primary` : '')}>
+              <span
+                className={cn(
+                  'flex items-center justify-start',
+                  isActive(item.href) ? `[&_svg]:text-primary` : '',
+                )}
+              >
                 {item.icon}
               </span>
               <Activity mode={isCollapsed ? 'hidden' : 'visible'}>
@@ -123,18 +128,12 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start`,
+                  `flex lg:p-4 p-3 justify-start rounded-lg lg:w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center w-full`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
-                  isCollapsed ? 'justify-start py-[18px]!' : '',
+                  isCollapsed && width >= Viewport.LG && 'py-[18px]!',
                 )}
               >
-                <Link
-                  href={item.href}
-                  className={cn(
-                    'flex items-center w-full justify-start',
-                    isCollapsed ? 'pl-[2px]' : '',
-                  )}
-                >
+                <Link href={item.href} className={cn('grid place-content-start pl-[2px] w-full')}>
                   {linkContent}
                 </Link>
               </TooltipTrigger>

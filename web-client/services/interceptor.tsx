@@ -111,7 +111,7 @@ api.interceptors.response.use(
         const refreshToken = storage?.refreshToken;
 
         if (!refreshToken) {
-          console.error('[Interceptor] No refresh token found, logging out');
+          console.log('[Interceptor] No refresh token found, logging out');
           handleLogout(true);
           return Promise.reject(new Error('No refresh token'));
         }
@@ -136,7 +136,7 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('[Interceptor] Refresh failed, logging out');
+        console.log('[Interceptor] Refresh failed, logging out');
         processQueue(refreshError as AxiosError, null);
         handleLogout(true);
         return Promise.reject(refreshError);
