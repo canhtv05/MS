@@ -1,0 +1,159 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+import { Activity, ReactNode, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
+import {
+  TooltipPanel,
+  TooltipTrigger,
+  Tooltip,
+} from '@/components/animate-ui/components/base/tooltip';
+import useViewport from '@/hooks/use-view-port';
+import { Viewport } from '@/enums/common';
+import { APP_CONFIGS } from '@/configs';
+import {
+  CalendarIcon,
+  FriendsIcon,
+  HouseIcon,
+  ImageIcon,
+} from '@/components/animate-ui/icons/common';
+import Link from 'next/link';
+
+interface IMenuNavigation {
+  title: string;
+  href: string;
+  icon: ReactNode;
+  isActive?: boolean;
+}
+
+const menu: IMenuNavigation[] = [
+  {
+    title: 'navigation.home',
+    href: APP_CONFIGS.ROUTES.home,
+    icon: <HouseIcon className="size-5 text-foreground/70 stroke-[2.5px]" />,
+    isActive: true,
+  },
+  {
+    title: 'navigation.friends',
+    href: APP_CONFIGS.ROUTES.friends,
+    icon: <FriendsIcon className="text-foreground/70 size-5 stroke-2" />,
+  },
+  {
+    title: 'navigation.photos',
+    href: APP_CONFIGS.ROUTES.photos,
+    icon: <ImageIcon className="size-5 text-foreground/70 stroke-2" />,
+  },
+  {
+    title: 'navigation.new_feed',
+    href: APP_CONFIGS.ROUTES.newFeed,
+    icon: <CalendarIcon className="size-5 text-foreground/70 stroke-2" />,
+  },
+];
+
+const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const { t } = useTranslation('navigation');
+  const pathname = usePathname();
+  const [tooltipSide, setTooltipSide] = useState<'top' | 'right' | null>(null);
+  const { width } = useViewport();
+
+  const isActive = (href: string) => pathname === href;
+
+  useEffect(() => {
+    const updateTooltipSide = () => {
+      if (isCollapsed && width >= Viewport.LG) {
+        setTooltipSide('right');
+        return;
+      }
+
+      if (width >= Viewport.LG) {
+        setTooltipSide(null);
+      } else if (width >= Viewport.MD) {
+        setTooltipSide('right');
+      } else {
+        setTooltipSide('top');
+      }
+    };
+    updateTooltipSide();
+  }, [width, isCollapsed]);
+
+  return (
+    <div className="lg:flex inline-flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
+      <div
+        className={cn(
+          'w-auto dark:bg-gray-800 bg-white md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] inline-flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
+          isCollapsed ? 'w-full' : 'w-full md:p-3',
+        )}
+      >
+        {menu.map((item, index) => {
+          const linkContent = (
+            <>
+              <span className={cn('shrink-0', isActive(item.href) ? `[&_svg]:text-primary` : '')}>
+                {item.icon}
+              </span>
+              <Activity mode={isCollapsed ? 'hidden' : 'visible'}>
+                <span
+                  className={cn(
+                    'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70',
+                    isActive(item.href) ? 'text-primary font-black' : 'font-bold',
+                  )}
+                >
+                  {t(item.title)}
+                </span>
+              </Activity>
+            </>
+          );
+
+          if (tooltipSide === null && !isCollapsed) {
+            return (
+              <Link
+                key={index}
+                href={item.href}
+                className={cn(
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start`,
+                  isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                )}
+              >
+                {linkContent}
+              </Link>
+            );
+          }
+
+          return (
+            <Tooltip key={index}>
+              <TooltipTrigger
+                className={cn(
+                  `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start`,
+                  isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                  isCollapsed ? 'justify-start py-[18px]!' : '',
+                )}
+              >
+                <Link
+                  href={item.href}
+                  className={cn(
+                    'flex items-center w-full justify-start',
+                    isCollapsed ? 'pl-[2px]' : '',
+                  )}
+                >
+                  {linkContent}
+                </Link>
+              </TooltipTrigger>
+              <TooltipPanel
+                className="whitespace-nowrap"
+                side={tooltipSide || 'right'}
+                initial={{ opacity: 0, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1 }}
+                transition={{ duration: 0.1 }}
+              >
+                <span className="text-white/70">{t(item.title)}</span>
+              </TooltipPanel>
+            </Tooltip>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export default NavigationMenu;

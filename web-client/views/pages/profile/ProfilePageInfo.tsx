@@ -60,7 +60,7 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
                     className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
                   >
                     <LinkIcon size={14} className="shrink-0" />
-                    <span className="leading-5 max-w-[200px] truncate">
+                    <span className="leading-5 max-w-[200px] truncate text-gray-500 dark:text-gray-400">
                       {data.data.tiktokUrl.replace(/^https?:\/\/(www\.)?/, '')}
                     </span>
                   </Link>
@@ -75,7 +75,7 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
                     className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
                   >
                     <LinkIcon size={14} className="shrink-0" />
-                    <span className="leading-5 max-w-[200px] truncate">
+                    <span className="leading-5 max-w-[200px] truncate text-gray-500 dark:text-gray-400">
                       {data.data.fbUrl.replace(/^https?:\/\/(www\.)?/, '')}
                     </span>
                   </Link>

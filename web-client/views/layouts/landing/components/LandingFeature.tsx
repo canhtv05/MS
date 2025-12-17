@@ -9,6 +9,7 @@ import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
 import { cn } from '@/lib/utils';
 import { FeatureIcon } from '@/components/animate-ui/icons/common';
 import { JSX } from 'react';
+import { motion } from 'framer-motion';
 
 interface LandingFeatureCardProps {
   icon: JSX.Element;
@@ -73,9 +74,30 @@ const LandingFeatureCard = ({ description, icon, title, className }: LandingFeat
 };
 
 const LandingFeature = () => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 50 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
     <div className="md:px-20 md:py-32 px-10 py-24">
-      <div className="flex flex-col items-center justify-center gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center gap-4"
+      >
         <div className="bg-green-50 flex items-center gap-2 rounded-full px-3 py-2">
           <FeatureIcon className="text-green-400 size-4 fill-green-400" />
           <span className="text-green-400 text-sm font-bold">Features</span>
@@ -87,12 +109,20 @@ const LandingFeature = () => {
         <p className="text-sm mx-auto max-w-lg text-center text-gray-600">
           Powerful features designed to help you build authentic relationships and grow your network
         </p>
-      </div>
-      <div className="grid lg:grid-cols-4 md:px-2 mt-10 md:grid-cols-2 grid-cols-1 gap-4 cursor-pointer">
+      </motion.div>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="grid lg:grid-cols-4 md:px-2 mt-10 md:grid-cols-2 grid-cols-1 gap-4 cursor-pointer"
+      >
         {homeFeatureCards.map((card, index) => (
-          <LandingFeatureCard key={index} {...card} />
+          <motion.div key={index} variants={item}>
+            <LandingFeatureCard {...card} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { CountingNumber } from '@/components/animate-ui/primitives/texts/countin
 import Ring from '@/components/customs/ring';
 import dynamic from 'next/dynamic';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
+import { motion } from 'framer-motion';
 
 const ClientHomeFeed = dynamic(() => import('./LandingFeed'), { ssr: false });
 
@@ -18,7 +19,12 @@ const LandingBanner = () => {
         bg-linear-to-br linear-2 cursor-default"
     >
       <div className="flex lg:flex-row flex-col md:gap-5 gap-0">
-        <div className="flex-1 lg:pl-20 lg:px-10 px-10 md:pl-20">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex-1 lg:pl-20 lg:px-10 px-10 md:pl-20"
+        >
           <div className="inline-block px-2 py-1 rounded-full border border-primary bg-white">
             <div className="w-full flex items-center justify-center gap-1">
               <Ring />
@@ -88,10 +94,15 @@ const LandingBanner = () => {
               <span className="text-gray-400 md:text-lg text-sm font-medium">Posts Daily</span>
             </div>
           </div>
-        </div>
-        <div className="flex-1 lg:px-5 md:px-20 px-10">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex-1 lg:px-5 md:px-20 px-10"
+        >
           <ClientHomeFeed />
-        </div>
+        </motion.div>
       </div>
     </section>
   );

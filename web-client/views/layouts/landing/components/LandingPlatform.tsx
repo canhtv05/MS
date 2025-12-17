@@ -6,6 +6,7 @@ import { MobileScreenIcon } from '@/components/animate-ui/icons/common';
 import images from '@/public/imgs';
 import { LucideIcon, RefreshCcw, Smartphone, TvMinimal } from 'lucide-react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface LandingPlatformCardProps {
   icon: LucideIcon;
@@ -66,7 +67,13 @@ const LandingFeatureCard = ({
 const LandingPlatform = () => {
   return (
     <div className="md:px-20 md:pt-16 px-10 py-12">
-      <div className="flex flex-col items-center justify-center gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center gap-4"
+      >
         <div className="bg-green-50 flex items-center gap-2 rounded-full px-3 py-2">
           <MobileScreenIcon className="text-green-400 size-4 fill-green-400" />
           <span className="text-green-400 text-sm font-bold">Cross Platform</span>
@@ -79,9 +86,15 @@ const LandingPlatform = () => {
           Seamlessly switch between desktop, tablet, and mobile. Your conversations follow you
           everywhere.
         </p>
-      </div>
+      </motion.div>
       <div className="flex md:flex-row flex-col md:gap-2 gap-10 md:px-2 mt-10">
-        <div className="relative w-full h-[300px] md:h-auto md:flex-1">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="relative w-full h-[300px] md:h-auto md:flex-1"
+        >
           <Image
             fill
             src={images.platform}
@@ -89,12 +102,18 @@ const LandingPlatform = () => {
             className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
           />
-        </div>
-        <div className="flex flex-1 flex-col cursor-pointer order-2 md:order-1">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex flex-1 flex-col cursor-pointer order-2 md:order-1"
+        >
           {homePlatformCards.map((card, index) => (
             <LandingFeatureCard key={index} {...card} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );
