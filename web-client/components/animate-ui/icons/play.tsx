@@ -70,10 +70,4 @@ function Play(props: PlayProps) {
   return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-export {
-  animations,
-  Play,
-  Play as PlayIcon,
-  type PlayProps,
-  type PlayProps as PlayIconProps,
-};
+export { animations, Play, Play as PlayIcon, type PlayProps, type PlayProps as PlayIconProps };

@@ -1,0 +1,9 @@
+{
+  "navigation": {
+    "home": "Home",
+    "friends": "Friends",
+    "photos": "Photos",
+    "new_feed": "New feed",
+    "profile": "Profile"
+  }
+}

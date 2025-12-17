@@ -82,10 +82,4 @@ function Star(props: StarProps) {
   return <IconWrapper icon={IconComponent} {...props} />;
 }
 
-export {
-  animations,
-  Star,
-  Star as StarIcon,
-  type StarProps,
-  type StarProps as StarIconProps,
-};
+export { animations, Star, Star as StarIcon, type StarProps, type StarProps as StarIconProps };

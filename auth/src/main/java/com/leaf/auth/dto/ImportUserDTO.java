@@ -5,19 +5,17 @@ import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
 import com.leaf.common.utils.JsonF;
 import com.leaf.common.utils.json.LowerCaseTrimDeserializer;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -47,11 +45,11 @@ public class ImportUserDTO implements Serializable {
 
     public User toEntity(String password, Set<Role> roles) {
         return User.builder()
-                .username(username.toLowerCase())
-                .password(password)
-                .roles(roles)
-                .activated(true)
-                .isGlobal(false)
-                .build();
+            .username(username.toLowerCase())
+            .password(password)
+            .roles(roles)
+            .activated(true)
+            .isGlobal(false)
+            .build();
     }
 }

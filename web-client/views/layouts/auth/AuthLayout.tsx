@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
-import { LanguagesIcon } from '@/components/ui/languages';
+import { LanguagesIcon } from '@/components/animate-ui/icons/languages';
 import { useTranslation } from 'react-i18next';
 import useAuthLayout from './use-auth-layout';
 import Image from 'next/image';
@@ -69,13 +69,13 @@ const AuthLayout = () => {
               <div className="size-5 relative">
                 <Image
                   sizes="(max-width: 768px) 24px, 32px"
-                  src={images.us}
+                  src={images.uk}
                   alt="US"
                   fill
                   className="object-contain"
                 />
               </div>
-              <span>{t('header.us')}</span>
+              <span>{t('header.uk')}</span>
             </DropdownMenuItem>
           </DropdownMenuHighlightItem>
         </DropdownMenuContent>

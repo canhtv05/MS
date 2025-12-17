@@ -26,23 +26,15 @@ function HoverCard(props: HoverCardProps) {
 
   return (
     <HoverCardProvider value={{ isOpen, setIsOpen }}>
-      <HoverCardPrimitive.Root
-        data-slot="hover-card"
-        {...props}
-        onOpenChange={setIsOpen}
-      />
+      <HoverCardPrimitive.Root data-slot="hover-card" {...props} onOpenChange={setIsOpen} />
     </HoverCardProvider>
   );
 }
 
-type HoverCardTriggerProps = React.ComponentProps<
-  typeof HoverCardPrimitive.Trigger
->;
+type HoverCardTriggerProps = React.ComponentProps<typeof HoverCardPrimitive.Trigger>;
 
 function HoverCardTrigger(props: HoverCardTriggerProps) {
-  return (
-    <HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
-  );
+  return <HoverCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />;
 }
 
 type HoverCardPortalProps = Omit<
@@ -55,20 +47,12 @@ function HoverCardPortal(props: HoverCardPortalProps) {
 
   return (
     <AnimatePresence>
-      {isOpen && (
-        <HoverCardPrimitive.Portal
-          forceMount
-          data-slot="hover-card-portal"
-          {...props}
-        />
-      )}
+      {isOpen && <HoverCardPrimitive.Portal forceMount data-slot="hover-card-portal" {...props} />}
     </AnimatePresence>
   );
 }
 
-type HoverCardContentProps = React.ComponentProps<
-  typeof HoverCardPrimitive.Content
-> &
+type HoverCardContentProps = React.ComponentProps<typeof HoverCardPrimitive.Content> &
   HTMLMotionProps<'div'>;
 
 function HoverCardContent({
@@ -113,9 +97,7 @@ function HoverCardContent({
   );
 }
 
-type HoverCardArrowProps = React.ComponentProps<
-  typeof HoverCardPrimitive.Arrow
->;
+type HoverCardArrowProps = React.ComponentProps<typeof HoverCardPrimitive.Arrow>;
 
 function HoverCardArrow(props: HoverCardArrowProps) {
   return <HoverCardPrimitive.Arrow data-slot="hover-card-arrow" {...props} />;

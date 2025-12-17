@@ -1,10 +1,9 @@
 package com.leaf.auth.exception;
 
+import java.io.Serial;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-
-import java.io.Serial;
 
 @Getter
 public class CustomAuthenticationException extends AuthenticationException {

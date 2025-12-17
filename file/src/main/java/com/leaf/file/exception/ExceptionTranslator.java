@@ -1,11 +1,10 @@
 package com.leaf.file.exception;
 
+import com.leaf.common.dto.ResponseObject;
+import com.leaf.common.exception.ApiException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.exception.ApiException;
 
 @RestControllerAdvice(name = "ExceptionTranslatorFile")
 public class ExceptionTranslator {

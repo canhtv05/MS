@@ -14,7 +14,7 @@ const AuthLayout = ({ children }: IAuthLayoutProps) => {
       id="login-container"
       className="min-h-screen relative overflow-hidden section-clickable flex"
     >
-      <div className="flex items-center h-full justify-center relative z-10 order-1 lg:px-10 px-0 lg:flex-none flex-1">
+      <div className="flex items-center min-h-screen justify-center relative z-10 order-1 lg:px-10 px-0 lg:flex-none flex-1">
         {children}
       </div>
       <AuthLayoutComponent />
@@ -24,6 +24,7 @@ const AuthLayout = ({ children }: IAuthLayoutProps) => {
             src={'/imgs/bg-login.png'}
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             fill
+            loading="eager"
             alt="login page image"
             className="object-cover"
           />

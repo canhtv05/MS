@@ -4,7 +4,13 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import Divider from '@/components/customs/divider';
 import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
-import { GoogleIcon, LockIcon, LockOpenIcon, MailIcon, UserIcon } from '@/public/icons';
+import {
+  GoogleIcon,
+  LockIcon,
+  LockOpenIcon,
+  MailIcon,
+  UserIcon,
+} from '@/components/animate-ui/icons/common';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import useSignUp from './use-signup';
@@ -151,10 +157,7 @@ const SignUpPage = () => {
       <div id="signup-link" className="text-center mt-8 section-clickable">
         <p className="text-foreground/70 text-sm">
           {t('sign_up.already_have_account')}
-          <Link
-            href="/sign-in"
-            className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium transition-colors"
-          >
+          <Link href="/sign-in" className="text-cyan-300 hover:text-cyan-200 ml-2 font-medium">
             {t('sign_up.sign_in_here')}
           </Link>
         </p>

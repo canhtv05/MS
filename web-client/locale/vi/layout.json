@@ -1,13 +1,14 @@
 {
   "header": {
-    "search_placeholder": "Tìm bài viết, hashtag, người dùng, ...",
+    "search_placeholder": "Tìm kiếm",
     "view_profile": "Xem hồ sơ",
     "settings": "Cài đặt",
     "dark_mode": "Chế độ tối",
     "language": "Ngôn ngữ",
-    "vn": "Việt Nam",
-    "us": "Mỹ",
+    "vn": "Tiếng Việt",
+    "uk": "Tiếng Anh",
     "logout": "Đăng xuất",
-    "change_password": "Đổi mật khẩu"
+    "change_password": "Đổi mật khẩu",
+    "create": "Tạo"
   }
 }

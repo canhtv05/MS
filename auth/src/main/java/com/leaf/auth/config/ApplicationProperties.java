@@ -14,8 +14,10 @@ public class ApplicationProperties {
     @Getter
     @Setter
     public static class SecurityConfig {
+
         private String base64Secret;
         private Long validDurationInSeconds;
         private Long refreshDurationInSeconds;
+        private String cookieDomain;
     }
 }

@@ -1,49 +1,13 @@
 import type { Metadata } from 'next';
-import {
-  Roboto,
-  Roboto_Mono,
-  Roboto_Slab,
-  Roboto_Flex,
-  Roboto_Serif,
-  Roboto_Condensed,
-} from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import './globals.css';
 import AppLayout from '@/views/layouts/AppLayout';
 
-const roboto = Roboto({
+const nunito = Nunito({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '700'],
-  variable: '--font-roboto',
-});
-
-const robotoMono = Roboto_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto-mono',
-});
-
-const robotoSlab = Roboto_Slab({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto-slab',
-});
-
-const robotoFlex = Roboto_Flex({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '700'],
-  variable: '--font-roboto-flex',
-});
-
-const robotoSerif = Roboto_Serif({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto-serif',
-});
-
-const robotoCondensed = Roboto_Condensed({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto-condensed',
+  display: 'swap',
+  variable: '--font-nunito',
+  weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
 export const metadata: Metadata = {
@@ -58,10 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        suppressHydrationWarning
-        className={`${roboto.variable} ${robotoMono.variable} ${robotoSlab.variable} ${robotoFlex.variable} ${robotoSerif.variable} ${robotoCondensed.variable} antialiased`}
-      >
+      <body suppressHydrationWarning className={`${nunito.variable} antialiased`}>
         <AppLayout>{children}</AppLayout>
       </body>
     </html>

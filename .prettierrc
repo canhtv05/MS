@@ -7,11 +7,15 @@
   "bracketSameLine": false,
   "htmlWhitespaceSensitivity": "ignore",
   "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-java"],
   "overrides": [
     {
       "files": "*.java",
       "options": {
-        "tabWidth": 4
+        "tabWidth": 4,
+        "printWidth": 120,
+        "singleQuote": false,
+        "trailingComma": "none"
       }
     },
     {

@@ -4,18 +4,16 @@ import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.dto.CookieValue;
 import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.utils.JsonF;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -25,10 +23,7 @@ public class CookieUtil {
     private final ApplicationProperties properties;
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
-        CookieValue cookieValue = CookieValue.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        CookieValue cookieValue = CookieValue.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
         String jsonData = JsonF.toJson(cookieValue);
 
@@ -43,8 +38,10 @@ public class CookieUtil {
         cookie.setHttpOnly(false);
         cookie.setMaxAge(properties.getSecurity().getRefreshDurationInSeconds().intValue()); // 2 weeks
         cookie.setPath("/");
-        cookie.setSecure(true); // true nếu chỉ cho gửi qua HTTPS
-        cookie.setDomain("localhost");
+        cookie.setSecure(false); // false for localhost development
+        String domain = properties.getSecurity().getCookieDomain();
+        if (StringUtils.hasText(domain)) cookie.setDomain(domain);
+
         return cookie;
     }
 
@@ -54,7 +51,8 @@ public class CookieUtil {
         cookie.setMaxAge(0);
         cookie.setPath("/");
         cookie.setSecure(true);
-        cookie.setDomain("localhost");
+        String domain = properties.getSecurity().getCookieDomain();
+        if (StringUtils.hasText(domain)) cookie.setDomain(domain);
         response.addCookie(cookie);
     }
 
@@ -62,16 +60,15 @@ public class CookieUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
-                if (c.getName().equals(CommonConstants.COOKIE_NAME))
-                    try {
-                        String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
+                if (c.getName().equals(CommonConstants.COOKIE_NAME)) try {
+                    String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
 
-                        CookieValue cookieValue = JsonF.jsonToObject(decoded, CookieValue.class);
-                        return cookieValue;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return null;
-                    }
+                    CookieValue cookieValue = JsonF.jsonToObject(decoded, CookieValue.class);
+                    return cookieValue;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         }
 

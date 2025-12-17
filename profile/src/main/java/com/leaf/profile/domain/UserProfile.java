@@ -1,23 +1,14 @@
 package com.leaf.profile.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leaf.profile.enums.Gender;
+import com.leaf.profile.enums.PrivacyLevel;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Property;
-import org.springframework.data.neo4j.core.schema.Relationship;
-import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leaf.profile.enums.Gender;
-import com.leaf.profile.enums.PrivacyLevel;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +16,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Getter
 @Setter
@@ -41,6 +38,8 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
 
     @Property("user_id")
     String userId;
+
+    String fullname;
     LocalDate dob;
     String city;
     Gender gender;
@@ -55,9 +54,13 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     @Property("avatar_url")
     String avatarUrl;
 
-    @Property("social_links")
+    @Property("tiktok_url")
     @Builder.Default
-    List<String> socialLinks = new ArrayList<>();
+    String tiktokUrl = "";
+
+    @Property("fb_url")
+    @Builder.Default
+    String fbUrl = "";
 
     @Property("profile_visibility")
     @Builder.Default

@@ -6,24 +6,21 @@ import com.leaf.auth.dto.excel.RowHeader;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.DateUtils;
-
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.IntStream;
-
 public class ExcelBuilder {
 
     public static byte[] buildFileTemplate(ExcelTemplateConfig config) {
-        try (XSSFWorkbook wb = new XSSFWorkbook();
-                ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        try (XSSFWorkbook wb = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet main = wb.createSheet("DataImport");
 
             CellStyle headerStyle = ExcelBuilder.createHeaderStyle(wb);
@@ -37,8 +34,14 @@ public class ExcelBuilder {
             }
             Row headerRow = main.createRow(0);
             IntStream.range(0, headers.size()).forEach(i -> {
-                createHeaderCell(headerRow, i, headers.get(i), config.getFieldRequired().contains(i), headerStyle,
-                        redFont);
+                createHeaderCell(
+                    headerRow,
+                    i,
+                    headers.get(i),
+                    config.getFieldRequired().contains(i),
+                    headerStyle,
+                    redFont
+                );
             });
 
             // Tạo STT data
@@ -56,7 +59,6 @@ public class ExcelBuilder {
                 Sheet hidden = wb.createSheet("__lists");
 
                 IntStream.range(0, config.getListValidations().size()).forEach(i -> {
-
                     ExcelTemplateConfig.ExcelValidation dto = config.getListValidations().get(i);
 
                     ExcelBuilder.fillListColumn(hidden, i, dto.getData()); // cột A
@@ -65,7 +67,8 @@ public class ExcelBuilder {
                     ExcelBuilder.createNamedRange(wb, dto.getRangeName(), getRefRange(i, dto.getData().size()));
 
                     // 3) Gán Data Validation cho các cột
-                    int firstRow = 1, lastRow = 100;
+                    int firstRow = 1,
+                        lastRow = 100;
 
                     // 3.1 Dropdown Loại KH cho cột PlanType
                     ExcelBuilder.addNamedListValidation(main, firstRow, lastRow, dto.getRowIndex(), dto.getRangeName());
@@ -109,7 +112,6 @@ public class ExcelBuilder {
             if (fileData.isEmpty()) {
                 throw new ApiException(ErrorMessage.IMPORT_EXCEL_ERROR, "File không có dữ liệu.");
             }
-
         } catch (Exception e) {
             if (e instanceof ApiException ex) {
                 throw ex;
@@ -124,8 +126,14 @@ public class ExcelBuilder {
         return "__lists!$_letter$1:$_letter$".replaceAll("_letter", letters.get(index)) + dataSize;
     }
 
-    private static void createHeaderCell(Row headerRow, int index, String value, boolean required, CellStyle style,
-            XSSFFont redFont) {
+    private static void createHeaderCell(
+        Row headerRow,
+        int index,
+        String value,
+        boolean required,
+        CellStyle style,
+        XSSFFont redFont
+    ) {
         Cell h = headerRow.createCell(index);
         h.setCellValue(value);
         h.setCellStyle(style);
@@ -139,8 +147,7 @@ public class ExcelBuilder {
     private static void fillListColumn(Sheet sheet, int col, List<String> data) {
         for (int i = 0; i < data.size(); i++) {
             Row r = sheet.getRow(i);
-            if (r == null)
-                r = sheet.createRow(i);
+            if (r == null) r = sheet.createRow(i);
             r.createCell(col).setCellValue(data.get(i));
         }
     }
@@ -176,12 +183,11 @@ public class ExcelBuilder {
 
     public static void createHeaderRow(Sheet sheet, CellStyle style, List<String> headers) {
         Row headerRow = sheet.createRow(0);
-        IntStream.range(0, headers.size())
-                .forEach(i -> {
-                    Cell h = headerRow.createCell(i);
-                    h.setCellValue(headers.get(i));
-                    h.setCellStyle(style);
-                });
+        IntStream.range(0, headers.size()).forEach(i -> {
+            Cell h = headerRow.createCell(i);
+            h.setCellValue(headers.get(i));
+            h.setCellStyle(style);
+        });
     }
 
     public static String readString(Row row, Integer colIndex) {
@@ -193,14 +199,12 @@ public class ExcelBuilder {
     }
 
     private static String readCellAsString(Cell cell) {
-        if (cell == null)
-            return "";
+        if (cell == null) return "";
         return switch (cell.getCellType()) {
             case STRING -> cell.getStringCellValue();
             case NUMERIC -> {
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    var ld = cell.getDateCellValue().toInstant()
-                            .atZone(ZoneId.systemDefault()).toLocalDate();
+                    var ld = cell.getDateCellValue().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     yield ld.toString();
                 } else {
                     yield String.valueOf(cell.getNumericCellValue());

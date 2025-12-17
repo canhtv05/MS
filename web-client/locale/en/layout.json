@@ -1,13 +1,14 @@
 {
   "header": {
-    "search_placeholder": "Search posts, hashtags, people, ...",
+    "search_placeholder": "Search",
     "view_profile": "View profile",
     "settings": "Settings",
     "dark_mode": "Dark mode",
     "language": "Language",
-    "vn": "Việt Nam",
-    "us": "US",
+    "vn": "Vietnamese",
+    "uk": "English",
     "logout": "Logout",
-    "change_password": "Change password"
+    "change_password": "Change password",
+    "create": "Create"
   }
 }

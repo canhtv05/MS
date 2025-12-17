@@ -1,7 +1,8 @@
 {
   "string": {
     "min": "{{field}} phải có ít nhất {{min}} ký tự",
-    "max": "{{field}} phải có nhiều nhất {{max}} ký tự"
+    "max": "{{field}} phải có nhiều nhất {{max}} ký tự",
+    "email": "{{field}} phải là một email hợp lệ"
   },
   "required": "{{field}} là bắt buộc"
 }

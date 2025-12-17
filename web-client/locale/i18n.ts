@@ -11,8 +11,12 @@ import authEN from './en/auth.json';
 import authVI from './vi/auth.json';
 import validationEN from './en/validation.json';
 import validationVI from './vi/validation.json';
+import navigationEN from './en/navigation.json';
+import navigationVI from './vi/navigation.json';
 import notificationEN from './en/notification.json';
 import notificationVI from './vi/notification.json';
+import profileEN from './en/profile.json';
+import profileVI from './vi/profile.json';
 import { APP_KEY } from '@/utils/cookieUtils';
 
 // the translations
@@ -22,14 +26,18 @@ const resources = {
     validation: validationEN,
     common: commonEN,
     layout: layoutEN,
+    navigation: navigationEN,
     notification: notificationEN,
+    profile: profileEN,
   },
   vi: {
     auth: authVI,
     validation: validationVI,
     common: commonVI,
     layout: layoutVI,
+    navigation: navigationVI,
     notification: notificationVI,
+    profile: profileVI,
   },
 };
 
@@ -61,7 +69,7 @@ if (!i18next.isInitialized) {
     fallbackLng: 'vi',
     debug: false,
     interpolation: { escapeValue: false },
-    ns: ['auth', 'validation', 'common', 'layout'],
+    ns: ['auth', 'validation', 'common', 'layout', 'navigation', 'profile'],
     defaultNS: 'common',
     lng: 'vi', // default language SSR
   });

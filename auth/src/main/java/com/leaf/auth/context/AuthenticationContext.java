@@ -7,27 +7,27 @@ package com.leaf.auth.context;
  */
 public class AuthenticationContext {
 
-  private static final ThreadLocal<String> channelContext = new ThreadLocal<>();
+    private static final ThreadLocal<String> channelContext = new ThreadLocal<>();
 
-  /**
-   * Set channel cho thread hiện tại
-   */
-  public static void setChannel(String channel) {
-    channelContext.set(channel);
-  }
+    /**
+     * Set channel cho thread hiện tại
+     */
+    public static void setChannel(String channel) {
+        channelContext.set(channel);
+    }
 
-  /**
-   * Lấy channel từ thread hiện tại
-   */
-  public static String getChannel() {
-    return channelContext.get();
-  }
+    /**
+     * Lấy channel từ thread hiện tại
+     */
+    public static String getChannel() {
+        return channelContext.get();
+    }
 
-  /**
-   * Xóa channel sau khi hoàn thành authentication
-   * QUAN TRỌNG: Phải gọi method này để tránh memory leak
-   */
-  public static void clear() {
-    channelContext.remove();
-  }
+    /**
+     * Xóa channel sau khi hoàn thành authentication
+     * QUAN TRỌNG: Phải gọi method này để tránh memory leak
+     */
+    public static void clear() {
+        channelContext.remove();
+    }
 }

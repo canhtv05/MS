@@ -5,9 +5,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthMutation } from '@/services/mutations/auth';
+import { useNotificationMutation } from '@/services/mutations/notification';
 
 const useSignIn = () => {
-  const { loginMutation } = useAuthMutation();
+  const { loginMutation, showResendEmail, setShowResendEmail } = useAuthMutation();
+  const { resendVerifyEmailMutation } = useNotificationMutation();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -21,9 +23,19 @@ const useSignIn = () => {
     loginMutation.mutate(data);
   };
 
+  const handleResendVerifyEmail = () => {
+    resendVerifyEmailMutation.mutate({
+      to: '',
+      username: form.getValues('username'),
+    });
+  };
+
   return {
     onSubmit,
     form,
+    showResendEmail,
+    setShowResendEmail,
+    handleResendVerifyEmail,
   };
 };
 

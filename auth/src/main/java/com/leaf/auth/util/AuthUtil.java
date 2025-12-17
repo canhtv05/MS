@@ -1,17 +1,14 @@
 package com.leaf.auth.util;
 
-import java.util.Objects;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import com.leaf.common.enums.AuthKey;
-
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -30,8 +27,7 @@ public class AuthUtil {
             return jwt;
         }
         var res = cookieUtil.getTokenCookie(request);
-        if (Objects.isNull(res))
-            return null;
+        if (Objects.isNull(res)) return null;
 
         return res.getAccessToken();
     }

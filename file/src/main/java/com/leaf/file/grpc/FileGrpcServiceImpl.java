@@ -1,18 +1,15 @@
 package com.leaf.file.grpc;
 
-import java.util.List;
-
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.google.protobuf.ByteString;
 import com.leaf.common.grpc.*;
 import com.leaf.file.mapper.FileProtoMapper;
 import com.leaf.file.service.FileService;
-
 import io.grpc.stub.StreamObserver;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -25,9 +22,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
         try {
             fileService.deleteById(request.getFileId());
 
-            DeleteByIdResponse response = DeleteByIdResponse.newBuilder()
-                    .setSuccess(true)
-                    .build();
+            DeleteByIdResponse response = DeleteByIdResponse.newBuilder().setSuccess(true).build();
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -68,25 +63,18 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
 
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
-
         } catch (Exception e) {
             responseObserver.onError(e);
         }
     }
 
     private MultipartFile[] convertFromGrpc(List<ByteString> filesList) {
-        return filesList.stream()
-                .map(FileGrpcServiceImpl::toMultipartFile)
-                .toArray(MultipartFile[]::new);
+        return filesList.stream().map(FileGrpcServiceImpl::toMultipartFile).toArray(MultipartFile[]::new);
     }
 
     private static MultipartFile toMultipartFile(ByteString bs) {
         try {
-            return new MockMultipartFile(
-                    "file",
-                    "file",
-                    "application/octet-stream",
-                    bs.toByteArray());
+            return new MockMultipartFile("file", "file", "application/octet-stream", bs.toByteArray());
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert gRPC bytes to MultipartFile", e);
         }

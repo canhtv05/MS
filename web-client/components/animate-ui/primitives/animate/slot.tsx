@@ -71,7 +71,6 @@ function Slot<T extends HTMLElement = HTMLElement>({ children, ref, ...props }: 
 
   const mergedProps = mergeProps(childProps, props);
 
-  // eslint-disable-next-line react-hooks/static-components
   return <Base {...mergedProps} ref={mergeRefs(childRef as React.Ref<T>, ref)} />;
 }
 

@@ -1,16 +1,14 @@
 package com.leaf.auth.domain;
 
+import com.leaf.auth.enums.PermissionAction;
+import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.util.UUID;
-
-import com.leaf.auth.enums.PermissionAction;
-import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 
 @Getter
 @Setter

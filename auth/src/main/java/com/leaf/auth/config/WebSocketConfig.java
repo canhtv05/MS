@@ -1,9 +1,8 @@
 package com.leaf.auth.config;
 
-import lombok.extern.slf4j.Slf4j;
-
+import com.leaf.auth.security.jwt.TokenProvider;
 import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +20,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.leaf.auth.security.jwt.TokenProvider;
-
 @Configuration
 @EnableWebSocketMessageBroker
 @Slf4j
@@ -36,9 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(@org.springframework.lang.NonNull StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
@@ -50,26 +45,34 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(@org.springframework.lang.NonNull ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @SuppressWarnings("null")
-            @Override
-            public Message<?> preSend(@org.springframework.lang.NonNull Message<?> message,
-                    @org.springframework.lang.NonNull MessageChannel channel) {
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        registration.interceptors(
+            new ChannelInterceptor() {
+                @SuppressWarnings("null")
+                @Override
+                public Message<?> preSend(
+                    @org.springframework.lang.NonNull Message<?> message,
+                    @org.springframework.lang.NonNull MessageChannel channel
+                ) {
+                    StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
+                        message,
+                        StompHeaderAccessor.class
+                    );
 
-                if (StompCommand.CONNECT.equals(accessor.getCommand()) && Objects.nonNull(accessor)) {
-                    String authorizationHeader = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
-                    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                        authorizationHeader = authorizationHeader.substring(7);
-                        if (tokenProvider.validateToken(authorizationHeader)) {
-                            Authentication authentication = tokenProvider.getAuthentication(authorizationHeader);
-                            accessor.setUser(authentication);
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                    assert accessor != null;
+                    if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                        String authorizationHeader = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
+                        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                            authorizationHeader = authorizationHeader.substring(7);
+                            if (tokenProvider.validateToken(authorizationHeader)) {
+                                Authentication authentication = tokenProvider.getAuthentication(authorizationHeader);
+                                accessor.setUser(authentication);
+                                SecurityContextHolder.getContext().setAuthentication(authentication);
+                            }
                         }
                     }
+                    return message;
                 }
-                return message;
             }
-        });
+        );
     }
 }

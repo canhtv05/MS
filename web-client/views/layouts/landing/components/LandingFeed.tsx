@@ -4,7 +4,7 @@ import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { MessageCircle } from '@/components/animate-ui/icons/message-circle';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import { Skeleton } from '@/components/customs/skeleton';
-import { Viewport } from '@/enums';
+import { Viewport } from '@/enums/common';
 import useViewport from '@/hooks/use-view-port';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';

@@ -32,3 +32,4 @@ application:
     base64-secret: ${BASE_64_SECRET}
     valid-duration-in-seconds: ${VALID_DURATION}
     refresh-duration-in-seconds: ${REFRESH_DURATION}
+    cookie-domain: ${COOKIE_DOMAIN:}

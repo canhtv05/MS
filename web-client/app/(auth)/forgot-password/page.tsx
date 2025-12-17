@@ -1,0 +1,7 @@
+import ForgotPasswordPage from '@/views/pages/forgot-password/ForgotPasswordPage';
+
+const ForgotPassword = () => {
+  return <ForgotPasswordPage />;
+};
+
+export default ForgotPassword;

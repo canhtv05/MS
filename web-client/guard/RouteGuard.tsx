@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuthQuery } from '@/services/queries/auth';
-import { useUserProfileQuery } from '@/services/queries/profile';
+import { useAuthStore } from '@/stores/auth';
+import cookieUtils from '@/utils/cookieUtils';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -10,19 +10,19 @@ interface IRouteGuard {
 }
 
 const RouteGuard = ({ children }: IRouteGuard) => {
-  const { user } = useAuthQuery(true);
-  const { userProfile } = useUserProfileQuery(true);
+  const user = useAuthStore(state => state.user);
 
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     if (pathname === '/sign-up' || pathname === '/sign-in') {
-      if (user && userProfile) {
+      const token = cookieUtils.getStorage()?.accessToken;
+      if (user && token) {
         router.push('/home');
       }
     }
-  }, [pathname, router, user, userProfile]);
+  }, [pathname, router, user]);
 
   return <>{children}</>;
 };

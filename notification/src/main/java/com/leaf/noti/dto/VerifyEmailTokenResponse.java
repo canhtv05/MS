@@ -1,5 +1,6 @@
 package com.leaf.noti.dto;
 
+import com.leaf.noti.enums.VerificationStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,5 @@ import lombok.experimental.FieldDefaults;
 public class VerifyEmailTokenResponse {
 
     boolean valid;
+    VerificationStatus verificationStatus;
 }

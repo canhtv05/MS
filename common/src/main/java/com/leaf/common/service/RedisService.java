@@ -1,18 +1,14 @@
 package com.leaf.common.service;
 
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.JsonF;
-
 import java.time.Duration;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +30,11 @@ public class RedisService {
     private String getKeyVerification(String token) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:verify:email:%s", envRunning, token);
+    }
+
+    private String getKeyForgotPassword(String token) {
+        String envRunning = environment.getActiveProfiles()[0];
+        return String.format("%s:forgot:password:%s", envRunning, token);
     }
 
     public String getToken(String username, String channel) {
@@ -61,11 +62,11 @@ public class RedisService {
     public void cacheUser(String username, String channel, String sessionId, String secretKey) {
         String userKey = this.getKeyUser(username, channel);
         UserSessionDTO user = UserSessionDTO.builder()
-                .sessionId(sessionId)
-                .channel(channel)
-                .username(username)
-                .secretKey(secretKey)
-                .build();
+            .sessionId(sessionId)
+            .channel(channel)
+            .username(username)
+            .secretKey(secretKey)
+            .build();
         redisTemplate.opsForValue().set(userKey, user);
     }
 
@@ -75,20 +76,33 @@ public class RedisService {
 
     public UserSessionDTO getUser(String username, String channel) {
         String userKey = this.getKeyUser(username, channel);
-        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey),
-                UserSessionDTO.class);
+        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey), UserSessionDTO.class);
     }
 
-    public void saveVerificationToken(String token, String username) {
+    public void saveEmailToken(String token, String username) {
         redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
     }
 
-    public String validateToken(String token) {
-        String username = (String) redisTemplate.opsForValue().get(getKeyVerification(token));
-        if (StringUtils.hasText(username)) {
-            redisTemplate.delete(getKeyVerification(token));
-            return username;
-        }
-        return null;
+    public String getUsernameIfEmailTokenAlive(String token) {
+        return (String) redisTemplate.opsForValue().get(getKeyVerification(token));
+    }
+
+    public void deleteEmailToken(String token) {
+        redisTemplate.delete(getKeyVerification(token));
+    }
+
+    public void saveForgotPasswordOTP(String username, String otp) {
+        String key = this.getKeyForgotPassword(username);
+        redisTemplate.opsForValue().set(key, otp, Duration.ofMinutes(10));
+    }
+
+    public String getForgotPasswordOTP(String username) {
+        String key = this.getKeyForgotPassword(username);
+        return (String) redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteForgotPasswordOTP(String username) {
+        String key = this.getKeyForgotPassword(username);
+        redisTemplate.delete(key);
     }
 }

@@ -1,13 +1,10 @@
 package com.leaf.file.dto;
 
+import com.leaf.file.domain.Video;
+import java.io.Serializable;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
-
 import org.springframework.beans.BeanUtils;
-
-import com.leaf.file.domain.Video;
 
 @Data
 @Builder
@@ -21,6 +18,7 @@ public class VideoResponse implements Serializable {
     String contentType;
     String videoUrl;
     String thumbnailUrl;
+    String previewVttUrl;
     Long fileSize;
     String originFileName;
     String publicId;

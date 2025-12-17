@@ -1,26 +1,40 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, ReactNode, useState } from 'react';
 import LoadingPage from '@/views/pages/loading';
 import { useAuthQuery } from '@/services/queries/auth';
-import { useUserProfileQuery } from '@/services/queries/profile';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/stores/auth';
+import { useAuthRefresh } from '@/guard/AuthRefreshContext';
+import cookieUtils from '@/utils/cookieUtils';
 
 interface IAuthRoute {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AuthRoute = ({ children }: IAuthRoute) => {
-  const { isLoading: loadingAuth } = useAuthQuery(true);
-  const { isLoading: loadingProfile } = useUserProfileQuery(true);
-
+  const queryClient = useQueryClient();
+  const { setUser } = useAuthStore();
+  const { isRefreshing } = useAuthRefresh();
+  const { isLoading: isAuthenticating, user: userData } = useAuthQuery(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loadingAuth && !loadingProfile && loading) {
+    if (!isAuthenticating && !isRefreshing) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
+    } else {
+      setLoading(true);
     }
-  }, [loadingAuth, loadingProfile, loading]);
+  }, [isAuthenticating, isRefreshing]);
+
+  useEffect(() => {
+    if (!loading && !userData && !isRefreshing) {
+      setUser(undefined);
+      queryClient.clear();
+      cookieUtils.deleteAccessToken();
+    }
+  }, [queryClient, userData, loading, setUser, isRefreshing]);
 
   if (loading) {
     return <LoadingPage />;

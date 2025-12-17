@@ -1,0 +1,16 @@
+{
+  "profile_not_found": "Không tìm thấy hồ sơ",
+  "you_tried_to_access": "Bạn đã cố truy cập:",
+  "expected_username_starting_with": "Chúng tôi mong đợi tên người dùng bắt đầu bằng @",
+  "user_not_found": "Không tìm thấy người dùng",
+  "message": "Tin nhắn",
+  "follow": "Theo dõi",
+  "posts": "Bài viết",
+  "followers": "Người theo dõi",
+  "following": "Đang theo dõi",
+  "liked": "Đã thích",
+  "saved": "Đã lưu",
+  "no_posts": "Chưa có bài viết nào",
+  "no_liked": "Chưa có bài viết nào đã thích",
+  "no_saved": "Chưa có bài viết nào đã lưu"
+}

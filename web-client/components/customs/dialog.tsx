@@ -33,10 +33,11 @@ const Dialog = ({ children, open, onAccept, onClose, title, description, id }: I
         </DialogHeader>
         {children}
         <DialogFooter className="flex justify-end items-center gap-2">
-          <Button variant={'outline'} onClick={onClose}>
+          <Button className="w-full sm:w-auto" variant={'outline'} onClick={onClose}>
             {t('button.close')}
           </Button>
           <Button
+            className="w-full sm:w-auto"
             variant={'destructive'}
             onClick={() => {
               onAccept?.();

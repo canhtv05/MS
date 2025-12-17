@@ -10,26 +10,30 @@ import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
 import com.leaf.auth.exception.CustomAuthenticationException;
+import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.constant.CacheConstants;
-import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.grpc.UserProfileIdRequest;
+import com.leaf.common.grpc.UserProfileResponse;
 import com.leaf.common.security.SecurityUtils;
-import com.leaf.common.service.RedisService;
+import com.leaf.common.utils.ConvertProto;
+// import com.leaf.common.service.RedisService;
 import com.leaf.common.utils.JsonF;
-
+import io.grpc.StatusRuntimeException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.http.HttpStatus;
@@ -42,15 +46,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
-    RedisService redisService;
+    // RedisService redisService;
     CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
@@ -58,34 +59,51 @@ public class AuthService {
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
     RedisCacheManager redisCacheManager;
+    GrpcUserProfileClient userProfileClient;
 
     @Transactional
-    public String authenticate(LoginRequest loginRequest, HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) {
+    public String authenticate(
+        LoginRequest loginRequest,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
         try {
             AuthenticationContext.setChannel(loginRequest.getChannel());
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword());
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            );
 
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return tokenProvider.createToken(authentication, httpServletRequest, httpServletResponse,
-                    loginRequest.getChannel());
+            return tokenProvider.createToken(
+                authentication,
+                httpServletRequest,
+                httpServletResponse,
+                loginRequest.getChannel()
+            );
         } finally {
             AuthenticationContext.clear();
         }
     }
 
     @Transactional
-    public RefreshTokenResponse refreshToken(String cookieValue, String channel, HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) {
-
+    public RefreshTokenResponse refreshToken(
+        String cookieValue,
+        String channel,
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse httpServletResponse
+    ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return tokenProvider.refreshToken(authentication, cookieValue, httpServletRequest, httpServletResponse,
-                channel);
+        return tokenProvider.refreshToken(
+            authentication,
+            cookieValue,
+            httpServletRequest,
+            httpServletResponse,
+            channel
+        );
     }
 
     @Transactional(readOnly = true)
@@ -97,9 +115,7 @@ public class AuthService {
 
         boolean valid = this.tokenProvider.validateToken(accessToken);
 
-        return VerifyTokenResponse.builder()
-                .valid(valid)
-                .build();
+        return VerifyTokenResponse.builder().valid(valid).build();
     }
 
     @Transactional
@@ -117,8 +133,9 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public UserProfileDTO getProfile(HttpServletRequest request) {
-        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(
-                () -> new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED));
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
+        );
 
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
         UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
@@ -133,12 +150,46 @@ public class AuthService {
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
 
-        // Get user session from Redis using channel
-        UserSessionDTO userSessionDTO = redisService.getUser(username, AuthenticationContext.getChannel());
-        if (userSessionDTO != null) {
-            userProfileDTO.setChannel(userSessionDTO.getChannel());
-            userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
+        UserProfileResponse userProfileResponse = null;
+        try {
+            userProfileResponse = userProfileClient.getUserProfile(
+                UserProfileIdRequest.newBuilder().setUserId(username).build()
+            );
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
+                throw new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND);
+            }
         }
+
+        if (Objects.nonNull(userProfileResponse)) {
+            userProfileDTO.setDob(ConvertProto.convertTimestampToLocalDate(userProfileResponse.getDob()));
+            userProfileDTO.setCity(userProfileResponse.getCity());
+            userProfileDTO.setBio(userProfileResponse.getBio());
+            userProfileDTO.setCoverUrl(userProfileResponse.getCoverUrl());
+            userProfileDTO.setAvatarUrl(userProfileResponse.getAvatarUrl());
+            userProfileDTO.setGender(userProfileResponse.getGender());
+            userProfileDTO.setPhoneNumber(userProfileResponse.getPhoneNumber());
+            userProfileDTO.setCreatedDate(ConvertProto.convertTimestampToInstant(userProfileResponse.getCreatedDate()));
+            userProfileDTO.setLastOnlineAt(
+                ConvertProto.convertTimestampToInstant(userProfileResponse.getLastOnlineAt())
+            );
+            userProfileDTO.setTiktokUrl(userProfileResponse.getTiktokUrl());
+            userProfileDTO.setFbUrl(userProfileResponse.getFbUrl());
+            userProfileDTO.setProfileVisibility(userProfileResponse.getProfileVisibility());
+            userProfileDTO.setFriendsVisibility(userProfileResponse.getFriendsVisibility());
+            userProfileDTO.setPostsVisibility(userProfileResponse.getPostsVisibility());
+            userProfileDTO.setFollowersCount(userProfileResponse.getFollowersCount());
+            userProfileDTO.setFollowingCount(userProfileResponse.getFollowingCount());
+        }
+
+        // Get user session from Redis using channel
+        // UserSessionDTO userSessionDTO = redisService.getUser(
+        // username,
+        // SecurityUtils.getCurrentUserChannel().orElse(null));
+        // if (userSessionDTO != null) {
+        // userProfileDTO.setChannel(userSessionDTO.getChannel());
+        // userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
+        // }
 
         if (Objects.nonNull(cache)) {
             cache.put(username, userProfileDTO);
@@ -148,22 +199,30 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public void mappingUserPermissions(UserProfileDTO userProfileDTO, User user) {
-        Set<String> permissions = user.getRoles().stream()
-                .filter(role -> !ObjectUtils.isEmpty(role.getPermissions()))
-                .flatMap(role -> role.getPermissions().stream())
-                .filter(Objects::nonNull)
-                .map(Permission::getCode)
-                .collect(Collectors.toSet());
+        Set<String> permissions = user
+            .getRoles()
+            .stream()
+            .filter(role -> !ObjectUtils.isEmpty(role.getPermissions()))
+            .flatMap(role -> role.getPermissions().stream())
+            .filter(Objects::nonNull)
+            .map(Permission::getCode)
+            .collect(Collectors.toSet());
         List<UserPermission> userPermissions = userPermissionRepository.findAllByUserId(user.getId());
         if (!userPermissions.isEmpty()) {
-            permissions.addAll(userPermissions.stream()
+            permissions.addAll(
+                userPermissions
+                    .stream()
                     .filter(pm -> PermissionAction.GRANT.equals(pm.getAction()))
                     .map(UserPermission::getPermissionCode)
-                    .collect(Collectors.toSet()));
-            permissions.removeAll(userPermissions.stream()
+                    .collect(Collectors.toSet())
+            );
+            permissions.removeAll(
+                userPermissions
+                    .stream()
                     .filter(pm -> PermissionAction.DENY.equals(pm.getAction()))
                     .map(UserPermission::getPermissionCode)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toSet())
+            );
         }
         userProfileDTO.setPermissions(new ArrayList<>(permissions));
     }

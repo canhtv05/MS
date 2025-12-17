@@ -80,23 +80,22 @@
   <body>
     <div class="container">
       <div class="header">
-        <div class="logo">🔐</div>
+        <!-- <div class="logo">🔐</div> -->
         <h1>Xác thực tài khoản</h1>
       </div>
 
       <p>
         Xin chào
-        <strong th:text="${username}">User</strong>
-        ,
+        <strong th:text="${username} + ','">User</strong>
       </p>
 
       <p>
         Cảm ơn bạn đã đăng ký! Vui lòng sử dụng mã xác thực bên dưới để kích hoạt tài khoản của bạn:
       </p>
-
+      <!-- 
       <div class="token-box">
         <div class="token" th:text="${token}">XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</div>
-      </div>
+      </div> -->
 
       <p style="text-align: center">
         <a th:href="${verificationUrl}" style="color: white" class="button">✓ Xác thực ngay</a>
@@ -114,12 +113,12 @@
         </ul>
       </div>
 
-      <p>Nếu bạn gặp vấn đề với nút bên trên, hãy copy và paste URL sau vào trình duyệt:</p>
+      <!-- <p>Nếu bạn gặp vấn đề với nút bên trên, hãy copy và paste URL sau vào trình duyệt:</p>
       <p style="word-break: break-all; color: #666; font-size: 12px">
         <span th:text="${verificationUrl}">
           http://localhost:1004/notifications/verify?token=xxx
         </span>
-      </p>
+      </p> -->
 
       <div class="footer">
         <p>Email này được gửi tự động, vui lòng không reply.</p>

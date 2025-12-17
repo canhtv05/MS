@@ -5,7 +5,7 @@ import { IUserProfileDTO } from '@/types/auth';
 import { IResponseObject } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
-import { API_ENDPOINTS } from '@/utils/endpoints';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useQuery } from '@tanstack/react-query';
 
 export const useAuthQuery = (enabled: boolean = true) => {
@@ -20,16 +20,36 @@ export const useAuthQuery = (enabled: boolean = true) => {
       setUser(res.data.data);
       return res.data;
     },
-    enabled: enabled && !!token && !user, // Chỉ fetch khi có token
+    enabled: enabled && !!token && !user,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // Cache 5 phút
-    gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút
-    refetchOnWindowFocus: false, // Không fetch lại khi focus window
-    refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    networkMode: 'offlineFirst',
   });
 
+  if (user) {
+    return {
+      user,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
+  }
+
+  if (!token) {
+    return {
+      user: undefined,
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
+  }
+
   return {
-    user: query.data,
+    user: query.data?.data,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
