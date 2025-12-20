@@ -11,7 +11,9 @@ public class CommonConstants {
         "/me/p/forgot-password",
         "/me/p/reset-password",
         "/me/p/verify-forgot-password-otp",
-        "/me/p/refresh-token"
+        "/me/p/refresh-token",
+        "/graphiql/**",
+        "/graphql/**"
     };
     public static final String[] NOTIFICATION_PUBLIC_ENDPOINTS = { "/verify-email", "/resend-verify-email" };
     public static final String[] PROFILE_PUBLIC_ENDPOINTS = { "/profile/**" };

@@ -27,6 +27,11 @@ spring:
               type:
                 headers: false
 
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
+
 application:
   security:
     base64-secret: ${BASE_64_SECRET}
