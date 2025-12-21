@@ -2,11 +2,13 @@
 
 import { useAuthStore } from '@/stores/auth';
 import { IUserProfileDTO } from '@/types/auth';
-import { IResponseObject } from '@/types/common';
-import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
-import { API_ENDPOINTS } from '@/configs/endpoints';
+import { getGraphQLClient, ME_QUERY } from '@/utils/graphql';
 import { useQuery } from '@tanstack/react-query';
+
+interface MeQueryResponse {
+  me: IUserProfileDTO;
+}
 
 export const useAuthQuery = (enabled: boolean = true) => {
   const setUser = useAuthStore(state => state.setUser);
@@ -15,10 +17,11 @@ export const useAuthQuery = (enabled: boolean = true) => {
 
   const query = useQuery({
     queryKey: ['auth', 'me'],
-    queryFn: async (): Promise<IResponseObject<IUserProfileDTO>> => {
-      const res = await api.get(API_ENDPOINTS.AUTH.ME);
-      setUser(res.data.data);
-      return res.data;
+    queryFn: async (): Promise<IUserProfileDTO> => {
+      const client = getGraphQLClient();
+      const data = await client.request<MeQueryResponse>(ME_QUERY);
+      setUser(data.me);
+      return data.me;
     },
     enabled: enabled && !!token && !user,
     retry: 1,
@@ -49,7 +52,7 @@ export const useAuthQuery = (enabled: boolean = true) => {
   }
 
   return {
-    user: query.data?.data,
+    user: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,

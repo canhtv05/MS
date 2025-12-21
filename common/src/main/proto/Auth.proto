@@ -4,10 +4,12 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "AuthProto";
 import "google/protobuf/timestamp.proto";
+import "Common.proto";
 
 service AuthGrpcService {
   rpc verifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
   rpc verifyEmailToken (VerifyEmailTokenDTO) returns (VerifyEmailTokenDTO);
+  rpc authMe (AuthMeRequest) returns (AuthMeResponse);
 }
 
 message VerifyTokenRequest {
@@ -24,4 +26,20 @@ message VerifyEmailTokenDTO {
   string email = 3;
   google.protobuf.Timestamp expiredAt = 4;
   string jti = 5;
+}
+
+message AuthMeRequest {
+  string userId = 1;
+}
+
+message AuthMeResponse {
+  string username = 1;
+  string fullname = 2;
+  string email = 3;
+  bool isGlobal = 4;
+  repeated string roles = 5;
+  repeated string roleLabels = 6;
+  repeated string permissions = 7;
+  string secretKey = 8;
+  string channel = 9;
 }

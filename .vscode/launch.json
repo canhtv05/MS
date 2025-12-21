@@ -48,7 +48,8 @@
       "envFile": "${workspaceFolder}/.env",
       "env": {
         "SPRING_PROFILES_ACTIVE": "dev"
-      }
+      },
+      "vmArgs": " -Dcom.sun.management.jmxremote"
     },
     {
       "type": "java",
@@ -58,7 +59,8 @@
       "mainClass": "com.leaf.discovery_server.DiscoveryServerApplication",
       "projectName": "discovery-server",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote"
     },
     {
       "type": "java",
@@ -80,6 +82,16 @@
       "cwd": "${workspaceFolder}",
       "mainClass": "com.leaf.noti.NotificationApplication",
       "projectName": "notification",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-GraphqlBffApplication<graphql-bff>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.graphql_bff.GraphqlBffApplication",
+      "projectName": "graphql-bff",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }

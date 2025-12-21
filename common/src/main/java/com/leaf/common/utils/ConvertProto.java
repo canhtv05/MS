@@ -26,7 +26,7 @@ public class ConvertProto {
             return null;
         }
         Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
-        LocalDate time = instant.atZone(ZoneOffset.UTC).toLocalDate();
+        LocalDate time = instant.atZone(ZoneOffset.of("+07:00")).toLocalDate();
         return time;
     }
 
@@ -34,7 +34,11 @@ public class ConvertProto {
         if (localDate == null) {
             return null;
         }
-        Instant instant = localDate.atStartOfDay(ZoneOffset.UTC).toInstant();
+        Instant instant = localDate.atStartOfDay(ZoneOffset.of("+07:00")).toInstant();
         return Timestamp.newBuilder().setSeconds(instant.getEpochSecond()).setNanos(instant.getNano()).build();
+    }
+
+    public static String nullToEmpty(String value) {
+        return value != null ? value : "";
     }
 }

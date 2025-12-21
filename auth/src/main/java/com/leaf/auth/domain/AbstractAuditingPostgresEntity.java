@@ -1,4 +1,4 @@
-package com.leaf.common.domain;
+package com.leaf.auth.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;

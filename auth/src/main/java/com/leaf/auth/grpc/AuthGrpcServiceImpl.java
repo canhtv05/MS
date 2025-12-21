@@ -1,8 +1,11 @@
 package com.leaf.auth.grpc;
 
+import com.leaf.auth.mapper.AuthGrpcMapper;
 import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
 import com.leaf.common.grpc.AuthGrpcServiceGrpc;
+import com.leaf.common.grpc.AuthMeRequest;
+import com.leaf.common.grpc.AuthMeResponse;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.grpc.VerifyTokenRequest;
 import com.leaf.common.grpc.VerifyTokenResponse;
@@ -31,6 +34,17 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
         try {
             var response = userService.activeUserByUserName(request);
             responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+        }
+    }
+
+    @Override
+    public void authMe(AuthMeRequest request, StreamObserver<AuthMeResponse> responseObserver) {
+        try {
+            var response = authService.getProfile();
+            responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeResponse(response));
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());

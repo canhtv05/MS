@@ -1,7 +1,6 @@
 package com.leaf.auth.domain;
 
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.Builder;

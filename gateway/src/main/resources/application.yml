@@ -45,6 +45,13 @@ spring:
               filters:
                 - StripPrefix=2
 
+            - id: graphql-bff
+              uri: lb://graphql-bff
+              predicates:
+                - Path=${app.api-prefix}/graphql/**
+              filters:
+                - StripPrefix=3
+
 grpc:
   client:
     auth-service:
@@ -58,6 +65,9 @@ grpc:
       negotiationType: plaintext
     notification-service:
       address: static://localhost:9004
+      negotiationType: plaintext
+    graphql-bff:
+      address: static://localhost:9006
       negotiationType: plaintext
 
 eureka:

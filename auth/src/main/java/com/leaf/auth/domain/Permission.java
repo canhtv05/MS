@@ -1,6 +1,5 @@
 package com.leaf.auth.domain;
 
-import com.leaf.common.domain.AbstractAuditingPostgresEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
