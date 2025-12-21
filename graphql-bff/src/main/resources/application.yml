@@ -1,0 +1,46 @@
+server:
+  port: 1006
+
+grpc:
+  server:
+    port: 9006
+  client:
+    profile-service:
+      address: static://localhost:9003
+      negotiationType: plaintext
+    auth-service:
+      address: static://localhost:9001
+      negotiationType: plaintext
+
+spring:
+  application:
+    name: graphql-bff
+
+  graphql:
+    http:
+      path: /graphql
+    graphiql:
+      enabled: true
+      path: /graphiql
+
+  profiles:
+    active: dev
+
+  output:
+    ansi:
+      enabled: always
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
