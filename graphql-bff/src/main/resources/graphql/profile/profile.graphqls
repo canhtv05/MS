@@ -1,0 +1,35 @@
+type ProfileDTO {
+  userId: String
+  fullname: String
+  dob: String
+  city: String
+  bio: String
+  coverUrl: String
+  avatarUrl: String
+  gender: Gender
+  phoneNumber: String
+  createdDate: String
+  lastOnlineAt: String
+  tiktokUrl: String
+  fbUrl: String
+  profileVisibility: PrivacyLevel
+  friendsVisibility: PrivacyLevel
+  postsVisibility: PrivacyLevel
+  followersCount: Int
+  followingCount: Int
+}
+
+enum Gender {
+  GENDER_UNSPECIFIED
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum PrivacyLevel {
+  PRIVACY_LEVEL_UNSPECIFIED
+  PUBLIC
+  PRIVATE
+  CUSTOM
+  FRIEND_ONLY
+}

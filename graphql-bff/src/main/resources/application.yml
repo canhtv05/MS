@@ -16,24 +16,26 @@ spring:
   application:
     name: graphql-bff
 
-  graphql:
-    cors:
-      allow-credentials: true
-      # allowed-origins: 'http://localhost:3000'
-      allowed-methods: 'GET, POST, PUT, DELETE, OPTIONS'
-      allowed-headers: 'Authorization, Content-Type'
-    http:
-      path: /
-    graphiql:
-      enabled: true
-      path: /graphiql
-
   profiles:
     active: dev
 
   output:
     ansi:
       enabled: always
+
+  graphql:
+    http:
+      enabled: true
+    graphiql:
+      enabled: true
+      path: /graphiql
+    schema:
+      locations:
+        - classpath:graphql/**/*.graphqls
+
+dgs:
+  graphql:
+    schema-locations: 'classpath*:graphql/**/*.graphqls'
 
 eureka:
   client:

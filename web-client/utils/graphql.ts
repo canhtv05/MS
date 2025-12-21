@@ -11,36 +11,3 @@ export const getGraphQLClient = () => {
     },
   });
 };
-
-// GraphQL Queries
-export const ME_QUERY = `
-  query Me {
-    me {
-      username
-      fullName
-      email
-      isGlobal
-      roles
-      roleLabels
-      permissions
-      secretKey
-      channel
-      dob
-      city
-      bio
-      coverUrl
-      avatarUrl
-      gender
-      phoneNumber
-      createdDate
-      lastOnlineAt
-      tiktokUrl
-      fbUrl
-      profileVisibility
-      friendsVisibility
-      postsVisibility
-      followersCount
-      followingCount
-    }
-  }
-`;

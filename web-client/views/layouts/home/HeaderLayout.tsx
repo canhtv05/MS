@@ -111,7 +111,7 @@ const HeaderLayout = () => {
                 />
               )}
             </div>
-            {user?.username ? (
+            {user?.auth?.username ? (
               <div className="flex gap-3 items-center justify-end md:pr-0 pr-3">
                 <div className="flex items-center justify-center gap-3 pr-3">
                   <AnimateIcon animateOnHover>
@@ -133,7 +133,7 @@ const HeaderLayout = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <div className="relative">
-                      <HomeHeaderAvatar src={images.avt1} fallback={user?.username} />
+                      <HomeHeaderAvatar src={images.avt1} fallback={user?.auth?.username} />
                     </div>
                   </DropdownMenuTrigger>
 
@@ -145,15 +145,15 @@ const HeaderLayout = () => {
                   >
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
-                        username={user?.username || ''}
+                        username={user?.auth?.username || ''}
                         avatarUrl={userProfile?.avatarUrl || images.avt1.src}
-                        fullName={user?.fullName || ''}
+                        fullName={user?.auth?.fullName || ''}
                       />
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <AnimateIcon animateOnHover>
-                        <DropdownMenuItem onClick={() => router.push(`/@${user?.username}`)}>
+                        <DropdownMenuItem onClick={() => router.push(`/@${user?.auth?.username}`)}>
                           <div className="flex items-center justify-center gap-2">
                             <UserRound />
                             <span>{t('header.view_profile')}</span>

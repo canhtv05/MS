@@ -113,7 +113,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           </>
         ) : (
           <>
-            {user?.username === data?.data?.userId ? (
+            {user?.auth?.username === data?.data?.userId ? (
               <MeProfilePageHeroSectionButton t={t} />
             ) : (
               <ProfilePageHeroSectionButton t={t} />

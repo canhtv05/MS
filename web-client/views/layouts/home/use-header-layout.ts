@@ -50,8 +50,8 @@ const useHeaderLayout = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') {
         e.preventDefault();
-        if (user?.username) {
-          router.push(`/@${user.username}`);
+        if (user?.auth?.username) {
+          router.push(`/@${user.auth.username}`);
         }
       } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();
@@ -69,7 +69,7 @@ const useHeaderLayout = () => {
 
     window.addEventListener('keydown', handleKeyDown, { capture: true });
     return () => window.removeEventListener('keydown', handleKeyDown, { capture: true });
-  }, [router, user?.username]);
+  }, [router, user?.auth?.username]);
 
   const handleChangeLang = (lang: 'vi' | 'en') => {
     setStorage({ language: lang });

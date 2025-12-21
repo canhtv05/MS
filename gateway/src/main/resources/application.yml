@@ -50,7 +50,7 @@ spring:
               predicates:
                 - Path=${app.api-prefix}/graphql/**
               filters:
-                - StripPrefix=3
+                - StripPrefix=2
 
 grpc:
   client:

@@ -1,6 +1,7 @@
 import { Gender, PrivacyLevel } from '@/enums/common';
 
-export interface IUserProfileDTO {
+// Auth response
+export interface IAuthMeDTO {
   username: string;
   fullName: string;
   email: string;
@@ -10,8 +11,12 @@ export interface IUserProfileDTO {
   permissions: string[];
   secretKey: string;
   channel: string;
+}
 
-  // profile service
+// Profile response
+export interface IProfileDTO {
+  userId: string;
+  fullname: string;
   dob: string;
   city: string;
   bio: string;
@@ -28,6 +33,11 @@ export interface IUserProfileDTO {
   postsVisibility: PrivacyLevel;
   followersCount: number;
   followingCount: number;
+}
+
+export interface IUserProfileDTO {
+  auth: IAuthMeDTO;
+  profile: IProfileDTO;
 }
 
 export interface ILoginResponse {

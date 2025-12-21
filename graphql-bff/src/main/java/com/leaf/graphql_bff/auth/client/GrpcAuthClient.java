@@ -1,28 +1,28 @@
-package com.leaf.graphql_bff.grpc;
+package com.leaf.graphql_bff.auth.client;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
-import com.leaf.common.grpc.UserProfileIdRequest;
-import com.leaf.common.grpc.UserProfileResponse;
+import com.leaf.common.grpc.AuthGrpcServiceGrpc;
+import com.leaf.common.grpc.AuthMeRequest;
+import com.leaf.common.grpc.AuthMeResponse;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GrpcUserProfileClient {
+public class GrpcAuthClient {
 
-    @GrpcClient("profile-service")
-    private UserProfileGrpcServiceGrpc.UserProfileGrpcServiceBlockingStub stub;
+    @GrpcClient("auth-service")
+    private AuthGrpcServiceGrpc.AuthGrpcServiceBlockingStub stub;
 
-    public UserProfileResponse getUserProfile(UserProfileIdRequest req) {
+    public AuthMeResponse authMe(String username) {
         try {
-            return stub.getUserProfile(req);
+            return stub.authMe(AuthMeRequest.newBuilder().setUserId(username).build());
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
                 throw new ApiException(ErrorMessage.UNAUTHENTICATED);
             }
+            throw e;
         }
-        return null;
     }
 }

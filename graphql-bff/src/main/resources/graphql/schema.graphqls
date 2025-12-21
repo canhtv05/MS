@@ -1,46 +1,7 @@
 type Query {
-  me: UserProfileDTO
 }
 
 type UserProfileDTO {
-  username: String
-  fullName: String
-  email: String
-  isGlobal: Boolean
-  roles: [String]
-  roleLabels: [String]
-  permissions: [String]
-  secretKey: String
-  channel: String
-  dob: String
-  city: String
-  bio: String
-  coverUrl: String
-  avatarUrl: String
-  gender: Gender
-  phoneNumber: String
-  createdDate: String
-  lastOnlineAt: String
-  tiktokUrl: String
-  fbUrl: String
-  profileVisibility: PrivacyLevel
-  friendsVisibility: PrivacyLevel
-  postsVisibility: PrivacyLevel
-  followersCount: String
-  followingCount: String
-}
-
-enum Gender {
-  GENDER_UNSPECIFIED
-  MALE
-  FEMALE
-  OTHER
-}
-
-enum PrivacyLevel {
-  PRIVACY_LEVEL_UNSPECIFIED
-  PUBLIC
-  PRIVATE
-  CUSTOM
-  FRIEND_ONLY
+  auth: AuthMeDTO
+  profile: ProfileDTO
 }

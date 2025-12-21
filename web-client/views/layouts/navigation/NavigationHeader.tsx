@@ -2,49 +2,36 @@
 
 import useNavigationLayout from './use-navigation-layout';
 import images from '@/public/imgs';
-import { Activity } from 'react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
-import useViewport from '@/hooks/use-view-port';
-import { Viewport } from '@/enums/common';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { userProfile, user } = useNavigationLayout();
   const router = useRouter();
-  const { width } = useViewport();
 
   return (
     <div className="dark:bg-gray-800 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white rounded-lg">
       <div
-        onClick={() => router.push(`/@${user?.username}`)}
+        onClick={() => router.push(`/@${user?.auth?.username}`)}
         className={cn(
           'group lg:flex flex-col flex lg:items-start items-center justify-center gap-2 rounded-lg cursor-pointer transition-[padding] duration-300 ease-out w-full',
           isCollapsed
             ? 'p-1 bg-transparent dark:bg-transparent h-full'
-            : `lg:p-4 p-0.5 lg:dark:bg-gray-700 dark:bg-gray-800 ${
-                typeof window !== 'undefined' && width >= Viewport.LG ? 'bg-gray-100' : ''
-              }`,
+            : 'lg:p-4 p-0.5 lg:dark:bg-gray-700 dark:bg-gray-800 lg:bg-gray-100',
         )}
       >
         <UserProfileCard
-          username={user?.username || ''}
+          username={user?.auth?.username || ''}
           avatarUrl={userProfile?.avatarUrl || images.avt1.src}
-          fullName={user?.fullName || ''}
+          fullName={user?.auth?.fullName || ''}
           hasRing={false}
           responsive
           hideInfo={isCollapsed}
           className={cn(isCollapsed && 'justify-end')}
         />
 
-        <Activity
-          mode={
-            isCollapsed ||
-            (width >= Viewport.MD && width <= Viewport.LG && typeof window !== 'undefined')
-              ? 'hidden'
-              : 'visible'
-          }
-        >
+        <div className={cn(isCollapsed ? 'hidden' : 'md:hidden lg:block', 'w-full')}>
           <div
             className={cn(
               'overflow-hidden w-full',
@@ -66,7 +53,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </div>
             </div>
           </div>
-        </Activity>
+        </div>
       </div>
     </div>
   );

@@ -3,8 +3,9 @@
 import { useAuthStore } from '@/stores/auth';
 import { IUserProfileDTO } from '@/types/auth';
 import cookieUtils from '@/utils/cookieUtils';
-import { getGraphQLClient, ME_QUERY } from '@/utils/graphql';
+import { getGraphQLClient } from '@/utils/graphql';
 import { useQuery } from '@tanstack/react-query';
+import { ME_QUERY } from '../graphql/query';
 
 interface MeQueryResponse {
   me: IUserProfileDTO;

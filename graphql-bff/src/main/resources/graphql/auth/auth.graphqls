@@ -1,0 +1,15 @@
+extend type Query {
+  me: UserProfileDTO
+}
+
+type AuthMeDTO {
+  username: String
+  fullName: String
+  email: String
+  isGlobal: Boolean
+  roles: [String]
+  roleLabels: [String]
+  permissions: [String]
+  secretKey: String
+  channel: String
+}

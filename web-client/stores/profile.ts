@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { IUserProfileDTO } from '../types/profile';
+import { IProfileDTO } from '../types/auth';
 
 interface ProfileState {
-  userProfile: IUserProfileDTO | undefined;
-  setUserProfile: (userProfile: IUserProfileDTO | undefined) => void;
+  userProfile: IProfileDTO | undefined;
+  setUserProfile: (userProfile: IProfileDTO | undefined) => void;
 }
 
 export const useProfileStore = create<ProfileState>(set => ({

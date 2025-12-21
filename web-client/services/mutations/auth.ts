@@ -56,38 +56,7 @@ export const useAuthMutation = () => {
       if (res.data) {
         const { token } = res.data;
         setToken(token);
-        await Promise.all([
-          queryClient.removeQueries({ queryKey: ['auth', 'me'] }),
-          // queryClient.removeQueries({ queryKey: ['profile', 'me'] }),
-        ]);
-
-        // await Promise.all([
-        //   queryClient.fetchQuery({
-        //     queryKey: ['auth', 'me'],
-        //     queryFn: async () => {
-        //       const profileRes = await api.get(API_ENDPOINTS.AUTH.ME, {
-        //         headers: {
-        //           Authorization: `Bearer ${token}`,
-        //         },
-        //       });
-        //       setUser(profileRes.data.data);
-        //       return profileRes.data;
-        //     },
-        //   }),
-
-        //   queryClient.fetchQuery({
-        //     queryKey: ['profile', 'me'],
-        //     queryFn: async () => {
-        //       const profileRes = await api.get(API_ENDPOINTS.PROFILE.ME, {
-        //         headers: {
-        //           Authorization: `Bearer ${token}`,
-        //         },
-        //       });
-        //       setUserProfile(profileRes.data.data);
-        //       return profileRes.data;
-        //     },
-        //   }),
-        // ]);
+        queryClient.removeQueries({ queryKey: ['auth', 'me'] });
 
         if (returnUrl) {
           router.push(decodeURIComponent(returnUrl));
