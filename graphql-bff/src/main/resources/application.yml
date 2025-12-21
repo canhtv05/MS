@@ -17,8 +17,13 @@ spring:
     name: graphql-bff
 
   graphql:
+    cors:
+      allow-credentials: true
+      # allowed-origins: 'http://localhost:3000'
+      allowed-methods: 'GET, POST, PUT, DELETE, OPTIONS'
+      allowed-headers: 'Authorization, Content-Type'
     http:
-      path: /graphql
+      path: /
     graphiql:
       enabled: true
       path: /graphiql

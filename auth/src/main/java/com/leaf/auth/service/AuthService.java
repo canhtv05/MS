@@ -9,7 +9,6 @@ import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
@@ -30,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -125,11 +123,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileDTO getProfile() {
-        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
-            new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
-        );
-
+    public UserProfileDTO getProfile(String username) {
         var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
         UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
         if (cached != null) {

@@ -1,5 +1,6 @@
 package com.leaf.graphql_bff.security;
 
+import com.leaf.common.constant.CommonConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -26,7 +27,13 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-            .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll())
+            .authorizeExchange(exchanges ->
+                exchanges
+                    .pathMatchers(CommonConstants.GRAPHQL_PUBLIC_ENDPOINTS)
+                    .permitAll()
+                    .anyExchange()
+                    .authenticated()
+            )
             .oauth2ResourceServer(oauth2 ->
                 oauth2
                     .jwt(jwt ->

@@ -15,14 +15,14 @@ public class GrpcAuthClient {
     @GrpcClient("auth-service")
     private AuthGrpcServiceGrpc.AuthGrpcServiceBlockingStub stub;
 
-    public AuthMeResponse authMe() {
+    public AuthMeResponse authMe(String username) {
         try {
-            return stub.authMe(AuthMeRequest.newBuilder().build());
+            return stub.authMe(AuthMeRequest.newBuilder().setUserId(username).build());
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
-                throw new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND);
+                throw new ApiException(ErrorMessage.UNAUTHENTICATED);
             }
-            return null;
+            throw e;
         }
     }
 }

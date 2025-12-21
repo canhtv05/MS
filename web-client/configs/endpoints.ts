@@ -3,13 +3,12 @@ export const API_BACKEND_URL =
 
 export const API_FRONTEND_URL = process.env.NEXT_PUBLIC_API_FRONTEND_URL || '/api/proxy';
 
-export const GRAPHQL_ENDPOINT = `${API_FRONTEND_URL}/graphql`;
+export const GRAPHQL_ENDPOINT = `${API_BACKEND_URL}/graphql`;
 
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/me/p/authenticate',
     LOGOUT: '/auth/me/p/logout',
-    ME: '/auth/me',
     REGISTER: '/auth/me/c/create',
     CHANGE_PASSWORD: '/auth/me/p/change-password',
     FORGOT_PASSWORD: '/auth/me/p/forgot-password',

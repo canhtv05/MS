@@ -20,7 +20,7 @@ public class GrpcUserProfileClient {
             return stub.getUserProfile(req);
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
-                throw new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND);
+                throw new ApiException(ErrorMessage.UNAUTHENTICATED);
             }
         }
         return null;

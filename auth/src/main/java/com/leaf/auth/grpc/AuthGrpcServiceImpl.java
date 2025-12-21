@@ -43,7 +43,7 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
     @Override
     public void authMe(AuthMeRequest request, StreamObserver<AuthMeResponse> responseObserver) {
         try {
-            var response = authService.getProfile();
+            var response = authService.getProfile(request.getUserId());
             responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeResponse(response));
             responseObserver.onCompleted();
         } catch (Exception e) {

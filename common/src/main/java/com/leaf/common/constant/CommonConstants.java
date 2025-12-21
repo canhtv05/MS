@@ -15,6 +15,7 @@ public class CommonConstants {
     };
     public static final String[] NOTIFICATION_PUBLIC_ENDPOINTS = { "/verify-email", "/resend-verify-email" };
     public static final String[] PROFILE_PUBLIC_ENDPOINTS = { "/profile/**" };
+    public static final String[] GRAPHQL_PUBLIC_ENDPOINTS = { "/graphiql/**", "/graphiql" };
 
     public static final String[] PREFIX_AUTH_PUBLIC_ENDPOINTS = Arrays.stream(AUTH_PUBLIC_ENDPOINTS)
         .map(res -> "/auth" + res)
@@ -28,10 +29,15 @@ public class CommonConstants {
         .map(res -> "/user-profile" + res)
         .toArray(String[]::new);
 
+    public static final String[] PREFIX_GRAPHQL_PUBLIC_ENDPOINTS = Arrays.stream(GRAPHQL_PUBLIC_ENDPOINTS)
+        .map(res -> "/graphql" + res)
+        .toArray(String[]::new);
+
     public static final String[] PREFIX_PUBLIC_ENDPOINTS = Stream.of(
         PREFIX_AUTH_PUBLIC_ENDPOINTS,
         PREFIX_NOTIFICATION_PUBLIC_ENDPOINTS,
-        PREFIX_PROFILE_PUBLIC_ENDPOINTS
+        PREFIX_PROFILE_PUBLIC_ENDPOINTS,
+        PREFIX_GRAPHQL_PUBLIC_ENDPOINTS
     )
         .flatMap(Arrays::stream)
         .toArray(String[]::new);
