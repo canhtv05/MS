@@ -10,5 +10,20 @@
   ],
   "editor.formatOnType": false,
   "editor.formatOnSave": true,
-  "java.debug.settings.onBuildFailureProceed": true
+  "java.debug.settings.onBuildFailureProceed": true,
+  "cSpell.words": [
+    "Authen",
+    "đăng",
+    "Jwts",
+    "khác",
+    "khoản",
+    "nhập",
+    "Phiên",
+    "projectlombok",
+    "projectreactor",
+    "springframework",
+    "webflux"
+  ],
+  "problems.showCurrentInStatus": false,
+  "boot-java.validation.java.version-validation": "OFF"
 }
