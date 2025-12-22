@@ -1,108 +1,93 @@
 package com.leaf.framework.service;
 
-import com.leaf.common.dto.UserSessionDTO;
-import com.leaf.common.utils.AESUtils;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final RedisTemplate<String, Object> redisTemplate;
     private final Environment environment;
+    private final RedissonClient redission;
 
-    private String getKeyToken(String username, String channel) {
+    private RBucket<String> getBucket(String key) {
+        return redission.getBucket(key, StringCodec.INSTANCE);
+    }
+
+    public String getKeyToken(String username, String channel) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:token:%s:%s", envRunning, username, channel);
     }
 
-    private String getKeyUser(String username, String channel) {
+    public String getKeyUser(String username, String channel) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:user:%s:%s", envRunning, username, channel);
     }
 
-    private String getKeyVerification(String token) {
+    public String getKeyVerification(String token) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:verify:email:%s", envRunning, token);
     }
 
-    private String getKeyForgotPassword(String token) {
+    public String getKeyForgotPassword(String token) {
         String envRunning = environment.getActiveProfiles()[0];
         return String.format("%s:forgot:password:%s", envRunning, token);
     }
 
-    public String getToken(String username, String channel) {
-        return (String) redisTemplate.opsForValue().get(this.getKeyToken(username, channel));
+    public <K, V> void set(K key, V value, long ttl, TimeUnit timeUnit) {
+        try {
+            if (CommonUtils.isEmpty(key, value)) return;
+
+            String data = JsonF.toJson(value);
+            Duration duration = Duration.of(ttl, timeUnit.toChronoUnit());
+            this.getBucket(key.toString()).set(data, duration);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    public boolean isTokenValid(String username, String channel, String token) {
-        String key = this.getKeyToken(username, channel);
-        String stored = (String) redisTemplate.opsForValue().get(key);
+    public <K, V> void set(K key, V value) {
+        try {
+            if (CommonUtils.isEmpty(key, value)) return;
 
-        String hashed = AESUtils.hexString(token);
-
-        return Objects.equals(stored, hashed);
+            String data = JsonF.toJson(value);
+            this.getBucket(key.toString()).set(data);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
-    public void deleteToken(String username, String channel) {
-        redisTemplate.delete(this.getKeyToken(username, channel));
+    public <K, V> V get(K key, Class<V> clazz) {
+        try {
+            if (CommonUtils.isEmpty(key)) return null;
+
+            String data = this.getBucket(key.toString()).get();
+            if (Objects.isNull(data)) return null;
+            return JsonF.jsonToObject(data, clazz);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 
-    public void cacheToken(String username, String channel, String token) {
-        String tokenKey = this.getKeyToken(username, channel);
-        redisTemplate.opsForValue().set(tokenKey, AESUtils.hexString(token));
-    }
+    public <K> void evict(K key) {
+        try {
+            if (Objects.isNull(key)) return;
 
-    public void cacheUser(String username, String channel, String sessionId, String secretKey) {
-        String userKey = this.getKeyUser(username, channel);
-        UserSessionDTO user = UserSessionDTO.builder()
-            .sessionId(sessionId)
-            .channel(channel)
-            .username(username)
-            .secretKey(secretKey)
-            .build();
-        redisTemplate.opsForValue().set(userKey, user);
-    }
-
-    public void deleteUser(String username, String channel) {
-        redisTemplate.delete(this.getKeyUser(username, channel));
-    }
-
-    public UserSessionDTO getUser(String username, String channel) {
-        String userKey = this.getKeyUser(username, channel);
-        return JsonF.jsonToObject((String) redisTemplate.opsForValue().get(userKey), UserSessionDTO.class);
-    }
-
-    public void saveEmailToken(String token, String username) {
-        redisTemplate.opsForValue().set(getKeyVerification(token), username, Duration.ofMinutes(10));
-    }
-
-    public String getUsernameIfEmailTokenAlive(String token) {
-        return (String) redisTemplate.opsForValue().get(getKeyVerification(token));
-    }
-
-    public void deleteEmailToken(String token) {
-        redisTemplate.delete(getKeyVerification(token));
-    }
-
-    public void saveForgotPasswordOTP(String username, String otp) {
-        String key = this.getKeyForgotPassword(username);
-        redisTemplate.opsForValue().set(key, otp, Duration.ofMinutes(10));
-    }
-
-    public String getForgotPasswordOTP(String username) {
-        String key = this.getKeyForgotPassword(username);
-        return (String) redisTemplate.opsForValue().get(key);
-    }
-
-    public void deleteForgotPasswordOTP(String username) {
-        String key = this.getKeyForgotPassword(username);
-        redisTemplate.delete(key);
+            this.getBucket(key.toString()).delete();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }

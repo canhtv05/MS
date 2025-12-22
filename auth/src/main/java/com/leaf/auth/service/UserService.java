@@ -214,14 +214,14 @@ public class UserService {
         if (!hasOTP) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
         }
-
-        if (!request.getOTP().equals(redisService.getForgotPasswordOTP(user.getUsername()))) {
+        String keyForgotPassword = redisService.getKeyForgotPassword(user.getUsername());
+        if (!request.getOTP().equals(redisService.get(keyForgotPassword, String.class))) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_INVALID);
         }
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        redisService.deleteForgotPasswordOTP(user.getUsername());
+        redisService.evict(keyForgotPassword);
     }
 
     public void verifyForgotPasswordOTP(VerifyOTPReq request) {
@@ -237,7 +237,8 @@ public class UserService {
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
 
-        String otp = redisService.getForgotPasswordOTP(user.getUsername());
+        String keyForgotPassword = redisService.getKeyForgotPassword(user.getUsername());
+        String otp = redisService.get(keyForgotPassword, String.class);
         if (CommonUtils.isEmpty(otp)) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
         }
@@ -420,6 +421,7 @@ public class UserService {
     }
 
     private boolean hasOTP(String username) {
-        return StringUtils.isNotEmpty(redisService.getForgotPasswordOTP(username));
+        String keyForgotPassword = redisService.getKeyForgotPassword(username);
+        return StringUtils.isNotEmpty(redisService.get(keyForgotPassword, String.class));
     }
 }

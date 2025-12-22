@@ -13,12 +13,12 @@ import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.util.CookieUtil;
-import com.leaf.common.constant.CacheConstants;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.security.SecurityUtils;
+import com.leaf.framework.service.RedisService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +28,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.boot.json.JsonParseException;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -50,7 +49,7 @@ public class AuthService {
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
-    RedisCacheManager redisCacheManager;
+    RedisService redis;
 
     @Transactional
     public String authenticate(
@@ -124,8 +123,8 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public UserProfileDTO getProfile(String username) {
-        var cache = redisCacheManager.getCache(CacheConstants.USER_NAME);
-        UserProfileDTO cached = cache != null ? cache.get(username, UserProfileDTO.class) : null;
+        String cacheKey = "USER_PROFILE:" + username;
+        UserProfileDTO cached = redis.get(cacheKey, UserProfileDTO.class);
         if (cached != null) {
             return cached;
         }
@@ -137,17 +136,8 @@ public class AuthService {
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
 
-        // Get user session from Redis using channel
-        // UserSessionDTO userSessionDTO = redisService.getUser(
-        // username,
-        // SecurityUtils.getCurrentUserChannel().orElse(null));
-        // if (userSessionDTO != null) {
-        // userProfileDTO.setChannel(userSessionDTO.getChannel());
-        // userProfileDTO.setSecretKey(userSessionDTO.getSecretKey());
-        // }
-
-        if (Objects.nonNull(cache)) {
-            cache.put(username, userProfileDTO);
+        if (Objects.nonNull(userProfileDTO)) {
+            redis.set(cacheKey, userProfileDTO);
         }
         return userProfileDTO;
     }

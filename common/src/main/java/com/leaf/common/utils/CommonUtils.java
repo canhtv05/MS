@@ -1,11 +1,15 @@
 package com.leaf.common.utils;
 
-import io.micrometer.common.util.StringUtils;
-import java.util.stream.Stream;
+import java.util.Arrays;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class CommonUtils {
 
-    public static boolean isEmpty(String... values) {
-        return Stream.of(values).anyMatch(StringUtils::isBlank);
+    public static boolean isEmpty(Object... args) {
+        return Arrays.stream(args).anyMatch(ObjectUtils::isEmpty);
+    }
+
+    public static boolean isNotEmpty(Object... args) {
+        return Arrays.stream(args).allMatch(ObjectUtils::isNotEmpty);
     }
 }

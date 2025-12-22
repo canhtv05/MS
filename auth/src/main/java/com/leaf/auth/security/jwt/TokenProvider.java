@@ -10,6 +10,7 @@ import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.CustomUserDetails;
 import com.leaf.auth.util.CookieUtil;
+import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
@@ -95,8 +96,9 @@ public class TokenProvider {
     ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String jwtName = authentication.getName();
-        String tokenExisting = redisService.getToken(jwtName, channel);
+        String name = authentication.getName();
+        String keyToken = redisService.getKeyToken(name, channel);
+        String tokenExisting = redisService.get(keyToken, String.class);
         HttpSession session = request.getSession(true);
         String sessionId = session.getId();
 
@@ -114,24 +116,22 @@ public class TokenProvider {
             // Revoke old session: delete tokens and clear refresh token
             // Note: tokenExisting is a hash, not the actual JWT, so we can't parse it
             User user = userRepository
-                .findByUsername(jwtName)
+                .findByUsername(name)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
-            redisService.deleteToken(jwtName, channel);
+            redisService.evict(keyToken);
         }
 
         String token = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
         String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, request, channel);
-
-        redisService.cacheUser(jwtName, channel, sessionId, AESUtils.generateSecretKey());
-        redisService.cacheToken(jwtName, channel, token);
+        this.cacheUserToken(name, channel, sessionId, token);
 
         Cookie cookie = cookieUtil.setTokenCookie(token, refreshToken);
         response.addCookie(cookie);
 
         User user = userRepository
-            .findByUsername(jwtName)
+            .findByUsername(name)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
@@ -205,8 +205,7 @@ public class TokenProvider {
         userRepository.save(user);
 
         String sessionId = request.getSession().getId();
-        redisService.cacheUser(username, channel, sessionId, AESUtils.generateSecretKey());
-        redisService.cacheToken(username, channel, newToken);
+        this.cacheUserToken(username, channel, sessionId, newToken);
 
         Cookie cookie = cookieUtil.setTokenCookie(newToken, newRefreshToken);
         response.addCookie(cookie);
@@ -245,7 +244,9 @@ public class TokenProvider {
                 throw new ApiException(ErrorMessage.UNAUTHENTICATED);
             }
 
-            return redisService.isTokenValid(username, channel, authToken);
+            String keyToken = redisService.getKeyToken(username, channel);
+            String tokenExisting = redisService.get(keyToken, String.class);
+            return Objects.equals(tokenExisting, AESUtils.hexString(authToken));
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException e) {
             log.trace(INVALID_JWT_TOKEN, e);
         } catch (IllegalArgumentException e) {
@@ -264,8 +265,10 @@ public class TokenProvider {
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
-            redisService.deleteToken(username, channel);
-            redisService.deleteUser(username, channel);
+            String keyToken = redisService.getKeyToken(username, channel);
+            redisService.evict(keyToken);
+            String keyUser = redisService.getKeyUser(username, channel);
+            redisService.evict(keyUser);
         }
     }
 
@@ -300,5 +303,18 @@ public class TokenProvider {
             .setExpiration(validity)
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
+    }
+
+    private void cacheUserToken(String username, String channel, String sessionId, String token) {
+        String keyUser = redisService.getKeyUser(username, channel);
+        UserSessionDTO userSessionDTO = UserSessionDTO.builder()
+            .sessionId(sessionId)
+            .channel(channel)
+            .secretKey(AESUtils.generateSecretKey())
+            .build();
+        redisService.set(keyUser, userSessionDTO);
+
+        String keyToken = redisService.getKeyToken(username, channel);
+        redisService.set(keyToken, AESUtils.hexString(token));
     }
 }

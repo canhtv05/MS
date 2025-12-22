@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -49,7 +50,7 @@ public class EmailService {
             Date expiredAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10min
 
             String token = tokenUtil.generateToken(event, expiredAt);
-            redisService.saveEmailToken(token, event.getUsername());
+            redisService.set(redisService.getKeyVerification(token), event.getUsername(), 10, TimeUnit.MINUTES);
             EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
 
             String jti = Jwts.parserBuilder()
@@ -104,7 +105,8 @@ public class EmailService {
             helper.setSubject("🔐 Quên mật khẩu");
 
             String otp = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
-            redisService.saveForgotPasswordOTP(event.getUsername(), otp);
+            String key = redisService.getKeyForgotPassword(event.getUsername());
+            redisService.set(key, otp, 10, TimeUnit.MINUTES);
 
             Context context = new Context();
             context.setVariable("username", event.getUsername());

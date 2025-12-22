@@ -46,7 +46,8 @@ public class NotificationService {
                     .build();
             }
 
-            String username = redisService.getUsernameIfEmailTokenAlive(token);
+            String keyVerification = redisService.getKeyVerification(token);
+            String username = redisService.get(keyVerification, String.class);
             if (!StringUtils.hasText(username)) {
                 if (logs.getExpiredAt().isBefore(Instant.now())) {
                     logs.setVerificationStatus(VerificationStatus.EXPIRED);
@@ -110,7 +111,7 @@ public class NotificationService {
             logs.setVerificationStatus(VerificationStatus.VERIFIED);
             logs.setVerifiedAt(Instant.now());
             emailVerificationLogsRepository.save(logs);
-            redisService.deleteEmailToken(token);
+            redisService.evict(keyVerification);
             return VerifyEmailTokenResponse.builder()
                 .valid(Objects.nonNull(response) && StringUtils.hasText(response.getUsername()))
                 .verificationStatus(VerificationStatus.VERIFIED)
@@ -137,7 +138,8 @@ public class NotificationService {
         }
         if (verificationStatus == VerificationStatus.INVALID || verificationStatus == VerificationStatus.EXPIRED) {
             try {
-                redisService.deleteEmailToken(logs.getToken());
+                String keyVerification = redisService.getKeyVerification(logs.getToken());
+                redisService.evict(keyVerification);
                 request.setTo(logs.getEmail());
                 emailService.sendVerificationEmail(request);
                 return;
