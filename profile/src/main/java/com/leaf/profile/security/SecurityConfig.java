@@ -1,6 +1,6 @@
 package com.leaf.profile.security;
 
-import com.leaf.common.constant.CommonConstants;
+import com.leaf.framework.constant.CommonConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

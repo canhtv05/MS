@@ -2,8 +2,8 @@ package com.leaf.auth.util;
 
 import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.dto.CookieValue;
-import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.utils.JsonF;
+import com.leaf.framework.constant.CommonConstants;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.leaf.common.security;
+package com.leaf.framework.security;
 
 public interface UserPrincipal {
     String getUsername();

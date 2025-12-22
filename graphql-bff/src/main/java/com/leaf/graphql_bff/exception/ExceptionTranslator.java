@@ -1,4 +1,4 @@
-package com.leaf.file.exception;
+package com.leaf.graphql_bff.exception;
 
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.exception.ApiException;

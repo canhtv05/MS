@@ -101,12 +101,12 @@
 			<groupId>com.leaf</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1</version>
-			 <exclusions>
-        <exclusion>
-            <groupId>net.devh</groupId>
-            <artifactId>grpc-server-spring-boot-starter</artifactId>
-        </exclusion>
-    </exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.leaf</groupId>
+			<artifactId>framework</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 
 		<dependency>

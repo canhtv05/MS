@@ -1,4 +1,4 @@
-package com.leaf.common.constant;
+package com.leaf.framework.constant;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -43,4 +43,6 @@ public class CommonConstants {
         .toArray(String[]::new);
 
     public static final String COOKIE_NAME = "MY_MICROSERVICE";
+
+    private CommonConstants() {}
 }

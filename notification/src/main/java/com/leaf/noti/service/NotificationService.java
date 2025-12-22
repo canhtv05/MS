@@ -4,7 +4,7 @@ import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
-import com.leaf.common.service.RedisService;
+import com.leaf.framework.service.RedisService;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.dto.VerifyEmailTokenResponse;
 import com.leaf.noti.enums.VerificationStatus;

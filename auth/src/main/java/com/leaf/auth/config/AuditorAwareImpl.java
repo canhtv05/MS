@@ -1,6 +1,6 @@
-package com.leaf.common.config;
+package com.leaf.auth.config;
 
-import com.leaf.common.security.SecurityUtils;
+import com.leaf.framework.security.SecurityUtils;
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;

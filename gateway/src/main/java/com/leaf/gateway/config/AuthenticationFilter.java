@@ -1,10 +1,10 @@
 package com.leaf.gateway.config;
 
-import com.leaf.common.constant.CommonConstants;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.JsonF;
+import com.leaf.framework.constant.CommonConstants;
 import com.leaf.gateway.grpc.GrpcAuthClient;
 import io.micrometer.common.util.StringUtils;
 import java.net.URLDecoder;

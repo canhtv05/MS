@@ -1,4 +1,4 @@
-package com.leaf.common.security;
+package com.leaf.framework.security;
 
 import java.util.Objects;
 import java.util.Optional;

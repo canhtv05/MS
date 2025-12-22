@@ -4,6 +4,8 @@ server:
   port: 1004
 
 grpc:
+  server:
+    port: 9004
   client:
     auth-service:
       address: static://localhost:9001

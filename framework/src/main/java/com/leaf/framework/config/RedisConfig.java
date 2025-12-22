@@ -1,4 +1,4 @@
-package com.leaf.common.config;
+package com.leaf.framework.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonGenerator;

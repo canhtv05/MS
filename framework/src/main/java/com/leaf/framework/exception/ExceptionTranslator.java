@@ -1,6 +1,8 @@
-package com.leaf.common.exception;
+package com.leaf.framework.exception;
 
 import com.leaf.common.dto.ResponseObject;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
-@RestControllerAdvice(name = "ExceptionTranslatorCommon")
+@RestControllerAdvice(name = "ExceptionTranslatorFramework")
 public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)

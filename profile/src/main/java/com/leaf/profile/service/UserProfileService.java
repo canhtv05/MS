@@ -2,7 +2,7 @@ package com.leaf.profile.service;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.security.SecurityUtils;
+import com.leaf.framework.security.SecurityUtils;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.SendFriendRequestDTO;
 import com.leaf.profile.dto.UserProfileCreationReq;
