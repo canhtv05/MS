@@ -1,4 +1,4 @@
-id,user_id,fullname,dob,city,gender,bio,cover_url,phone_number,avatar_url,fb_url,tiktok_url,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date
+id,user_id,fullname,dob,city,gender,bio,cover_url,phone_number,avatar_url,facebook_url,tiktok_url,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date
 "1-1",admin,"Trần Văn Cảnh",2005-10-17,"Trung Văn, Nam Từ Liêm, Hà Nội",MALE,"while(!success) {
     if (youFail) improvement++;
     if (improvement > fear) success = true;
