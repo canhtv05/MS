@@ -69,7 +69,6 @@ public class UserDTO implements Serializable {
         dto.setRoleLabels(entity.getRoles().stream().map(Role::getDescription).collect(Collectors.toList()));
         dto.setPassword(null);
         dto.setEmail(entity.getEmail());
-        dto.setFullname(entity.getFullName());
         return dto;
     }
 }

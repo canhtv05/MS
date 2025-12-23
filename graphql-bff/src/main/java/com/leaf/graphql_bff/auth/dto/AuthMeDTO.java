@@ -15,7 +15,6 @@ import lombok.Setter;
 public class AuthMeDTO {
 
     private String username;
-    private String fullName;
     private String email;
     private Boolean isGlobal;
     private List<String> roles;

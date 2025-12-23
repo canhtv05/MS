@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
-  const { userProfile, user } = useNavigationLayout();
+  const { user } = useNavigationLayout();
   const router = useRouter();
 
   return (
@@ -23,8 +23,8 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
       >
         <UserProfileCard
           username={user?.auth?.username || ''}
-          avatarUrl={userProfile?.avatarUrl || images.avt1.src}
-          fullName={user?.auth?.fullName || ''}
+          avatarUrl={user?.profile?.avatarUrl || images.avt1.src}
+          fullName={user?.profile?.fullname || ''}
           hasRing={false}
           responsive
           hideInfo={isCollapsed}

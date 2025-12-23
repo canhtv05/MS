@@ -6,6 +6,7 @@ import cookieUtils from '@/utils/cookieUtils';
 import { getGraphQLClient } from '@/utils/graphql';
 import { useQuery } from '@tanstack/react-query';
 import { ME_QUERY } from '../graphql/query';
+import { AxiosError } from 'axios';
 
 interface MeQueryResponse {
   me: IUserProfileDTO;
@@ -19,10 +20,17 @@ export const useAuthQuery = (enabled: boolean = true) => {
   const query = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async (): Promise<IUserProfileDTO> => {
-      const client = getGraphQLClient();
-      const data = await client.request<MeQueryResponse>(ME_QUERY);
-      setUser(data.me);
-      return data.me;
+      try {
+        const client = getGraphQLClient();
+        const data = await client.request<MeQueryResponse>(ME_QUERY);
+        setUser(data.me);
+        return data.me;
+      } catch (error) {
+        if (error instanceof AxiosError && error?.response?.status === 401) {
+          return null as unknown as IUserProfileDTO;
+        }
+        throw error;
+      }
     },
     enabled: enabled && !!token && !user,
     retry: 1,

@@ -1,11 +1,11 @@
 package com.leaf.profile.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.leaf.common.grpc.Gender;
+import com.leaf.common.grpc.PrivacyLevel;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.common.utils.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfile;
-import com.leaf.profile.enums.Gender;
-import com.leaf.profile.enums.PrivacyLevel;
 import java.time.Instant;
 import java.time.LocalDate;
 import lombok.AccessLevel;
@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.BeanUtils;
 
 @Data
 @AllArgsConstructor
@@ -41,7 +40,9 @@ public class UserProfileResponse {
     String phoneNumber;
     String avatarUrl;
     String tiktokUrl;
-    String fbUrl;
+    String xUrl;
+    String instagramUrl;
+    String facebookUrl;
     PrivacyLevel profileVisibility;
     PrivacyLevel friendsVisibility;
     PrivacyLevel postsVisibility;
@@ -50,8 +51,28 @@ public class UserProfileResponse {
     Long followingCount;
 
     public static UserProfileResponse toUserProfileResponse(UserProfile userProfile) {
-        UserProfileResponse response = new UserProfileResponse();
-        BeanUtils.copyProperties(userProfile, response);
-        return response;
+        UserProfileResponse.UserProfileResponseBuilder builder = UserProfileResponse.builder()
+            .id(userProfile.getId())
+            .userId(userProfile.getUserId())
+            .fullname(userProfile.getFullname())
+            .dob(userProfile.getDob())
+            .city(userProfile.getCity())
+            .gender(userProfile.getGender())
+            .bio(userProfile.getBio())
+            .phoneNumber(userProfile.getPhoneNumber())
+            .createdDate(userProfile.getCreatedDate())
+            .lastOnlineAt(userProfile.getLastOnlineAt())
+            .followersCount(userProfile.getFollowersCount())
+            .followingCount(userProfile.getFollowingCount())
+            .coverUrl(userProfile.getCoverUrl())
+            .avatarUrl(userProfile.getAvatarUrl())
+            .tiktokUrl(userProfile.getTiktokUrl())
+            .xUrl(userProfile.getXUrl())
+            .instagramUrl(userProfile.getInstagramUrl())
+            .facebookUrl(userProfile.getFacebookUrl())
+            .profileVisibility(userProfile.getProfileVisibility())
+            .friendsVisibility(userProfile.getFriendsVisibility())
+            .postsVisibility(userProfile.getPostsVisibility());
+        return builder.build();
     }
 }

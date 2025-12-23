@@ -32,7 +32,6 @@ public class UserProfileMapper {
     private AuthMeDTO toAuthMeDTO(AuthMeResponse response) {
         return AuthMeDTO.builder()
             .username(ConvertProto.nullToEmpty(response.getUsername()))
-            .fullName(ConvertProto.nullToEmpty(response.getFullname()))
             .email(ConvertProto.nullToEmpty(response.getEmail()))
             .isGlobal(response.getIsGlobal())
             .roles(response.getRolesList())
@@ -45,6 +44,7 @@ public class UserProfileMapper {
 
     private ProfileDTO toProfileDTO(UserProfileResponse response) {
         return ProfileDTO.builder()
+            .id(ConvertProto.nullToEmpty(response.getId()))
             .userId(ConvertProto.nullToEmpty(response.getUserId()))
             .fullname(ConvertProto.nullToEmpty(response.getFullname()))
             .dob(ConvertProto.convertTimestampToLocalDate(response.getDob()).toString())
@@ -57,7 +57,9 @@ public class UserProfileMapper {
             .createdDate(ConvertProto.convertTimestampToInstant(response.getCreatedDate()).toString())
             .lastOnlineAt(ConvertProto.convertTimestampToInstant(response.getLastOnlineAt()).toString())
             .tiktokUrl(ConvertProto.nullToEmpty(response.getTiktokUrl()))
-            .fbUrl(ConvertProto.nullToEmpty(response.getFbUrl()))
+            .xUrl(ConvertProto.nullToEmpty(response.getXUrl()))
+            .instagramUrl(ConvertProto.nullToEmpty(response.getInstagramUrl()))
+            .facebookUrl(ConvertProto.nullToEmpty(response.getFacebookUrl()))
             .profileVisibility(response.getProfileVisibility())
             .friendsVisibility(response.getFriendsVisibility())
             .postsVisibility(response.getPostsVisibility())

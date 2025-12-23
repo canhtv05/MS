@@ -105,6 +105,7 @@ public class NotificationService {
             VerifyEmailTokenDTO request = VerifyEmailTokenDTO.newBuilder()
                 .setUsername(username)
                 .setEmail(tokenDTO.getEmail())
+                .setFullname(tokenDTO.getFullname())
                 .build();
 
             var response = grpcAuthClient.verifyEmailToken(request);

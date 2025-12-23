@@ -29,7 +29,7 @@ public class ApplicationInitConfig {
                         u.cover_url = row.cover_url,
                         u.phone_number = row.phone_number,
                         u.avatar_url = row.avatar_url,
-                        u.fb_url = row.fb_url,
+                        u.facebook_url = row.facebook_url,
                         u.tiktok_url = row.tiktok_url,
                         u.profile_visibility = row.profile_visibility,
                         u.friends_visibility = row.friends_visibility,
@@ -38,7 +38,8 @@ public class ApplicationInitConfig {
                         u.following_count = toInteger(row.following_count),
                         u.created_by = row.created_by,
                         u.modified_by = row.modified_by,
-                        u.created_date = datetime(row.created_date)
+                        u.created_date = datetime(row.created_date),
+                        u.modified_date = datetime(row.created_date)
                     """;
 
                 session.executeWrite(ex -> {

@@ -51,7 +51,7 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
         {!isLoading &&
           (data?.data?.city ||
             data?.data?.tiktokUrl ||
-            data?.data?.fbUrl ||
+            data?.data?.facebookUrl ||
             data?.data?.createdDate) && (
             <div className="flex flex-wrap flex-col items-start gap-x-4 gap-y-1 pt-1">
               <div className="flex gap-2 group items-center flex-wrap justify-start">
@@ -87,16 +87,16 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
                 </AnimateIcon>
               )}
 
-              {data?.data?.fbUrl && (
+              {data?.data?.facebookUrl && (
                 <AnimateIcon animateOnHover>
                   <Link
                     target="_blank"
-                    href={data.data.fbUrl}
+                    href={data.data.facebookUrl}
                     className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
                   >
                     <LinkIcon size={14} className="shrink-0" />
                     <span className="leading-5 max-w-[200px] truncate text-gray-500 dark:text-gray-400">
-                      {data.data.fbUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                      {data.data.facebookUrl.replace(/^https?:\/\/(www\.)?/, '')}
                     </span>
                   </Link>
                 </AnimateIcon>

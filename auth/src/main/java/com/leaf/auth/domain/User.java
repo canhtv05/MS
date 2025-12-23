@@ -29,9 +29,6 @@ public class User extends AbstractAuditingPostgresEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
-
     @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;

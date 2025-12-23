@@ -34,12 +34,11 @@ message AuthMeRequest {
 
 message AuthMeResponse {
   string username = 1;
-  string fullname = 2;
-  string email = 3;
-  bool isGlobal = 4;
-  repeated string roles = 5;
-  repeated string roleLabels = 6;
-  repeated string permissions = 7;
-  string secretKey = 8;
-  string channel = 9;
+  string email = 2;
+  bool isGlobal = 3;
+  repeated string roles = 4;
+  repeated string roleLabels = 5;
+  repeated string permissions = 6;
+  string secretKey = 7;
+  string channel = 8;
 }

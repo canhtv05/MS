@@ -66,10 +66,10 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private void validatePermission(String method, String path, CustomUserDetails userDetails) {
-        // if (path.startsWith("/auth/me")) {
-        // return;
-        // }
         if (SecurityUtils.isGlobalSuperAdmin()) {
+            return;
+        }
+        if (path.contains("/auth/me/p/logout")) {
             return;
         }
         List<PermissionSelect> permissions = service.getPermissionSelect();
