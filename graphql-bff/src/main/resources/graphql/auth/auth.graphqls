@@ -4,7 +4,6 @@ extend type Query {
 
 type AuthMeDTO {
   username: String
-  fullName: String
   email: String
   isGlobal: Boolean
   roles: [String]

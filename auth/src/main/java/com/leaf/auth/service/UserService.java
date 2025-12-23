@@ -19,13 +19,13 @@ import com.leaf.auth.dto.req.VerifyOTPReq;
 import com.leaf.auth.dto.search.SearchRequest;
 import com.leaf.auth.dto.search.SearchResponse;
 import com.leaf.auth.enums.PermissionAction;
-import com.leaf.auth.grpc.GrpcUserProfileClient;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.util.ExcelBuilder;
 import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.ForgotPasswordEvent;
+import com.leaf.common.dto.event.UserCreatedEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
@@ -72,7 +72,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserPermissionRepository userPermissionRepository;
-    private final GrpcUserProfileClient userProfileClient;
     private final AuthService authService;
     private final KafkaProducerService kafkaProducerService;
     private final RedisService redisService;
@@ -103,7 +102,6 @@ public class UserService {
             .isGlobal(isAdmin ? request.getIsGlobal() : false)
             .isLocked(false)
             .email(request.getEmail())
-            .fullName(request.getFullname())
             .build();
 
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
@@ -119,13 +117,17 @@ public class UserService {
             if (!isAdmin || !request.isActivated()) {
                 kafkaProducerService.send(
                     EventConstants.VERIFICATION_EMAIL_TOPIC,
-                    VerificationEmailEvent.builder().to(request.getEmail()).username(request.getUsername()).build()
+                    VerificationEmailEvent.builder()
+                        .to(request.getEmail())
+                        .username(request.getUsername())
+                        .fullName(request.getFullname())
+                        .build()
                 );
             } else {
-                com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-                    .setUserId(user.getUsername())
-                    .build();
-                userProfileClient.createUserProfile(userProfileDTO);
+                kafkaProducerService.send(
+                    EventConstants.USER_CREATED_TOPIC,
+                    UserCreatedEvent.builder().userId(user.getUsername()).fullName(request.getFullname()).build()
+                );
             }
         } catch (Exception e) {
             throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
@@ -168,11 +170,11 @@ public class UserService {
         user.setActivated(true);
         userRepository.save(user);
 
-        com.leaf.common.grpc.UserProfileDTO userProfileDTO = com.leaf.common.grpc.UserProfileDTO.newBuilder()
-            .setUserId(user.getUsername())
-            .setFullname(user.getFullName())
-            .build();
-        userProfileClient.createUserProfile(userProfileDTO);
+        // Send Kafka event to create user profile with fullname from verification token
+        kafkaProducerService.send(
+            EventConstants.USER_CREATED_TOPIC,
+            UserCreatedEvent.builder().userId(user.getUsername()).fullName(request.getFullname()).build()
+        );
 
         return VerifyEmailTokenDTO.newBuilder().setUsername(user.getUsername()).setEmail(request.getEmail()).build();
     }

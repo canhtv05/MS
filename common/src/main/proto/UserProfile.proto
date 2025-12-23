@@ -33,11 +33,14 @@ message UserProfileResponse {
     string phoneNumber = 9;
     string avatarUrl = 10;
     string tiktokUrl = 11;
-    string fbUrl = 13;
-    PrivacyLevel profileVisibility = 14;
-    PrivacyLevel friendsVisibility = 15;
-    PrivacyLevel postsVisibility = 16;
-    google.protobuf.Timestamp lastOnlineAt = 17;
-    int64 followersCount = 18;
-    int64 followingCount = 19;
+    string xUrl = 12;
+    string instagramUrl = 13;
+    string facebookUrl = 14;
+    PrivacyLevel profileVisibility = 15;
+    PrivacyLevel friendsVisibility = 16;
+    PrivacyLevel postsVisibility = 17;
+    google.protobuf.Timestamp lastOnlineAt = 18;
+    int64 followersCount = 19;
+    int64 followingCount = 20;
+    string id = 21;
 }

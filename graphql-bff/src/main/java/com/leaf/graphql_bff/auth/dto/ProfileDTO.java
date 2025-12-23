@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProfileDTO {
 
+    private String id;
     private String userId;
     private String fullname;
     private String dob;
@@ -27,7 +28,9 @@ public class ProfileDTO {
     private String createdDate;
     private String lastOnlineAt;
     private String tiktokUrl;
-    private String fbUrl;
+    private String xUrl;
+    private String instagramUrl;
+    private String facebookUrl;
     private PrivacyLevel profileVisibility;
     private PrivacyLevel friendsVisibility;
     private PrivacyLevel postsVisibility;

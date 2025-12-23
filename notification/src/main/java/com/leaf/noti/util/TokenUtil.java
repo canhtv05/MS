@@ -20,6 +20,7 @@ public class TokenUtil {
 
     private final NotificationProperties notificationProperties;
     private static final String EMAIL_KEY = "email";
+    private static final String FULLNAME_KEY = "fullname";
 
     public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(notificationProperties.getSecretKey());
@@ -31,6 +32,7 @@ public class TokenUtil {
             .setId(UUID.randomUUID().toString())
             .setSubject(request.getUsername())
             .claim(EMAIL_KEY, request.getTo())
+            .claim(FULLNAME_KEY, request.getFullName())
             .setIssuedAt(new Date())
             .setExpiration(expiredAt)
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -47,6 +49,7 @@ public class TokenUtil {
         return VerifyEmailTokenDTO.newBuilder()
             .setUsername(body.getSubject())
             .setEmail(body.get(EMAIL_KEY, String.class))
+            .setFullname(body.get(FULLNAME_KEY, String.class))
             .setExpiredAt(expiredAt)
             .setJti(body.getId())
             .build();

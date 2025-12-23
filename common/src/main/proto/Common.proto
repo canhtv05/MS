@@ -16,5 +16,5 @@ enum PrivacyLevel {
     PUBLIC = 1;
     PRIVATE = 2;
     CUSTOM = 3;
-    FRIEND_ONLY = 4;
+    FRIENDS_ONLY = 4;
 }

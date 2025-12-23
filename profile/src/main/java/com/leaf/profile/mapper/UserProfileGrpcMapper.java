@@ -31,6 +31,7 @@ public interface UserProfileGrpcMapper {
         }
 
         com.leaf.common.grpc.UserProfileResponse.Builder builder = com.leaf.common.grpc.UserProfileResponse.newBuilder()
+            .setId(nullToEmpty(response.getId()))
             .setUserId(nullToEmpty(response.getUserId()))
             .setFullname(nullToEmpty(response.getFullname()))
             .setCity(nullToEmpty(response.getCity()))
@@ -39,11 +40,27 @@ public interface UserProfileGrpcMapper {
             .setAvatarUrl(nullToEmpty(response.getAvatarUrl()))
             .setPhoneNumber(nullToEmpty(response.getPhoneNumber()))
             .setTiktokUrl(nullToEmpty(response.getTiktokUrl()))
-            .setFbUrl(nullToEmpty(response.getFbUrl()))
-            .setGender(toGrpcGender(response.getGender()))
-            .setProfileVisibility(toGrpcPrivacyLevel(response.getProfileVisibility()))
-            .setFriendsVisibility(toGrpcPrivacyLevel(response.getFriendsVisibility()))
-            .setPostsVisibility(toGrpcPrivacyLevel(response.getPostsVisibility()));
+            .setXUrl(nullToEmpty(response.getXUrl()))
+            .setInstagramUrl(nullToEmpty(response.getInstagramUrl()))
+            .setFacebookUrl(nullToEmpty(response.getFacebookUrl()))
+            .setGender(response.getGender() != null ? response.getGender() : Gender.GENDER_UNSPECIFIED)
+            .setProfileVisibility(
+                response.getProfileVisibility() != null
+                    ? response.getProfileVisibility()
+                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
+            )
+            .setFriendsVisibility(
+                response.getFriendsVisibility() != null
+                    ? response.getFriendsVisibility()
+                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
+            )
+            .setPostsVisibility(
+                response.getPostsVisibility() != null
+                    ? response.getPostsVisibility()
+                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
+            )
+            .setFollowersCount(response.getFollowersCount() != null ? response.getFollowersCount() : 0L)
+            .setFollowingCount(response.getFollowingCount() != null ? response.getFollowingCount() : 0L);
 
         if (response.getDob() != null) {
             builder.setDob(toTimestamp(response.getDob()));
@@ -63,31 +80,6 @@ public interface UserProfileGrpcMapper {
             return null;
         }
         return UserProfileDTO.newBuilder().setUserId(nullToEmpty(response.getUserId())).build();
-    }
-
-    @Named("toGrpcGender")
-    default Gender toGrpcGender(com.leaf.profile.enums.Gender gender) {
-        if (gender == null) {
-            return Gender.GENDER_UNSPECIFIED;
-        }
-        return switch (gender) {
-            case MALE -> Gender.MALE;
-            case FEMALE -> Gender.FEMALE;
-            case OTHER -> Gender.OTHER;
-        };
-    }
-
-    @Named("toGrpcPrivacyLevel")
-    default PrivacyLevel toGrpcPrivacyLevel(com.leaf.profile.enums.PrivacyLevel privacyLevel) {
-        if (privacyLevel == null) {
-            return PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED;
-        }
-        return switch (privacyLevel) {
-            case PUBLIC -> PrivacyLevel.PUBLIC;
-            case PRIVATE -> PrivacyLevel.PRIVATE;
-            case CUSTOM -> PrivacyLevel.CUSTOM;
-            case FRIENDS_ONLY -> PrivacyLevel.FRIEND_ONLY;
-        };
     }
 
     @Named("toTimestamp")

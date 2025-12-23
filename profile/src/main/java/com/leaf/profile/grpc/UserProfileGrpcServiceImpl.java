@@ -48,7 +48,14 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
             responseObserver.onNext(grpcResponse);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+            e.printStackTrace();
+            if (e.getMessage().contains("NOT_FOUND")) {
+                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
+            } else {
+                responseObserver.onError(
+                    io.grpc.Status.INTERNAL.withDescription("Internal error: " + e.getMessage()).asRuntimeException()
+                );
+            }
         }
     }
 }

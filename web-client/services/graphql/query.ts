@@ -3,7 +3,6 @@ export const ME_QUERY = `
     me {
       auth {
         username
-        fullName
         email
         isGlobal
         roles
@@ -13,6 +12,9 @@ export const ME_QUERY = `
         channel
       }
       profile {
+        id
+        userId
+        fullname
         dob
         city
         bio
@@ -23,7 +25,9 @@ export const ME_QUERY = `
         createdDate
         lastOnlineAt
         tiktokUrl
-        fbUrl
+        xUrl
+        instagramUrl
+        facebookUrl
         profileVisibility
         friendsVisibility
         postsVisibility

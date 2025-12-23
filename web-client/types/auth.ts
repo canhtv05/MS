@@ -3,7 +3,6 @@ import { Gender, PrivacyLevel } from '@/enums/common';
 // Auth response
 export interface IAuthMeDTO {
   username: string;
-  fullName: string;
   email: string;
   isGlobal: boolean;
   roles: string[];
@@ -15,6 +14,7 @@ export interface IAuthMeDTO {
 
 // Profile response
 export interface IProfileDTO {
+  id: string;
   userId: string;
   fullname: string;
   dob: string;
@@ -27,7 +27,9 @@ export interface IProfileDTO {
   createdDate: string;
   lastOnlineAt: string;
   tiktokUrl: string;
-  fbUrl: string;
+  xUrl: string;
+  instagramUrl: string;
+  facebookUrl: string;
   profileVisibility: PrivacyLevel;
   friendsVisibility: PrivacyLevel;
   postsVisibility: PrivacyLevel;

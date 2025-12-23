@@ -13,7 +13,6 @@ public class AuthGrpcMapper {
     public AuthMeResponse toAuthMeResponse(UserProfileDTO userProfile) {
         AuthMeResponse.Builder builder = AuthMeResponse.newBuilder()
             .setUsername(ConvertProto.nullToEmpty(userProfile.getUsername()))
-            .setFullname(ConvertProto.nullToEmpty(userProfile.getFullName()))
             .setEmail(ConvertProto.nullToEmpty(userProfile.getEmail()))
             .setIsGlobal(Boolean.TRUE.equals(userProfile.getIsGlobal()))
             .addAllRoles(userProfile.getRoles().stream().map(String::toString).toList())

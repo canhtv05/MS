@@ -33,7 +33,6 @@ import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import { Bell } from '@/components/animate-ui/icons/bell';
 import UserProfileCard from '@/components/UserProfileCard';
-import { useProfileStore } from '@/stores/profile';
 import { useRouter } from 'next/navigation';
 import HomeHeaderAvatar from './HomeHeaderAvatar';
 import HomeHeaderDropdown from './HomeHeaderDropdown';
@@ -62,7 +61,6 @@ const HeaderLayout = () => {
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const router = useRouter();
   const user = useAuthStore(s => s.user);
-  const userProfile = useProfileStore(s => s.userProfile);
 
   if (!ready) return null;
 
@@ -146,8 +144,8 @@ const HeaderLayout = () => {
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
                         username={user?.auth?.username || ''}
-                        avatarUrl={userProfile?.avatarUrl || images.avt1.src}
-                        fullName={user?.auth?.fullName || ''}
+                        avatarUrl={user?.profile?.avatarUrl || images.avt1.src}
+                        fullName={user?.profile?.fullname || ''}
                       />
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

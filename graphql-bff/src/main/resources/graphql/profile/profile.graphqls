@@ -1,4 +1,5 @@
 type ProfileDTO {
+  id: String
   userId: String
   fullname: String
   dob: String
@@ -11,7 +12,9 @@ type ProfileDTO {
   createdDate: String
   lastOnlineAt: String
   tiktokUrl: String
-  fbUrl: String
+  xUrl: String
+  instagramUrl: String
+  facebookUrl: String
   profileVisibility: PrivacyLevel
   friendsVisibility: PrivacyLevel
   postsVisibility: PrivacyLevel
@@ -31,5 +34,5 @@ enum PrivacyLevel {
   PUBLIC
   PRIVATE
   CUSTOM
-  FRIEND_ONLY
+  FRIENDS_ONLY
 }
