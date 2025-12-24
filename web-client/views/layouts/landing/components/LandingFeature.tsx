@@ -1,15 +1,11 @@
 'use client';
 
-import { Compass } from '@/components/animate-ui/icons/compass';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { MessageCircleMore } from '@/components/animate-ui/icons/message-circle-more';
-import { Send } from '@/components/animate-ui/icons/send';
-import { Star } from '@/components/animate-ui/icons/star';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 import { cn } from '@/lib/utils';
-import { FeatureIcon } from '@/components/animate-ui/icons/common';
+import { FeatureIcon } from '@/components/animate-ui/icons';
 import { JSX } from 'react';
 import { motion } from 'framer-motion';
+import { Plain2, Dialog2, Compass, Star } from '@solar-icons/react-perf/Linear';
 
 interface LandingFeatureCardProps {
   icon: JSX.Element;
@@ -20,14 +16,14 @@ interface LandingFeatureCardProps {
 
 const homeFeatureCards: LandingFeatureCardProps[] = [
   {
-    icon: <Send className={'text-white stroke-1'} />,
+    icon: <Plain2 className={'text-white stroke-1 size-6'} />,
     title: 'Share Posts',
     description:
       'Share your thoughts, photos, and videos with your network. Express yourself freely and authentically.',
     className: 'bg-cyan-500 border-cyan-300 hover:bg-cyan-300 hover:shadow-cyan-200 shadow-lg',
   },
   {
-    icon: <MessageCircleMore className={'text-white stroke-1'} />,
+    icon: <Dialog2 className={'text-white stroke-1 size-6'} />,
     title: 'Chat Instantly',
     description:
       'Real-time messaging with friends and groups. Stay connected with the people who matter most.',
@@ -35,7 +31,7 @@ const homeFeatureCards: LandingFeatureCardProps[] = [
       'bg-violet-400 border-violet-200 hover:bg-violet-200 hover:shadow-violet-100 shadow-lg',
   },
   {
-    icon: <Compass className={'text-white stroke-1'} />,
+    icon: <Compass className={'text-white stroke-1 size-6'} />,
     title: 'Discover Communities',
     description:
       'Find and join communities that match your interests. Connect with like-minded individuals globally.',
@@ -43,7 +39,7 @@ const homeFeatureCards: LandingFeatureCardProps[] = [
       'bg-orange-400 border-orange-200 hover:bg-orange-200 hover:shadow-orange-100 shadow-lg',
   },
   {
-    icon: <Star className={'text-white stroke-1'} />,
+    icon: <Star className={'text-white stroke-1 size-6'} />,
     title: 'Build Your Brand',
     description:
       'Grow your personal or business brand. Reach your audience and make an impact that matters.',
@@ -54,22 +50,20 @@ const homeFeatureCards: LandingFeatureCardProps[] = [
 
 const LandingFeatureCard = ({ description, icon, title, className }: LandingFeatureCardProps) => {
   return (
-    <AnimateIcon animateOnHover>
-      <div className="p-5 rounded-lg linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
-        <div className="h-full border-none shadow-none">
-          <div
-            className={cn(
-              'border inline-block p-2 rounded-md group-hover:scale-110 transition-all duration-300',
-              className,
-            )}
-          >
-            {icon}
-          </div>
-          <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
-          <p className="text-gray-600 leading-relaxed text-sm">{description}</p>
+    <div className="p-5 rounded-lg linear-3 h-full border-none shadow-none hover:shadow-secondary/20 hover:shadow-lg duration-500 transition-shadow group">
+      <div className="h-full border-none shadow-none">
+        <div
+          className={cn(
+            'border inline-block p-2 rounded-md group-hover:scale-110 transition-all duration-300',
+            className,
+          )}
+        >
+          {icon}
         </div>
+        <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
+        <p className="text-gray-600 leading-relaxed text-sm">{description}</p>
       </div>
-    </AnimateIcon>
+    </div>
   );
 };
 

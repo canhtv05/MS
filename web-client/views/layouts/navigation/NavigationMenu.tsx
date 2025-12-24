@@ -12,13 +12,8 @@ import {
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
 import { APP_CONFIGS } from '@/configs';
-import {
-  CalendarIcon,
-  FriendsIcon,
-  HouseIcon,
-  ImageIcon,
-} from '@/components/animate-ui/icons/common';
 import Link from 'next/link';
+import { Home, UsersGroupRounded, Album, Calendar } from '@solar-icons/react-perf/BoldDuotone';
 
 interface IMenuNavigation {
   title: string;
@@ -31,23 +26,23 @@ const menu: IMenuNavigation[] = [
   {
     title: 'navigation.home',
     href: APP_CONFIGS.ROUTES.home,
-    icon: <HouseIcon className="size-5 text-foreground/70 stroke-[2.5px]" />,
+    icon: <Home className="size-5 text-foreground/70 stroke-[2.5px]" />,
     isActive: true,
   },
   {
     title: 'navigation.friends',
     href: APP_CONFIGS.ROUTES.friends,
-    icon: <FriendsIcon className="text-foreground/70 size-5 stroke-2" />,
+    icon: <UsersGroupRounded className="text-foreground/70 size-5 stroke-2" />,
   },
   {
     title: 'navigation.photos',
     href: APP_CONFIGS.ROUTES.photos,
-    icon: <ImageIcon className="size-5 text-foreground/70 stroke-2" />,
+    icon: <Album className="size-5 text-foreground/70 stroke-2" />,
   },
   {
     title: 'navigation.new_feed',
     href: APP_CONFIGS.ROUTES.newFeed,
-    icon: <CalendarIcon className="size-5 text-foreground/70 stroke-2" />,
+    icon: <Calendar className="size-5 text-foreground/70 stroke-2" />,
   },
 ];
 

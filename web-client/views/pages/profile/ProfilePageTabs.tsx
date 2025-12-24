@@ -1,13 +1,10 @@
 'use client';
 
-import { BookmarkIcon } from '@/components/animate-ui/icons/bookmark';
-import { GalleryVerticalEnd } from '@/components/animate-ui/icons/gallery-horizontal-end';
-import { Heart } from '@/components/animate-ui/icons/heart';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
 import { ReactNode, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import { Heart, Bookmark, Library } from '@solar-icons/react-perf/Bold';
 
 interface ITabs {
   id: string;
@@ -16,9 +13,9 @@ interface ITabs {
 }
 
 const tabs: ITabs[] = [
-  { id: 'posts', labelKey: 'posts', icon: <GalleryVerticalEnd size={16} /> },
+  { id: 'posts', labelKey: 'posts', icon: <Library size={16} /> },
   { id: 'liked', labelKey: 'liked', icon: <Heart size={16} /> },
-  { id: 'saved', labelKey: 'saved', icon: <BookmarkIcon size={16} /> },
+  { id: 'saved', labelKey: 'saved', icon: <Bookmark size={16} /> },
 ];
 
 // Fake data for posts
@@ -201,13 +198,10 @@ const ProfilePageTabs = () => {
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
               >
-                <AnimateIcon
-                  animate={hoverIndex === index}
-                  className="flex gap-2 items-center justify-center group-hover:animate-icon"
-                >
+                <div className="flex gap-2 items-center justify-center">
                   {tab.icon}
                   {t(tab.labelKey)}
-                </AnimateIcon>
+                </div>
               </button>
             ))}
           </div>

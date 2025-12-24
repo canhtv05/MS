@@ -5,12 +5,13 @@ import CheckBox from '@/components/customs/checkbox';
 import Divider from '@/components/customs/divider';
 import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
-import { GoogleIcon, LockIcon, UserIcon } from '@/components/animate-ui/icons/common';
+import { GoogleIcon } from '@/components/animate-ui/icons';
 import Link from 'next/link';
 import useSignIn from './use-signin';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Dialog from '@/components/customs/dialog';
+import { User, LockPassword } from '@solar-icons/react-perf/Bold';
 
 const SignInPage = () => {
   const { onSubmit, form, setShowResendEmail, showResendEmail, handleResendVerifyEmail } =
@@ -45,7 +46,7 @@ const SignInPage = () => {
                 id="username"
                 label={t('sign_in.label_email_or_username')}
                 placeholder={t('sign_in.email_or_username')}
-                icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+                icon={<User className="size-5 p-0.5 text-foreground/70" />}
                 inputSize="md"
                 errorText={fieldState?.error?.message}
                 validate
@@ -64,7 +65,7 @@ const SignInPage = () => {
                 label={t('sign_in.label_password')}
                 placeholder={t('sign_in.password')}
                 type="password"
-                icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+                icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
                 inputSize="md"
                 errorText={fieldState?.error?.message}
                 validate

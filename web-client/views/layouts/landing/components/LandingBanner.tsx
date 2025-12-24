@@ -1,9 +1,7 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { ArrowRight } from '@/components/animate-ui/icons/arrow-right';
-import { Play } from '@/components/animate-ui/icons/play';
+import { SkipNext, ArrowRight } from '@solar-icons/react-perf/Bold';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
 import Ring from '@/components/customs/ring';
 import dynamic from 'next/dynamic';
@@ -41,35 +39,31 @@ const LandingBanner = () => {
             you. Your social network reimagined.
           </p>
           <div className="flex md:flex-row mt-10 flex-col gap-2">
-            <AnimateIcon animateOnHover>
-              <Button className="rounded-full w-full" size={'lg'}>
-                <div className="flex items-center justify-center w-full gap-2">
-                  <span>Join the community</span>
-                  <ArrowRight />
-                </div>
-              </Button>
-            </AnimateIcon>
-            <AnimateIcon animateOnHover>
-              <Button
-                className="rounded-full w-full bg-white! text-black hover:shadow-black/20 hover:shadow-md shadow"
-                size={'lg'}
-                variant="accent"
-              >
-                <div className="flex items-center justify-center w-full gap-2">
-                  <span>Watch demo</span>
-                  <Play />
-                </div>
-              </Button>
-            </AnimateIcon>
+            <Button className="rounded-full w-full" size={'lg'}>
+              <div className="flex items-center justify-center w-full gap-2">
+                <span>Join the community</span>
+                <ArrowRight />
+              </div>
+            </Button>
+            <Button
+              className="rounded-full w-full bg-white! text-black hover:shadow-black/20 hover:shadow-md shadow"
+              size={'lg'}
+              variant="accent"
+            >
+              <div className="flex items-center justify-center w-full gap-2">
+                <span>Watch demo</span>
+                <SkipNext />
+              </div>
+            </Button>
           </div>
           <div className="grid grid-cols-3 py-10 md:place-items-start place-items-center gap-2">
             <div className="flex flex-col">
               <div className="flex">
                 <CountingNumber
                   number={10}
-                  className="text-secondary md:text-lg text-sm font-bold"
+                  className="text-black/80 md:text-lg text-sm font-bold"
                 />
-                <span className="text-secondary md:text-lg text-sm font-bold">K+</span>
+                <span className="text-black/80 md:text-lg text-sm font-bold">K+</span>
               </div>
               <span className="text-gray-400 md:text-lg text-sm font-medium">Active users</span>
             </div>
@@ -77,19 +71,16 @@ const LandingBanner = () => {
               <div className="flex">
                 <CountingNumber
                   number={50}
-                  className="text-secondary md:text-lg text-sm font-bold"
+                  className="text-black/80 md:text-lg text-sm font-bold"
                 />
-                <span className="text-secondary md:text-lg text-sm font-bold">K+</span>
+                <span className="text-black/80 md:text-lg text-sm font-bold">K+</span>
               </div>
               <span className="text-gray-400 md:text-lg text-sm font-medium">Communities</span>
             </div>
             <div className="flex flex-col">
               <div className="flex">
-                <CountingNumber
-                  number={1}
-                  className="text-secondary md:text-lg text-sm font-bold"
-                />
-                <span className="text-secondary md:text-lg text-sm font-bold">K+</span>
+                <CountingNumber number={1} className="text-black/80 md:text-lg text-sm font-bold" />
+                <span className="text-black/80 md:text-lg text-sm font-bold">K+</span>
               </div>
               <span className="text-gray-400 md:text-lg text-sm font-medium">Posts Daily</span>
             </div>

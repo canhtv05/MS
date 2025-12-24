@@ -6,11 +6,10 @@ import Logo from '@/components/Logo';
 import useForgotPassword from './use-forgot-password';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Mail } from 'lucide-react';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { ChevronLeft } from '@/components/animate-ui/icons/chevron-left';
+import { Letter } from '@solar-icons/react-perf/Linear';
 import { InputOTP } from '@/components/customs/input-otp';
-import { LockIcon, LockOpenIcon } from '@/components/animate-ui/icons/common';
+import { AltArrowLeft } from '@solar-icons/react-perf/Outline';
+import { LockPasswordUnlocked, LockPassword } from '@solar-icons/react-perf/Outline';
 
 const ForgotPasswordPage = () => {
   const {
@@ -54,7 +53,7 @@ const ForgotPasswordPage = () => {
                   id="email"
                   label={t('forgot_password.email_address')}
                   placeholder={t('forgot_password.enter_your_email_address')}
-                  icon={<Mail className="size-5 p-0.5 text-foreground/70" />}
+                  icon={<Letter className="size-5 p-0.5 text-foreground/70" />}
                   inputSize="md"
                   errorText={fieldState?.error?.message}
                   validate
@@ -130,7 +129,7 @@ const ForgotPasswordPage = () => {
                   required
                   validate
                   inputSize="md"
-                  icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+                  icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
                   errorText={fieldState?.error?.message}
                 />
               )}
@@ -148,7 +147,7 @@ const ForgotPasswordPage = () => {
                   required
                   validate
                   inputSize="md"
-                  icon={<LockOpenIcon className="size-5 p-0.5 text-foreground/70" />}
+                  icon={<LockPasswordUnlocked className="size-5 p-0.5 text-foreground/70" />}
                   errorText={fieldState?.error?.message}
                 />
               )}
@@ -160,19 +159,17 @@ const ForgotPasswordPage = () => {
         )}
 
         <div id="social-sign-in" className="space-y-4 pt-5 section-clickable">
-          <AnimateIcon animateOnHover>
-            <Button
-              className="w-full text-cyan-300 text-sm hover:text-cyan-200"
-              size={'lg'}
-              variant={'ghost'}
-              onClick={navigateSignIn}
-            >
-              <div className="flex items-center gap-2 justify-center">
-                <ChevronLeft />
-                <p>{t('forgot_password.back_to_sign_in')}</p>
-              </div>
-            </Button>
-          </AnimateIcon>
+          <Button
+            className="w-full text-cyan-300 text-sm hover:text-cyan-200"
+            size={'lg'}
+            variant={'ghost'}
+            onClick={navigateSignIn}
+          >
+            <div className="flex items-center gap-2 justify-center">
+              <AltArrowLeft />
+              <p>{t('forgot_password.back_to_sign_in')}</p>
+            </div>
+          </Button>
         </div>
       </div>
     </div>

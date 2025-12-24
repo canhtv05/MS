@@ -1,14 +1,10 @@
 import { detectLanguage } from '@/utils/common';
 import Link from 'next/link';
-import { LinkIcon } from '@/components/animate-ui/icons/link';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { CalendarDaysIcon } from '@/components/animate-ui/icons/calendar-day';
 import { formatNumberString } from '@/lib/utils';
 import { IProfilePageProps } from './ProfilePage';
 import { Skeleton } from '@/components/customs/skeleton';
-import { AtSignIcon } from '@/components/animate-ui/icons/at-sign';
-import { MapPinIcon } from '@/components/animate-ui/icons/map-pin';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
+import { Calendar, LinkMinimalistic2, MapPointWave } from '@solar-icons/react-perf/Outline';
 
 interface StatItemProps {
   value: number;
@@ -42,8 +38,7 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
               {data?.data?.fullname}
             </h2>
             <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-              <AtSignIcon size={14} className="shrink-0" />
-              <p className="leading-5">{data?.data?.userId}</p>
+              <p className="">@{data?.data?.userId}</p>
             </div>
           </div>
         )}
@@ -52,54 +47,64 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
           (data?.data?.city ||
             data?.data?.tiktokUrl ||
             data?.data?.facebookUrl ||
+            data?.data?.instagramUrl ||
             data?.data?.createdDate) && (
             <div className="flex flex-wrap flex-col items-start gap-x-4 gap-y-1 pt-1">
               <div className="flex gap-2 group items-center flex-wrap justify-start">
                 {data?.data?.city && (
-                  <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-                    <MapPinIcon size={14} className="shrink-0" />
-                    <p className="leading-5 max-w-[250px] md:max-w-full text-sm truncate">
+                  <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                    <MapPointWave size={14} className="shrink-0" />
+                    <p className="max-w-[250px] md:max-w-[300px] text-xs truncate">
                       {data.data.city}
                     </p>
                   </div>
                 )}
 
                 {data?.data?.createdDate && (
-                  <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-                    <CalendarDaysIcon size={14} className="shrink-0]" />
-                    <p className="leading-5 text-sm">{data.data.createdDate.substring(0, 10)}</p>
+                  <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
+                    <Calendar size={14} className="shrink-0" />
+                    <span className="text-xs">{data.data.createdDate.substring(0, 10)}</span>
                   </div>
                 )}
               </div>
 
               {data?.data?.tiktokUrl && (
-                <AnimateIcon animateOnHover>
-                  <Link
-                    target="_blank"
-                    href={data.data.tiktokUrl}
-                    className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
-                  >
-                    <LinkIcon size={14} className="shrink-0" />
-                    <span className="leading-5 max-w-[200px] truncate text-gray-500 dark:text-gray-400">
-                      {data.data.tiktokUrl.replace(/^https?:\/\/(www\.)?/, '')}
-                    </span>
-                  </Link>
-                </AnimateIcon>
+                <Link
+                  target="_blank"
+                  href={data.data.tiktokUrl}
+                  className="text-xs hover:underline font-medium flex items-center gap-1.5 group"
+                >
+                  <LinkMinimalistic2 size={14} className="shrink-0" />
+                  <span className="max-w-[250px] md:max-w-[300px] truncate text-gray-500 dark:text-gray-400">
+                    {data.data.tiktokUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                  </span>
+                </Link>
               )}
 
               {data?.data?.facebookUrl && (
-                <AnimateIcon animateOnHover>
-                  <Link
-                    target="_blank"
-                    href={data.data.facebookUrl}
-                    className="text-sm hover:underline font-medium flex items-center gap-1.5 group"
-                  >
-                    <LinkIcon size={14} className="shrink-0" />
-                    <span className="leading-5 max-w-[200px] truncate text-gray-500 dark:text-gray-400">
-                      {data.data.facebookUrl.replace(/^https?:\/\/(www\.)?/, '')}
-                    </span>
-                  </Link>
-                </AnimateIcon>
+                <Link
+                  target="_blank"
+                  href={data.data.facebookUrl}
+                  className="text-xs hover:underline font-medium flex items-center gap-1.5 group"
+                >
+                  <LinkMinimalistic2 size={14} className="shrink-0" />
+                  <span className="max-w-[250px] md:max-w-[300px] truncate text-gray-500 dark:text-gray-400">
+                    {data.data.facebookUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                  </span>
+                </Link>
+              )}
+
+              {data?.data?.instagramUrl && (
+                <Link
+                  target="_blank"
+                  href={data.data.instagramUrl}
+                  className="text-xs hover:underline font-medium flex items-center gap-1.5 group"
+                >
+                  <LinkMinimalistic2 size={14} className="shrink-0" />
+                  <span className="max-w-[250px] md:max-w-[300px] truncate text-gray-500 dark:text-gray-400">
+                    {data.data.instagramUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                  </span>
+                </Link>
               )}
             </div>
           )}
@@ -121,10 +126,12 @@ const ProfilePageInfo = ({ isLoading, t, data }: IProfilePageProps) => {
       </div>
 
       <div className="mt-3">
-        {isLoading || !data?.data?.bio || data.data.bio.trim() === '' ? (
-          <div className="space-y-2">
-            <Skeleton className="h-14 w-full" />
-          </div>
+        {isLoading || !data?.data?.bio ? (
+          data?.data?.bio && (
+            <div className="space-y-2">
+              <Skeleton className="h-14 w-full" />
+            </div>
+          )
         ) : (
           <Code code={data.data.bio}>
             <CodeBlock

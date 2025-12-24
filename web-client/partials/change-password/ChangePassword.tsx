@@ -7,7 +7,7 @@ import { z } from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/customs/input';
 import { useTranslation } from 'react-i18next';
-import { LockIcon } from 'lucide-react';
+import { LockPassword } from '@solar-icons/react-perf/Outline';
 
 interface IChangePasswordProps {
   onSuccess: () => void;
@@ -54,7 +54,7 @@ const ChangePassword = ({ onSuccess }: IChangePasswordProps) => {
             validate
             inputSize="md"
             errorText={fieldState?.error?.message}
-            icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+            icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
           />
         )}
       />
@@ -72,7 +72,7 @@ const ChangePassword = ({ onSuccess }: IChangePasswordProps) => {
             validate
             inputSize="md"
             errorText={fieldState.error?.message}
-            icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+            icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
             value={field.value}
           />
         )}
@@ -90,7 +90,7 @@ const ChangePassword = ({ onSuccess }: IChangePasswordProps) => {
             required
             validate
             inputSize="md"
-            icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+            icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
             errorText={fieldState?.error?.message}
           />
         )}

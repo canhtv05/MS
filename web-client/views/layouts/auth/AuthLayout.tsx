@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
-import { LanguagesIcon } from '@/components/animate-ui/icons/languages';
+import { Earth } from '@solar-icons/react-perf/BoldDuotone';
 import { useTranslation } from 'react-i18next';
 import useAuthLayout from './use-auth-layout';
 import Image from 'next/image';
@@ -27,7 +27,7 @@ const AuthLayout = () => {
           <div
             className={`${itemClassName} group-hover:animate-icon cursor-pointer bg-background p-2! border border-foreground/20 rounded-lg`}
           >
-            <LanguagesIcon className="text-foreground/70" />
+            <Earth className="text-foreground/70" />
             <span>{t('header.language')}</span>
           </div>
         </DropdownMenuTrigger>

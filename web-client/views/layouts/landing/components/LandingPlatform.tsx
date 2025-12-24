@@ -2,14 +2,14 @@
 
 import { Card, CardContent } from '@/components/customs/card';
 import { cn } from '@/lib/utils';
-import { MobileScreenIcon } from '@/components/animate-ui/icons/common';
 import images from '@/public/imgs';
-import { LucideIcon, RefreshCcw, Smartphone, TvMinimal } from 'lucide-react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { Smartphone, Tablet, Refresh } from '@solar-icons/react-perf/Outline';
+import { Icon } from '@solar-icons/react-perf/lib/types';
 
 interface LandingPlatformCardProps {
-  icon: LucideIcon;
+  icon: Icon;
   title: string;
   description: string;
   className: string;
@@ -17,7 +17,7 @@ interface LandingPlatformCardProps {
 
 const homePlatformCards: LandingPlatformCardProps[] = [
   {
-    icon: TvMinimal,
+    icon: Tablet,
     title: 'Desktop Experience',
     description:
       'Full-featured interface with multi-column layouts, keyboard shortcuts, and advanced features for power users.',
@@ -31,7 +31,7 @@ const homePlatformCards: LandingPlatformCardProps[] = [
     className: 'bg-amber-400 border-amber-200 hover:bg-amber-200 hover:shadow-amber-100 shadow-lg',
   },
   {
-    icon: RefreshCcw,
+    icon: Refresh,
     title: 'Real-Time Sync',
     description:
       'Your data syncs instantly across all devices. Start a conversation on mobile, continue on desktop.',
@@ -55,7 +55,7 @@ const LandingFeatureCard = ({
             className,
           )}
         >
-          <Icon className="text-white" />
+          <Icon className="text-white size-6" />
         </div>
         <h3 className="mt-2 font-bold text-gray-900 mb-3">{title}</h3>
         <p className="text-gray-600 leading-relaxed text-sm">{description}</p>
@@ -75,7 +75,7 @@ const LandingPlatform = () => {
         className="flex flex-col items-center justify-center gap-4"
       >
         <div className="bg-green-50 flex items-center gap-2 rounded-full px-3 py-2">
-          <MobileScreenIcon className="text-green-400 size-4 fill-green-400" />
+          <Smartphone className="text-green-400 size-4 fill-green-400" />
           <span className="text-green-400 text-sm font-bold">Cross Platform</span>
         </div>
         <h2 className="lg:text-5xl md:text-3xl text-xl font-black text-black">

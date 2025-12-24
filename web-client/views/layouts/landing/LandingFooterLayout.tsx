@@ -2,7 +2,7 @@
 
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import Logo from '@/components/Logo';
-import { MailIcon } from 'lucide-react';
+import { Letter } from '@solar-icons/react-perf/Linear';
 
 const LandingFooterLayout = () => {
   return (
@@ -23,14 +23,14 @@ const LandingFooterLayout = () => {
                   id="email_"
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-full bg-gray-600 border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary"
+                  className="flex-1 px-4 py-2 rounded-full bg-gray-600 placeholder-gray-400 focus:outline-none focus:border-none border-none caret-white text-white"
                 />
                 <IconButton
                   variant={'accent'}
                   className="rounded-lg bg-gray-600 hover:bg-gray-600 cursor-pointer"
                   size={'lg'}
                 >
-                  <MailIcon className="stroke-white" />
+                  <Letter className="stroke-white" />
                 </IconButton>
               </div>
             </div>

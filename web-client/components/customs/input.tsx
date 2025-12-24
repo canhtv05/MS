@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { CircleAlert, Eye, EyeClosed, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import usePrevious from '@/hooks/use-previous';
+import { DangerCircle, Eye, EyeClosed, CloseCircle } from '@solar-icons/react-perf/Linear';
 import { Label } from './label';
 
 const hasInputValue = (value?: string | number | readonly string[]) => {
@@ -183,17 +183,17 @@ function Input({
                 inputSize === 'lg' && 'h-11',
               )}
             >
-              <X className="size-4 p-1 dark:bg-gray-700 bg-gray-200 rounded-full" />
+              <CloseCircle className="size-4 p-1 dark:bg-gray-700 bg-gray-200 rounded-full" />
             </div>
           )}
 
           {isEmpty && !!validate && (
-            <CircleAlert
+            <DangerCircle
               className={`absolute ${
                 typeInput === 'password' || prevType === 'password' || type === 'password'
                   ? 'right-12'
                   : 'right-4'
-              } top-1/2 -translate-y-1/2 size-3.5 stroke-red-500`}
+              } top-1/2 -translate-y-1/2 size-3.5 text-red-500`}
             />
           )}
 
@@ -203,9 +203,9 @@ function Input({
               onClick={togglePasswordVisibility}
             >
               {typeInput === 'password' ? (
-                <Eye className="absolute right-0 top-1/2 -translate-y-1/2 size-4 cursor-pointer stroke-[#6e6b7b]" />
+                <Eye className="absolute right-0 top-1/2 -translate-y-1/2 size-4 cursor-pointer text-[#6e6b7b]" />
               ) : (
-                <EyeClosed className="absolute right-0 top-1/2 -translate-y-1/2 size-4 cursor-pointer stroke-[#6e6b7b]" />
+                <EyeClosed className="absolute right-0 top-1/2 -translate-y-1/2 size-4 cursor-pointer text-[#6e6b7b]" />
               )}
             </div>
           )}

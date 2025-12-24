@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { TFunction } from 'i18next';
-import { Loader2 } from 'lucide-react';
+import { Loader2Icon } from '@/components/animate-ui/icons';
 import { AnimatePresence } from 'motion/react';
 import { Dispatch, forwardRef, SetStateAction } from 'react';
 import HomeHeaderSearchCard from './HomeHeaderSearchCard';
@@ -34,7 +34,7 @@ const HomeHeaderSearchLG = forwardRef(
       >
         {isLoading ? (
           <div className="flex mt-2 items-center justify-center">
-            <Loader2 className="animate-spin size-8 text-foreground" />
+            <Loader2Icon className="animate-spin size-8 text-foreground" />
           </div>
         ) : isShowSearch && debouncedValue.trim() !== '' && !isLoading ? (
           <AnimatePresence>
