@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'react-medium-image-zoom/dist/styles.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -240,6 +244,18 @@
   }
 }
 
-/* @utility glass-effect {
-  @apply bg-background/40 backdrop-blur-xl border border-foreground/10 shadow-2xl;
-} */
+[data-rmiz-btn-unzoom] {
+  display: none !important;
+}
+
+[data-rmiz-modal-content] {
+  @apply bg-background;
+}
+
+[data-rmiz-modal-img] {
+  @apply cursor-pointer;
+}
+
+[data-rmiz-content='found'] img {
+  @apply cursor-pointer;
+}

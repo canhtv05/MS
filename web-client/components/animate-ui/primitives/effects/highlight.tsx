@@ -264,7 +264,7 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
                   left: boundsState.left,
                   width: boundsState.width,
                   height: boundsState.height,
-                  opacity: 1,
+                  opacity: 0,
                 }}
                 exit={{
                   opacity: 0,
@@ -411,7 +411,7 @@ function HighlightItem<T extends React.ElementType>({
     localRef.current = node as HTMLDivElement;
   }, []);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (mode !== 'parent') return;
     let rafId: number;
     let previousBounds: Bounds | null = null;
@@ -458,16 +458,6 @@ function HighlightItem<T extends React.ElementType>({
     forceUpdateBounds,
     contextForceUpdateBounds,
   ]);
-
-  React.useEffect(() => {
-    if (mode !== 'parent' || !isActive) return;
-    const timer = setTimeout(() => {
-      if (localRef.current) {
-        setBounds(localRef.current.getBoundingClientRect());
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [mode, isActive, setBounds]);
 
   if (!React.isValidElement(children)) return children;
 

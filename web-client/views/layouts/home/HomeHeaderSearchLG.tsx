@@ -26,23 +26,29 @@ const HomeHeaderSearchLG = forwardRef(
       <div
         ref={ref}
         className={cn(
-          isLoading ? 'overflow-hidden' : 'overflow-y-auto',
-          'z-40 relative max-h-[40vh] bg-gray-50 dark:bg-gray-700 rounded-lg',
-          'fixed top-[60px] left-5 right-5 w-auto shadow-lg',
-          'lg:absolute lg:w-full max-w-xs lg:top-10 lg:left-0 lg:right-auto',
+          'z-50 rounded-lg shadow-lg',
+          'fixed top-[64px] inset-x-0 md:px-0 px-5',
+          'lg:absolute lg:w-full lg:max-w-xs lg:top-10 lg:inset-x-auto lg:left-0',
         )}
       >
-        {isLoading ? (
-          <div className="flex mt-2 items-center justify-center">
-            <Loader2Icon className="animate-spin size-8 text-foreground" />
-          </div>
-        ) : isShowSearch && debouncedValue.trim() !== '' && !isLoading ? (
-          <AnimatePresence>
-            {Array.from({ length: 20 }).map((_, index) => (
-              <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
-            ))}
-          </AnimatePresence>
-        ) : null}
+        <div
+          className={cn(
+            'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] ',
+            isLoading ? 'overflow-hidden' : 'overflow-y-auto',
+          )}
+        >
+          {isLoading ? (
+            <div className="flex mt-2 items-center justify-center">
+              <Loader2Icon className="animate-spin size-8 text-foreground" />
+            </div>
+          ) : isShowSearch && debouncedValue.trim() !== '' && !isLoading ? (
+            <AnimatePresence>
+              {Array.from({ length: 20 }).map((_, index) => (
+                <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
+              ))}
+            </AnimatePresence>
+          ) : null}
+        </div>
       </div>
     );
   },
