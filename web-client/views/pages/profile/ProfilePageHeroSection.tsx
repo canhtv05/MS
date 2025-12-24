@@ -5,40 +5,39 @@ import {
   TooltipTrigger,
 } from '@/components/animate-ui/components/base/tooltip';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import { AddUserIcon, Mail2Icon } from '@/components/animate-ui/icons/common';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import images from '@/public/imgs';
 import { IProfilePageProps } from './ProfilePage';
 import { useAuthStore } from '@/stores/auth';
-import { SettingsIcon } from '@/components/animate-ui/icons/settings';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
+import { Settings } from '@solar-icons/react-perf/Bold';
+import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
     <>
       <div className="md:flex hidden items-center justify-center gap-2">
         <Button variant="outline" className="gap-2">
-          <Mail2Icon />
+          <Letter />
           {t?.('message')}
         </Button>
         <Button variant="default" className="gap-2">
-          <AddUserIcon />
+          <UserPlusRounded className="size-5" />
           {t?.('follow')}
         </Button>
       </div>
 
       <div className="md:hidden flex items-center justify-center gap-2">
         <Button variant="outline" className="gap-2">
-          <Mail2Icon />
+          <Letter />
           {t?.('message')}
         </Button>
-        {[{ icon: AddUserIcon, variant: 'default' as const, text: t?.('follow') }].map(
+        {[{ icon: UserPlusRounded, variant: 'default' as const, text: t?.('follow') }].map(
           ({ icon: Icon, variant, text }, index) => (
             <Tooltip key={index}>
               <TooltipTrigger asChild>
                 <IconButton className="cursor-pointer shadow-none" variant={variant}>
-                  <Icon />
+                  <Icon size={30} />
                 </IconButton>
               </TooltipTrigger>
               <TooltipPanel
@@ -66,9 +65,9 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
           {t?.('edit_profile')}
         </Button>
         <IconButton variant="outline" className="cursor-pointer">
-          <AnimateIcon animateOnHover className="flex items-center justify-center w-full h-full">
-            <SettingsIcon />
-          </AnimateIcon>
+          <div className="flex items-center justify-center w-full h-full">
+            <Settings />
+          </div>
         </IconButton>
       </div>
     </>
@@ -81,11 +80,11 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   return (
     <>
       {isLoading && !data?.data ? (
-        <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 shadow-lg before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
+        <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
           <Skeleton className="w-full h-full rounded-full relative z-10" />
         </div>
       ) : (
-        <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800 shadow-lg">
+        <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
           <AvatarImage
             width={128}
             height={128}

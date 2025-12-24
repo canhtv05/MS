@@ -1,10 +1,7 @@
 'use client';
 
-import { SquarePenIcon } from '@/components/animate-ui/icons/square-pen';
 import { Input } from '@/components/customs/input';
-import { Search } from 'lucide-react';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { SlidersHorizontal } from '@/components/animate-ui/icons/sliders-horizontal';
+import { Magnifer, Reorder, PenNewSquare } from '@solar-icons/react-perf/Outline';
 import { useTranslation } from 'react-i18next';
 import {
   Tabs,
@@ -28,22 +25,20 @@ const SidebarLayout = () => {
         <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto bg-white rounded-lg">
           <div className="flex justify-between group items-center px-4 pt-4">
             <h3 className="text-sm font-black">Messages</h3>
-            <SquarePenIcon size={18} className="group-hover:animate-icon" />
+            <PenNewSquare size={18} />
           </div>
           <div className="pt-4 px-4">
-            <AnimateIcon animateOnHover>
-              <Input
-                autoComplete="off"
-                showClear
-                inputSize="md"
-                id="search_messages"
-                placeholder={t('header.search_placeholder')}
-                className="dark:bg-gray-700 bg-gray-100 h-8 placeholder:font-medium rounded-lg border-transparent"
-                classNameIcon="dark:bg-gray-700 bg-gray-100 h-8"
-                icon={<Search className={'size-5 p-0.5 text-foreground/60 stroke-3'} />}
-                endIcon={<SlidersHorizontal className="size-5 p-0.5" />}
-              />
-            </AnimateIcon>
+            <Input
+              autoComplete="off"
+              showClear
+              inputSize="md"
+              id="search_messages"
+              placeholder={t('header.search_placeholder')}
+              className="dark:bg-gray-700 bg-gray-100 h-8 placeholder:font-medium rounded-lg border-transparent"
+              classNameIcon="dark:bg-gray-700 bg-gray-100 h-8"
+              icon={<Magnifer className={'size-5 p-0.5 text-foreground/60 stroke-3'} />}
+              endIcon={<Reorder className="size-5 p-0.5" />}
+            />
           </div>
           <div className="pt-3">
             <div className="flex max-h-[50vh] overflow-y-auto w-full max-w-sm flex-col gap-6">

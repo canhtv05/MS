@@ -20,7 +20,7 @@ import {
   type DialogCloseProps as DialogClosePrimitiveProps,
 } from '@/components/animate-ui/primitives/headless/dialog';
 import { cn } from '@/lib/utils';
-import { XIcon } from 'lucide-react';
+import { XIcon } from '../../icons';
 
 type DialogProps<TTag extends React.ElementType = 'div'> = DialogPrimitiveProps<TTag>;
 

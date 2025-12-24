@@ -6,14 +6,10 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/animate-ui/components/radix/hover-card';
-import { GalleryVerticalEnd } from '@/components/animate-ui/icons/gallery-horizontal-end';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { Layers } from '@/components/animate-ui/icons/layers';
-import { Star } from '@/components/animate-ui/icons/star';
-import { cn, formatNumberString } from '@/lib/utils';
-import { ChevronDown, Github, LucideIcon, Menu, X } from 'lucide-react';
+import { Layers } from '@solar-icons/react-perf/Outline';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { useState } from 'react';
+import { ElementType, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   Sheet,
@@ -28,53 +24,52 @@ import { ReposProvider, useHeaderHomeRepo } from './LandingHeaderRepoProvider';
 import CustomImage from '@/components/customs/custom-image';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/Logo';
+import { AltArrowDown, MenuDotsSquare } from '@solar-icons/react-perf/Bold';
+import { CloseCircle } from '@solar-icons/react-perf/Linear';
+import { GithubIcon } from '@/components/animate-ui/icons';
 
 interface IResourceCardProps {
   content: string;
   url: string;
-  icon: LucideIcon;
+  icon: ElementType;
   title: string;
-  hasStar?: boolean;
   imageURL?: string;
 }
 
 const ResourceCard = (props: IResourceCardProps) => {
-  const { content, icon: Icon, url, title, hasStar, imageURL } = props;
+  const { content, icon: Icon, url, title, imageURL } = props;
 
   return (
-    <AnimateIcon animateOnHover>
-      <Link
-        target="_blank"
-        href={url}
-        className="flex gap-2 justify-between md:items-start items-center hover:bg-muted-foreground/10 p-2 rounded-sm cursor-pointer"
+    <Link
+      target="_blank"
+      href={url}
+      className="flex gap-2 justify-between md:items-start items-center hover:bg-muted-foreground/10 p-2 rounded-sm cursor-pointer"
+    >
+      <div
+        className={cn(
+          'p-2 leading-none rounded-sm border border-card/30 h-full',
+          imageURL && 'p-0! border-none',
+        )}
       >
-        <div
-          className={cn(
-            'p-2 leading-none rounded-sm border border-card/30 h-full',
-            imageURL && 'p-0! border-none',
-          )}
-        >
-          {imageURL ? (
-            <CustomImage
-              src={imageURL}
-              className="rounded-sm"
-              width={40}
-              height={40}
-              alt="image resource"
-            />
-          ) : (
-            <Icon className="text-black" />
-          )}
-        </div>
-        <div className="flex flex-col flex-1 justify-start">
-          <h4 className={cn('text-black', hasStar && 'flex items-center gap-2')}>
-            <span className="line-clamp-1">{title}</span>
-            {hasStar && <Star className={'fill-yellow-400 stroke-yellow-400 size-4'} />}
-          </h4>
-          <p className="text-black/40 lg:line-clamp-3 line-clamp-1">{content}</p>
-        </div>
-      </Link>
-    </AnimateIcon>
+        {imageURL ? (
+          <CustomImage
+            src={imageURL}
+            className="rounded-sm"
+            width={40}
+            height={40}
+            alt="image resource"
+          />
+        ) : (
+          <Icon className="text-black" />
+        )}
+      </div>
+      <div className="flex flex-col flex-1 justify-start">
+        <h4 className="text-black">
+          <span className="line-clamp-1">{title}</span>
+        </h4>
+        <p className="text-black/40 lg:line-clamp-3 line-clamp-1">{content}</p>
+      </div>
+    </Link>
   );
 };
 
@@ -86,7 +81,7 @@ const Resources = () => {
     <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
       <HoverCardTrigger className="cursor-pointer font-normal flex justify-center items-center gap-2">
         <span className="text-black">Resource</span>
-        <ChevronDown
+        <AltArrowDown
           className={cn(
             'size-3 text-black transition-transform duration-200 h-full block',
             open && 'rotate-180',
@@ -100,35 +95,29 @@ const Resources = () => {
       >
         <div className="flex justify-between gap-10">
           <div className="flex flex-col flex-1">
-            <AnimateIcon animateOnHover>
-              <div className="flex justify-start items-center gap-2">
-                <GalleryVerticalEnd className={'size-4 text-black/40'} />
-                <h3 className="text-black/40 leading-0">Component repository</h3>
-              </div>
-            </AnimateIcon>
+            <div className="flex justify-start items-center gap-2">
+              <Layers className={'size-4 text-black/40'} />
+              <h3 className="text-black/40 leading-0">Component repository</h3>
+            </div>
             <div className="mt-2">
               <ResourceCard
-                hasStar
-                title={`${repos.lib?.full_name} • ${formatNumberString(Number(repos.lib?.stargazers_count))}`}
+                title={`${repos.lib?.full_name}`}
                 content={repos.lib?.description ?? 'Xem mã nguồn animate.ui'}
-                icon={Github}
+                icon={GithubIcon}
                 url="https://github.com/imskyleen/animate-ui"
               />
             </div>
           </div>
           <div className="flex flex-col flex-1">
-            <AnimateIcon animateOnHover>
-              <div className="flex justify-start items-center gap-2">
-                <Layers className={'size-4 text-black/40'} />
-                <h3 className="text-black/40 leading-0">My source</h3>
-              </div>
-            </AnimateIcon>
+            <div className="flex justify-start items-center gap-2">
+              <Layers className={'size-4 text-black/40'} />
+              <h3 className="text-black/40 leading-0">My source</h3>
+            </div>
             <div className="mt-2 flex flex-col">
               <ResourceCard
-                hasStar
-                title={`${repos.me?.full_name} • ${formatNumberString(Number(repos.me?.stargazers_count))}`}
+                title={`${repos.me?.full_name}`}
                 content={repos.me?.description ?? 'Xem mã nguồn của tôi'}
-                icon={Github}
+                icon={GithubIcon}
                 imageURL={repos.me?.owner.avatar_url}
                 url="https://github.com/canhtv05/MS"
               />
@@ -242,7 +231,7 @@ const HeaderMD = () => {
                   >
                     <Sheet>
                       <SheetTrigger className="flex items-center justify-center cursor-pointer">
-                        <Menu className={'stroke-1 stroke-black'} />
+                        <MenuDotsSquare className={'stroke-1 stroke-black'} />
                       </SheetTrigger>
                       <SheetContent
                         showCloseButton={false}
@@ -250,7 +239,7 @@ const HeaderMD = () => {
                         className="h-full bg-white"
                       >
                         <SheetClose className="absolute top-4 right-4 text-black hover:text-gray-700">
-                          <X />
+                          <CloseCircle />
                         </SheetClose>
                         <SheetDescription className="hidden"></SheetDescription>
                         <div className="p-5">
@@ -259,51 +248,41 @@ const HeaderMD = () => {
                             <div className="flex justify-center items-center flex-col">
                               <div className="flex flex-col flex-1 gap-2">
                                 <div className="flex flex-col">
-                                  <AnimateIcon animateOnHover>
-                                    <div className="flex justify-start items-center gap-2">
-                                      <GalleryVerticalEnd className={'size-4 text-black/40'} />
-                                      <h3 className="text-black/40 leading-0">
-                                        Component repository
-                                      </h3>
-                                    </div>
-                                  </AnimateIcon>
-                                  <div className="mt-2">
-                                    <ResourceCard
-                                      hasStar
-                                      title={`${repos.lib?.full_name} • ${formatNumberString(
-                                        Number(repos.lib?.stargazers_count),
-                                      )}`}
-                                      content={repos.lib?.description ?? 'Xem mã nguồn animate.ui'}
-                                      icon={Github}
-                                      url="https://github.com/imskyleen/animate-ui"
-                                    />
+                                  <div className="flex justify-start items-center gap-2">
+                                    <Layers className={'size-4 text-black/40'} />
+                                    <h3 className="text-black/40 leading-0">
+                                      Component repository
+                                    </h3>
                                   </div>
                                 </div>
-                                <div className="flex flex-col">
-                                  <AnimateIcon animateOnHover>
-                                    <div className="flex justify-start items-center gap-2">
-                                      <Layers className={'size-4 text-black/40'} />
-                                      <h3 className="text-black/40 leading-0">My source</h3>
-                                    </div>
-                                  </AnimateIcon>
-                                  <div className="mt-2 flex flex-col">
-                                    <ResourceCard
-                                      hasStar
-                                      title={`${repos.me?.full_name} • ${formatNumberString(
-                                        Number(repos.me?.stargazers_count),
-                                      )}`}
-                                      content={repos.me?.description ?? 'Xem mã nguồn của tôi'}
-                                      icon={Github}
-                                      imageURL={repos.me?.owner.avatar_url}
-                                      url="https://github.com/canhtv05/MS"
-                                    />
-                                  </div>
+                                <div className="mt-2">
+                                  <ResourceCard
+                                    title={`${repos.lib?.full_name}`}
+                                    content={repos.lib?.description ?? 'Xem mã nguồn animate.ui'}
+                                    icon={GithubIcon}
+                                    url="https://github.com/imskyleen/animate-ui"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="flex justify-start items-center gap-2">
+                                  <Layers className={'size-4 text-black/40'} />
+                                  <h3 className="text-black/40 leading-0">My source</h3>
+                                </div>
+                                <div className="mt-2 flex flex-col">
+                                  <ResourceCard
+                                    title={`${repos.me?.full_name}`}
+                                    content={repos.me?.description ?? 'Xem mã nguồn của tôi'}
+                                    icon={GithubIcon}
+                                    imageURL={repos.me?.owner.avatar_url}
+                                    url="https://github.com/canhtv05/MS"
+                                  />
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <SheetTitle className="text-black">Blog</SheetTitle>
                         </div>
+                        <SheetTitle className="text-black">Blog</SheetTitle>
                         <SheetFooter>
                           <Button>Create account</Button>
                         </SheetFooter>

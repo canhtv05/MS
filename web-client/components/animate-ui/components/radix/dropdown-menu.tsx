@@ -34,7 +34,8 @@ import {
   type DropdownMenuTriggerProps as DropdownMenuTriggerPrimitiveProps,
 } from '@/components/animate-ui/primitives/radix/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
+import { CheckRead, AltArrowRight } from '@solar-icons/react-perf/Outline';
+import { CircleIcon } from '../../icons';
 
 type DropdownMenuProps = DropdownMenuPrimitiveProps;
 
@@ -134,7 +135,7 @@ function DropdownMenuCheckboxItem({
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
           >
-            <CheckIcon className="size-4" />
+            <CheckRead className="size-4" />
           </DropdownMenuItemIndicatorPrimitive>
         </span>
         {children}
@@ -244,7 +245,7 @@ function DropdownMenuSubTrigger({
         {...props}
       >
         {children}
-        <ChevronRightIcon data-slot="chevron" className="ml-auto size-4" />
+        <AltArrowRight data-slot="chevron" className="ml-auto size-4" />
       </DropdownMenuSubTriggerPrimitive>
     </DropdownMenuHighlightItemPrimitive>
   );

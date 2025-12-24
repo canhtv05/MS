@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { AltArrowLeft, AltArrowRight } from '@solar-icons/react-perf/Outline';
 import NavigationMenu from './NavigationMenu';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -44,9 +44,9 @@ const NavigationLayout = () => {
               className="relative z-10 w-8 h-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
             >
               {isCollapsed ? (
-                <ChevronRightIcon className="size-4" />
+                <AltArrowRight className="size-4" />
               ) : (
-                <ChevronLeftIcon className="size-4" />
+                <AltArrowLeft className="size-4" />
               )}
             </button>
           </div>

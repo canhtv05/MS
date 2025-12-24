@@ -1,12 +1,12 @@
 'use client';
 
-import { Heart } from '@/components/animate-ui/icons/heart';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
-import { StarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 import { StaticImageData } from 'next/image';
 import images from '@/public/imgs';
+import { Heart } from '@solar-icons/react-perf/Bold';
+import { Star } from '@solar-icons/react-perf/Outline';
 
 interface LandingTestimonialsCardProps {
   content: string;
@@ -93,7 +93,7 @@ const LandingTestimonialsCard = ({
       <div className="flex flex-col flex-1 justify-between">
         <div className="flex">
           {Array.from({ length: 5 }).map((_, index) => (
-            <StarIcon key={index} className="size-4 text-yellow-400 fill-yellow-400" />
+            <Star key={index} className="size-4 text-yellow-400 fill-yellow-400" />
           ))}
         </div>
 
@@ -128,7 +128,7 @@ const LandingTestimonials = () => {
         className="flex flex-col items-center justify-center gap-4"
       >
         <div className="bg-green-50 flex items-center gap-2 rounded-full px-3 py-2">
-          <Heart autoAnimate className="text-green-400 size-4 fill-green-400" />
+          <Heart className="text-green-400 size-4 fill-green-400 animate-pulse" />
           <span className="text-green-400 text-sm font-bold">Testimonials</span>
         </div>
         <h2 className="lg:text-5xl md:text-3xl text-xl font-black text-black">

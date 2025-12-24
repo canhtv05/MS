@@ -4,17 +4,12 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import Divider from '@/components/customs/divider';
 import { Input } from '@/components/customs/input';
 import Logo from '@/components/Logo';
-import {
-  GoogleIcon,
-  LockIcon,
-  LockOpenIcon,
-  MailIcon,
-  UserIcon,
-} from '@/components/animate-ui/icons/common';
+import { GoogleIcon } from '@/components/animate-ui/icons';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import useSignUp from './use-signup';
 import { Controller } from 'react-hook-form';
+import { User, LockPassword, Letter, LockPasswordUnlocked } from '@solar-icons/react-perf/Bold';
 
 const SignUpPage = () => {
   const { onSubmit, form } = useSignUp();
@@ -52,7 +47,7 @@ const SignUpPage = () => {
               validate
               inputSize="md"
               errorText={fieldState?.error?.message}
-              icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+              icon={<User className="size-5 p-0.5 text-foreground/70" />}
             />
           )}
         />
@@ -69,7 +64,7 @@ const SignUpPage = () => {
               validate
               inputSize="md"
               errorText={fieldState.error?.message}
-              icon={<UserIcon className="size-5 p-0.5 text-foreground/70" />}
+              icon={<User className="size-5 p-0.5 text-foreground/70" />}
               value={field.value}
               onChange={e => {
                 const raw = e.target.value;
@@ -92,7 +87,7 @@ const SignUpPage = () => {
               required
               validate
               inputSize="md"
-              icon={<MailIcon className="size-5 p-0.5 text-foreground/70" />}
+              icon={<Letter className="size-5 p-0.5 text-foreground/70" />}
               errorText={fieldState?.error?.message}
             />
           )}
@@ -110,7 +105,7 @@ const SignUpPage = () => {
               required
               validate
               inputSize="md"
-              icon={<LockIcon className="size-5 p-0.5 text-foreground/70" />}
+              icon={<LockPassword className="size-5 p-0.5 text-foreground/70" />}
               errorText={fieldState?.error?.message}
             />
           )}
@@ -128,7 +123,7 @@ const SignUpPage = () => {
               required
               validate
               inputSize="md"
-              icon={<LockOpenIcon className="size-5 p-0.5 text-foreground/70" />}
+              icon={<LockPasswordUnlocked className="size-5 p-0.5 text-foreground/70" />}
               errorText={fieldState?.error?.message}
             />
           )}

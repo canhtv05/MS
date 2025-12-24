@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
-import { SearchIcon } from '@/components/animate-ui/icons/search';
+import { Magnifer } from '@solar-icons/react-perf/Outline';
 
 interface IHomeHeaderSearchCard {
   value: string;
@@ -22,7 +22,7 @@ const HomeHeaderSearchCard = ({ value, index }: IHomeHeaderSearchCard) => {
           className="rounded-full bg-transparent flex cursor-pointer shadow-none transition-all duration-300"
           variant={'accent'}
         >
-          <SearchIcon className={'size-6 p-0.5'} />
+          <Magnifer className={'size-6 p-0.5'} />
         </IconButton>
         <span className="text-foreground text-sm">{value}</span>
       </div>

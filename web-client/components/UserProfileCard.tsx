@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { AtSignIcon } from './animate-ui/icons/at-sign';
 import { Avatar, AvatarFallback, AvatarImage } from './customs/avatar';
 import Ring from './customs/ring';
 import { Activity } from 'react';
@@ -50,8 +49,7 @@ const UserProfileCard = ({
             {fullName}
           </h3>
           <span className="text-xs flex items-center gap-0.5 max-w-[150px] w-full text-foreground/70 truncate">
-            <AtSignIcon size={12} className="group-hover:animate-icon" />
-            {username}
+            @{username}
           </span>
         </div>
       </Activity>

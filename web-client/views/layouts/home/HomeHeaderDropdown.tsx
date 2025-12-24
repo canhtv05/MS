@@ -6,10 +6,6 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
-import { AnimateIcon } from '@/components/animate-ui/icons/icon';
-import { LanguagesIcon } from '@/components/animate-ui/icons/languages';
-import { SunIcon } from '@/components/animate-ui/icons/sun';
-import { SunMoon } from '@/components/animate-ui/icons/sun-moon';
 import { DropdownMenuHighlightItem } from '@/components/animate-ui/primitives/radix/dropdown-menu';
 import { Switch, SwitchThumb } from '@/components/animate-ui/primitives/radix/switch';
 import { cn } from '@/lib/utils';
@@ -17,6 +13,7 @@ import images from '@/public/imgs';
 import Image from 'next/image';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Sun, Moon, Earth } from '@solar-icons/react-perf/BoldDuotone';
 
 interface IHomeHeaderDropdown {
   theme?: string;
@@ -38,41 +35,39 @@ const HomeHeaderDropdown = ({
 
   return (
     <>
-      <AnimateIcon animateOnHover>
-        <DropdownMenuItem onSelect={e => e.preventDefault()}>
-          <div
-            className="flex items-center justify-between gap-2 w-full"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-center gap-2">
-              {theme === 'dark' ? <SunMoon /> : <SunIcon />}
-              <span className="text-foreground/70">{t('header.dark_mode')}</span>
-            </div>
-            <Switch
-              className={cn(
-                'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border-none',
-                'data-[state=checked]:bg-emerald-500 bg-foreground pl-0.5',
-              )}
-              checked={theme === 'dark'}
-              onTap={() => {
-                setTheme(theme === 'dark' ? 'light' : 'dark');
-              }}
-            >
-              <SwitchThumb
-                className={cn(
-                  'h-5 w-5 aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
-                  'group-data-[state=checked]:translate-x-4',
-                )}
-                pressedAnimation={{ width: 20 }}
-              />
-            </Switch>
+      <DropdownMenuItem onSelect={e => e.preventDefault()}>
+        <div
+          className="flex items-center justify-between gap-2 w-full"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-center gap-2">
+            {theme === 'dark' ? <Moon /> : <Sun />}
+            <span className="text-foreground/70">{t('header.dark_mode')}</span>
           </div>
-        </DropdownMenuItem>
-      </AnimateIcon>
+          <Switch
+            className={cn(
+              'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border-none',
+              'data-[state=checked]:bg-emerald-500 bg-foreground pl-0.5',
+            )}
+            checked={theme === 'dark'}
+            onTap={() => {
+              setTheme(theme === 'dark' ? 'light' : 'dark');
+            }}
+          >
+            <SwitchThumb
+              className={cn(
+                'h-5 w-5 aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
+                'group-data-[state=checked]:translate-x-4',
+              )}
+              pressedAnimation={{ width: 20 }}
+            />
+          </Switch>
+        </div>
+      </DropdownMenuItem>
       <DropdownMenuSub>
         <DropdownMenuHighlightItem className="group cursor-pointer">
           <DropdownMenuSubTrigger className={`${itemClassName} cursor-pointer`}>
-            <LanguagesIcon className="group-hover:animate-icon text-foreground/70" />
+            <Earth className="group-hover:animate-icon text-foreground/70" />
             <span className="text-foreground/70">{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
