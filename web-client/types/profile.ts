@@ -1,1 +1,9 @@
 export type { IProfileDTO as IUserProfileDTO } from './auth';
+
+export interface IMediaHistoryDTO {
+  id: string;
+  userId: string;
+  url: string;
+  type: string;
+  createdAt: string;
+}

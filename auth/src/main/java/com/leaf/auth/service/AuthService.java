@@ -18,7 +18,6 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.service.RedisService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,14 +41,12 @@ import org.springframework.util.ObjectUtils;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
-    // RedisService redisService;
     CookieUtil cookieUtil;
     UserRepository userRepository;
     UserPermissionRepository userPermissionRepository;
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
-    RedisService redis;
 
     @Transactional
     public String authenticate(
@@ -123,22 +120,12 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public UserProfileDTO getProfile(String username) {
-        String cacheKey = "USER_PROFILE:" + username;
-        UserProfileDTO cached = redis.get(cacheKey, UserProfileDTO.class);
-        if (cached != null) {
-            return cached;
-        }
-
         Optional<User> user = userRepository.findOneWithAuthoritiesByUsername(username);
         if (user.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
         }
         UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
-
-        if (Objects.nonNull(userProfileDTO)) {
-            redis.set(cacheKey, userProfileDTO);
-        }
         return userProfileDTO;
     }
 

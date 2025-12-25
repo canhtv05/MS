@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import usePrevious from '@/hooks/use-previous';
-import { DangerCircle, Eye, EyeClosed, CloseCircle } from '@solar-icons/react-perf/Linear';
+import { DangerCircle, Eye, EyeClosed } from '@solar-icons/react-perf/Linear';
 import { Label } from './label';
+import { XIcon } from '../animate-ui/icons';
 
 const hasInputValue = (value?: string | number | readonly string[]) => {
   if (value === undefined || value === null) return false;
@@ -183,7 +184,7 @@ function Input({
                 inputSize === 'lg' && 'h-11',
               )}
             >
-              <CloseCircle className="size-4 p-1 dark:bg-gray-700 bg-gray-200 rounded-full" />
+              <XIcon className="size-5 p-1 dark:bg-gray-700 bg-gray-200 rounded-full" />
             </div>
           )}
 

@@ -20,8 +20,7 @@ public class GrpcUserProfileClient {
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.ALREADY_EXISTS) {
                 throw new ApiException(ErrorMessage.EMAIL_ALREADY_EXITS);
-            }
+            } else throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
         }
-        return null;
     }
 }

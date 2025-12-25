@@ -4,6 +4,7 @@ import logo from './logo.png';
 import platform from './platform.jpg';
 import vn from './vn.webp';
 import uk from './uk.webp';
+import goku from './goku-bg.jpg';
 
 import avt1 from './avatars/avatar1.jpeg';
 import avt2 from './avatars/avatar2.jpg';
@@ -28,6 +29,7 @@ const images = {
   platform,
   vn,
   uk,
+  goku,
   avt1,
   avt2,
   avt3,

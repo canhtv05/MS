@@ -7,12 +7,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import RouteGuard from '@/guard/RouteGuard';
 import { AuthRefreshProvider } from '@/guard/AuthRefreshContext';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import '@/locale/i18n';
 import { APP_CONFIGS } from '@/configs';
+import '@/locale/i18n';
 
 import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
 

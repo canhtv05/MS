@@ -32,6 +32,7 @@ public enum ErrorMessage {
 
     // file
     FILE_NOT_FOUND("FILE_NOT_FOUND", "Không tìm thấy file"),
+    FILE_SIZE_EXCEEDED("FILE_SIZE_EXCEEDED", "File size exceeded 20MB"),
 
     // profile
     USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng"),

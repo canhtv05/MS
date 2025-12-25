@@ -13,6 +13,19 @@ import { IUserProfileDTO } from '@/types/profile';
 import ProfilePageInfo from './ProfilePageInfo';
 import ProfilePageHeroSection from './ProfilePageHeroSection';
 import ProfilePageTabs from './ProfilePageTabs';
+import Zoom from 'react-medium-image-zoom';
+import images from '@/public/imgs';
+import { Button } from '@/components/animate-ui/components/buttons/button';
+import { CameraMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
+import { useAuthStore } from '@/stores/auth';
+import {
+  DropdownMenu,
+  DropdownMenuArrow,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/animate-ui/components/radix/dropdown-menu';
+import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -23,8 +36,20 @@ export interface IProfilePageProps {
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
-  const { data, isLoading, error } = useProfile({ username: decodedUsername });
-  const { t } = useTranslation('profile');
+  const { user } = useAuthStore();
+  const {
+    data,
+    isLoading,
+    error,
+    coverImagePreview,
+    handleFileChange,
+    triggerFileInput,
+    fileInputRef,
+    isUploading,
+  } = useProfile({
+    username: decodedUsername,
+  });
+  const { t } = useTranslation(['profile', 'layout']);
 
   if (!decodedUsername.startsWith('@')) {
     return (
@@ -51,16 +76,61 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   return (
     <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white dark:bg-gray-800 flex-col lg:w-full rounded-lg">
       <div className="relative w-full h-[200px]!">
-        <Image
-          src={
-            'https://thumbs.dreamstime.com/b/incredibly-beautiful-sunset-sun-lake-sunrise-landscape-panorama-nature-sky-amazing-colorful-clouds-fantasy-design-115177001.jpg'
-          }
-          alt="bg"
-          fill
-          className="object-cover rounded-t-md"
-          loading="eager"
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
         />
+        <Zoom
+          zoomMargin={20}
+          zoomImg={{
+            src: coverImagePreview || data?.data?.coverUrl || images.goku.src,
+            alt: 'bg',
+          }}
+        >
+          <div className="relative w-full h-[200px]">
+            <Image
+              src={coverImagePreview || data?.data?.coverUrl || images.goku.src}
+              alt="bg"
+              fill
+              className="object-cover rounded-t-md"
+              loading="eager"
+              quality={100}
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+              unoptimized
+            />
+            {isUploading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
+                <div className="text-white text-sm font-medium">
+                  {t('layout:header.uploading')}...
+                </div>
+              </div>
+            )}
+          </div>
+        </Zoom>
+        {user?.auth?.username === data?.data?.userId && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="absolute right-2 bottom-2 z-10" disabled={isUploading}>
+                <CameraMinimalistic />
+                {t('layout:header.change_cover')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={8}>
+              <DropdownMenuArrow />
+              <DropdownMenuItem>
+                <Gallery />
+                {t('profile:choose_cover_image')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={triggerFileInput}>
+                <GallerySend />
+                {t('profile:upload_new_cover')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-lg">
         <div className="flex items-end gap-5 -mt-16">

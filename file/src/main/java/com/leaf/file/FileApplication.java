@@ -5,10 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(
     exclude = {
-        net.devh.boot.grpc.server.autoconfigure.GrpcServerAutoConfiguration.class,
-        net.devh.boot.grpc.server.autoconfigure.GrpcServerFactoryAutoConfiguration.class,
-        net.devh.boot.grpc.server.autoconfigure.GrpcMetadataEurekaConfiguration.class,
-        net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class
+        net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class,
+        net.devh.boot.grpc.client.autoconfigure.GrpcClientHealthAutoConfiguration.class
     }
 )
 public class FileApplication {

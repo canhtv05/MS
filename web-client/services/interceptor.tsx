@@ -65,10 +65,18 @@ api.interceptors.request.use(
     }
 
     if (config.method !== 'get') {
-      config.data = {
-        ...(config.data ?? {}),
-        ...ctx,
-      };
+      if (config.data instanceof FormData) {
+        Object.entries(ctx).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            config.data.append(key, value as string);
+          }
+        });
+      } else {
+        config.data = {
+          ...(config.data ?? {}),
+          ...ctx,
+        };
+      }
     }
 
     return config;

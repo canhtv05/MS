@@ -6,7 +6,9 @@ import { ErrorMessage } from '@/enums/error-message';
 
 export const handleMutationError = (error: unknown, id: string) => {
   if (axios.isAxiosError(error)) {
-    toast.error(error.response?.data?.message ?? i18next.t(Status.ERROR), { id });
+    const message =
+      error.response?.data?.message || error.response?.statusText || i18next.t(Status.ERROR);
+    toast.error(message, { id });
     if (error.response?.data?.message === ErrorMessage.UNAUTHENTICATED) {
       toast.error(i18next.t(Status.UNAUTHENTICATED), { id });
     }

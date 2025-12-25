@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { AnimatePresence, motion, type Transition } from 'motion/react';
-
 import { cn } from '@/lib/utils';
 
 type HighlightMode = 'children' | 'parent';
@@ -167,10 +166,15 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
   const [boundsState, setBoundsState] = React.useState<Bounds | null>(null);
   const [activeClassNameState, setActiveClassNameState] = React.useState<string>('');
 
+  const onValueChangeRef = React.useRef(onValueChange);
+  React.useEffect(() => {
+    onValueChangeRef.current = onValueChange;
+  });
+
   const safeSetActiveValue = (id: string | null) => {
     setActiveValue(prev => {
       if (prev !== id) {
-        onValueChange?.(id);
+        onValueChangeRef.current?.(id);
         return id;
       }
       return prev;
@@ -211,9 +215,9 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
     safeSetBoundsRef.current?.(bounds);
   };
 
-  const clearBounds = React.useCallback(() => {
+  const clearBounds = () => {
     setBoundsState(prev => (prev === null ? prev : null));
-  }, []);
+  };
 
   React.useEffect(() => {
     if (value !== undefined) setActiveValue(value);
@@ -264,7 +268,7 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
                   left: boundsState.left,
                   width: boundsState.width,
                   height: boundsState.height,
-                  opacity: 1,
+                  opacity: 0,
                 }}
                 exit={{
                   opacity: 0,
@@ -411,7 +415,7 @@ function HighlightItem<T extends React.ElementType>({
     localRef.current = node as HTMLDivElement;
   }, []);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (mode !== 'parent') return;
     let rafId: number;
     let previousBounds: Bounds | null = null;
@@ -458,16 +462,6 @@ function HighlightItem<T extends React.ElementType>({
     forceUpdateBounds,
     contextForceUpdateBounds,
   ]);
-
-  React.useEffect(() => {
-    if (mode !== 'parent' || !isActive) return;
-    const timer = setTimeout(() => {
-      if (localRef.current) {
-        setBounds(localRef.current.getBoundingClientRect());
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [mode, isActive, setBounds]);
 
   if (!React.isValidElement(children)) return children;
 

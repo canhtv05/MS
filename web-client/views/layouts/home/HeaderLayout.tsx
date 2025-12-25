@@ -90,8 +90,26 @@ const HeaderLayout = () => {
                     isLoading ? (
                       <Loader2Icon className="animate-spin size-5 p-0.5" />
                     ) : (
-                      <div className="text-xs md:block hidden font-medium dark:bg-gray-600 bg-white p-1 px-2 rounded-md">
-                        <p className="font-medium">⌘K</p>
+                      <div className="items-center gap-1 lg:flex hidden">
+                        <kbd className="size-5 leading-none flex items-center justify-center border rounded-[4px] dark:bg-gray-600 bg-white">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-command size-2.5"
+                          >
+                            <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
+                          </svg>
+                        </kbd>
+                        <kbd className="size-5 flex items-center justify-center border rounded-[4px] dark:bg-gray-600 bg-white">
+                          <span className="leading-none text-[0.625rem] pt-px">K</span>
+                        </kbd>
                       </div>
                     )
                   }
@@ -159,7 +177,7 @@ const HeaderLayout = () => {
                         onClick={() => setOpenChangePassword(true)}
                         className="group cursor-pointer flex items-center justify-start gap-2"
                       >
-                        <LockPassword className="group-hover:animate-icon text-foreground/70" />
+                        <LockPassword className="text-foreground/70" />
                         <span>{t('header.change_password')}</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem>

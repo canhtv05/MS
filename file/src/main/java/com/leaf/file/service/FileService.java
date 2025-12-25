@@ -7,6 +7,7 @@ import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.grpc.ResourceType;
 import com.leaf.file.domain.Image;
 import com.leaf.file.domain.Video;
 import com.leaf.file.dto.FileResponse;
@@ -16,6 +17,7 @@ import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
 import com.leaf.framework.security.SecurityUtils;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,7 +44,7 @@ public class FileService {
     Cloudinary cloudinary;
     FileRepository fileRepository;
 
-    public FileResponse upload(MultipartFile[] files) throws IOException {
+    public FileResponse upload(MultipartFile[] files, ResourceType resourceType) throws IOException {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
@@ -58,21 +60,37 @@ public class FileService {
             totalSize += file.getSize();
 
             if (contentType.startsWith("image")) {
-                imageResponses.add(processImageUpload(file));
+                imageResponses.add(processImageUpload(file, resourceType, userId));
             } else if (contentType.startsWith("video")) {
-                videoResponses.add(processVideoUpload(file));
+                videoResponses.add(processVideoUpload(file, resourceType, userId));
             }
+        }
+
+        if (totalSize > 20 * 1024 * 1024) {
+            throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
         }
 
         return saveFileMetadata(userId, totalSize, imageResponses, videoResponses);
     }
 
-    public ImageResponse processImageUpload(MultipartFile file) throws IOException {
+    public ImageResponse processImageUpload(MultipartFile file, ResourceType resourceType, String userId)
+        throws IOException {
+        Long size = file.getSize();
+        if (size > 20 * 1024 * 1024) {
+            throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
+        }
         var result = cloudinary
             .uploader()
             .upload(
                 file.getBytes(),
-                ObjectUtils.asMap("resource_type", "image", "upload_preset", "social-media", "folder", "image")
+                ObjectUtils.asMap(
+                    "resource_type",
+                    "image",
+                    "upload_preset",
+                    "social-media",
+                    "folder",
+                    getResourcePath("image", resourceType, userId)
+                )
             );
 
         return ImageResponse.builder()
@@ -84,7 +102,12 @@ public class FileService {
             .build();
     }
 
-    public VideoResponse processVideoUpload(MultipartFile file) throws IOException {
+    public VideoResponse processVideoUpload(MultipartFile file, ResourceType resourceType, String userId)
+        throws IOException {
+        Long size = file.getSize();
+        if (size > 20 * 1024 * 1024) {
+            throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
+        }
         var videoResult = cloudinary
             .uploader()
             .upload(
@@ -95,7 +118,7 @@ public class FileService {
                     "upload_preset",
                     "social-media",
                     "folder",
-                    "video",
+                    getResourcePath("video", resourceType, userId),
                     "eager",
                     List.of(
                         new EagerTransformation().width(320).height(240).crop("thumb").fetchFormat("jpg"),
@@ -274,5 +297,18 @@ public class FileService {
         } catch (IOException e) {
             log.error("Failed to delete file", e);
         }
+    }
+
+    private String getResourcePath(String mimeType, ResourceType resourceType, String currentUser) {
+        String type = mimeType.startsWith("video") ? "video" : "image";
+
+        String result = String.format(
+            "leafhub/%s/%s/%s/%s",
+            type,
+            currentUser,
+            resourceType.name().toLowerCase(),
+            LocalDate.now().toString()
+        );
+        return result;
     }
 }

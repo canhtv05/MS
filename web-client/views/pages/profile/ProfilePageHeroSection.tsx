@@ -12,6 +12,15 @@ import { IProfilePageProps } from './ProfilePage';
 import { useAuthStore } from '@/stores/auth';
 import { Settings } from '@solar-icons/react-perf/Bold';
 import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
+import { CameraMinimalistic } from '@solar-icons/react-perf/category/style/BoldDuotone';
+import {
+  Popover,
+  PopoverArrow,
+  PopoverPopup,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverTrigger,
+} from '@/components/animate-ui/primitives/base/popover';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -84,18 +93,42 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           <Skeleton className="w-full h-full rounded-full relative z-10" />
         </div>
       ) : (
-        <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
-          <AvatarImage
-            width={128}
-            height={128}
-            className="rounded-full cursor-pointer"
-            src={images.avt1.src}
-            alt={data?.data?.fullname}
-          />
-          <AvatarFallback className="text-2xl font-bold">
-            {data?.data?.fullname?.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
+        <div className="relative">
+          <Popover>
+            <PopoverTrigger>
+              <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
+                <AvatarImage
+                  width={128}
+                  height={128}
+                  className="rounded-full cursor-pointer"
+                  src={images.avt1.src}
+                  alt={data?.data?.fullname}
+                />
+                <AvatarFallback className="text-2xl font-bold">
+                  {data?.data?.fullname?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverPortal>
+              <PopoverPositioner sideOffset={8}>
+                <PopoverPopup className="bg-background p-2 rounded-md shadow-lg border">
+                  <PopoverArrow />
+                  <div className="p-2">
+                    <p>Popover content</p>
+                  </div>
+                </PopoverPopup>
+              </PopoverPositioner>
+            </PopoverPortal>
+          </Popover>
+          {user?.auth?.username === data?.data?.userId && (
+            <IconButton
+              className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
+              variant={'outline'}
+            >
+              <CameraMinimalistic />
+            </IconButton>
+          )}
+        </div>
       )}
 
       <div className="flex items-center gap-2 ml-auto mb-2">
