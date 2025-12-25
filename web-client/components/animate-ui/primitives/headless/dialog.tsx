@@ -63,6 +63,7 @@ function DialogBackdrop<TTag extends React.ElementType = typeof motion.div>(
   );
 }
 
+type DialogAnimationType = 'flip' | 'scale';
 type DialogFlipDirection = 'top' | 'bottom' | 'left' | 'right';
 
 type DialogPanelProps<TTag extends React.ElementType = typeof motion.div> = Omit<
@@ -71,6 +72,7 @@ type DialogPanelProps<TTag extends React.ElementType = typeof motion.div> = Omit
 > &
   Omit<HTMLMotionProps<'div'>, 'children'> & {
     from?: DialogFlipDirection;
+    animationType?: DialogAnimationType;
     transition?: Transition;
     as?: TTag;
   };
@@ -82,10 +84,41 @@ function DialogPanel<TTag extends React.ElementType = typeof motion.div>(
     children,
     as = motion.div,
     from = 'top',
+    animationType = 'scale',
     transition = { type: 'spring', stiffness: 150, damping: 25 },
     ...rest
   } = props;
 
+  // Scale animation (simple, from center)
+  if (animationType === 'scale') {
+    return (
+      <DialogPanelPrimitive
+        key="dialog-panel"
+        data-slot="dialog-panel"
+        as={as as React.ElementType}
+        initial={{
+          opacity: 0,
+          scale: 0.95,
+          transition,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          transition,
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0.95,
+          transition,
+        }}
+        {...rest}
+      >
+        {bag => <>{typeof children === 'function' ? children(bag) : children}</>}
+      </DialogPanelPrimitive>
+    );
+  }
+
+  // Flip animation (original)
   const initialRotation = from === 'bottom' || from === 'left' ? '20deg' : '-20deg';
   const isVertical = from === 'top' || from === 'bottom';
   const rotateAxis = isVertical ? 'rotateX' : 'rotateY';
@@ -189,4 +222,5 @@ export {
   type DialogHeaderProps,
   type DialogFooterProps,
   type DialogFlipDirection,
+  type DialogAnimationType,
 };

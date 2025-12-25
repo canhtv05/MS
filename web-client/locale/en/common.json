@@ -16,6 +16,8 @@
   },
   "button": {
     "accept": "Accept",
-    "close": "Close"
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

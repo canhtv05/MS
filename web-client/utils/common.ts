@@ -99,3 +99,23 @@ export const detectLanguage = (content: string = ''): string => {
 
   return 'text';
 };
+
+export const getDateLabel = (dateStr: string, t: (key: string) => string): string => {
+  const [day, month, year] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  today.setHours(0, 0, 0, 0);
+  yesterday.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  if (date.getTime() === today.getTime()) {
+    return t('today');
+  }
+  if (date.getTime() === yesterday.getTime()) {
+    return t('yesterday');
+  }
+  return dateStr;
+};

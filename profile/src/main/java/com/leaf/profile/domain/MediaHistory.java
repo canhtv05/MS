@@ -25,6 +25,7 @@ public class MediaHistory {
 
     @Id
     @GeneratedValue(UUIDStringGenerator.class)
+    @Property("id")
     String id;
 
     @Builder.Default

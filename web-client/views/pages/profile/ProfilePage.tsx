@@ -14,7 +14,6 @@ import ProfilePageInfo from './ProfilePageInfo';
 import ProfilePageHeroSection from './ProfilePageHeroSection';
 import ProfilePageTabs from './ProfilePageTabs';
 import Zoom from 'react-medium-image-zoom';
-import images from '@/public/imgs';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { CameraMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { useAuthStore } from '@/stores/auth';
@@ -26,6 +25,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
+import Dialog from '@/components/customs/dialog';
+import { Skeleton } from '@/components/customs/skeleton';
+import ProfilePageChooseImage from './ProfilePageChooseImage';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -46,10 +48,18 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
     triggerFileInput,
     fileInputRef,
     isUploading,
+    showConfirmChangeCoverUrl,
+    confirmUpload,
+    cancelUpload,
+    showDialogMediaHistory,
+    setShowDialogMediaHistory,
+    selectedCoverFromHistory,
+    setSelectedCoverFromHistory,
+    handleChangeCoverFromHistory,
   } = useProfile({
     username: decodedUsername,
   });
-  const { t } = useTranslation(['profile', 'layout']);
+  const { t } = useTranslation(['profile', 'layout', 'common']);
 
   if (!decodedUsername.startsWith('@')) {
     return (
@@ -83,44 +93,68 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           onChange={handleFileChange}
           className="hidden"
         />
-        <Zoom
-          zoomMargin={20}
-          zoomImg={{
-            src: coverImagePreview || data?.data?.coverUrl || images.goku.src,
-            alt: 'bg',
-          }}
-        >
-          <div className="relative w-full h-[200px]">
-            <Image
-              src={coverImagePreview || data?.data?.coverUrl || images.goku.src}
-              alt="bg"
-              fill
-              className="object-cover rounded-t-md"
-              loading="eager"
-              quality={100}
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
-              unoptimized
-            />
-            {isUploading && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
-                <div className="text-white text-sm font-medium">
-                  {t('layout:header.uploading')}...
-                </div>
+        {(() => {
+          if (isLoading) {
+            return (
+              <div className="relative w-full h-[200px]">
+                <Skeleton className="w-full h-full rounded-t-md" />
               </div>
-            )}
-          </div>
-        </Zoom>
-        {user?.auth?.username === data?.data?.userId && (
+            );
+          }
+
+          const coverSrc = coverImagePreview || data?.data?.coverUrl || user?.profile?.coverUrl;
+          if (coverSrc && coverSrc !== '') {
+            return (
+              <Zoom
+                zoomMargin={20}
+                zoomImg={{
+                  src: coverSrc,
+                  alt: 'bg',
+                }}
+              >
+                <div className="relative w-full h-[200px]">
+                  <Image
+                    src={coverSrc}
+                    alt="bg"
+                    fill
+                    className="object-cover rounded-t-md"
+                    loading="eager"
+                    quality={100}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+                    unoptimized
+                  />
+                  {isUploading && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
+                      <div className="text-white text-sm font-medium">
+                        {t('layout:header.uploading')}...
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Zoom>
+            );
+          }
+          return (
+            <div className="relative w-full h-[200px]">
+              <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-t-md" />
+            </div>
+          );
+        })()}
+        {user?.auth?.username === data?.data?.userId && !isLoading && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="absolute right-2 bottom-2 z-10" disabled={isUploading}>
+              <Button
+                className="absolute bg-background! right-2 bottom-2 z-10"
+                variant="outline"
+                disabled={isUploading}
+              >
                 <CameraMinimalistic />
                 {t('layout:header.change_cover')}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={8}>
-              <DropdownMenuArrow />
-              <DropdownMenuItem>
+              <DropdownMenuArrow className="dark:fill-gray-800 fill-white [&>polygon]:stroke-gray-200 dark:[&>polygon]:stroke-gray-700" />
+              <DropdownMenuItem onClick={() => setShowDialogMediaHistory(true)}>
                 <Gallery />
                 {t('profile:choose_cover_image')}
               </DropdownMenuItem>
@@ -139,6 +173,36 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
         <ProfilePageTabs />
       </div>
+      <Dialog
+        open={showDialogMediaHistory}
+        onClose={() => {
+          setShowDialogMediaHistory(false);
+          setSelectedCoverFromHistory(null);
+        }}
+        onAccept={handleChangeCoverFromHistory}
+        title={t('profile:choose_image')}
+        id="confirm-cover-upload"
+        size="lg"
+        disableAccept={!selectedCoverFromHistory}
+      >
+        <ProfilePageChooseImage
+          onSelect={setSelectedCoverFromHistory}
+          selectedUrl={selectedCoverFromHistory}
+        />
+      </Dialog>
+      {showConfirmChangeCoverUrl && (
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-50 bg-background h-[60px] flex items-center justify-between md:px-6 px-4">
+          <h5 className="text-sm font-semibold">{t('profile:confirm_cover_upload')}</h5>
+          <div className="flex justify-end items-center gap-2 h-full">
+            <Button variant="outline" onClick={cancelUpload} disabled={isUploading}>
+              {t('common:button.cancel')}
+            </Button>
+            <Button variant="default" onClick={confirmUpload} disabled={isUploading}>
+              {t('common:button.confirm')}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

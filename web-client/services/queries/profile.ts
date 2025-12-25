@@ -1,11 +1,11 @@
 'use client';
 
-import { IMediaHistoryDTO, IUserProfileDTO } from '@/types/profile';
-import { IResponseObject, ISearchRequest } from '@/types/common';
+import { IMediaHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
+import { IResponseObject, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
@@ -26,7 +26,7 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
     },
     enabled: enabled && !!token && !userProfile,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -38,29 +38,37 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
   };
 };
 
-export const useMyMediaHistoryQuery = (enabled: boolean = true, searchRequest: ISearchRequest) => {
-  const mediaHistory = useProfileStore(state => state.mediaHistory);
-  const setMediaHistory = useProfileStore(state => state.setMediaHistory);
-
-  const query = useQuery({
-    queryKey: ['profile', 'media-history'],
-    queryFn: async (): Promise<IResponseObject<IMediaHistoryDTO[]>> => {
-      const res = await api.post(API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY, searchRequest);
-      setMediaHistory(res.data.data);
+export const useMyMediaHistoryInfiniteQuery = (
+  enabled: boolean = true,
+  pageSize: number = 20,
+  userID?: string,
+) => {
+  return useInfiniteQuery({
+    queryKey: ['profile', 'media-history-infinite', userID],
+    queryFn: async ({
+      pageParam = 0,
+    }): Promise<IResponseObject<ISearchResponse<IMediaHistoryGroupDTO[]>>> => {
+      const res = await api.post(API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY, {
+        page: pageParam,
+        size: pageSize,
+      });
       return res.data;
     },
-    enabled: enabled && !mediaHistory,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      const pagination = lastPage?.data?.pagination;
+      if (pagination && pagination.currentPage < pagination.totalPages - 1) {
+        return pagination.currentPage + 1;
+      }
+      return undefined;
+    },
+    enabled: enabled && !!userID,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
-
-  return {
-    query,
-    mediaHistory,
-  };
 };
 
 export const useUserProfileQuery = (username: string, enabled: boolean = true) => {

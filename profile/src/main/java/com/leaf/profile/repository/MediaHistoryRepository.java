@@ -1,6 +1,7 @@
 package com.leaf.profile.repository;
 
 import com.leaf.profile.domain.MediaHistory;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -56,4 +57,6 @@ public interface MediaHistoryRepository extends Neo4jRepository<MediaHistory, St
         """
     )
     void saveMediaHistory(String userId, String url, String type);
+
+    Optional<MediaHistory> findByUserIdAndUrl(String userId, String url);
 }

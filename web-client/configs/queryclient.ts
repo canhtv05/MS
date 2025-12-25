@@ -46,6 +46,8 @@ const queryClient = new QueryClient({
           cookieUtils.deleteAccessToken();
           queryClient.setQueryData(['auth', 'me'], undefined);
           queryClient.setQueryData(['profile', 'me'], undefined);
+        } else if (error.status === 500) {
+          queryClient.clear();
         }
       }
     },

@@ -1,20 +1,28 @@
 'use client';
 
-import { useMyMediaHistoryQuery, useUserProfileQuery } from '@/services/queries/profile';
+import { useUserProfileQuery } from '@/services/queries/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '@/stores/auth';
+import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const useProfile = ({ username }: { username: string }) => {
   const { data, isLoading, isError, error, refetch } = useUserProfileQuery(username);
-  const { changeCoverImageMutation } = useProfileMutation();
-  const { query } = useMyMediaHistoryQuery(true, {
-    page: 1,
-    size: 20,
-  });
+  const queryClient = useQueryClient();
+  const { t } = useTranslation('profile');
+  const { changeCoverImageMutation, changeCoverImageFromMediaHistoryMutation } =
+    useProfileMutation();
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [showConfirmChangeCoverUrl, setShowConfirmChangeCoverUrl] = useState(false);
+  const [showDialogMediaHistory, setShowDialogMediaHistory] = useState(false);
+  const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
+  const { user } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'];
@@ -31,27 +39,83 @@ const useProfile = ({ username }: { username: string }) => {
 
       const previewUrl = URL.createObjectURL(selectedFile);
       setCoverImagePreview(previewUrl);
-
-      try {
-        await changeCoverImageMutation.mutateAsync({ file: selectedFile });
-        await new Promise(resolve => {
-          refetch();
-          query.refetch();
-          resolve(true);
-        });
-        URL.revokeObjectURL(previewUrl);
-        setCoverImagePreview(null);
-      } catch {
-        URL.revokeObjectURL(previewUrl);
-        setCoverImagePreview(null);
-      }
+      setPendingFile(selectedFile);
+      setShowConfirmChangeCoverUrl(true);
     }
     event.target.value = '';
   };
 
+  const confirmUpload = useCallback(async () => {
+    if (!pendingFile) return;
+
+    try {
+      await changeCoverImageMutation.mutateAsync({ file: pendingFile });
+      await refetch();
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'media-history', user?.auth?.username],
+      });
+    } catch {
+    } finally {
+      if (coverImagePreview) {
+        URL.revokeObjectURL(coverImagePreview);
+      }
+      setCoverImagePreview(null);
+      setPendingFile(null);
+      setShowConfirmChangeCoverUrl(false);
+    }
+  }, [
+    pendingFile,
+    changeCoverImageMutation,
+    refetch,
+    queryClient,
+    user?.auth?.username,
+    coverImagePreview,
+  ]);
+
+  const cancelUpload = useCallback(() => {
+    if (coverImagePreview) {
+      URL.revokeObjectURL(coverImagePreview);
+    }
+    setCoverImagePreview(null);
+    setPendingFile(null);
+    setShowConfirmChangeCoverUrl(false);
+  }, [coverImagePreview]);
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
+  const handleChangeCoverFromHistory = useCallback(async () => {
+    if (!selectedCoverFromHistory) return;
+
+    const currentCoverUrl = data?.data?.coverUrl;
+    if (selectedCoverFromHistory === currentCoverUrl) {
+      toast.error(t('change_cover_image_same'), {
+        id: 'change-cover-image-from-media-history-toast',
+      });
+      return;
+    }
+
+    try {
+      await changeCoverImageFromMediaHistoryMutation.mutateAsync({ url: selectedCoverFromHistory });
+      await refetch();
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'media-history', user?.auth?.username],
+      });
+    } catch {
+    } finally {
+      setShowDialogMediaHistory(false);
+      setSelectedCoverFromHistory(null);
+    }
+  }, [
+    selectedCoverFromHistory,
+    data?.data?.coverUrl,
+    user?.auth?.username,
+    t,
+    changeCoverImageFromMediaHistoryMutation,
+    refetch,
+    queryClient,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -71,6 +135,15 @@ const useProfile = ({ username }: { username: string }) => {
     triggerFileInput,
     fileInputRef,
     isUploading: changeCoverImageMutation.isPending,
+    showConfirmChangeCoverUrl,
+    confirmUpload,
+    setShowConfirmChangeCoverUrl,
+    showDialogMediaHistory,
+    setShowDialogMediaHistory,
+    selectedCoverFromHistory,
+    setSelectedCoverFromHistory,
+    cancelUpload,
+    handleChangeCoverFromHistory,
   };
 };
 
