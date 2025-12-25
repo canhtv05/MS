@@ -71,6 +71,7 @@ services:
       - '7474:7474'
       - '7687:7687'
     volumes:
+      - neo4j_ms:/data
       - ./import:/var/lib/neo4j/import
       - ./plugins:/var/lib/neo4j/plugins
     environment:
