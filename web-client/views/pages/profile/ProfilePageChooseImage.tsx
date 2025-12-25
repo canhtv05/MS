@@ -114,8 +114,9 @@ const ProfilePageChooseImage = ({ onSelect, selectedUrl }: ProfilePageChooseImag
                   key={image.id || idx}
                   type="button"
                   className={cn(
-                    'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer transition-all duration-200',
-                    'ring-2 ring-transparent',
+                    'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
+                    'ring-2 ring-transparent transition-all duration-200',
+                    'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
                     isSelected && 'ring-primary',
                   )}
                   onClick={() => {
@@ -134,6 +135,11 @@ const ProfilePageChooseImage = ({ onSelect, selectedUrl }: ProfilePageChooseImag
                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                     unoptimized
                   />
+                  {image?.createdAt && (
+                    <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
+                      {image?.createdAt?.toLocaleString()?.split(' ')[1]}
+                    </span>
+                  )}
                 </button>
               );
             })}
