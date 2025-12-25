@@ -117,7 +117,7 @@ const SignInPage = () => {
       <Dialog
         open={showResendEmail}
         title={t('notification:resend_verify_email.title')}
-        onCls={() => setShowResendEmail(false)}
+        onClose={() => setShowResendEmail(false)}
         description={t('notification:resend_verify_email.description')}
         onAccept={() => {
           handleResendVerifyEmail();
