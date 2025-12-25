@@ -18,5 +18,11 @@
   "change_cover_image_success": "Change cover image success",
   "change_cover_image_loading": "Change cover image loading",
   "choose_cover_image": "Choose cover image",
-  "upload_new_cover": "Upload new cover"
+  "upload_new_cover": "Upload new cover",
+  "confirm_cover_upload": "Confirm cover upload",
+  "choose_image": "Choose image",
+  "no_images_found": "No images found",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "change_cover_image_same": "You have selected the same cover image"
 }

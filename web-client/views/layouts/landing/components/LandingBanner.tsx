@@ -39,14 +39,14 @@ const LandingBanner = () => {
             you. Your social network reimagined.
           </p>
           <div className="flex md:flex-row mt-10 flex-col gap-2">
-            <Button className="rounded-full w-full" size={'lg'}>
+            <Button className="rounded-full w-auto" size={'lg'}>
               <div className="flex items-center justify-center w-full gap-2">
                 <span>Join the community</span>
                 <ArrowRight />
               </div>
             </Button>
             <Button
-              className="rounded-full w-full bg-white! text-black hover:shadow-black/20 hover:shadow-md shadow"
+              className="rounded-full w-auto bg-white! text-black hover:shadow-black/20 hover:shadow-md shadow"
               size={'lg'}
               variant="accent"
             >

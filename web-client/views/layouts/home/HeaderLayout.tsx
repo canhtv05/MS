@@ -257,9 +257,9 @@ const HeaderLayout = () => {
         }}
       />
       <Dialog
+        onClose={() => setOpenChangePassword(false)}
         open={openChangePassword}
         title={t('auth:change_password.title')}
-        onClose={() => setOpenChangePassword(false)}
         description={t('auth:change_password.description')}
         id="change-password-form"
       >

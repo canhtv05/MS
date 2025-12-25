@@ -7,3 +7,12 @@ export interface IMediaHistoryDTO {
   type: string;
   createdAt: string;
 }
+
+export interface IMediaHistoryGroupDTO {
+  date: string;
+  items: IMediaHistoryDTO[];
+}
+
+export interface ChangeCoverByUrlReq {
+  url: string;
+}
