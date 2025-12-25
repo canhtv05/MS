@@ -41,7 +41,7 @@ spring:
     open-in-view: false
     show-sql: false
     hibernate:
-      ddl-auto: true
+      ddl-auto: none
     properties:
       '[hibernate.format_sql]': true
 eureka:

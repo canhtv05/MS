@@ -18,6 +18,14 @@ import images from '@/public/imgs';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { CameraMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { useAuthStore } from '@/stores/auth';
+import {
+  DropdownMenu,
+  DropdownMenuArrow,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/animate-ui/components/radix/dropdown-menu';
+import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -103,14 +111,25 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           </div>
         </Zoom>
         {user?.auth?.username === data?.data?.userId && (
-          <Button
-            className="absolute right-2 bottom-2 z-10"
-            onClick={triggerFileInput}
-            disabled={isUploading}
-          >
-            <CameraMinimalistic />
-            {t('layout:header.change_cover')}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="absolute right-2 bottom-2 z-10" disabled={isUploading}>
+                <CameraMinimalistic />
+                {t('layout:header.change_cover')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={8}>
+              <DropdownMenuArrow />
+              <DropdownMenuItem>
+                <Gallery />
+                {t('profile:choose_cover_image')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={triggerFileInput}>
+                <GallerySend />
+                {t('profile:upload_new_cover')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
       <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-lg">

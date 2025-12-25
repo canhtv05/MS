@@ -1,7 +1,7 @@
 'use client';
 
-import { IUserProfileDTO } from '@/types/profile';
-import { IResponseObject } from '@/types/common';
+import { IMediaHistoryDTO, IUserProfileDTO } from '@/types/profile';
+import { IResponseObject, ISearchRequest } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
@@ -35,6 +35,31 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
   return {
     meQuery,
     userProfile,
+  };
+};
+
+export const useMyMediaHistoryQuery = (enabled: boolean = true, searchRequest: ISearchRequest) => {
+  const mediaHistory = useProfileStore(state => state.mediaHistory);
+  const setMediaHistory = useProfileStore(state => state.setMediaHistory);
+
+  const query = useQuery({
+    queryKey: ['profile', 'media-history'],
+    queryFn: async (): Promise<IResponseObject<IMediaHistoryDTO[]>> => {
+      const res = await api.post(API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY, searchRequest);
+      setMediaHistory(res.data.data);
+      return res.data;
+    },
+    enabled: enabled && !mediaHistory,
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  return {
+    query,
+    mediaHistory,
   };
 };
 

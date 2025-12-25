@@ -22,3 +22,16 @@ export interface ClientContext {
 export interface MultipartFile {
   file: File;
 }
+
+export interface ISearchRequest {
+  searchText?: string;
+  page?: number;
+  size?: number;
+  sortOrder?: string;
+  sortField?: string;
+}
+
+export interface ISearchResponse<T> {
+  data: T;
+  pagination: IPagination;
+}

@@ -16,5 +16,7 @@
   "edit_profile": "Sửa hồ sơ",
   "change_cover_image": "Thay đổi ảnh bìa",
   "change_cover_image_success": "Thay đổi ảnh bìa thành công",
-  "change_cover_image_loading": "Đang thay đổi ảnh bìa"
+  "change_cover_image_loading": "Đang thay đổi ảnh bìa",
+  "choose_cover_image": "Chọn ảnh bìa",
+  "upload_new_cover": "Tải ảnh lên"
 }

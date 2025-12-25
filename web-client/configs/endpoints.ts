@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
     ME: '/user-profile/me',
     GET_USER_PROFILE: '/user-profile/profile/{username}',
     CHANGE_COVER_IMAGE: '/user-profile/me/change-cover-image',
+    MY_MEDIA_HISTORY: '/user-profile/me/search-media-history',
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: '/notifications/verify-email',

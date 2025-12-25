@@ -422,6 +422,12 @@ function DropdownMenuItemIndicator(props: DropdownMenuItemIndicatorProps) {
   );
 }
 
+type DropdownMenuArrowProps = React.ComponentProps<typeof DropdownMenuPrimitive.Arrow>;
+
+function DropdownMenuArrow(props: DropdownMenuArrowProps) {
+  return <DropdownMenuPrimitive.Arrow data-slot="dropdown-menu-arrow" {...props} />;
+}
+
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -441,6 +447,7 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
+  DropdownMenuArrow,
   useDropdownMenu,
   useDropdownMenuSub,
   type DropdownMenuProps,
@@ -461,6 +468,7 @@ export {
   type DropdownMenuSubContentProps,
   type DropdownMenuSubTriggerProps,
   type DropdownMenuRadioGroupProps,
+  type DropdownMenuArrowProps,
   type DropdownMenuContextType,
   type DropdownMenuSubContextType,
 };
