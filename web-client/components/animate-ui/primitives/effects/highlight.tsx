@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { AnimatePresence, motion, type Transition } from 'motion/react';
-
 import { cn } from '@/lib/utils';
 
 type HighlightMode = 'children' | 'parent';
@@ -167,10 +166,15 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
   const [boundsState, setBoundsState] = React.useState<Bounds | null>(null);
   const [activeClassNameState, setActiveClassNameState] = React.useState<string>('');
 
+  const onValueChangeRef = React.useRef(onValueChange);
+  React.useEffect(() => {
+    onValueChangeRef.current = onValueChange;
+  });
+
   const safeSetActiveValue = (id: string | null) => {
     setActiveValue(prev => {
       if (prev !== id) {
-        onValueChange?.(id);
+        onValueChangeRef.current?.(id);
         return id;
       }
       return prev;
@@ -211,9 +215,9 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
     safeSetBoundsRef.current?.(bounds);
   };
 
-  const clearBounds = React.useCallback(() => {
+  const clearBounds = () => {
     setBoundsState(prev => (prev === null ? prev : null));
-  }, []);
+  };
 
   React.useEffect(() => {
     if (value !== undefined) setActiveValue(value);

@@ -4,20 +4,17 @@
 import * as React from 'react';
 import { DropdownMenu as DropdownMenuPrimitive } from 'radix-ui';
 import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react';
-
-import {
-  Highlight,
-  HighlightItem,
-  type HighlightItemProps,
-  type HighlightProps,
-} from '@/components/animate-ui/primitives/effects/highlight';
 import { getStrictContext } from '@/lib/get-strict-context';
 import { useControlledState } from '@/hooks/use-controlled-state';
 import { useDataState } from '@/hooks/use-data-state';
+import { Highlight, HighlightItem, HighlightItemProps, HighlightProps } from '../effects/highlight';
 
-type DropdownMenuContextType = {
+type DropdownMenuOpenContextType = {
   isOpen: boolean;
   setIsOpen: (o: boolean) => void;
+};
+
+type DropdownMenuHighlightContextType = {
   highlightedValue: string | null;
   setHighlightedValue: (value: string | null) => void;
 };
@@ -27,11 +24,21 @@ type DropdownMenuSubContextType = {
   setIsOpen: (o: boolean) => void;
 };
 
-const [DropdownMenuProvider, useDropdownMenu] =
-  getStrictContext<DropdownMenuContextType>('DropdownMenuContext');
+const [DropdownMenuOpenProvider, useDropdownMenuOpen] =
+  getStrictContext<DropdownMenuOpenContextType>('DropdownMenuOpenContext');
+
+const [DropdownMenuHighlightProvider, useDropdownMenuHighlight] =
+  getStrictContext<DropdownMenuHighlightContextType>('DropdownMenuHighlightContext');
 
 const [DropdownMenuSubProvider, useDropdownMenuSub] =
   getStrictContext<DropdownMenuSubContextType>('DropdownMenuSubContext');
+
+// Unified hook for backward compatibility
+function useDropdownMenu() {
+  const openContext = useDropdownMenuOpen();
+  const highlightContext = useDropdownMenuHighlight();
+  return { ...openContext, ...highlightContext };
+}
 
 type DropdownMenuProps = React.ComponentProps<typeof DropdownMenuPrimitive.Root>;
 
@@ -43,10 +50,18 @@ function DropdownMenu(props: DropdownMenuProps) {
   });
   const [highlightedValue, setHighlightedValue] = React.useState<string | null>(null);
 
+  const openValue = React.useMemo(() => ({ isOpen, setIsOpen }), [isOpen, setIsOpen]);
+  const highlightValue = React.useMemo(
+    () => ({ highlightedValue, setHighlightedValue }),
+    [highlightedValue],
+  );
+
   return (
-    <DropdownMenuProvider value={{ isOpen, setIsOpen, highlightedValue, setHighlightedValue }}>
-      <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} onOpenChange={setIsOpen} />
-    </DropdownMenuProvider>
+    <DropdownMenuOpenProvider value={openValue}>
+      <DropdownMenuHighlightProvider value={highlightValue}>
+        <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} onOpenChange={setIsOpen} />
+      </DropdownMenuHighlightProvider>
+    </DropdownMenuOpenProvider>
   );
 }
 
@@ -101,7 +116,7 @@ type DropdownMenuSubTriggerProps = Omit<
   HTMLMotionProps<'div'>;
 
 function DropdownMenuSubTrigger({ disabled, textValue, ...props }: DropdownMenuSubTriggerProps) {
-  const { setHighlightedValue } = useDropdownMenu();
+  const { setHighlightedValue } = useDropdownMenuHighlight();
   const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, value => {
     if (value === true) {
       const el = highlightedRef.current;
@@ -196,7 +211,7 @@ function DropdownMenuHighlight({
   transition = { type: 'spring', stiffness: 350, damping: 35 },
   ...props
 }: DropdownMenuHighlightProps) {
-  const { highlightedValue } = useDropdownMenu();
+  const { highlightedValue } = useDropdownMenuHighlight();
 
   return (
     <Highlight
@@ -239,7 +254,7 @@ function DropdownMenuContent({
   container,
   ...props
 }: DropdownMenuContentProps) {
-  const { isOpen } = useDropdownMenu();
+  const { isOpen } = useDropdownMenuOpen();
 
   return (
     <AnimatePresence>
@@ -287,6 +302,12 @@ function DropdownMenuHighlightItem(props: DropdownMenuHighlightItemProps) {
   return <HighlightItem data-slot="dropdown-menu-highlight-item" {...props} />;
 }
 
+type DropdownMenuArrowProps = React.ComponentProps<typeof DropdownMenuPrimitive.Arrow>;
+
+function DropdownMenuArrow(props: DropdownMenuArrowProps) {
+  return <DropdownMenuPrimitive.Arrow data-slot="dropdown-menu-arrow" {...props} />;
+}
+
 type DropdownMenuItemProps = Omit<
   React.ComponentProps<typeof DropdownMenuPrimitive.Item>,
   'asChild'
@@ -294,7 +315,7 @@ type DropdownMenuItemProps = Omit<
   HTMLMotionProps<'div'>;
 
 function DropdownMenuItem({ disabled, onSelect, textValue, ...props }: DropdownMenuItemProps) {
-  const { setHighlightedValue } = useDropdownMenu();
+  const { setHighlightedValue } = useDropdownMenuHighlight();
   const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, value => {
     if (value === true) {
       const el = highlightedRef.current;
@@ -330,7 +351,7 @@ function DropdownMenuCheckboxItem({
   textValue,
   ...props
 }: DropdownMenuCheckboxItemProps) {
-  const { setHighlightedValue } = useDropdownMenu();
+  const { setHighlightedValue } = useDropdownMenuHighlight();
   const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, value => {
     if (value === true) {
       const el = highlightedRef.current;
@@ -367,7 +388,7 @@ function DropdownMenuRadioItem({
   textValue,
   ...props
 }: DropdownMenuRadioItemProps) {
-  const { setHighlightedValue } = useDropdownMenu();
+  const { setHighlightedValue } = useDropdownMenuHighlight();
   const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, value => {
     if (value === true) {
       const el = highlightedRef.current;
@@ -422,12 +443,6 @@ function DropdownMenuItemIndicator(props: DropdownMenuItemIndicatorProps) {
   );
 }
 
-type DropdownMenuArrowProps = React.ComponentProps<typeof DropdownMenuPrimitive.Arrow>;
-
-function DropdownMenuArrow(props: DropdownMenuArrowProps) {
-  return <DropdownMenuPrimitive.Arrow data-slot="dropdown-menu-arrow" {...props} />;
-}
-
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -449,6 +464,8 @@ export {
   DropdownMenuRadioGroup,
   DropdownMenuArrow,
   useDropdownMenu,
+  useDropdownMenuOpen,
+  useDropdownMenuHighlight,
   useDropdownMenuSub,
   type DropdownMenuProps,
   type DropdownMenuTriggerProps,
@@ -469,6 +486,7 @@ export {
   type DropdownMenuSubTriggerProps,
   type DropdownMenuRadioGroupProps,
   type DropdownMenuArrowProps,
-  type DropdownMenuContextType,
+  type DropdownMenuOpenContextType,
+  type DropdownMenuHighlightContextType,
   type DropdownMenuSubContextType,
 };
