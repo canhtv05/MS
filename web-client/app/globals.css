@@ -248,8 +248,26 @@
   display: none !important;
 }
 
+[data-rmiz-modal-overlay='visible'] {
+  @apply bg-background/70;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
 [data-rmiz-modal-content] {
-  @apply bg-background;
+  @apply bg-transparent;
+}
+
+[data-rmiz-modal-content]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px) brightness(0.5);
+  transform: scale(1.1);
+  z-index: -1;
 }
 
 [data-rmiz-modal-img] {
@@ -258,4 +276,28 @@
 
 [data-rmiz-content='found'] img {
   @apply cursor-pointer;
+}
+
+[data-slot='popover-arrow'] {
+  display: flex;
+}
+
+[data-slot='popover-arrow'][data-side='top'] {
+  bottom: -8px;
+  rotate: 180deg;
+}
+
+[data-slot='popover-arrow'][data-side='bottom'] {
+  top: -8px;
+  rotate: 0deg;
+}
+
+[data-slot='popover-arrow'][data-side='left'] {
+  right: -13px;
+  rotate: 90deg;
+}
+
+[data-slot='popover-arrow'][data-side='right'] {
+  left: -13px;
+  rotate: -90deg;
 }

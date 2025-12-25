@@ -6,9 +6,6 @@ server:
 grpc:
   server:
     port: 9002
-  client:
-    health:
-      enabled: false
 
 spring:
   application:

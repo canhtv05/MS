@@ -18,3 +18,7 @@ export interface ClientContext {
   channel: 'WEB';
   context: string;
 }
+
+export interface MultipartFile {
+  file: File;
+}

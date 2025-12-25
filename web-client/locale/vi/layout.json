@@ -10,6 +10,7 @@
     "logout": "Đăng xuất",
     "change_password": "Đổi mật khẩu",
     "create": "Tạo",
-    "change_cover": "Đổi ảnh bìa"
+    "change_cover": "Đổi ảnh bìa",
+    "uploading": "Đang tải lên"
   }
 }

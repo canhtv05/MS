@@ -7,6 +7,10 @@ server:
 grpc:
   server:
     port: 9003
+  client:
+    file-service:
+      address: static://localhost:9002
+      negotiationType: plaintext
 
 spring:
   application:
@@ -18,6 +22,11 @@ spring:
   output:
     ansi:
       enabled: always
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
   datasource:
     hikari:

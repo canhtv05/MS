@@ -14,14 +14,20 @@ service FileGrpcService {
 
 message UploadOneImageRequest {
     bytes file = 1;
+    ResourceType resourceType = 2;
+    string userId = 3;
 }
 
 message UploadOneVideoRequest {
     bytes file = 1;
+    ResourceType resourceType = 2;
+    string userId = 3;
 }
 
 message UploadFilesRequest {
     repeated bytes files = 1;
+    ResourceType resourceType = 2;
+    string userId = 3;
 }
 
 message GetFilesByIdsRequest {
@@ -65,4 +71,14 @@ message FileResponse {
 
     repeated VideoResponse videos = 3;
     repeated ImageResponse images = 4;
+}
+
+enum ResourceType {
+    RESOURCE_TYPE_UNSPECIFIED = 0;
+    AVATAR = 1;
+    COVER = 2;
+    POST = 3;
+    COMMENT = 4;
+    MESSAGE = 5;
+    RESOURCE_OTHER = 6;
 }

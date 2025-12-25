@@ -112,8 +112,10 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
             <PopoverPortal>
               <PopoverPositioner sideOffset={8}>
                 <PopoverPopup className="bg-background p-2 rounded-md shadow-lg border">
-                  <PopoverArrow className="fill-background" />
-                  <div>Popover content</div>
+                  <PopoverArrow />
+                  <div className="p-2">
+                    <p>Popover content</p>
+                  </div>
                 </PopoverPopup>
               </PopoverPositioner>
             </PopoverPortal>

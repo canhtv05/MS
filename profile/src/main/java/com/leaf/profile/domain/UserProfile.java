@@ -30,53 +30,74 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     @GeneratedValue(UUIDStringGenerator.class)
     String id;
 
-    @Property("user_id")
-    String userId;
-
-    String fullname;
-    LocalDate dob;
-    String city;
-    Gender gender;
-    String bio;
-
-    @Property("phone_number")
-    String phoneNumber;
-
-    @Property("cover_url")
-    String coverUrl;
-
-    @Property("avatar_url")
-    String avatarUrl;
-
-    @Property("x_url")
-    String xUrl;
-
-    @Property("instagram_url")
-    String instagramUrl;
-
-    @Property("tiktok_url")
-    String tiktokUrl;
-
-    @Property("facebook_url")
-    String facebookUrl;
-
-    @Property("profile_visibility")
-    PrivacyLevel profileVisibility;
-
-    @Property("friends_visibility")
-    PrivacyLevel friendsVisibility;
-
-    @Property("posts_visibility")
-    PrivacyLevel postsVisibility;
-
-    @Property("last_online_at")
-    Instant lastOnlineAt;
-
-    @Property("followers_count")
     @Builder.Default
+    @Property("user_id")
+    String userId = "";
+
+    @Builder.Default
+    String fullname = "";
+
+    @Builder.Default
+    LocalDate dob = null;
+
+    @Builder.Default
+    String city = "";
+
+    @Builder.Default
+    Gender gender = null;
+
+    @Builder.Default
+    String bio = "";
+
+    @Builder.Default
+    @Property("phone_number")
+    String phoneNumber = "";
+
+    @Builder.Default
+    @Property("cover_url")
+    String coverUrl = "";
+
+    @Builder.Default
+    @Property("avatar_url")
+    String avatarUrl = "";
+
+    @Builder.Default
+    @Property("x_url")
+    String xUrl = "";
+
+    @Builder.Default
+    @Property("instagram_url")
+    String instagramUrl = "";
+
+    @Builder.Default
+    @Property("tiktok_url")
+    String tiktokUrl = "";
+
+    @Builder.Default
+    @Property("facebook_url")
+    String facebookUrl = "";
+
+    @Builder.Default
+    @Property("profile_visibility")
+    PrivacyLevel profileVisibility = PrivacyLevel.PUBLIC;
+
+    @Builder.Default
+    @Property("friends_visibility")
+    PrivacyLevel friendsVisibility = PrivacyLevel.PUBLIC;
+
+    @Builder.Default
+    @Property("posts_visibility")
+    PrivacyLevel postsVisibility = PrivacyLevel.PUBLIC;
+
+    @Builder.Default
+    @Property("last_online_at")
+    Instant lastOnlineAt = Instant.now();
+
+    @Builder.Default
+    @Property("followers_count")
     Long followersCount = 0L;
 
-    @Property("following_count")
     @Builder.Default
+    @Property("following_count")
     Long followingCount = 0L;
 }

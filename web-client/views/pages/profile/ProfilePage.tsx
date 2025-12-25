@@ -29,7 +29,18 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
   const { user } = useAuthStore();
-  const { data, isLoading, error } = useProfile({ username: decodedUsername });
+  const {
+    data,
+    isLoading,
+    error,
+    coverImagePreview,
+    handleFileChange,
+    triggerFileInput,
+    fileInputRef,
+    isUploading,
+  } = useProfile({
+    username: decodedUsername,
+  });
   const { t } = useTranslation(['profile', 'layout']);
 
   if (!decodedUsername.startsWith('@')) {
@@ -57,27 +68,46 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   return (
     <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white dark:bg-gray-800 flex-col lg:w-full rounded-lg">
       <div className="relative w-full h-[200px]!">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
         <Zoom
           zoomMargin={20}
           zoomImg={{
-            src: images.goku.src,
+            src: coverImagePreview || data?.data?.coverUrl || images.goku.src,
             alt: 'bg',
           }}
         >
           <div className="relative w-full h-[200px]">
             <Image
-              src={images.goku.src}
+              src={coverImagePreview || data?.data?.coverUrl || images.goku.src}
               alt="bg"
               fill
               className="object-cover rounded-t-md"
               loading="eager"
               quality={100}
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+              unoptimized
             />
+            {isUploading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
+                <div className="text-white text-sm font-medium">
+                  {t('layout:header.uploading')}...
+                </div>
+              </div>
+            )}
           </div>
         </Zoom>
         {user?.auth?.username === data?.data?.userId && (
-          <Button className="absolute right-2 bottom-2 z-10">
+          <Button
+            className="absolute right-2 bottom-2 z-10"
+            onClick={triggerFileInput}
+            disabled={isUploading}
+          >
             <CameraMinimalistic />
             {t('layout:header.change_cover')}
           </Button>
