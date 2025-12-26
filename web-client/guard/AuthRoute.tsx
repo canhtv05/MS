@@ -31,7 +31,6 @@ const AuthRoute = ({ children }: IAuthRoute) => {
   useEffect(() => {
     if (!loading && !userData && !isRefreshing) {
       setUser(undefined);
-      queryClient.clear();
       cookieUtils.deleteAccessToken();
     }
   }, [queryClient, userData, loading, setUser, isRefreshing]);

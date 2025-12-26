@@ -10,16 +10,26 @@ import { GalleryMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IMediaHistoryGroupDTO } from '@/types/profile';
+import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
 
 interface ProfilePageChooseImageProps {
   onSelect?: (url: string) => void;
   selectedUrl?: string | null;
+  isAvatar?: boolean;
 }
 
-const ProfilePageChooseImage = ({ onSelect, selectedUrl }: ProfilePageChooseImageProps) => {
+const ProfilePageChooseImage = ({
+  onSelect,
+  selectedUrl,
+  isAvatar = false,
+}: ProfilePageChooseImageProps) => {
   const { user } = useAuthStore();
   const { t } = useTranslation('profile');
   const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const handleContainerClick = useCallback(() => {
+    onSelect?.('');
+  }, [onSelect]);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useMyMediaHistoryInfiniteQuery(true, 20, user?.auth?.username);
@@ -95,7 +105,8 @@ const ProfilePageChooseImage = ({ onSelect, selectedUrl }: ProfilePageChooseImag
   }
 
   return (
-    <div className="max-h-[500px] overflow-y-auto space-y-6 p-1">
+    <div onClick={handleContainerClick} className="max-h-[500px] overflow-y-auto space-y-6 p-1">
+      {isAvatar && <ProfilePageChangeAvatar />}
       {groups.map((group, groupIdx) => (
         <div key={groupIdx}>
           <div className="flex items-center gap-3 mb-3">
@@ -119,7 +130,8 @@ const ProfilePageChooseImage = ({ onSelect, selectedUrl }: ProfilePageChooseImag
                     'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
                     isSelected && 'ring-primary',
                   )}
-                  onClick={() => {
+                  onClick={e => {
+                    e.stopPropagation();
                     if (image.url === selectedUrl) {
                       onSelect?.('');
                     } else {

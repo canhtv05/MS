@@ -11,6 +11,7 @@ import com.leaf.graphql_bff.auth.mapper.UserProfileMapper;
 import com.leaf.graphql_bff.util.SecurityUtils;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
+import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -49,7 +50,7 @@ public class AuthQueryResolver {
                     tuple.getT1(),
                     tuple.getT2()
                 );
-                redisService.set(cacheKey, userProfileDTO);
+                redisService.set(cacheKey, userProfileDTO, 1, TimeUnit.HOURS);
                 return userProfileDTO;
             });
         });

@@ -110,6 +110,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
                 zoomImg={{
                   src: coverSrc,
                   alt: 'bg',
+                  loading: 'eager',
                 }}
               >
                 <div className="relative w-full h-[200px]">
@@ -152,8 +153,8 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
                 {t('layout:header.change_cover')}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={8}>
-              <DropdownMenuArrow className="dark:fill-gray-800 fill-white [&>polygon]:stroke-gray-200 dark:[&>polygon]:stroke-gray-700" />
+            <DropdownMenuContent align="end" sideOffset={-2}>
+              <DropdownMenuArrow />
               <DropdownMenuItem onClick={() => setShowDialogMediaHistory(true)}>
                 <Gallery />
                 {t('profile:choose_cover_image')}

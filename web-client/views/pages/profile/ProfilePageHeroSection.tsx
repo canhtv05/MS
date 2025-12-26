@@ -21,6 +21,8 @@ import {
   PopoverPositioner,
   PopoverTrigger,
 } from '@/components/animate-ui/primitives/base/popover';
+import Dialog from '@/components/customs/dialog';
+import ProfilePageChooseImage from './ProfilePageChooseImage';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -120,7 +122,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
               </PopoverPositioner>
             </PopoverPortal>
           </Popover>
-          {user?.auth?.username === data?.data?.userId && (
+          {user?.auth?.username === data?.data?.userId && !isLoading && (
             <IconButton
               className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
               variant={'outline'}
@@ -153,6 +155,18 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           </>
         )}
       </div>
+      <Dialog
+        open={true}
+        onClose={() => {}}
+        onAccept={() => {}}
+        title={t?.('profile:choose_image') || ''}
+        id="confirm-cover-upload"
+        size="lg"
+        disableAccept={true}
+        disableFooter={true}
+      >
+        <ProfilePageChooseImage onSelect={() => {}} selectedUrl={''} isAvatar={true} />
+      </Dialog>
     </>
   );
 };

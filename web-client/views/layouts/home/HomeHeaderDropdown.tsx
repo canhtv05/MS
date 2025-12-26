@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  DropdownMenuArrow,
   DropdownMenuItem,
   DropdownMenuSub,
   DropdownMenuSubContent,
@@ -35,6 +36,7 @@ const HomeHeaderDropdown = ({
 
   return (
     <>
+      <DropdownMenuArrow />
       <DropdownMenuItem onSelect={e => e.preventDefault()}>
         <div
           className="flex items-center justify-between gap-2 w-full"

@@ -25,6 +25,8 @@ public interface MediaHistoryRepository extends Neo4jRepository<MediaHistory, St
         )
         RETURN m
         ORDER BY m.created_at DESC
+        SKIP $skip
+        LIMIT $limit
         """,
         countQuery = """
         MATCH (m:media_history)

@@ -27,14 +27,15 @@ interface IDialog<T extends FieldValues = FieldValues> {
   size?: DialogSize;
   disableAccept?: boolean;
   form?: UseFormReturn<T>;
+  disableFooter?: boolean;
 }
 
 const sizeClasses: Record<DialogSize, string> = {
-  sm: 'sm:max-w-sm',
-  md: 'sm:max-w-lg',
-  lg: 'sm:max-w-2xl',
-  xl: 'sm:max-w-4xl',
-  full: 'sm:max-w-[90vw]',
+  sm: 'sm:max-w-sm sm:h-auto max-w-full h-full',
+  md: 'sm:max-w-lg sm:h-auto max-w-full h-full',
+  lg: 'sm:max-w-2xl sm:h-auto max-w-full h-full',
+  xl: 'sm:max-w-4xl sm:h-auto max-w-full h-full',
+  full: 'sm:max-w-[90vw] sm:h-auto max-w-full h-full',
 };
 
 const Dialog = <T extends FieldValues = FieldValues>({
@@ -48,6 +49,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
   size = 'md',
   disableAccept = false,
   form,
+  disableFooter = false,
 }: IDialog<T>) => {
   const { t } = useTranslation();
 
@@ -76,28 +78,30 @@ const Dialog = <T extends FieldValues = FieldValues>({
       <DialogPanel className={cn(sizeClasses[size])}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className={description ? 'visible' : 'invisible'}>
+          <DialogDescription className={!!description ? 'block' : 'hidden'}>
             {description}
           </DialogDescription>
         </DialogHeader>
         {children}
-        <DialogFooter className="flex justify-end items-center gap-2">
-          <Button className="w-full sm:w-auto" variant={'outline'} onClick={handleClose}>
-            {t('button.close')}
-          </Button>
-          <Button
-            className="w-full sm:w-auto"
-            variant={'destructive'}
-            onClick={() => {
-              onAccept?.();
-            }}
-            type="submit"
-            form={id}
-            disabled={isAcceptDisabled}
-          >
-            {t('button.accept')}
-          </Button>
-        </DialogFooter>
+        {!disableFooter && (
+          <DialogFooter className="flex flex-row! justify-end items-center gap-2">
+            <Button className="w-auto" variant={'outline'} onClick={handleClose}>
+              {t('button.close')}
+            </Button>
+            <Button
+              className="w-auto"
+              variant={'destructive'}
+              onClick={() => {
+                onAccept?.();
+              }}
+              type="submit"
+              form={id}
+              disabled={isAcceptDisabled}
+            >
+              {t('button.accept')}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogPanel>
     </DialogAnimate>
   );

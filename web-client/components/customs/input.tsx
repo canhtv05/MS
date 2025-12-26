@@ -23,7 +23,7 @@ interface IInputProps extends React.ComponentProps<'input'> {
   name?: string;
   label?: string;
   id?: string;
-  inputSize?: 'md' | 'lg';
+  inputSize?: 'md' | 'lg' | 'sm';
   classNameIcon?: string;
   showClear?: boolean;
 }
@@ -129,7 +129,13 @@ function Input({
           )}
         >
           {icon && (
-            <div className={cn('px-2 h-10 grid place-items-center', inputSize === 'lg' && 'h-11')}>
+            <div
+              className={cn(
+                'px-2 h-10 grid place-items-center',
+                inputSize === 'lg' && 'h-11',
+                inputSize === 'sm' && 'h-6',
+              )}
+            >
               {icon}
             </div>
           )}
@@ -154,6 +160,7 @@ function Input({
               !icon && endIcon && 'pl-3!',
               isInvalid && 'border-red-500',
               inputSize === 'lg' && 'p-3',
+              inputSize === 'sm' && 'px-3 py-1',
             )}
             onChange={handleChange}
             onBlur={e => handleBlur(e.target.value)}
@@ -170,6 +177,7 @@ function Input({
               className={cn(
                 'h-10 grid place-items-center',
                 inputSize === 'lg' && 'h-11',
+                inputSize === 'sm' && 'h-6',
                 shouldShowClear ? 'px-0' : 'px-3',
               )}
             >
@@ -182,6 +190,7 @@ function Input({
               className={cn(
                 'px-3 cursor-pointer h-10 grid place-items-center',
                 inputSize === 'lg' && 'h-11',
+                inputSize === 'sm' && 'h-6',
               )}
             >
               <XIcon className="size-5 p-1 dark:bg-gray-700 bg-gray-200 rounded-full" />

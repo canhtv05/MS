@@ -3,7 +3,8 @@ export const API_BACKEND_URL =
 
 export const API_FRONTEND_URL = process.env.NEXT_PUBLIC_API_FRONTEND_URL || '/api/proxy';
 
-export const GRAPHQL_ENDPOINT = `${API_BACKEND_URL}/graphql`;
+// Relative path so it uses api's baseURL (/api/proxy) -> /api/proxy/graphql
+export const GRAPHQL_ENDPOINT = '/graphql';
 
 export const API_ENDPOINTS = {
   AUTH: {

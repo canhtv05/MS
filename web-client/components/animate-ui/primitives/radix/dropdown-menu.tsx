@@ -302,9 +302,18 @@ function DropdownMenuHighlightItem(props: DropdownMenuHighlightItemProps) {
   return <HighlightItem data-slot="dropdown-menu-highlight-item" {...props} />;
 }
 
-type DropdownMenuArrowProps = React.ComponentProps<typeof DropdownMenuPrimitive.Arrow>;
+type DropdownMenuArrowProps = React.ComponentProps<typeof DropdownMenuPrimitive.Arrow> & {
+  children?: React.ReactNode;
+};
 
-function DropdownMenuArrow(props: DropdownMenuArrowProps) {
+function DropdownMenuArrow({ children, ...props }: DropdownMenuArrowProps) {
+  if (children) {
+    return (
+      <DropdownMenuPrimitive.Arrow data-slot="dropdown-menu-arrow" asChild {...props}>
+        {children}
+      </DropdownMenuPrimitive.Arrow>
+    );
+  }
   return <DropdownMenuPrimitive.Arrow data-slot="dropdown-menu-arrow" {...props} />;
 }
 

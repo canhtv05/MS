@@ -301,3 +301,7 @@
   left: -13px;
   rotate: -90deg;
 }
+
+span:has(> [data-slot='dropdown-menu-arrow']) {
+  top: 2px !important;
+}

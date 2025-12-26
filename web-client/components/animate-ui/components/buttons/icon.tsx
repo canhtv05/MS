@@ -54,7 +54,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         <ButtonPrimitive
           data-slot="icon-button"
           ref={ref}
-          className={cn(buttonVariants({ variant, size, className }))}
+          className={cn('cursor-pointer', buttonVariants({ variant, size, className }))}
           onClick={e => {
             setKey(prev => prev + 1);
             setIsActive(true);
