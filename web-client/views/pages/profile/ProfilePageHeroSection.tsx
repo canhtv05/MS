@@ -22,7 +22,10 @@ import {
   PopoverTrigger,
 } from '@/components/animate-ui/primitives/base/popover';
 import Dialog from '@/components/customs/dialog';
-import ProfilePageChooseImage from './ProfilePageChooseImage';
+import Cropper from 'react-easy-crop';
+import React, { useState } from 'react';
+import { Slider } from '@/components/customs/slider';
+import { getCroppedImg } from '@/utils/common';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -87,6 +90,36 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [sliderZoom, setSliderZoom] = useState(1);
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+
+  const onCropComplete = React.useCallback(
+    async (
+      croppedArea: unknown,
+      croppedAreaPixels: { x: number; y: number; width: number; height: number },
+    ) => {
+      try {
+        const croppedImage = await getCroppedImg(images.goku.src, croppedAreaPixels);
+        setCroppedImage(croppedImage);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [],
+  );
+
+  const handleSliderChange = React.useCallback((value: number[]) => {
+    const newZoom = value[0];
+    setSliderZoom(newZoom);
+    setZoom(newZoom);
+  }, []);
+
+  const handleCropperZoomChange = React.useCallback((newZoom: number) => {
+    setZoom(newZoom);
+    setSliderZoom(newZoom);
+  }, []);
 
   return (
     <>
@@ -163,9 +196,63 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         id="confirm-cover-upload"
         size="lg"
         disableAccept={true}
-        disableFooter={true}
+        disableFooter={false}
       >
-        <ProfilePageChooseImage onSelect={() => {}} selectedUrl={''} isAvatar={true} />
+        <div className="relative w-full h-[400px]">
+          <Cropper
+            image={images.goku.src}
+            crop={crop}
+            zoom={zoom}
+            aspect={1 / 1}
+            cropShape="round"
+            showGrid={true}
+            onCropChange={setCrop}
+            onCropComplete={onCropComplete}
+            onZoomChange={handleCropperZoomChange}
+          />
+        </div>
+        <div className="w-full px-5 md:px-20 flex items-center gap-2">
+          <Button
+            onClick={() => {
+              if (zoom === 1) return;
+              setZoom(zoom - 0.1);
+              setSliderZoom(zoom - 0.1);
+            }}
+            size="icon"
+            variant="outline"
+            className="rounded-full"
+            disabled={zoom === 1}
+          >
+            <span className="text-xl">-</span>
+          </Button>
+          <Slider
+            value={[sliderZoom]}
+            min={1}
+            max={3}
+            step={0.1}
+            onValueChange={handleSliderChange}
+          />
+          <Button
+            onClick={() => {
+              if (zoom === 3) return;
+              setZoom(zoom + 0.1);
+              setSliderZoom(zoom + 0.1);
+            }}
+            size="icon"
+            variant="outline"
+            className="rounded-full"
+            disabled={zoom === 3}
+          >
+            <span className="text-xl">+</span>
+          </Button>
+        </div>
+        {/* {croppedImage && (
+          <div className="flex justify-center mt-4">
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-primary shadow-sm">
+              <img src={croppedImage} alt="Cropped" className="w-full h-full object-cover" />
+            </div>
+          </div>
+        )} */}
       </Dialog>
     </>
   );
