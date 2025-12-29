@@ -82,7 +82,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
             {description}
           </DialogDescription>
         </DialogHeader>
-        {children}
+        <div className="overflow-y-auto">{children}</div>
         {!disableFooter && (
           <DialogFooter className="flex flex-row! justify-end items-center gap-2">
             <Button className="w-auto" variant={'outline'} onClick={handleClose}>

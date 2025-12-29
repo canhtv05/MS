@@ -92,6 +92,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
   const [sliderZoom, setSliderZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
@@ -119,6 +120,10 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const handleCropperZoomChange = React.useCallback((newZoom: number) => {
     setZoom(newZoom);
     setSliderZoom(newZoom);
+  }, []);
+
+  const handleRotationChange = React.useCallback((newRotation: number[]) => {
+    setRotation(newRotation[0]);
   }, []);
 
   return (
@@ -189,7 +194,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         )}
       </div>
       <Dialog
-        open={true}
+        open={false}
         onClose={() => {}}
         onAccept={() => {}}
         title={t?.('profile:choose_image') || ''}
@@ -198,53 +203,96 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         disableAccept={true}
         disableFooter={false}
       >
-        <div className="relative w-full h-[400px]">
-          <Cropper
-            image={images.goku.src}
-            crop={crop}
-            zoom={zoom}
-            aspect={1 / 1}
-            cropShape="round"
-            showGrid={true}
-            onCropChange={setCrop}
-            onCropComplete={onCropComplete}
-            onZoomChange={handleCropperZoomChange}
-          />
-        </div>
-        <div className="w-full px-5 md:px-20 flex items-center gap-2">
-          <Button
-            onClick={() => {
-              if (zoom === 1) return;
-              setZoom(zoom - 0.1);
-              setSliderZoom(zoom - 0.1);
-            }}
-            size="icon"
-            variant="outline"
-            className="rounded-full"
-            disabled={zoom === 1}
-          >
-            <span className="text-xl">-</span>
-          </Button>
-          <Slider
-            value={[sliderZoom]}
-            min={1}
-            max={3}
-            step={0.1}
-            onValueChange={handleSliderChange}
-          />
-          <Button
-            onClick={() => {
-              if (zoom === 3) return;
-              setZoom(zoom + 0.1);
-              setSliderZoom(zoom + 0.1);
-            }}
-            size="icon"
-            variant="outline"
-            className="rounded-full"
-            disabled={zoom === 3}
-          >
-            <span className="text-xl">+</span>
-          </Button>
+        <div className="flex flex-col gap-2">
+          <div className="relative w-full md:h-[400px] h-[300px]">
+            <Cropper
+              image={images.goku.src}
+              crop={crop}
+              zoom={zoom}
+              rotation={rotation}
+              aspect={1 / 1}
+              cropShape="round"
+              showGrid={true}
+              onCropChange={setCrop}
+              onRotationChange={setRotation}
+              onCropComplete={onCropComplete}
+              onZoomChange={handleCropperZoomChange}
+            />
+          </div>
+          <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
+            <span>Zoom</span>
+            <div className="flex items-center gap-2 w-full">
+              <Button
+                onClick={() => {
+                  if (zoom === 1) return;
+                  setZoom(zoom - 0.1);
+                  setSliderZoom(zoom - 0.1);
+                }}
+                size="icon"
+                variant="outline"
+                className="rounded-full"
+                disabled={zoom === 1}
+              >
+                <span className="text-xl">-</span>
+              </Button>
+              <Slider
+                value={[sliderZoom]}
+                min={1}
+                max={3}
+                step={0.1}
+                onValueChange={handleSliderChange}
+              />
+              <Button
+                onClick={() => {
+                  if (zoom === 3) return;
+                  setZoom(zoom + 0.1);
+                  setSliderZoom(zoom + 0.1);
+                }}
+                size="icon"
+                variant="outline"
+                className="rounded-full"
+                disabled={zoom === 3}
+              >
+                <span className="text-xl">+</span>
+              </Button>
+            </div>
+          </div>
+          <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
+            <span>Rotate</span>
+            <div className="flex items-center gap-2 w-full">
+              <Button
+                onClick={() => {
+                  if (rotation === 0) return;
+                  setRotation(rotation - 1);
+                }}
+                size="icon"
+                variant="outline"
+                className="rounded-full"
+                disabled={rotation === 0}
+              >
+                <span className="text-xl">-</span>
+              </Button>
+              <Slider
+                value={[rotation]}
+                min={0}
+                max={360}
+                step={1}
+                onValueChange={handleRotationChange}
+              />
+              <Button
+                onClick={() => {
+                  if (rotation === 360) return;
+                  setRotation(rotation + 1);
+                }}
+                size="icon"
+                variant="outline"
+                className="rounded-full"
+                disabled={rotation === 360}
+              >
+                <span className="text-xl">+</span>
+              </Button>
+            </div>
+          </div>
         </div>
         {/* {croppedImage && (
           <div className="flex justify-center mt-4">
