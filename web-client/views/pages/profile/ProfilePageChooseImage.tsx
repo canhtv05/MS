@@ -101,7 +101,7 @@ const ProfilePageChooseImage = ({
   if (groups.length === 0) {
     return (
       <>
-        {isAvatar && <ProfilePageChangeAvatar />}
+        {isAvatar && <ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedUrl} />}
         <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
           <GalleryMinimalistic className="w-16 h-16 mb-4 opacity-50" />
           <p className="text-sm">{t('no_images_found')}</p>
@@ -111,9 +111,9 @@ const ProfilePageChooseImage = ({
   }
 
   return (
-    <div onClick={handleContainerClick} className="overflow-y-auto space-y-6 p-1">
-      {isAvatar && <ProfilePageChangeAvatar />}
-      <div className="max-h-[500px] overflow-y-auto">
+    <div onClick={handleContainerClick} className="overflow-y-auto space-y-6">
+      {isAvatar && <ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedUrl} />}
+      <div className="max-h-[500px] overflow-y-auto p-1">
         {groups.map((group, groupIdx) => (
           <div key={groupIdx}>
             <div className="flex items-center gap-3 my-2">

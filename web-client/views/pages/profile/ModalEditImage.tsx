@@ -8,19 +8,19 @@ import { getCroppedImg } from '@/utils/common';
 import { useCallback, useEffect, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
-import ProfilePageChooseImage from './ProfilePageChooseImage';
 import { useAuthStore } from '@/stores/auth';
 import { useProfileMutation } from '@/services/mutations/profile';
-import { useQueryClient } from '@tanstack/react-query';
+import { useUserProfileQuery } from '@/services/queries/profile';
+import Image from 'next/image';
+import { useProfileModalStore } from './use-profile-modal';
 
 interface IModalEditImage {
   open: boolean;
-  onClose: () => void;
+  onClose: (value: boolean) => void;
   avatarPreview?: string | null;
-  pendingFile?: File | null;
 }
 
-const ModalEditImage = ({ open, onClose, avatarPreview, pendingFile }: IModalEditImage) => {
+const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   const { t } = useTranslation('profile');
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -30,8 +30,9 @@ const ModalEditImage = ({ open, onClose, avatarPreview, pendingFile }: IModalEdi
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const { changeAvatarImageMutation } = useProfileMutation();
-  const queryClient = useQueryClient();
+  const { refetch } = useUserProfileQuery(user?.auth?.username);
   const avatarUrl = user?.profile?.avatarUrl;
+  const closeParentDialog = useProfileModalStore(state => state.closeParentDialog);
 
   useEffect(() => {
     return () => {
@@ -78,45 +79,44 @@ const ModalEditImage = ({ open, onClose, avatarPreview, pendingFile }: IModalEdi
   }, []);
 
   const confirmUpload = useCallback(async () => {
-    if (!pendingFile) return;
+    if (!croppedImage) return;
 
     try {
-      await changeAvatarImageMutation.mutateAsync({ file: pendingFile });
+      // Convert cropped blob URL to File
+      const response = await fetch(croppedImage);
+      const blob = await response.blob();
+      const croppedFile = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+
+      await changeAvatarImageMutation.mutateAsync({ file: croppedFile });
       await refetch();
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
-      });
     } catch {
     } finally {
-      if (coverImagePreview) {
-        URL.revokeObjectURL(coverImagePreview);
+      onClose(false);
+      setShowConfirm(false);
+      if (avatarPreview) {
+        URL.revokeObjectURL(avatarPreview);
       }
-      setCoverImagePreview(null);
-      setPendingFile(null);
-      setShowConfirmChangeCoverUrl(false);
+      if (croppedImage) {
+        URL.revokeObjectURL(croppedImage);
+      }
+      setCroppedImage(null);
+      closeParentDialog();
     }
-  }, [
-    pendingFile,
-    changeCoverImageMutation,
-    refetch,
-    queryClient,
-    user?.auth?.username,
-    coverImagePreview,
-  ]);
+  }, [croppedImage, changeAvatarImageMutation, refetch, onClose, avatarPreview, closeParentDialog]);
 
   return (
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={() => onClose(false)}
         onAccept={() => setShowConfirm(true)}
         title={t?.('profile:choose_image') || ''}
         id="edit-avatar-upload"
-        size="lg"
+        size="md"
         disableAccept={false}
       >
         <div className="flex flex-col gap-2">
-          <div className="relative w-full md:h-[400px] h-[300px]">
+          <div className="relative w-full h-[300px]">
             <Cropper
               image={avatarPreview || avatarUrl || images.goku.src}
               crop={crop}
@@ -210,21 +210,23 @@ const ModalEditImage = ({ open, onClose, avatarPreview, pendingFile }: IModalEdi
       <Dialog
         open={showConfirm}
         onClose={() => setShowConfirm(false)}
-        onAccept={() => {
-          onClose();
-          setShowConfirm(false);
-        }}
-        title={t?.('profile:confirm') || ''}
+        onAccept={confirmUpload}
+        title={t?.('profile:edit_avatar_title') || ''}
         id="edit-avatar-confirm"
-        size="lg"
+        size="sm"
         disableAccept={false}
-        description="profile:confirm_message"
+        description={t?.('profile:edit_avatar_description') || ''}
       >
         {croppedImage && (
           <div className="flex justify-center mt-4">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-primary shadow-sm">
-              <img src={croppedImage} alt="Cropped" className="w-full h-full object-cover" />
-            </div>
+            <Image
+              src={croppedImage}
+              width={176}
+              height={176}
+              unoptimized
+              alt="Cropped"
+              className="rounded-full object-cover"
+            />
           </div>
         )}
       </Dialog>

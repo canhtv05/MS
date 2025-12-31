@@ -7,11 +7,15 @@ import { useRef, useState } from 'react';
 import ModalEditImage from './ModalEditImage';
 import { useAuthStore } from '@/stores/auth';
 import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
+import { useProfileModalStore } from './use-profile-modal';
 
-const ProfilePageChangeAvatar = () => {
+interface IProfilePageChangeAvatar {
+  selectHistoryAvatarUrl?: string | null;
+}
+
+const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeAvatar) => {
   const { t } = useTranslation('profile');
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
-  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuthStore();
   const [openModalEditImage, setOpenModalEditImage] = useState(false);
@@ -32,7 +36,6 @@ const ProfilePageChangeAvatar = () => {
 
       const previewUrl = URL.createObjectURL(selectedFile);
       setCoverImagePreview(previewUrl);
-      setPendingFile(selectedFile);
       setOpenModalEditImage(true);
     }
     event.target.value = '';
@@ -44,7 +47,7 @@ const ProfilePageChangeAvatar = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 p-1">
         <input
           type="file"
           accept="image/*"
@@ -70,10 +73,12 @@ const ProfilePageChangeAvatar = () => {
         </IconButton>
       </div>
       <ModalEditImage
-        open={openModalEditImage}
-        onClose={() => setOpenModalEditImage(false)}
-        avatarPreview={coverImagePreview}
-        pendingFile={pendingFile}
+        open={openModalEditImage || useProfileModalStore.getState().isChildDialogOpen}
+        onClose={() => {
+          setOpenModalEditImage(false);
+          useProfileModalStore.getState().closeChildDialog();
+        }}
+        avatarPreview={selectHistoryAvatarUrl || coverImagePreview}
       />
     </>
   );

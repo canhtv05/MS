@@ -32,5 +32,7 @@
   "no_images_found": "Không tìm thấy ảnh nào",
   "today": "Hôm nay",
   "yesterday": "Hôm qua",
-  "change_cover_image_same": "Bạn đã chọn ảnh bìa giống như hiện tại"
+  "change_cover_image_same": "Bạn đã chọn ảnh bìa giống như hiện tại",
+  "edit_avatar_title": "Cập nhật ảnh đại diện",
+  "edit_avatar_description": "Một bức ảnh rõ nét sẽ giúp mọi người dễ dàng nhận ra bạn. Hỗ trợ định dạng JPG, PNG hoặc GIF"
 }

@@ -31,11 +31,11 @@ interface IDialog<T extends FieldValues = FieldValues> {
 }
 
 const sizeClasses: Record<DialogSize, string> = {
-  sm: 'max-w-sm w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
-  md: 'max-w-lg w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
-  lg: 'max-w-2xl w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
-  xl: 'max-w-4xl w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
-  full: 'max-w-[90vw] w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
+  sm: 'max-w-sm! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
+  md: 'max-w-lg! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
+  lg: 'max-w-2xl! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
+  xl: 'max-w-4xl! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
+  full: 'max-w-[90vw]! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
 };
 
 const Dialog = <T extends FieldValues = FieldValues>({

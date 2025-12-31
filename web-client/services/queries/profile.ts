@@ -74,10 +74,10 @@ export const useMyMediaHistoryInfiniteQuery = (
   });
 };
 
-export const useUserProfileQuery = (username: string, enabled: boolean = true) => {
-  let us = username;
-  if (username.startsWith('@')) {
-    us = username.slice(1);
+export const useUserProfileQuery = (username?: string, enabled: boolean = true) => {
+  let us = username || '';
+  if (us.startsWith('@')) {
+    us = us.slice(1);
   }
 
   const query = useQuery({

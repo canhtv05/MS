@@ -178,13 +178,27 @@ export async function getCroppedImg(
   // draw rotated image
   ctx.drawImage(image, 0, 0);
 
-  // croppedAreaPixels values are bounding box relative
-  // extract the cropped image using these values
-  const data = ctx.getImageData(pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height);
+  const pixelCropX = Math.round(pixelCrop.x ?? 0);
+  const pixelCropY = Math.round(pixelCrop.y ?? 0);
+  const pixelCropWidth = Math.round(pixelCrop.width ?? 0);
+  const pixelCropHeight = Math.round(pixelCrop.height ?? 0);
+
+  if (
+    Number.isNaN(pixelCropX) ||
+    Number.isNaN(pixelCropY) ||
+    Number.isNaN(pixelCropWidth) ||
+    Number.isNaN(pixelCropHeight) ||
+    pixelCropWidth <= 0 ||
+    pixelCropHeight <= 0
+  ) {
+    return null;
+  }
+
+  const data = ctx.getImageData(pixelCropX, pixelCropY, pixelCropWidth, pixelCropHeight);
 
   // set canvas width to final desired crop size - this will clear existing context
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
+  canvas.width = pixelCropWidth;
+  canvas.height = pixelCropHeight;
 
   // paste generated rotate image at the top left corner
   ctx.putImageData(data, 0, 0);

@@ -23,11 +23,13 @@ import {
 } from '@/components/animate-ui/primitives/base/popover';
 import Dialog from '@/components/customs/dialog';
 import Cropper from 'react-easy-crop';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Slider } from '@/components/customs/slider';
 import { getCroppedImg } from '@/utils/common';
 import ModalEditImage from './ModalEditImage';
 import ProfilePageChooseImage from './ProfilePageChooseImage';
+import { useProfileModalStore } from './use-profile-modal';
+import { useProfileMutation } from '@/services/mutations/profile';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -92,8 +94,14 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
-  const [openModalEditImage, setOpenModalEditImage] = useState(false);
+  const { isParentDialogOpen, openParentDialog, closeParentDialog } = useProfileModalStore();
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      setSelectedCoverFromHistory(null);
+    };
+  }, []);
 
   return (
     <>
@@ -117,7 +125,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
                     width={128}
                     height={128}
                     className="rounded-full cursor-pointer"
-                    src={images.avt1.src}
+                    src={user?.profile?.avatarUrl || images.avt1.src}
                     alt={data?.data?.fullname}
                   />
                   <AvatarFallback className="text-2xl font-bold">
@@ -140,7 +148,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
               <IconButton
                 className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
                 variant={'outline'}
-                onClick={() => setOpenModalEditImage(true)}
+                onClick={() => openParentDialog()}
               >
                 <CameraMinimalistic />
               </IconButton>
@@ -180,12 +188,16 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         )}
       </div>
       <Dialog
-        open={openModalEditImage}
-        onClose={() => setOpenModalEditImage(false)}
+        open={isParentDialogOpen}
+        onClose={closeParentDialog}
         title={t?.('profile:choose_image') || 'Choose Image'}
-        id="confirm-cover-upload"
+        id="edit-avatar-upload-parent"
         size="lg"
-        disableAccept={true}
+        disableAccept={!selectedCoverFromHistory}
+        onAccept={() => {
+          if (!selectedCoverFromHistory) return;
+          useProfileModalStore.getState().openChildDialog();
+        }}
       >
         <ProfilePageChooseImage
           onSelect={setSelectedCoverFromHistory}

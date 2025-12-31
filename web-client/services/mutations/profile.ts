@@ -16,7 +16,7 @@ import { useAuthStore } from '@/stores/auth';
 export const useProfileMutation = () => {
   const { t } = useTranslation('profile');
   const { setUserProfile } = useProfileStore();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const queryClient = useQueryClient();
 
   const changeCoverImageMutation = useMutation({
@@ -39,8 +39,11 @@ export const useProfileMutation = () => {
     },
     onSuccess: async data => {
       setUserProfile(data?.data);
+      if (user && data?.data) {
+        setUser({ ...user, profile: data.data });
+      }
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'cover'],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
       });
       toast.success(t('change_cover_image_success'), {
         id: 'change-cover-image-toast',
@@ -68,8 +71,11 @@ export const useProfileMutation = () => {
     },
     onSuccess: async data => {
       setUserProfile(data?.data);
+      if (user && data?.data) {
+        setUser({ ...user, profile: data.data });
+      }
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'avatar'],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
       });
       toast.success(t('change_avatar_image_success'), {
         id: 'change-avatar-image-toast',
@@ -94,6 +100,12 @@ export const useProfileMutation = () => {
     },
     onSuccess: async data => {
       setUserProfile(data?.data);
+      if (user && data?.data) {
+        setUser({ ...user, profile: data.data });
+      }
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+      });
       toast.success(t('change_cover_image_success'), {
         id: 'change-cover-image-from-media-history-toast',
       });

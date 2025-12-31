@@ -52,7 +52,7 @@ const useProfile = ({ username }: { username: string }) => {
       await changeCoverImageMutation.mutateAsync({ file: pendingFile });
       await refetch();
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'cover'],
       });
     } catch {
     } finally {
@@ -100,7 +100,7 @@ const useProfile = ({ username }: { username: string }) => {
       await changeCoverImageFromMediaHistoryMutation.mutateAsync({ url: selectedCoverFromHistory });
       await refetch();
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'cover'],
       });
     } catch {
     } finally {

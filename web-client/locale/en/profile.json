@@ -32,5 +32,7 @@
   "no_images_found": "No images found",
   "today": "Today",
   "yesterday": "Yesterday",
-  "change_cover_image_same": "You have selected the same cover image"
+  "change_cover_image_same": "You have selected the same cover image",
+  "edit_avatar_title": "Update Profile Picture",
+  "edit_avatar_description": "A clear, high-quality photo helps people recognize you easily. Supports JPG, PNG or GIF"
 }
