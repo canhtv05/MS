@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # 1. Cấu hình cho Backend (Spring Boot - Maven)
+  - package-ecosystem: "maven"
+    directory: "/" # Nó sẽ tìm file pom.xml ở thư mục gốc
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # 2. Cấu hình cho Frontend (Next.js - npm/yarn)
+  - package-ecosystem: "npm"
+    directory: "/" # Nó sẽ tìm file package.json ở thư mục gốc
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
