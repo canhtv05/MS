@@ -73,11 +73,17 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             return unauthenticated(exchange.getResponse());
         }
 
+        final String finalToken = token;
         return grpcAuthClient
-            .verifyToken(token)
+            .verifyToken(finalToken)
             .flatMap(verifyTokenResponseApiResponse -> {
                 if (Boolean.TRUE.equals(verifyTokenResponseApiResponse.getValid())) {
-                    return chain.filter(exchange);
+                    ServerHttpRequest request = exchange
+                        .getRequest()
+                        .mutate()
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + finalToken)
+                        .build();
+                    return chain.filter(exchange.mutate().request(request).build());
                 } else {
                     return unauthenticated(exchange.getResponse());
                 }
@@ -100,6 +106,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.getCookies().remove(CommonConstants.COOKIE_NAME);
 
         return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes())));
     }

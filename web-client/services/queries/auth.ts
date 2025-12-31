@@ -15,7 +15,7 @@ interface MeQueryResponse {
 export const useAuthQuery = (enabled: boolean = true) => {
   const setUser = useAuthStore(state => state.setUser);
   const user = useAuthStore(state => state.user);
-  const token = cookieUtils.getStorage()?.accessToken;
+  const isAuthenticated = cookieUtils.getAuthenticated();
 
   const query = useQuery({
     queryKey: ['auth', 'me'],
@@ -32,7 +32,7 @@ export const useAuthQuery = (enabled: boolean = true) => {
         throw error;
       }
     },
-    enabled: enabled && !!token && !user,
+    enabled: enabled && isAuthenticated && !user,
     retry: 1,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
@@ -51,7 +51,7 @@ export const useAuthQuery = (enabled: boolean = true) => {
     };
   }
 
-  if (!token) {
+  if (!isAuthenticated) {
     return {
       user: undefined,
       isLoading: false,

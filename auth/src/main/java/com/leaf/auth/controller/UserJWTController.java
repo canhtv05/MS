@@ -8,8 +8,8 @@ import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.req.LogoutRequest;
 import com.leaf.auth.dto.req.ResetPasswordReq;
 import com.leaf.auth.dto.req.VerifyOTPReq;
+import com.leaf.auth.dto.res.AuthenticateResponse;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
-import com.leaf.auth.dto.res.TokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,24 +35,30 @@ public class UserJWTController {
     private final UserService userService;
 
     @PostMapping("/p/authenticate")
-    public ResponseEntity<TokenResponse> authorize(
+    public ResponseEntity<ResponseObject<AuthenticateResponse>> authorize(
         @Valid @RequestBody LoginRequest loginRequest,
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
     ) {
-        String jwt = authService.authenticate(loginRequest, httpServletRequest, httpServletResponse);
-        return new ResponseEntity<>(new TokenResponse(jwt), HttpStatus.OK);
+        AuthenticateResponse authenticateResponse = authService.authenticate(
+            loginRequest,
+            httpServletRequest,
+            httpServletResponse
+        );
+        return ResponseEntity.ok(ResponseObject.success(authenticateResponse));
     }
 
     @PostMapping("/p/refresh-token")
     public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
         @CookieValue(name = CommonConstants.COOKIE_NAME, required = false) String cookieValue,
-        @RequestBody String channel,
+        @Valid @RequestBody LogoutRequest request,
         HttpServletRequest httpServletRequest,
         HttpServletResponse response
     ) {
         return ResponseEntity.ok(
-            ResponseObject.success(authService.refreshToken(cookieValue, channel, httpServletRequest, response))
+            ResponseObject.success(
+                authService.refreshToken(cookieValue, request.getChannel(), httpServletRequest, response)
+            )
         );
     }
 

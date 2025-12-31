@@ -31,7 +31,7 @@ export async function getClientContext(): Promise<ClientContext> {
 
   cachedContext = {
     ip,
-    channel: 'WEB',
+    channel: 'web',
     context: `${uuid}_${userAgent}`,
   };
 

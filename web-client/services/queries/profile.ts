@@ -11,20 +11,16 @@ import { useProfileStore } from '@/stores/profile';
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useProfileStore(state => state.userProfile);
   const setUserProfile = useProfileStore(state => state.setUserProfile);
-  const token = cookieUtils.getStorage()?.accessToken;
+  const isAuthenticated = cookieUtils.getAuthenticated();
 
   const meQuery = useQuery({
     queryKey: ['profile', 'me'],
     queryFn: async (): Promise<IResponseObject<IUserProfileDTO>> => {
-      const res = await api.get(API_ENDPOINTS.PROFILE.ME, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await api.get(API_ENDPOINTS.PROFILE.ME);
       setUserProfile(res.data.data);
       return res.data;
     },
-    enabled: enabled && !!token && !userProfile,
+    enabled: enabled && isAuthenticated && !userProfile,
     retry: 1,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

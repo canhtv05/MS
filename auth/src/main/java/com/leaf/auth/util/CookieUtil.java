@@ -34,11 +34,11 @@ public class CookieUtil {
         Cookie cookie = new Cookie(CommonConstants.COOKIE_NAME, encode);
         // cookie.setHttpOnly(true);
 
-        // cho phép lấy cookie từ phía client
-        cookie.setHttpOnly(false);
+        // không cho phép lấy cookie từ phía client
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(properties.getSecurity().getRefreshDurationInSeconds().intValue()); // 2 weeks
         cookie.setPath("/");
-        cookie.setSecure(false); // false for localhost development
+        cookie.setSecure(false); // false for localhost development, true for production
         String domain = properties.getSecurity().getCookieDomain();
         if (StringUtils.hasText(domain)) cookie.setDomain(domain);
 
@@ -50,7 +50,7 @@ public class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setMaxAge(0);
         cookie.setPath("/");
-        cookie.setSecure(true);
+        cookie.setSecure(false); // false for localhost development, true for production
         String domain = properties.getSecurity().getCookieDomain();
         if (StringUtils.hasText(domain)) cookie.setDomain(domain);
         response.addCookie(cookie);

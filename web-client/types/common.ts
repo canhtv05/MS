@@ -15,7 +15,7 @@ export interface IPagination {
 
 export interface ClientContext {
   ip: string;
-  channel: 'WEB';
+  channel: 'web';
   context: string;
 }
 

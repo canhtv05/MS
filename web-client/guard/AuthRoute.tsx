@@ -6,7 +6,6 @@ import { useAuthQuery } from '@/services/queries/auth';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth';
 import { useAuthRefresh } from '@/guard/AuthRefreshContext';
-import cookieUtils from '@/utils/cookieUtils';
 
 interface IAuthRoute {
   children: ReactNode;
@@ -31,7 +30,6 @@ const AuthRoute = ({ children }: IAuthRoute) => {
   useEffect(() => {
     if (!loading && !userData && !isRefreshing) {
       setUser(undefined);
-      cookieUtils.deleteAccessToken();
     }
   }, [queryClient, userData, loading, setUser, isRefreshing]);
 
