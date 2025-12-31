@@ -20,16 +20,16 @@ const NavigationLayout = () => {
         effectiveCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
       )}
     >
-      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start lg:gap-7 gap-4 w-full">
+      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-3 w-full">
         <div className="md:block hidden w-full">
           <NavigationHeader isCollapsed={effectiveCollapsed} />
         </div>
         <div className="md:order-2 order-1 md:relative md:bottom-auto fixed bottom-0 z-50 md:z-auto w-full">
           <NavigationMenu isCollapsed={effectiveCollapsed} />
 
-          <div className="hidden lg:block absolute -right-4 top-1/2 -translate-y-1/2">
+          <div className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2">
             <div
-              className="absolute inset-0 w-8 h-8"
+              className="absolute inset-0 left-0 w-8 h-8"
               style={{ filter: 'drop-shadow(1px 0 5px rgba(0,0,0,0.09))' }}
             >
               <div

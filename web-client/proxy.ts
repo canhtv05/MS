@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export default function proxy(request: NextRequest) {
-  const cookie = request.cookies.get('MY_MICROSERVICE');
-  let accessToken = null;
+  const cookie = request.cookies.get('LEAF_KEY');
+  let isAuthenticated = null;
 
   if (cookie) {
     try {
       const value = JSON.parse(cookie.value);
-      accessToken = value.accessToken;
+      isAuthenticated = value.isAuthenticated;
     } catch {
       // Cookie invalid or not JSON
     }
@@ -18,7 +18,7 @@ export default function proxy(request: NextRequest) {
   const authRoutes = ['/sign-in', '/sign-up'];
 
   if (authRoutes.some(route => pathname.startsWith(route))) {
-    if (accessToken) {
+    if (isAuthenticated) {
       return NextResponse.redirect(new URL('/home', request.url));
     }
   }
@@ -26,7 +26,7 @@ export default function proxy(request: NextRequest) {
   /* customize
   const protectedRoutes = ['/home', '/profile'];
   if (protectedRoutes.some(route => pathname.startsWith(route))) {
-    if (!accessToken) {
+    if (!isAuthenticated) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
   }

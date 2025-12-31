@@ -6,7 +6,7 @@ import {
   IChangePasswordRequest,
   IForgotPasswordRequest,
   ILoginRequest,
-  ILoginResponse,
+  IAuthenticateResponse,
   IRegisterRequest,
   IResetPasswordReq,
   IVerifyOTPReq,
@@ -29,17 +29,17 @@ export const useAuthMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { t } = useTranslation('auth');
-  const accessToken = cookieUtils.getStorage()?.accessToken;
   const returnUrl = searchParams.get('returnUrl');
 
-  const setUser = useAuthStore(state => state.setUser);
-  const setToken = useAuthStore(state => state.setToken);
+  const { setUser, logout } = useAuthStore();
   const setUserProfile = useProfileStore(state => state.setUserProfile);
 
   const loginMutation = useMutation({
     mutationKey: [API_ENDPOINTS.AUTH.LOGIN],
-    mutationFn: async (payload: ILoginRequest): Promise<IResponseObject<ILoginResponse>> =>
-      await api.post(API_ENDPOINTS.AUTH.LOGIN, payload),
+    mutationFn: async (payload: ILoginRequest): Promise<IResponseObject<IAuthenticateResponse>> => {
+      const res = await api.post(API_ENDPOINTS.AUTH.LOGIN, payload);
+      return res.data;
+    },
     onError: error => {
       if (error instanceof axios.AxiosError) {
         const message: string = error.response?.data?.message;
@@ -54,13 +54,13 @@ export const useAuthMutation = () => {
     },
     onSuccess: async res => {
       if (res.data) {
-        const { token } = res.data;
-        setToken(token);
+        const { authenticate } = res.data;
+        cookieUtils.setAuthenticated(true);
         queryClient.removeQueries({ queryKey: ['auth', 'me'] });
 
         if (returnUrl) {
           router.push(decodeURIComponent(returnUrl));
-        } else {
+        } else if (!returnUrl && authenticate) {
           router.push('/home');
         }
         toast.success(t('sign_in.login_success'), { id: 'login-toast' });
@@ -71,11 +71,7 @@ export const useAuthMutation = () => {
   const logoutMutation = useMutation({
     mutationKey: [API_ENDPOINTS.AUTH.LOGOUT],
     mutationFn: async (): Promise<IResponseObject<void>> =>
-      await api.post(API_ENDPOINTS.AUTH.LOGOUT, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }),
+      await api.post(API_ENDPOINTS.AUTH.LOGOUT, null),
     onError: error => handleMutationError(error, 'logout-toast'),
     onMutate: () => {
       toast.loading(t('logout.loading'), { id: 'logout-toast' });
@@ -85,7 +81,8 @@ export const useAuthMutation = () => {
       setUserProfile(undefined);
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       queryClient.removeQueries({ queryKey: ['profile', 'me'] });
-      cookieUtils.deleteStorage();
+      cookieUtils.clearAuthenticated();
+      logout();
       toast.success(t('logout.logout_success'), { id: 'logout-toast' });
     },
   });
@@ -109,11 +106,7 @@ export const useAuthMutation = () => {
   const changePasswordMutation = useMutation({
     mutationKey: [API_ENDPOINTS.AUTH.CHANGE_PASSWORD],
     mutationFn: async (payload: IChangePasswordRequest): Promise<IResponseObject<void>> =>
-      await api.post(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }),
+      await api.post(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, payload),
     onError: error => handleMutationError(error, 'change-password-toast'),
     onMutate: () => {
       toast.loading(t('auth:change_password.loading'), { id: 'change-password-toast' });
@@ -123,7 +116,8 @@ export const useAuthMutation = () => {
       setUserProfile(undefined);
       queryClient.removeQueries({ queryKey: ['auth', 'me'] });
       // queryClient.removeQueries({ queryKey: ['profile', 'me'] });
-      cookieUtils.deleteStorage();
+      cookieUtils.clearAuthenticated();
+      logout();
       toast.success(t('auth:change_password.change_password_success'), {
         id: 'change-password-toast',
       });

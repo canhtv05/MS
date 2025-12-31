@@ -42,8 +42,8 @@ export interface IUserProfileDTO {
   profile: IProfileDTO;
 }
 
-export interface ILoginResponse {
-  token: string;
+export interface IAuthenticateResponse {
+  authenticate: boolean;
 }
 
 export interface ILoginRequest {

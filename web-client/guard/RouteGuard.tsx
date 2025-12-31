@@ -17,8 +17,8 @@ const RouteGuard = ({ children }: IRouteGuard) => {
 
   useEffect(() => {
     if (pathname === '/sign-up' || pathname === '/sign-in') {
-      const token = cookieUtils.getStorage()?.accessToken;
-      if (user && token) {
+      const isAuthenticated = cookieUtils.getAuthenticated();
+      if (user && isAuthenticated) {
         router.push('/home');
       }
     }

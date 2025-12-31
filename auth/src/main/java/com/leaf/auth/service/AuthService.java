@@ -6,6 +6,7 @@ import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.LoginRequest;
+import com.leaf.auth.dto.res.AuthenticateResponse;
 import com.leaf.auth.dto.res.RefreshTokenResponse;
 import com.leaf.auth.dto.res.VerifyTokenResponse;
 import com.leaf.auth.enums.PermissionAction;
@@ -49,7 +50,7 @@ public class AuthService {
     TokenProvider tokenProvider;
 
     @Transactional
-    public String authenticate(
+    public AuthenticateResponse authenticate(
         LoginRequest loginRequest,
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
@@ -65,12 +66,16 @@ public class AuthService {
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return tokenProvider.createToken(
+            String token = tokenProvider.createToken(
                 authentication,
                 httpServletRequest,
                 httpServletResponse,
                 loginRequest.getChannel()
             );
+            if (StringUtils.isBlank(token)) {
+                throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
+            }
+            return new AuthenticateResponse(true);
         } finally {
             AuthenticationContext.clear();
         }

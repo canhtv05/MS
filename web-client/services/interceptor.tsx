@@ -1,32 +1,31 @@
 'use client';
 
-import { api, handleRedirectLogin, PREFIX_PUBLIC_ENDPOINTS } from '@/utils/api';
+import { api, handleRedirectLogin } from '@/utils/api';
 import cookieUtils from '../utils/cookieUtils';
-import { AxiosResponse, AxiosError } from 'axios';
-import { IRefreshTokenResponse } from '@/types/auth';
-import { IResponseObject } from '@/types/common';
+import { AxiosError } from 'axios';
 import { getClientContext } from '@/utils/client-context';
 import { ReactNode } from 'react';
 import { setAuthRefreshing } from '@/guard/AuthRefreshContext';
+import { API_ENDPOINTS } from '@/configs/endpoints';
 
 interface IApiInterceptor {
   children: ReactNode;
 }
 
 interface IFailedRequestQueue {
-  resolve: (value: string | null) => void;
+  resolve: () => void;
   reject: (reason?: AxiosError) => void;
 }
 
 let isRefreshing = false;
 let failedQueue: IFailedRequestQueue[] = [];
 
-const processQueue = (error: AxiosError | null, token: string | null = null) => {
+const processQueue = (error: AxiosError | null) => {
   failedQueue.forEach(prom => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve();
     }
   });
   failedQueue = [];
@@ -39,10 +38,10 @@ const handleLogout = (clearAll = false) => {
 
     if (clearAll) {
       useAuthStore.getState().setUser(undefined);
-      cookieUtils.deleteStorage();
+      cookieUtils.clearAuthenticated();
       handleRedirectLogin(true);
     } else {
-      cookieUtils.deleteAccessToken();
+      cookieUtils.clearAuthenticated();
     }
   }
 };
@@ -50,19 +49,9 @@ const handleLogout = (clearAll = false) => {
 api.interceptors.request.use(
   async config => {
     const ctx = await getClientContext();
-    const accessToken = cookieUtils.getStorage()?.accessToken;
 
-    const isPublicEndpoint = PREFIX_PUBLIC_ENDPOINTS.some(pattern => {
-      if (pattern.endsWith('/**')) {
-        const baseRoute = pattern.replace('/**', '');
-        return config.url?.startsWith(baseRoute);
-      }
-      return config.url === pattern;
-    });
-
-    if (accessToken && !isPublicEndpoint) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+    // Không kiểm tra isAuthenticated ở đây vì cookie httpOnly
+    // Gateway sẽ tự đính kèm token từ cookie
 
     if (config.method !== 'get') {
       if (config.data instanceof FormData) {
@@ -92,17 +81,34 @@ api.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
+    // Kiểm tra nếu đây là endpoint refresh-token bị lỗi thì logout luôn
+    if (originalRequest.url?.includes('/refresh-token') && error.response?.status === 401) {
+      console.log('[Interceptor] Refresh token expired, logging out');
+      handleLogout(true);
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401) {
+      // Nếu đã thử retry rồi thì không retry nữa
       if (originalRequest._retry) {
+        handleLogout(true);
         return Promise.reject(error);
       }
 
+      // Kiểm tra xem user có đang authenticated không
+      const isAuthenticated = cookieUtils.getAuthenticated();
+      if (!isAuthenticated) {
+        console.log('[Interceptor] User not authenticated, skipping refresh');
+        return Promise.reject(error);
+      }
+
+      // Nếu đang refresh thì queue request lại
       if (isRefreshing) {
-        return new Promise(function (resolve, reject) {
+        return new Promise<void>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(token => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+          .then(() => {
+            // Không cần set Authorization header vì gateway sẽ lấy từ cookie
             return api(originalRequest);
           })
           .catch(err => {
@@ -115,37 +121,13 @@ api.interceptors.response.use(
       setAuthRefreshing(true);
 
       try {
-        const storage = cookieUtils.getStorage();
-        const refreshToken = storage?.refreshToken;
-
-        if (!refreshToken) {
-          console.log('[Interceptor] No refresh token found, logging out');
-          handleLogout(true);
-          return Promise.reject(new Error('No refresh token'));
-        }
-
-        const res: AxiosResponse<IResponseObject<IRefreshTokenResponse>> = await api.post(
-          '/auth/me/p/refresh-token',
-          { channel: 'web' },
-          {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
-          },
-        );
-
-        const { accessToken, refreshToken: newRefresh } = res.data.data;
-        cookieUtils.setStorage({
-          accessToken,
-          refreshToken: newRefresh,
-        });
-
-        processQueue(null, accessToken);
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        await api.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {});
+        cookieUtils.setAuthenticated(true);
+        processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
         console.log('[Interceptor] Refresh failed, logging out');
-        processQueue(refreshError as AxiosError, null);
+        processQueue(refreshError as AxiosError);
         handleLogout(true);
         return Promise.reject(refreshError);
       } finally {
