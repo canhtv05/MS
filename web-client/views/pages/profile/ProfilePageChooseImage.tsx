@@ -10,7 +10,6 @@ import { GalleryMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IMediaHistoryGroupDTO } from '@/types/profile';
-import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
 import { ResourceType } from '@/enums/common';
 
 interface ProfilePageChooseImageProps {
@@ -100,20 +99,16 @@ const ProfilePageChooseImage = ({
 
   if (groups.length === 0) {
     return (
-      <>
-        {isAvatar && <ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedUrl} />}
-        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-          <GalleryMinimalistic className="w-16 h-16 mb-4 opacity-50" />
-          <p className="text-sm">{t('no_images_found')}</p>
-        </div>
-      </>
+      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+        <GalleryMinimalistic className="w-16 h-16 mb-4 opacity-50" />
+        <p className="text-sm">{t('no_images_found')}</p>
+      </div>
     );
   }
 
   return (
     <div onClick={handleContainerClick} className="overflow-y-auto space-y-6">
-      {isAvatar && <ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedUrl} />}
-      <div className="max-h-[500px] overflow-y-auto p-1">
+      <div className="p-1">
         {groups.map((group, groupIdx) => (
           <div key={groupIdx}>
             <div className="flex items-center gap-3 my-2">

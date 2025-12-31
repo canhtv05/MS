@@ -47,7 +47,7 @@ const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeA
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2 p-1">
+      <div className="flex items-center justify-between gap-2 p-1 w-full">
         <input
           type="file"
           accept="image/*"

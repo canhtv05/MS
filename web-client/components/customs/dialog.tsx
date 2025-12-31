@@ -11,7 +11,7 @@ import {
 import { Button } from '../animate-ui/components/buttons/button';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { useCallback, useEffect } from 'react';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -21,6 +21,7 @@ interface IDialog<T extends FieldValues = FieldValues> {
   onAccept?: () => void;
   onClose?: () => void;
   title: string;
+  titleNode?: ReactNode;
   description?: string;
   open: boolean;
   id?: string;
@@ -50,6 +51,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
   disableAccept = false,
   form,
   disableFooter = false,
+  titleNode,
 }: IDialog<T>) => {
   const { t } = useTranslation();
 
@@ -77,7 +79,10 @@ const Dialog = <T extends FieldValues = FieldValues>({
     <DialogAnimate open={open} onClose={handleClose}>
       <DialogPanel className={cn(sizeClasses[size], 'flex flex-col')}>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="flex items-start justify-center w-full flex-col gap-1">
+            {title}
+            {titleNode}
+          </DialogTitle>
           <DialogDescription className={description ? 'text-muted-foreground' : 'sr-only'}>
             {description}
           </DialogDescription>

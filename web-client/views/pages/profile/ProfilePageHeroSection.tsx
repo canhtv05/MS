@@ -22,14 +22,10 @@ import {
   PopoverTrigger,
 } from '@/components/animate-ui/primitives/base/popover';
 import Dialog from '@/components/customs/dialog';
-import Cropper from 'react-easy-crop';
 import React, { useEffect, useState } from 'react';
-import { Slider } from '@/components/customs/slider';
-import { getCroppedImg } from '@/utils/common';
-import ModalEditImage from './ModalEditImage';
 import ProfilePageChooseImage from './ProfilePageChooseImage';
 import { useProfileModalStore } from './use-profile-modal';
-import { useProfileMutation } from '@/services/mutations/profile';
+import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -98,10 +94,17 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isParentDialogOpen) {
+      const handleSelectedCoverFromHistory = () => {
+        setSelectedCoverFromHistory(null);
+      };
+      handleSelectedCoverFromHistory();
+    }
+
     return () => {
       setSelectedCoverFromHistory(null);
     };
-  }, []);
+  }, [isParentDialogOpen]);
 
   return (
     <>
@@ -198,6 +201,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           if (!selectedCoverFromHistory) return;
           useProfileModalStore.getState().openChildDialog();
         }}
+        titleNode={<ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedCoverFromHistory} />}
       >
         <ProfilePageChooseImage
           onSelect={setSelectedCoverFromHistory}
