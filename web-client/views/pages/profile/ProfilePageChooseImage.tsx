@@ -11,6 +11,7 @@ import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IMediaHistoryGroupDTO } from '@/types/profile';
 import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
+import { ResourceType } from '@/enums/common';
 
 interface ProfilePageChooseImageProps {
   onSelect?: (url: string) => void;
@@ -32,7 +33,9 @@ const ProfilePageChooseImage = ({
   }, [onSelect]);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useMyMediaHistoryInfiniteQuery(true, 20, user?.auth?.username);
+    useMyMediaHistoryInfiniteQuery(true, user?.auth?.username, {
+      searchText: isAvatar ? ResourceType.AVATAR : ResourceType.COVER,
+    });
 
   const pages = data?.pages;
   const groups = useMemo(() => {
@@ -97,74 +100,79 @@ const ProfilePageChooseImage = ({
 
   if (groups.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-        <GalleryMinimalistic className="w-16 h-16 mb-4 opacity-50" />
-        <p className="text-sm">{t('no_images_found')}</p>
-      </div>
+      <>
+        {isAvatar && <ProfilePageChangeAvatar />}
+        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+          <GalleryMinimalistic className="w-16 h-16 mb-4 opacity-50" />
+          <p className="text-sm">{t('no_images_found')}</p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div onClick={handleContainerClick} className="max-h-[500px] overflow-y-auto space-y-6 p-1">
+    <div onClick={handleContainerClick} className="overflow-y-auto space-y-6 p-1">
       {isAvatar && <ProfilePageChangeAvatar />}
-      {groups.map((group, groupIdx) => (
-        <div key={groupIdx}>
-          <div className="flex items-center gap-3 mb-3">
-            <span className="text-sm font-medium text-muted-foreground">
-              {getDateLabel(group.date, t)}
-            </span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
+      <div className="max-h-[500px] overflow-y-auto">
+        {groups.map((group, groupIdx) => (
+          <div key={groupIdx}>
+            <div className="flex items-center gap-3 my-2">
+              <span className="text-xs font-medium text-muted-foreground">
+                {getDateLabel(group.date, t)}
+              </span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {group.items.map((image, idx) => {
-              const isSelected = selectedUrl === image.url;
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {group.items.map((image, idx) => {
+                const isSelected = selectedUrl === image.url;
 
-              return (
-                <button
-                  key={image.id || idx}
-                  type="button"
-                  className={cn(
-                    'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
-                    'ring-2 ring-transparent transition-all duration-200',
-                    'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
-                    isSelected && 'ring-primary',
-                  )}
-                  onClick={e => {
-                    e.stopPropagation();
-                    if (image.url === selectedUrl) {
-                      onSelect?.('');
-                    } else {
-                      onSelect?.(image.url);
-                    }
-                  }}
-                >
-                  <Image
-                    src={image.url}
-                    alt={`Media ${image.type}`}
-                    fill
-                    className="object-cover absolute inset-0"
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                    unoptimized
-                  />
-                  {image?.createdAt && (
-                    <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
-                      {image?.createdAt?.toLocaleString()?.split(' ')[1]}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={image.id || idx}
+                    type="button"
+                    className={cn(
+                      'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
+                      'ring-2 ring-transparent transition-all duration-200',
+                      'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
+                      isSelected && 'ring-primary',
+                    )}
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (image.url === selectedUrl) {
+                        onSelect?.('');
+                      } else {
+                        onSelect?.(image.url);
+                      }
+                    }}
+                  >
+                    <Image
+                      src={image.url}
+                      alt={`Media ${image.type}`}
+                      fill
+                      className="object-cover absolute inset-0"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      unoptimized
+                    />
+                    {image?.createdAt && (
+                      <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
+                        {image?.createdAt?.toLocaleString()?.split(' ')[1]}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+        ))}
+
+        <div ref={loadMoreRef} className="h-4">
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-4">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+            </div>
+          )}
         </div>
-      ))}
-
-      <div ref={loadMoreRef} className="h-4">
-        {isFetchingNextPage && (
-          <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
-          </div>
-        )}
       </div>
     </div>
   );

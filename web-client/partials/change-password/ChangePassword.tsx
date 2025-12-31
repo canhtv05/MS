@@ -38,7 +38,7 @@ const ChangePassword = ({ onSuccess }: IChangePasswordProps) => {
     <form
       onSubmit={form.handleSubmit(onSubmit)}
       id="change-password-form"
-      className="space-y-2 flex flex-col gap-1 section-clickable"
+      className="space-y-2 flex flex-col gap-1 section-clickable h-full "
     >
       <Controller
         name="currentPassword"

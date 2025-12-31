@@ -1,10 +1,7 @@
 package com.leaf.profile.controller;
 
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.dto.search.SearchRequest;
-import com.leaf.common.dto.search.SearchResponse;
 import com.leaf.profile.dto.ChangeCoverByUrlReq;
-import com.leaf.profile.dto.MediaHistoryGroupDTO;
 import com.leaf.profile.dto.SendFriendRequestDTO;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.service.UserProfileService;
@@ -13,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,14 +44,14 @@ public class UserProfileController {
     public ResponseEntity<ResponseObject<UserProfileResponse>> changeCoverImage(
         @RequestParam(name = "file", required = true) MultipartFile file
     ) {
-        return ResponseEntity.ok(ResponseObject.success(userProfileService.changeCoverImage(file)));
+        return ResponseEntity.ok(ResponseObject.success(userProfileService.changeAvatarOrCoverImage(file, false)));
     }
 
-    @PostMapping("/me/search-media-history")
-    public ResponseEntity<ResponseObject<SearchResponse<MediaHistoryGroupDTO>>> searchMediaHistory(
-        @ModelAttribute SearchRequest criteria
+    @PostMapping(value = "/me/change-avatar-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseObject<UserProfileResponse>> changeAvatarImage(
+        @RequestParam(name = "file", required = true) MultipartFile file
     ) {
-        return ResponseEntity.ok(ResponseObject.success(userProfileService.searchMediaHistory(criteria)));
+        return ResponseEntity.ok(ResponseObject.success(userProfileService.changeAvatarOrCoverImage(file, true)));
     }
 
     @PostMapping(value = "/me/change-cover-image-from-media-history")

@@ -143,11 +143,15 @@ export function rotateSize(width: number, height: number, rotation: number) {
 }
 
 export async function getCroppedImg(
-  imageSrc: string,
+  imageSrc: string | null | undefined,
   pixelCrop: { x: number; y: number; width: number; height: number },
   rotation = 0,
   flip = { horizontal: false, vertical: false },
 ): Promise<string | null> {
+  if (!imageSrc || !pixelCrop || pixelCrop.width <= 0 || pixelCrop.height <= 0) {
+    return null;
+  }
+
   const image = await createImage(imageSrc);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -199,3 +203,11 @@ export async function getCroppedImg(
     }, 'image/jpeg');
   });
 }
+
+export const ALLOWED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/avif',
+];

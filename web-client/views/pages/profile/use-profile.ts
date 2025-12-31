@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
 
 const useProfile = ({ username }: { username: string }) => {
   const { data, isLoading, isError, error, refetch } = useUserProfileQuery(username);
@@ -25,8 +26,7 @@ const useProfile = ({ username }: { username: string }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'];
-      if (!allowedTypes.includes(selectedFile.type)) {
+      if (!ALLOWED_IMAGE_TYPES.includes(selectedFile.type)) {
         event.target.value = '';
         return;
       }
@@ -52,7 +52,7 @@ const useProfile = ({ username }: { username: string }) => {
       await changeCoverImageMutation.mutateAsync({ file: pendingFile });
       await refetch();
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history', user?.auth?.username],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
       });
     } catch {
     } finally {
@@ -100,7 +100,7 @@ const useProfile = ({ username }: { username: string }) => {
       await changeCoverImageFromMediaHistoryMutation.mutateAsync({ url: selectedCoverFromHistory });
       await refetch();
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history', user?.auth?.username],
+        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
       });
     } catch {
     } finally {

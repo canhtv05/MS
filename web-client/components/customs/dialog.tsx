@@ -31,11 +31,11 @@ interface IDialog<T extends FieldValues = FieldValues> {
 }
 
 const sizeClasses: Record<DialogSize, string> = {
-  sm: 'sm:max-w-sm sm:h-auto max-w-full h-full',
-  md: 'sm:max-w-lg sm:h-auto max-w-full h-full',
-  lg: 'sm:max-w-2xl sm:h-auto max-w-full h-full',
-  xl: 'sm:max-w-4xl sm:h-auto max-w-full h-full',
-  full: 'sm:max-w-[90vw] sm:h-auto max-w-full h-full',
+  sm: 'max-w-sm w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
+  md: 'max-w-lg w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
+  lg: 'max-w-2xl w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
+  xl: 'max-w-4xl w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
+  full: 'max-w-[90vw] w-[calc(100%-2rem)] md:w-full h-auto rounded-lg',
 };
 
 const Dialog = <T extends FieldValues = FieldValues>({
@@ -75,16 +75,16 @@ const Dialog = <T extends FieldValues = FieldValues>({
 
   return (
     <DialogAnimate open={open} onClose={handleClose}>
-      <DialogPanel className={cn(sizeClasses[size])}>
+      <DialogPanel className={cn(sizeClasses[size], 'flex flex-col')}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className={!!description ? 'block' : 'hidden'}>
+          <DialogDescription className={description ? 'text-muted-foreground' : 'sr-only'}>
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div className="overflow-y-auto">{children}</div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
         {!disableFooter && (
-          <DialogFooter className="flex flex-row! justify-end items-center gap-2">
+          <DialogFooter className="flex flex-row! justify-end items-center gap-2 mt-auto">
             <Button className="w-auto" variant={'outline'} onClick={handleClose}>
               {t('button.close')}
             </Button>

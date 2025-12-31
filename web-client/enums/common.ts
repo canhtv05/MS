@@ -36,3 +36,13 @@ export enum Gender {
   FEMALE = 'FEMALE',
   OTHER = 'OTHER',
 }
+
+export enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED = 'RESOURCE_TYPE_UNSPECIFIED',
+  AVATAR = 'AVATAR',
+  COVER = 'COVER',
+  POST = 'POST',
+  COMMENT = 'COMMENT',
+  MESSAGE = 'MESSAGE',
+  RESOURCE_OTHER = 'RESOURCE_OTHER',
+}
