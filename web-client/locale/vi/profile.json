@@ -6,6 +6,10 @@
   "message": "Tin nhắn",
   "follow": "Theo dõi",
   "posts": "Bài viết",
+  "introduce": "Giới thiệu",
+  "friends": "Bạn bè",
+  "pictures": "Ảnh",
+  "more": "Xem thêm",
   "followers": "Người theo dõi",
   "following": "Đang theo dõi",
   "liked": "Đã thích",
@@ -14,6 +18,9 @@
   "no_liked": "Chưa có bài viết nào đã thích",
   "no_saved": "Chưa có bài viết nào đã lưu",
   "edit_profile": "Sửa hồ sơ",
+  "change_avatar_image": "Thay đổi ảnh đại diện",
+  "change_avatar_image_success": "Thay đổi ảnh đại diện thành công",
+  "change_avatar_image_loading": "Đang thay đổi ảnh đại diện",
   "change_cover_image": "Thay đổi ảnh bìa",
   "change_cover_image_success": "Thay đổi ảnh bìa thành công",
   "change_cover_image_loading": "Đang thay đổi ảnh bìa",
@@ -25,5 +32,7 @@
   "no_images_found": "Không tìm thấy ảnh nào",
   "today": "Hôm nay",
   "yesterday": "Hôm qua",
-  "change_cover_image_same": "Bạn đã chọn ảnh bìa giống như hiện tại"
+  "change_cover_image_same": "Bạn đã chọn ảnh bìa giống như hiện tại",
+  "edit_avatar_title": "Cập nhật ảnh đại diện",
+  "edit_avatar_description": "Một bức ảnh rõ nét sẽ giúp mọi người dễ dàng nhận ra bạn. Hỗ trợ định dạng JPG, PNG hoặc GIF"
 }

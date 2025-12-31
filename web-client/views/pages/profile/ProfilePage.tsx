@@ -150,25 +150,25 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
                 disabled={isUploading}
               >
                 <CameraMinimalistic />
-                {t('layout:header.change_cover')}
+                <span className="md:text-sm text-xs">{t('layout:header.change_cover')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={-2}>
               <DropdownMenuArrow />
               <DropdownMenuItem onClick={() => setShowDialogMediaHistory(true)}>
                 <Gallery />
-                {t('profile:choose_cover_image')}
+                <span className="md:text-sm text-xs">{t('profile:choose_cover_image')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={triggerFileInput}>
                 <GallerySend />
-                {t('profile:upload_new_cover')}
+                <span className="md:text-sm text-xs">{t('profile:upload_new_cover')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </div>
-      <div className="px-6 pb-6 dark:bg-gray-800 bg-white rounded-b-lg">
-        <div className="flex items-end gap-5 -mt-16">
+      <div className="md:px-6 px-[10px] md:pb-6 pb-[10px] dark:bg-gray-800 bg-white rounded-b-lg">
+        <div className="flex flex-col lg:flex-row flex-wrap items-center lg:items-end lg:gap-5 gap-0">
           <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
         </div>
         <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
@@ -184,7 +184,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         title={t('profile:choose_image')}
         id="confirm-cover-upload"
         size="lg"
-        disableAccept={!selectedCoverFromHistory}
+        disableAccept={!selectedCoverFromHistory || isUploading}
       >
         <ProfilePageChooseImage
           onSelect={setSelectedCoverFromHistory}

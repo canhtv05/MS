@@ -23,9 +23,13 @@ import {
 } from '@/components/animate-ui/primitives/base/popover';
 import Dialog from '@/components/customs/dialog';
 import Cropper from 'react-easy-crop';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Slider } from '@/components/customs/slider';
 import { getCroppedImg } from '@/utils/common';
+import ModalEditImage from './ModalEditImage';
+import ProfilePageChooseImage from './ProfilePageChooseImage';
+import { useProfileModalStore } from './use-profile-modal';
+import { useProfileMutation } from '@/services/mutations/profile';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -90,88 +94,78 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [sliderZoom, setSliderZoom] = useState(1);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const { isParentDialogOpen, openParentDialog, closeParentDialog } = useProfileModalStore();
+  const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
 
-  const onCropComplete = React.useCallback(
-    async (
-      croppedArea: unknown,
-      croppedAreaPixels: { x: number; y: number; width: number; height: number },
-    ) => {
-      try {
-        const croppedImage = await getCroppedImg(images.goku.src, croppedAreaPixels);
-        setCroppedImage(croppedImage);
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [],
-  );
-
-  const handleSliderChange = React.useCallback((value: number[]) => {
-    const newZoom = value[0];
-    setSliderZoom(newZoom);
-    setZoom(newZoom);
-  }, []);
-
-  const handleCropperZoomChange = React.useCallback((newZoom: number) => {
-    setZoom(newZoom);
-    setSliderZoom(newZoom);
-  }, []);
-
-  const handleRotationChange = React.useCallback((newRotation: number[]) => {
-    setRotation(newRotation[0]);
+  useEffect(() => {
+    return () => {
+      setSelectedCoverFromHistory(null);
+    };
   }, []);
 
   return (
     <>
       {isLoading && !data?.data ? (
-        <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0">
-          <Skeleton className="w-full h-full rounded-full relative z-10" />
+        <div className="flex flex-1 flex-col lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full lg:w-auto">
+          <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0 -mt-16">
+            <Skeleton className="w-full h-full rounded-full relative z-10" />
+          </div>
+          <div className="flex flex-col mb-2 gap-1 items-center lg:items-start justify-end w-full lg:w-auto">
+            <Skeleton className="h-7 w-[130px]" />
+            <Skeleton className="h-4 w-[100px]" />
+          </div>
         </div>
       ) : (
-        <div className="relative">
-          <Popover>
-            <PopoverTrigger>
-              <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
-                <AvatarImage
-                  width={128}
-                  height={128}
-                  className="rounded-full cursor-pointer"
-                  src={images.avt1.src}
-                  alt={data?.data?.fullname}
-                />
-                <AvatarFallback className="text-2xl font-bold">
-                  {data?.data?.fullname?.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-            </PopoverTrigger>
-            <PopoverPortal>
-              <PopoverPositioner sideOffset={8}>
-                <PopoverPopup className="bg-background p-2 rounded-md shadow-lg border">
-                  <PopoverArrow />
-                  <div className="p-2">
-                    <p>Popover content</p>
-                  </div>
-                </PopoverPopup>
-              </PopoverPositioner>
-            </PopoverPortal>
-          </Popover>
-          {user?.auth?.username === data?.data?.userId && !isLoading && (
-            <IconButton
-              className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
-              variant={'outline'}
-            >
-              <CameraMinimalistic />
-            </IconButton>
-          )}
+        <div className="flex flex-col flex-1 lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full min-w-0">
+          <div className="relative -mt-16">
+            <Popover>
+              <PopoverTrigger>
+                <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
+                  <AvatarImage
+                    width={128}
+                    height={128}
+                    className="rounded-full cursor-pointer"
+                    src={user?.profile?.avatarUrl || images.avt1.src}
+                    alt={data?.data?.fullname}
+                  />
+                  <AvatarFallback className="text-2xl font-bold">
+                    {data?.data?.fullname?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              </PopoverTrigger>
+              <PopoverPortal>
+                <PopoverPositioner sideOffset={8}>
+                  <PopoverPopup className="bg-background p-2 rounded-md shadow-lg border">
+                    <PopoverArrow />
+                    <div className="p-2">
+                      <p>Popover content</p>
+                    </div>
+                  </PopoverPopup>
+                </PopoverPositioner>
+              </PopoverPortal>
+            </Popover>
+            {user?.auth?.username === data?.data?.userId && (
+              <IconButton
+                className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
+                variant={'outline'}
+                onClick={() => openParentDialog()}
+              >
+                <CameraMinimalistic />
+              </IconButton>
+            )}
+          </div>
+          <div className="flex flex-col items-center lg:items-start justify-end gap-1 mb-2 flex-1 min-w-0 w-full lg:w-auto text-center lg:text-left">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white leading-7 wrap-break-word break-all w-full">
+              {data?.data?.fullname}
+            </h2>
+            <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center justify-center lg:justify-start gap-1.5 w-full">
+              <p className="break-all block max-w-full">@{data?.data?.userId}</p>
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="flex items-center gap-2 ml-auto mb-2">
+      <div className="flex items-center gap-2 lg:mb-2 mb-0 lg:ml-auto w-full lg:w-auto justify-center lg:justify-end mt-0 lg:mt-4 shrink-0">
         {isLoading && !data?.data ? (
           <>
             <div className="md:flex hidden items-center justify-center gap-2">
@@ -194,113 +188,22 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         )}
       </div>
       <Dialog
-        open={false}
-        onClose={() => {}}
-        onAccept={() => {}}
-        title={t?.('profile:choose_image') || ''}
-        id="confirm-cover-upload"
+        open={isParentDialogOpen}
+        onClose={closeParentDialog}
+        title={t?.('profile:choose_image') || 'Choose Image'}
+        id="edit-avatar-upload-parent"
         size="lg"
-        disableAccept={true}
-        disableFooter={false}
+        disableAccept={!selectedCoverFromHistory}
+        onAccept={() => {
+          if (!selectedCoverFromHistory) return;
+          useProfileModalStore.getState().openChildDialog();
+        }}
       >
-        <div className="flex flex-col gap-2">
-          <div className="relative w-full md:h-[400px] h-[300px]">
-            <Cropper
-              image={images.goku.src}
-              crop={crop}
-              zoom={zoom}
-              rotation={rotation}
-              aspect={1 / 1}
-              cropShape="round"
-              showGrid={true}
-              onCropChange={setCrop}
-              onRotationChange={setRotation}
-              onCropComplete={onCropComplete}
-              onZoomChange={handleCropperZoomChange}
-            />
-          </div>
-          <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
-            <span>Zoom</span>
-            <div className="flex items-center gap-2 w-full">
-              <Button
-                onClick={() => {
-                  if (zoom === 1) return;
-                  setZoom(zoom - 0.1);
-                  setSliderZoom(zoom - 0.1);
-                }}
-                size="icon"
-                variant="outline"
-                className="rounded-full"
-                disabled={zoom === 1}
-              >
-                <span className="text-xl">-</span>
-              </Button>
-              <Slider
-                value={[sliderZoom]}
-                min={1}
-                max={3}
-                step={0.1}
-                onValueChange={handleSliderChange}
-              />
-              <Button
-                onClick={() => {
-                  if (zoom === 3) return;
-                  setZoom(zoom + 0.1);
-                  setSliderZoom(zoom + 0.1);
-                }}
-                size="icon"
-                variant="outline"
-                className="rounded-full"
-                disabled={zoom === 3}
-              >
-                <span className="text-xl">+</span>
-              </Button>
-            </div>
-          </div>
-          <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
-            <span>Rotate</span>
-            <div className="flex items-center gap-2 w-full">
-              <Button
-                onClick={() => {
-                  if (rotation === 0) return;
-                  setRotation(rotation - 1);
-                }}
-                size="icon"
-                variant="outline"
-                className="rounded-full"
-                disabled={rotation === 0}
-              >
-                <span className="text-xl">-</span>
-              </Button>
-              <Slider
-                value={[rotation]}
-                min={0}
-                max={360}
-                step={1}
-                onValueChange={handleRotationChange}
-              />
-              <Button
-                onClick={() => {
-                  if (rotation === 360) return;
-                  setRotation(rotation + 1);
-                }}
-                size="icon"
-                variant="outline"
-                className="rounded-full"
-                disabled={rotation === 360}
-              >
-                <span className="text-xl">+</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-        {/* {croppedImage && (
-          <div className="flex justify-center mt-4">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-primary shadow-sm">
-              <img src={croppedImage} alt="Cropped" className="w-full h-full object-cover" />
-            </div>
-          </div>
-        )} */}
+        <ProfilePageChooseImage
+          onSelect={setSelectedCoverFromHistory}
+          selectedUrl={selectedCoverFromHistory}
+          isAvatar
+        />
       </Dialog>
     </>
   );

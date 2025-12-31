@@ -1,10 +1,27 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Heart, Bookmark, Library } from '@solar-icons/react-perf/Bold';
+import {
+  Heart,
+  Bookmark,
+  Library,
+  ClipboardText,
+  UsersGroupTwoRounded,
+} from '@solar-icons/react-perf/BoldDuotone';
+import useViewport from '@/hooks/use-view-port';
+import { Viewport } from '@/enums/common';
+import { AltArrowDown } from '@solar-icons/react-perf/Outline';
+import {
+  DropdownMenu,
+  DropdownMenuArrow,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/animate-ui/components/radix/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 interface ITabs {
   id: string;
@@ -13,9 +30,18 @@ interface ITabs {
 }
 
 const tabs: ITabs[] = [
-  { id: 'posts', labelKey: 'posts', icon: <Library size={16} /> },
-  { id: 'liked', labelKey: 'liked', icon: <Heart size={16} /> },
-  { id: 'saved', labelKey: 'saved', icon: <Bookmark size={16} /> },
+  { id: 'posts', labelKey: 'posts', icon: <Bookmark className="text-current size-[16px]" /> },
+  {
+    id: 'introduce',
+    labelKey: 'introduce',
+    icon: <ClipboardText className="text-current size-[16px]" />,
+  },
+  {
+    id: 'friends',
+    labelKey: 'friends',
+    icon: <UsersGroupTwoRounded className="text-current size-[16px]" />,
+  },
+  { id: 'pictures', labelKey: 'pictures', icon: <Library className="text-current size-[16px]" /> },
 ];
 
 // Fake data for posts
@@ -133,6 +159,15 @@ const ProfilePageTabs = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const { width } = useViewport();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const handleSetMounted = () => {
+      setMounted(true);
+    };
+    handleSetMounted();
+  }, []);
 
   const tabParam = searchParams.get('tab');
   const activeTab =
@@ -147,10 +182,29 @@ const ProfilePageTabs = () => {
     router.push(newUrl, { scroll: false });
   };
 
-  const indicatorIndex = hoverIndex !== null ? hoverIndex : activeTab;
+  const activeTabId = tabs[activeTab].id;
+
+  const maxVisible = !mounted
+    ? tabs.length
+    : width < Viewport.MD
+      ? 2
+      : width < Viewport.LG
+        ? 3
+        : tabs.length;
+
+  const visibleTabs = tabs.slice(0, maxVisible);
+  const hiddenTabs = tabs.slice(maxVisible);
+  const showDropdown = hiddenTabs.length > 0;
+  const renderItemsCount = visibleTabs.length + (showDropdown ? 1 : 0);
+
+  const isHiddenActive = hiddenTabs.some(tab => tab.id === activeTabId);
+  const activeRenderIndex = isHiddenActive ? visibleTabs.length : activeTab;
+
+  const indicatorIndex = hoverIndex !== null ? hoverIndex : activeRenderIndex;
 
   const getCurrentTabContent = () => {
     const currentTab = tabs[activeTab];
+    if (!currentTab) return fakePosts;
     switch (currentTab.id) {
       case 'posts':
         return fakePosts;
@@ -158,6 +212,12 @@ const ProfilePageTabs = () => {
         return fakeLiked;
       case 'saved':
         return [];
+      case 'pictures':
+        return fakePosts; // Mock content
+      case 'friends':
+        return []; // Mock
+      case 'introduce':
+        return []; // Mock
       default:
         return fakePosts;
     }
@@ -165,13 +225,8 @@ const ProfilePageTabs = () => {
 
   const getEmptyMessage = () => {
     const currentTab = tabs[activeTab];
+    if (!currentTab) return t('no_posts');
     switch (currentTab.id) {
-      case 'posts':
-        return t('no_posts');
-      case 'liked':
-        return t('no_liked');
-      case 'saved':
-        return t('no_saved');
       default:
         return t('no_posts');
     }
@@ -179,16 +234,21 @@ const ProfilePageTabs = () => {
 
   const content = getCurrentTabContent();
 
+  const handleHiddenTabSelect = (tabId: string) => {
+    const newUrl = `${pathname}?tab=${tabId}`;
+    router.push(newUrl, { scroll: false });
+  };
+
   return (
     <div className="relative mt-2 w-full">
       <div className="relative">
         <div className="absolute bottom-0 left-0 right-0 h-px bg-border w-full" />
-        <div className="relative max-w-lg">
+        <div className="relative">
           <div className="flex">
-            {tabs.map((tab, index) => (
+            {visibleTabs.map((tab, index) => (
               <button
                 key={tab.id}
-                className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium transition-colors duration-200 cursor-pointer
+                className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium transition-colors duration-300 cursor-pointer
                   ${
                     activeTab === index
                       ? 'text-primary'
@@ -200,22 +260,65 @@ const ProfilePageTabs = () => {
               >
                 <div className="flex gap-2 items-center justify-center">
                   {tab.icon}
-                  {t(tab.labelKey)}
+                  <span className="truncate">{t(tab.labelKey)}</span>
                 </div>
               </button>
             ))}
+
+            {showDropdown && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium transition-colors duration-300 cursor-pointer outline-none
+                      ${
+                        isHiddenActive
+                          ? 'text-primary'
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    onMouseEnter={() => setHoverIndex(visibleTabs.length)}
+                    onMouseLeave={() => setHoverIndex(null)}
+                  >
+                    <div className="flex gap-1 items-center justify-center">
+                      <span className="truncate">{t('more') || 'More'}</span>
+                      <AltArrowDown size={14} className="mt-[2px]" />
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="group">
+                  <DropdownMenuArrow />
+                  {hiddenTabs.map(tab => (
+                    <DropdownMenuItem
+                      key={tab.id}
+                      onClick={() => handleHiddenTabSelect(tab.id)}
+                      className={cn(
+                        'cursor-pointer outline-none focus:bg-muted/50 transition-colors duration-200',
+                        'text-muted-foreground focus:text-primary!',
+                        activeTabId === tab.id
+                          ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'
+                          : '',
+                      )}
+                    >
+                      <div className="flex gap-2 items-center">
+                        {tab.icon}
+                        {t(tab.labelKey)}
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
           <div
             className="absolute bottom-0 h-[2px] bg-primary transition-all duration-300 ease-out"
             style={{
-              width: `${100 / tabs.length}%`,
+              width: `${100 / renderItemsCount}%`,
               transform: `translateX(${indicatorIndex * 100}%)`,
             }}
           />
         </div>
       </div>
 
-      <div className="mt-6">
+      {/* <div className="md:mt-6 mt-[10px] ">
         {content.length > 0 ? (
           <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
             {content.map(post => (
@@ -230,7 +333,7 @@ const ProfilePageTabs = () => {
             <p className="text-lg font-medium">{getEmptyMessage()}</p>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

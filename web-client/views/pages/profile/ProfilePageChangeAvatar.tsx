@@ -4,19 +4,26 @@ import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { AddCircle, Pen } from '@solar-icons/react-perf/category/style/Bold';
 import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
+import ModalEditImage from './ModalEditImage';
+import { useAuthStore } from '@/stores/auth';
+import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
+import { useProfileModalStore } from './use-profile-modal';
 
-const ProfilePageChangeAvatar = () => {
+interface IProfilePageChangeAvatar {
+  selectHistoryAvatarUrl?: string | null;
+}
+
+const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeAvatar) => {
   const { t } = useTranslation('profile');
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
-  const [pendingFile, setPendingFile] = useState<File | null>(null);
-  const [showConfirmChangeCoverUrl, setShowConfirmChangeCoverUrl] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { user } = useAuthStore();
+  const [openModalEditImage, setOpenModalEditImage] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/avif'];
-      if (!allowedTypes.includes(selectedFile.type)) {
+      if (!ALLOWED_IMAGE_TYPES.includes(selectedFile.type)) {
         event.target.value = '';
         return;
       }
@@ -29,8 +36,7 @@ const ProfilePageChangeAvatar = () => {
 
       const previewUrl = URL.createObjectURL(selectedFile);
       setCoverImagePreview(previewUrl);
-      setPendingFile(selectedFile);
-      setShowConfirmChangeCoverUrl(true);
+      setOpenModalEditImage(true);
     }
     event.target.value = '';
   };
@@ -40,18 +46,41 @@ const ProfilePageChangeAvatar = () => {
   };
 
   return (
-    <div className="flex items-center justify-between gap-2">
-      <input type="file" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
-      <div className="flex items-center gap-2 w-full">
-        <Button className="w-full bg-primary/40" variant={'default'} onClick={triggerFileInput}>
-          <AddCircle />
-          {t('upload_new_avatar')}
-        </Button>
+    <>
+      <div className="flex items-center justify-between gap-2 p-1">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+          ref={fileInputRef}
+        />
+        <div className="flex items-center gap-2 w-full">
+          <Button className="w-full bg-primary/40" variant={'default'} onClick={triggerFileInput}>
+            <AddCircle />
+            {t('upload_new_avatar')}
+          </Button>
+        </div>
+        <IconButton
+          variant={'outline'}
+          disabled={!user?.profile?.avatarUrl}
+          onClick={() => {
+            if (!user?.profile?.avatarUrl) return;
+            setOpenModalEditImage(true);
+          }}
+        >
+          <Pen />
+        </IconButton>
       </div>
-      <IconButton variant={'outline'}>
-        <Pen />
-      </IconButton>
-    </div>
+      <ModalEditImage
+        open={openModalEditImage || useProfileModalStore.getState().isChildDialogOpen}
+        onClose={() => {
+          setOpenModalEditImage(false);
+          useProfileModalStore.getState().closeChildDialog();
+        }}
+        avatarPreview={selectHistoryAvatarUrl || coverImagePreview}
+      />
+    </>
   );
 };
 

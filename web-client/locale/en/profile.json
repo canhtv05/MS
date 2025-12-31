@@ -6,6 +6,10 @@
   "message": "Message",
   "follow": "Follow",
   "posts": "Posts",
+  "introduce": "Introduce",
+  "friends": "Friends",
+  "pictures": "Pictures",
+  "more": "More",
   "followers": "Followers",
   "following": "Following",
   "liked": "Liked",
@@ -14,6 +18,9 @@
   "no_liked": "No liked posts yet",
   "no_saved": "No saved posts yet",
   "edit_profile": "Edit profile",
+  "change_avatar_image": "Change avatar image",
+  "change_avatar_image_success": "Change avatar image success",
+  "change_avatar_image_loading": "Change avatar image loading",
   "change_cover_image": "Change cover image",
   "change_cover_image_success": "Change cover image success",
   "change_cover_image_loading": "Change cover image loading",
@@ -25,5 +32,7 @@
   "no_images_found": "No images found",
   "today": "Today",
   "yesterday": "Yesterday",
-  "change_cover_image_same": "You have selected the same cover image"
+  "change_cover_image_same": "You have selected the same cover image",
+  "edit_avatar_title": "Update Profile Picture",
+  "edit_avatar_description": "A clear, high-quality photo helps people recognize you easily. Supports JPG, PNG or GIF"
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { IMediaHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
-import { IResponseObject, ISearchResponse } from '@/types/common';
+import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
@@ -36,18 +36,25 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
 
 export const useMyMediaHistoryInfiniteQuery = (
   enabled: boolean = true,
-  pageSize: number = 20,
   userID?: string,
+  searchRequest?: ISearchRequest,
 ) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'media-history-infinite', userID],
+    queryKey: ['profile', 'media-history-infinite', userID, { ...searchRequest }],
     queryFn: async ({
       pageParam = 0,
     }): Promise<IResponseObject<ISearchResponse<IMediaHistoryGroupDTO[]>>> => {
-      const res = await api.post(API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY, {
-        page: pageParam,
-        size: pageSize,
-      });
+      const res = await api.post(
+        API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY,
+        {},
+        {
+          params: {
+            page: pageParam,
+            size: 20,
+            ...searchRequest,
+          },
+        },
+      );
       return res.data;
     },
     initialPageParam: 0,
@@ -67,10 +74,10 @@ export const useMyMediaHistoryInfiniteQuery = (
   });
 };
 
-export const useUserProfileQuery = (username: string, enabled: boolean = true) => {
-  let us = username;
-  if (username.startsWith('@')) {
-    us = username.slice(1);
+export const useUserProfileQuery = (username?: string, enabled: boolean = true) => {
+  let us = username || '';
+  if (us.startsWith('@')) {
+    us = us.slice(1);
   }
 
   const query = useQuery({

@@ -99,17 +99,21 @@ function DialogPanel<TTag extends React.ElementType = typeof motion.div>(
         initial={{
           opacity: 0,
           scale: 0.95,
-          transition,
+          x: '-50%',
+          y: '-50%',
         }}
         animate={{
           opacity: 1,
           scale: 1,
+          x: '-50%',
+          y: '-50%',
           transition,
         }}
         exit={{
           opacity: 0,
           scale: 0.95,
-          transition,
+          x: '-50%',
+          y: '-50%',
         }}
         {...rest}
       >
