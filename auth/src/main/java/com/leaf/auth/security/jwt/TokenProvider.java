@@ -23,17 +23,15 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.security.SecurityException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.security.Key;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +39,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,7 @@ public class TokenProvider {
     private static final String ROLES_KEY = "role";
     private static final String USER_GLOBAL_KEY = "isGlobal";
     private static final String INVALID_JWT_TOKEN = "Invalid JWT token.";
-    private final Key key;
+    private final SecretKey key;
     private final JwtParser jwtParser;
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisService redisService;
@@ -83,7 +82,7 @@ public class TokenProvider {
         String secret = cookieUtil.getProperties().getSecurity().getBase64Secret();
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
-        jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+        jwtParser = Jwts.parser().verifyWith(key).build();
         this.tokenValidityDuration = cookieUtil.getProperties().getSecurity().getValidDurationInSeconds();
         this.refreshTokenValidityDuration = cookieUtil.getProperties().getSecurity().getRefreshDurationInSeconds();
     }
@@ -165,7 +164,7 @@ public class TokenProvider {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
 
-        Claims claims = jwtParser.parseClaimsJws(refreshToken).getBody();
+        Claims claims = jwtParser.parseSignedClaims(refreshToken).getPayload();
         String username = claims.getSubject();
         User user = userRepository
             .findByUsername(username)
@@ -214,7 +213,7 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = jwtParser.parseClaimsJws(token).getBody();
+        Claims claims = jwtParser.parseSignedClaims(token).getPayload();
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(
             claims.get(AUTHORITIES_KEY).toString().split(",")
         )
@@ -234,7 +233,7 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Claims claims = jwtParser.parseClaimsJws(authToken).getBody();
+            Claims claims = jwtParser.parseSignedClaims(authToken).getPayload();
             String username = claims.getSubject();
             String channel = claims.get(CHANNEL_KEY, String.class);
 
@@ -247,7 +246,7 @@ public class TokenProvider {
             String keyToken = redisService.getKeyToken(username, channel);
             String tokenExisting = redisService.get(keyToken, String.class);
             return Objects.equals(tokenExisting, AESUtils.hexString(authToken));
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException e) {
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException e) {
             log.trace(INVALID_JWT_TOKEN, e);
         } catch (IllegalArgumentException e) {
             log.error("Token validation error {}", e.getMessage());
@@ -293,15 +292,15 @@ public class TokenProvider {
         String sessionId = session.getId();
 
         return Jwts.builder()
-            .setId(sessionId)
-            .setSubject(authentication.getName())
+            .id(sessionId)
+            .subject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
             .claim(ROLES_KEY, String.join(",", userDetails.getRole()))
             .claim(USER_GLOBAL_KEY, userDetails.isGlobal())
             .claim(CHANNEL_KEY, channel)
-            .setIssuedAt(new Date(now))
-            .setExpiration(validity)
-            .signWith(key, SignatureAlgorithm.HS512)
+            .issuedAt(new Date(now))
+            .expiration(validity)
+            .signWith(key, Jwts.SIG.HS512)
             .compact();
     }
 

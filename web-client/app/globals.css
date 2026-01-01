@@ -251,6 +251,17 @@
   display: none !important;
 }
 
+[data-rmiz-modal] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+[data-rmiz-modal],
+[data-rmiz-modal] *:not(img):not(button):not(svg):not(path) {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
 [data-rmiz-modal-overlay='visible'] {
   @apply bg-background/70;
   backdrop-filter: blur(20px);
@@ -258,18 +269,18 @@
 }
 
 [data-rmiz-modal-content] {
-  @apply bg-transparent;
+  @apply bg-transparent!;
+  position: relative;
+  overflow: hidden;
 }
 
 [data-rmiz-modal-content]::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: inherit;
-  background-size: cover;
-  background-position: center;
-  filter: blur(30px) brightness(0.5);
-  transform: scale(1.1);
+  inset: -20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
   z-index: -1;
 }
 

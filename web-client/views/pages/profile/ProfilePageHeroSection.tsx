@@ -12,20 +12,26 @@ import { IProfilePageProps } from './ProfilePage';
 import { useAuthStore } from '@/stores/auth';
 import { Settings } from '@solar-icons/react-perf/Bold';
 import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
-import { CameraMinimalistic } from '@solar-icons/react-perf/category/style/BoldDuotone';
 import {
-  Popover,
-  PopoverArrow,
-  PopoverPopup,
-  PopoverPortal,
-  PopoverPositioner,
-  PopoverTrigger,
-} from '@/components/animate-ui/primitives/base/popover';
+  CameraMinimalistic,
+  Gallery,
+  UserCircle,
+} from '@solar-icons/react-perf/category/style/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProfilePageChooseImage from './ProfilePageChooseImage';
 import { useProfileModalStore } from './use-profile-modal';
 import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
+import { Controlled as ControlledZoom } from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
+import {
+  DropdownMenu,
+  DropdownMenuArrow,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/animate-ui/components/radix/dropdown-menu';
+import Image from 'next/image';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -90,8 +96,10 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
-  const { isParentDialogOpen, openParentDialog, closeParentDialog } = useProfileModalStore();
+  const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
+    useProfileModalStore();
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
+  const [isClickViewAvatar, setIsClickViewAvatar] = useState(false);
 
   useEffect(() => {
     if (!isParentDialogOpen) {
@@ -120,33 +128,62 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         </div>
       ) : (
         <div className="flex flex-col flex-1 lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full min-w-0">
-          <div className="relative -mt-16">
-            <Popover>
-              <PopoverTrigger>
-                <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
-                  <AvatarImage
-                    width={128}
-                    height={128}
-                    className="rounded-full cursor-pointer"
-                    src={user?.profile?.avatarUrl || images.avt1.src}
-                    alt={data?.data?.fullname}
-                  />
-                  <AvatarFallback className="text-2xl font-bold">
-                    {data?.data?.fullname?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </PopoverTrigger>
-              <PopoverPortal>
-                <PopoverPositioner sideOffset={8}>
-                  <PopoverPopup className="bg-background p-2 rounded-md shadow-lg border">
-                    <PopoverArrow />
-                    <div className="p-2">
-                      <p>Popover content</p>
-                    </div>
-                  </PopoverPopup>
-                </PopoverPositioner>
-              </PopoverPortal>
-            </Popover>
+          <div className="relative -mt-16 shrink-0 z-10">
+            <ControlledZoom
+              isZoomed={isClickViewAvatar}
+              onZoomChange={setIsClickViewAvatar}
+              classDialog="!z-[9999]"
+              zoomMargin={20}
+              zoomImg={{
+                src: user?.profile?.avatarUrl || images.avt1.src,
+                alt: 'Avatar',
+                loading: 'eager',
+              }}
+            >
+              <Image
+                src={user?.profile?.avatarUrl || images.avt1.src}
+                alt="bg"
+                fill
+                className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
+                loading="eager"
+                quality={100}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+                unoptimized
+              />
+            </ControlledZoom>
+
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="cursor-pointer focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full"
+                >
+                  <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
+                    <AvatarImage
+                      width={128}
+                      height={128}
+                      className="rounded-full cursor-pointer"
+                      src={user?.profile?.avatarUrl || images.avt1.src}
+                      alt={data?.data?.fullname}
+                    />
+                    <AvatarFallback className="text-2xl font-bold">
+                      {data?.data?.fullname?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" side="bottom" sideOffset={-2}>
+                <DropdownMenuArrow />
+                <DropdownMenuItem onClick={() => setIsClickViewAvatar(true)}>
+                  <UserCircle />
+                  <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={openParentDialog}>
+                  <Gallery />
+                  <span className="md:text-sm text-xs">{t?.('profile:choose_avatar')}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             {user?.auth?.username === data?.data?.userId && (
               <IconButton
                 className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
@@ -165,31 +202,31 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
               <p className="break-all block max-w-full">@{data?.data?.userId}</p>
             </div>
           </div>
+          <div className="flex items-center gap-2 lg:mb-2 mb-0 lg:ml-auto w-full lg:w-auto justify-center lg:justify-end mt-0 lg:mt-4 shrink-0">
+            {isLoading && !data?.data ? (
+              <>
+                <div className="md:flex hidden items-center justify-center gap-2">
+                  <Skeleton className="h-10 w-[110px] rounded-md" />
+                  <Skeleton className="h-10 w-[100px] rounded-md" />
+                </div>
+                <div className="md:hidden flex items-center justify-center gap-2">
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                  <Skeleton className="h-9 w-9 rounded-md" />
+                </div>
+              </>
+            ) : (
+              <>
+                {user?.auth?.username === data?.data?.userId ? (
+                  <MeProfilePageHeroSectionButton t={t} />
+                ) : (
+                  <ProfilePageHeroSectionButton t={t} />
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
 
-      <div className="flex items-center gap-2 lg:mb-2 mb-0 lg:ml-auto w-full lg:w-auto justify-center lg:justify-end mt-0 lg:mt-4 shrink-0">
-        {isLoading && !data?.data ? (
-          <>
-            <div className="md:flex hidden items-center justify-center gap-2">
-              <Skeleton className="h-10 w-[110px] rounded-md" />
-              <Skeleton className="h-10 w-[100px] rounded-md" />
-            </div>
-            <div className="md:hidden flex items-center justify-center gap-2">
-              <Skeleton className="h-9 w-9 rounded-md" />
-              <Skeleton className="h-9 w-9 rounded-md" />
-            </div>
-          </>
-        ) : (
-          <>
-            {user?.auth?.username === data?.data?.userId ? (
-              <MeProfilePageHeroSectionButton t={t} />
-            ) : (
-              <ProfilePageHeroSectionButton t={t} />
-            )}
-          </>
-        )}
-      </div>
       <Dialog
         open={isParentDialogOpen}
         onClose={closeParentDialog}
@@ -202,6 +239,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
           useProfileModalStore.getState().openChildDialog();
         }}
         titleNode={<ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedCoverFromHistory} />}
+        isPending={isPending}
       >
         <ProfilePageChooseImage
           onSelect={setSelectedCoverFromHistory}

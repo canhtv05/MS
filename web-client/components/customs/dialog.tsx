@@ -29,6 +29,7 @@ interface IDialog<T extends FieldValues = FieldValues> {
   disableAccept?: boolean;
   form?: UseFormReturn<T>;
   disableFooter?: boolean;
+  isPending?: boolean;
 }
 
 const sizeClasses: Record<DialogSize, string> = {
@@ -52,16 +53,18 @@ const Dialog = <T extends FieldValues = FieldValues>({
   form,
   disableFooter = false,
   titleNode,
+  isPending = false,
 }: IDialog<T>) => {
   const { t } = useTranslation();
 
   const handleClose = useCallback(() => {
+    if (isPending) return;
     onClose?.();
-  }, [onClose]);
+  }, [onClose, isPending]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !isPending) {
         handleClose();
       }
     };
@@ -71,9 +74,9 @@ const Dialog = <T extends FieldValues = FieldValues>({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleClose]);
+  }, [handleClose, isPending]);
 
-  const isAcceptDisabled = form ? !form.formState.isValid : disableAccept;
+  const isAcceptDisabled = isPending || (form ? !form.formState.isValid : disableAccept);
 
   return (
     <DialogAnimate open={open} onClose={handleClose}>
@@ -90,7 +93,12 @@ const Dialog = <T extends FieldValues = FieldValues>({
         <div className="flex-1 overflow-y-auto">{children}</div>
         {!disableFooter && (
           <DialogFooter className="flex flex-row! justify-end items-center gap-2 mt-auto">
-            <Button className="w-auto" variant={'outline'} onClick={handleClose}>
+            <Button
+              className="w-auto"
+              variant={'outline'}
+              onClick={handleClose}
+              disabled={isPending}
+            >
               {t('button.close')}
             </Button>
             <Button

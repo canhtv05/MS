@@ -168,9 +168,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         )}
       </div>
       <div className="md:px-6 px-[10px] md:pb-6 pb-[10px] dark:bg-gray-800 bg-white rounded-b-lg">
-        <div className="flex flex-col lg:flex-row flex-wrap items-center lg:items-end lg:gap-5 gap-0">
-          <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
-        </div>
+        <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
         <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
         <ProfilePageTabs />
       </div>

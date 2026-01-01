@@ -33,6 +33,12 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   const { refetch } = useUserProfileQuery(user?.auth?.username);
   const avatarUrl = user?.profile?.avatarUrl;
   const closeParentDialog = useProfileModalStore(state => state.closeParentDialog);
+  const setIsPending = useProfileModalStore(state => state.setIsPending);
+  const isPending = changeAvatarImageMutation.isPending;
+
+  useEffect(() => {
+    setIsPending(isPending);
+  }, [isPending, setIsPending]);
 
   useEffect(() => {
     return () => {
@@ -114,6 +120,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
         id="edit-avatar-upload"
         size="md"
         disableAccept={false}
+        isPending={changeAvatarImageMutation.isPending}
       >
         <div className="flex flex-col gap-2">
           <div className="relative w-full h-[300px]">
@@ -216,6 +223,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
         size="sm"
         disableAccept={false}
         description={t?.('profile:edit_avatar_description') || ''}
+        isPending={changeAvatarImageMutation.isPending}
       >
         {croppedImage && (
           <div className="flex justify-center mt-4">
