@@ -1,0 +1,146 @@
+version: 2
+updates:
+  # ========================================
+  # MAVEN - Backend Microservices
+  # ========================================
+
+  # Auth Service
+  - package-ecosystem: 'maven'
+    directory: '/auth'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # Profile Service
+  - package-ecosystem: 'maven'
+    directory: '/profile'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # File Service
+  - package-ecosystem: 'maven'
+    directory: '/file'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # Notification Service
+  - package-ecosystem: 'maven'
+    directory: '/notification'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # GraphQL BFF
+  - package-ecosystem: 'maven'
+    directory: '/graphql-bff'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # API Gateway
+  - package-ecosystem: 'maven'
+    directory: '/gateway'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # Discovery Server (Eureka)
+  - package-ecosystem: 'maven'
+    directory: '/discovery-server'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # Common Module
+  - package-ecosystem: 'maven'
+    directory: '/common'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # Framework Module
+  - package-ecosystem: 'maven'
+    directory: '/framework'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'java'
+
+  # ========================================
+  # NPM - Frontend & Root
+  # ========================================
+
+  # Root package (linting, formatting tools)
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'devtools'
+
+  # Web Client (Next.js Frontend)
+  - package-ecosystem: 'npm'
+    directory: '/web-client'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 5
+    labels:
+      - 'dependencies'
+      - 'frontend'
+      - 'javascript'
+
+  # ========================================
+  # DOCKER - Container Images
+  # ========================================
+
+  - package-ecosystem: 'docker'
+    directory: '/.devcontainer'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'docker'
+
+  # ========================================
+  # GITHUB ACTIONS
+  # ========================================
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 3
+    labels:
+      - 'dependencies'
+      - 'ci'
