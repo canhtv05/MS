@@ -6,14 +6,19 @@ on:
   push:
     branches:
       - main
+    path-ignore:
+      - '.github/dependabot.yml'
   pull_request:
-    branches: 
+    branches:
       - main
-    types: 
-      - merged
-  
+    types:
+      - closed
+
 jobs:
   Deploy-Production:
+    if: |
+      github.event_name == 'push' && github.actor != 'dependabot[bot]' ||
+      github.event.pull_request.merged == true && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,4 +33,4 @@ jobs:
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} --archive=tgz
