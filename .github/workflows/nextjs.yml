@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-    path-ignore:
+    paths-ignore:
       - '.github/dependabot.yml'
   pull_request:
     branches:
@@ -20,6 +20,9 @@ jobs:
       github.event_name == 'push' && github.actor != 'dependabot[bot]' ||
       github.event.pull_request.merged == true && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://web-client-azure.vercel.app/
     defaults:
       run:
         # chạy trên fplder web-client
