@@ -251,6 +251,10 @@
   display: none !important;
 }
 
+[data-slot='dialog-close'] {
+  display: none !important;
+}
+
 [data-rmiz-modal] {
   background: transparent !important;
   background-color: transparent !important;
@@ -296,7 +300,6 @@
   @apply cursor-pointer;
 }
 
-/* Keep original image visible when zoom is open */
 [data-rmiz-content] img,
 [data-rmiz-wrap='visible'] img {
   visibility: visible !important;

@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { ReactNode, useCallback, useEffect } from 'react';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
+import { XIcon } from '../animate-ui/icons';
+import { IconButton } from '../animate-ui/components/buttons/icon';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -30,6 +32,7 @@ interface IDialog<T extends FieldValues = FieldValues> {
   form?: UseFormReturn<T>;
   disableFooter?: boolean;
   isPending?: boolean;
+  hasBorder?: boolean;
 }
 
 const sizeClasses: Record<DialogSize, string> = {
@@ -54,6 +57,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
   disableFooter = false,
   titleNode,
   isPending = false,
+  hasBorder = false,
 }: IDialog<T>) => {
   const { t } = useTranslation();
 
@@ -80,19 +84,39 @@ const Dialog = <T extends FieldValues = FieldValues>({
 
   return (
     <DialogAnimate open={open} onClose={handleClose}>
-      <DialogPanel className={cn(sizeClasses[size], 'flex flex-col')}>
+      <DialogPanel className={cn(sizeClasses[size], hasBorder && 'p-0 gap-5', 'flex flex-col')}>
         <DialogHeader>
-          <DialogTitle className="flex items-start justify-center w-full flex-col gap-1">
-            {title}
+          <DialogTitle
+            className={cn(
+              'flex items-start justify-center w-full flex-col gap-1',
+              hasBorder ? 'border-b p-5' : '',
+            )}
+          >
+            <div className="relative w-full flex items-center justify-between">
+              <span className="font-semibold text-center flex-1">{title}</span>
+              <IconButton
+                disabled={isPending}
+                className="rounded-full absolute! right-0"
+                variant="ghost"
+                onClick={handleClose}
+              >
+                <XIcon />
+              </IconButton>
+            </div>
             {titleNode}
           </DialogTitle>
           <DialogDescription className={description ? 'text-muted-foreground' : 'sr-only'}>
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div className="flex-1 overflow-y-auto">{children}</div>
+        <div className={cn('flex-1 overflow-y-auto', hasBorder && 'px-5')}>{children}</div>
         {!disableFooter && (
-          <DialogFooter className="flex flex-row! justify-end items-center gap-2 mt-auto">
+          <DialogFooter
+            className={cn(
+              'flex flex-row! justify-end items-center gap-2 mt-auto',
+              hasBorder && 'px-5 pb-5',
+            )}
+          >
             <Button
               className="w-auto"
               variant={'outline'}
