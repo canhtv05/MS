@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>org.liquibase.ext</groupId>
 			<artifactId>liquibase-hibernate6</artifactId>
-			<version>4.28.0</version>
+			<version>5.0.1</version>
 		</dependency>
 
 		<!-- Validation -->
