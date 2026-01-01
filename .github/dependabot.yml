@@ -4,11 +4,18 @@ updates:
   # MAVEN - Backend Microservices
   # ========================================
   - package-ecosystem: 'maven'
-    directory: '/' # Quét toàn bộ repo để tìm pom.xml trong các folder con
+    directory: '/'
     schedule:
       interval: 'weekly'
     open-pull-requests-limit: 10
-    # GOM NHÓM: Tất cả update Java/Maven sẽ vào 1 PR duy nhất
+
+    # CHẶN NÂNG CẤP LÊN SPRING BOOT 4
+    ignore:
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'org.springframework.cloud:*'
+        update-types: ['version-update:semver-major']
+
     groups:
       java-microservices:
         patterns:
@@ -21,7 +28,7 @@ updates:
   # NPM - Frontend & Root Tools
   # ========================================
   - package-ecosystem: 'npm'
-    directory: '/' # Root package (linting, formatting)
+    directory: '/'
     schedule:
       interval: 'weekly'
     groups:
@@ -33,7 +40,7 @@ updates:
       - 'devtools'
 
   - package-ecosystem: 'npm'
-    directory: '/web-client' # Next.js Frontend
+    directory: '/web-client'
     schedule:
       interval: 'weekly'
     groups:
