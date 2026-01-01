@@ -3,144 +3,70 @@ updates:
   # ========================================
   # MAVEN - Backend Microservices
   # ========================================
-
-  # Auth Service
   - package-ecosystem: 'maven'
-    directory: '/auth'
+    directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
+    open-pull-requests-limit: 10
 
-  # Profile Service
-  - package-ecosystem: 'maven'
-    directory: '/profile'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
+    # CHẶN NÂNG CẤP LÊN SPRING BOOT 4
+    ignore:
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'org.springframework.cloud:*'
+        update-types: ['version-update:semver-major']
 
-  # File Service
-  - package-ecosystem: 'maven'
-    directory: '/file'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # Notification Service
-  - package-ecosystem: 'maven'
-    directory: '/notification'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # GraphQL BFF
-  - package-ecosystem: 'maven'
-    directory: '/graphql-bff'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # API Gateway
-  - package-ecosystem: 'maven'
-    directory: '/gateway'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # Discovery Server (Eureka)
-  - package-ecosystem: 'maven'
-    directory: '/discovery-server'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # Common Module
-  - package-ecosystem: 'maven'
-    directory: '/common'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
-    labels:
-      - 'dependencies'
-      - 'java'
-
-  # Framework Module
-  - package-ecosystem: 'maven'
-    directory: '/framework'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
+    groups:
+      java-microservices:
+        patterns:
+          - '*'
     labels:
       - 'dependencies'
       - 'java'
 
   # ========================================
-  # NPM - Frontend & Root
+  # NPM - Frontend & Root Tools
   # ========================================
-
-  # Root package (linting, formatting tools)
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 5
+    groups:
+      root-tools:
+        patterns:
+          - '*'
     labels:
       - 'dependencies'
       - 'devtools'
 
-  # Web Client (Next.js Frontend)
   - package-ecosystem: 'npm'
     directory: '/web-client'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 5
+    groups:
+      frontend-libs:
+        patterns:
+          - '*'
     labels:
       - 'dependencies'
       - 'frontend'
       - 'javascript'
 
   # ========================================
-  # DOCKER - Container Images
+  # DOCKER & GITHUB ACTIONS
   # ========================================
-
   - package-ecosystem: 'docker'
     directory: '/.devcontainer'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 3
     labels:
       - 'dependencies'
       - 'docker'
-
-  # ========================================
-  # GITHUB ACTIONS
-  # ========================================
 
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 3
     labels:
       - 'dependencies'
       - 'ci'
