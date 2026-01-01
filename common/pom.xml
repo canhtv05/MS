@@ -32,7 +32,7 @@
 		<grpc.spring.version>3.1.0.RELEASE</grpc.spring.version>
 		<grpc.version>1.78.0</grpc.version>
 		<protobuf.version>4.32.0</protobuf.version>
-		<spring-grpc.version>0.12.0</spring-grpc.version>
+		<spring-grpc.version>1.0.0</spring-grpc.version>
 	</properties>
 	<dependencies>
 		<dependency>
