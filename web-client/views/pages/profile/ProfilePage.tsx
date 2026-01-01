@@ -84,7 +84,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   }
 
   return (
-    <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white dark:bg-gray-800 flex-col lg:w-full rounded-lg">
+    <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex flex-col lg:w-full rounded-lg">
       <div className="relative w-full h-[200px]!">
         <input
           ref={fileInputRef}
@@ -167,9 +167,11 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           </DropdownMenu>
         )}
       </div>
-      <div className="md:px-6 px-[10px] md:pb-6 pb-[10px] dark:bg-gray-800 bg-white rounded-b-lg">
-        <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
-        <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
+      <div className="rounded-b-lg">
+        <div className="md:px-6 px-[10px] md:pb-6 pb-[10px] bg-white dark:bg-gray-800 w-full">
+          <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
+          <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
+        </div>
         <ProfilePageTabs />
       </div>
       <Dialog
@@ -183,6 +185,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         id="confirm-cover-upload"
         size="lg"
         disableAccept={!selectedCoverFromHistory || isUploading}
+        isPending={isUploading}
       >
         <ProfilePageChooseImage
           onSelect={setSelectedCoverFromHistory}

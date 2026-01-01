@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
+import { useProfileStore } from '@/stores/profile';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -96,6 +97,7 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
 
 const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
+  const { userProfile } = useProfileStore(state => state);
   const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
     useProfileModalStore();
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
@@ -129,28 +131,40 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
       ) : (
         <div className="flex flex-col flex-1 lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full min-w-0">
           <div className="relative -mt-16 shrink-0 z-10">
-            <ControlledZoom
-              isZoomed={isClickViewAvatar}
-              onZoomChange={setIsClickViewAvatar}
-              classDialog="!z-[9999]"
-              zoomMargin={20}
-              zoomImg={{
-                src: user?.profile?.avatarUrl || images.avt1.src,
-                alt: 'Avatar',
-                loading: 'eager',
-              }}
-            >
-              <Image
-                src={user?.profile?.avatarUrl || images.avt1.src}
-                alt="bg"
-                fill
-                className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
-                loading="eager"
-                quality={100}
-                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
-                unoptimized
-              />
-            </ControlledZoom>
+            {(() => {
+              const avatarSrc =
+                user?.profile?.avatarUrl && user.profile.avatarUrl !== ''
+                  ? user.profile.avatarUrl
+                  : userProfile?.avatarUrl && userProfile.avatarUrl !== ''
+                    ? userProfile.avatarUrl
+                    : data?.data?.avatarUrl && data.data.avatarUrl !== ''
+                      ? data.data.avatarUrl
+                      : images.avt1.src;
+              return (
+                <ControlledZoom
+                  isZoomed={isClickViewAvatar}
+                  onZoomChange={setIsClickViewAvatar}
+                  classDialog="!z-[9999]"
+                  zoomMargin={20}
+                  zoomImg={{
+                    src: avatarSrc,
+                    alt: 'Avatar',
+                    loading: 'eager',
+                  }}
+                >
+                  <Image
+                    src={avatarSrc}
+                    alt="Avatar"
+                    fill
+                    className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
+                    loading="eager"
+                    quality={100}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+                    unoptimized
+                  />
+                </ControlledZoom>
+              );
+            })()}
 
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
@@ -163,8 +177,13 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
                       width={128}
                       height={128}
                       className="rounded-full cursor-pointer"
-                      src={user?.profile?.avatarUrl || images.avt1.src}
-                      alt={data?.data?.fullname}
+                      src={
+                        user?.profile?.avatarUrl ||
+                        userProfile?.avatarUrl ||
+                        data?.data?.avatarUrl ||
+                        images.avt1.src
+                      }
+                      alt={user?.profile?.fullname || userProfile?.fullname || data?.data?.fullname}
                     />
                     <AvatarFallback className="text-2xl font-bold">
                       {data?.data?.fullname?.charAt(0)}

@@ -147,7 +147,10 @@ const HeaderLayout = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <div className="relative">
-                      <HomeHeaderAvatar src={images.avt1} fallback={user?.auth?.username} />
+                      <HomeHeaderAvatar
+                        src={user?.profile?.avatarUrl || images.avt1.src}
+                        fallback={user?.auth?.username}
+                      />
                     </div>
                   </DropdownMenuTrigger>
 

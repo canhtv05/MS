@@ -68,7 +68,7 @@ public class MediaHistoryService {
             .toList();
 
         PageResponse pageResponse = PageResponse.builder()
-            .currentPage(page.getNumber())
+            .currentPage(page.getNumber() + 1)
             .totalPages(page.getTotalPages())
             .size(page.getSize())
             .count(page.getNumberOfElements())

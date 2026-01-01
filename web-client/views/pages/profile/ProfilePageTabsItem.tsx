@@ -1,0 +1,175 @@
+'use client';
+
+import { Heart } from '@solar-icons/react-perf/category/style/BoldDuotone';
+import { TFunction } from 'i18next';
+import Image from 'next/image';
+import { ITabs } from './ProfilePageTabs';
+
+// Fake data for posts
+const fakePosts = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop',
+    likes: 234,
+    comments: 12,
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=400&fit=crop',
+    likes: 567,
+    comments: 45,
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=400&fit=crop',
+    likes: 123,
+    comments: 8,
+  },
+  {
+    id: 4,
+    image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop',
+    likes: 891,
+    comments: 67,
+  },
+  {
+    id: 5,
+    image: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400&h=400&fit=crop',
+    likes: 345,
+    comments: 23,
+  },
+  {
+    id: 6,
+    image: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=400&fit=crop',
+    likes: 678,
+    comments: 34,
+  },
+];
+
+const fakeLiked = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&h=400&fit=crop',
+    likes: 1234,
+    comments: 89,
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop',
+    likes: 2345,
+    comments: 156,
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&h=400&fit=crop',
+    likes: 987,
+    comments: 45,
+  },
+  {
+    id: 4,
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=400&fit=crop',
+    likes: 543,
+    comments: 32,
+  },
+];
+
+interface IProfilePageTabsItem {
+  tabs: ITabs[];
+  activeTab: number;
+  t: TFunction<'translation', undefined>;
+}
+
+interface PostCardProps {
+  post: {
+    id: number;
+    image: string;
+    likes: number;
+    comments: number;
+  };
+}
+
+const PostCard = ({ post }: PostCardProps) => (
+  <div className="relative aspect-square group cursor-pointer overflow-hidden rounded-lg">
+    <Image
+      src={post.image}
+      alt={`Post ${post.id}`}
+      fill
+      className="object-cover transition-transform duration-300 group-hover:scale-105"
+      sizes="(max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
+    />
+    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+      <div className="flex items-center gap-1 text-white font-semibold">
+        <Heart size={18} className="fill-white" />
+        <span>{post.likes}</span>
+      </div>
+      <div className="flex items-center gap-1 text-white font-semibold">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="white"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        <span>{post.comments}</span>
+      </div>
+    </div>
+  </div>
+);
+
+const ProfilePageTabsItem = ({ tabs, activeTab, t }: IProfilePageTabsItem) => {
+  const getEmptyMessage = () => {
+    const currentTab = tabs[activeTab];
+    if (!currentTab) return t('no_posts');
+    switch (currentTab.id) {
+      default:
+        return t('no_posts');
+    }
+  };
+
+  const getCurrentTabContent = () => {
+    const currentTab = tabs[activeTab];
+    if (!currentTab) return fakePosts;
+    switch (currentTab.id) {
+      case 'posts':
+        return fakePosts;
+      case 'liked':
+        return fakeLiked;
+      case 'saved':
+        return [];
+      case 'pictures':
+        return fakePosts; // Mock content
+      case 'friends':
+        return []; // Mock
+      case 'introduce':
+        return []; // Mock
+      default:
+        return fakePosts;
+    }
+  };
+
+  return (
+    <div className="md:mt-6 mt-[10px] ">
+      {getCurrentTabContent().length > 0 ? (
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
+          {getCurrentTabContent().map(post => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+            {tabs[activeTab].icon}
+          </div>
+          <p className="text-lg font-medium">{getEmptyMessage()}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProfilePageTabsItem;

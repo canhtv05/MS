@@ -5,7 +5,7 @@ import Ring from '@/components/customs/ring';
 import { StaticImageData } from 'next/image';
 
 interface IHomeHeaderAvatar {
-  src: StaticImageData;
+  src: StaticImageData | string;
   fallback: string;
 }
 
@@ -25,7 +25,7 @@ const HomeHeaderAvatar = ({ fallback, src }: IHomeHeaderAvatar) => {
           width={35}
           height={35}
           className="rounded-full border-2 border-purple-300 cursor-pointer"
-          src={src.src}
+          src={typeof src === 'string' ? src : src.src}
           alt={fallback}
         />
         <AvatarFallback>{fallback.charAt(0)}</AvatarFallback>

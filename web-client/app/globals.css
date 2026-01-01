@@ -254,12 +254,16 @@
 [data-rmiz-modal] {
   background: transparent !important;
   background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
 }
 
 [data-rmiz-modal],
 [data-rmiz-modal] *:not(img):not(button):not(svg):not(path) {
   background: transparent !important;
   background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
 }
 
 [data-rmiz-modal-overlay='visible'] {
@@ -290,6 +294,13 @@
 
 [data-rmiz-content='found'] img {
   @apply cursor-pointer;
+}
+
+/* Keep original image visible when zoom is open */
+[data-rmiz-content] img,
+[data-rmiz-wrap='visible'] img {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 [data-slot='popover-arrow'] {

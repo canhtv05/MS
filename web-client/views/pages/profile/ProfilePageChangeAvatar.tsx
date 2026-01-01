@@ -56,7 +56,11 @@ const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeA
           ref={fileInputRef}
         />
         <div className="flex items-center gap-2 w-full">
-          <Button className="w-full bg-primary/40" variant={'default'} onClick={triggerFileInput}>
+          <Button
+            className="w-full dark:bg-primary/40"
+            variant={'default'}
+            onClick={triggerFileInput}
+          >
             <AddCircle />
             {t('upload_new_avatar')}
           </Button>

@@ -134,7 +134,8 @@ const useProfile = ({ username }: { username: string }) => {
     handleFileChange,
     triggerFileInput,
     fileInputRef,
-    isUploading: changeCoverImageMutation.isPending,
+    isUploading:
+      changeCoverImageMutation.isPending || changeCoverImageFromMediaHistoryMutation.isPending,
     showConfirmChangeCoverUrl,
     confirmUpload,
     setShowConfirmChangeCoverUrl,

@@ -42,7 +42,7 @@ export const useMyMediaHistoryInfiniteQuery = (
   return useInfiniteQuery({
     queryKey: ['profile', 'media-history-infinite', userID, { ...searchRequest }],
     queryFn: async ({
-      pageParam = 0,
+      pageParam = 1,
     }): Promise<IResponseObject<ISearchResponse<IMediaHistoryGroupDTO[]>>> => {
       const res = await api.post(
         API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY,
@@ -57,10 +57,10 @@ export const useMyMediaHistoryInfiniteQuery = (
       );
       return res.data;
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
     getNextPageParam: lastPage => {
       const pagination = lastPage?.data?.pagination;
-      if (pagination && pagination.currentPage < pagination.totalPages - 1) {
+      if (pagination && pagination.currentPage < pagination.totalPages) {
         return pagination.currentPage + 1;
       }
       return undefined;

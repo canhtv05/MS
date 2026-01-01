@@ -107,67 +107,65 @@ const ProfilePageChooseImage = ({
   }
 
   return (
-    <div onClick={handleContainerClick} className="overflow-y-auto space-y-6">
-      <div className="p-1">
-        {groups.map((group, groupIdx) => (
-          <div key={groupIdx}>
-            <div className="flex items-center gap-3 my-2">
-              <span className="text-xs font-medium text-muted-foreground">
-                {getDateLabel(group.date, t)}
-              </span>
-              <div className="flex-1 h-px bg-border" />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {group.items.map((image, idx) => {
-                const isSelected = selectedUrl === image.url;
-
-                return (
-                  <button
-                    key={image.id || idx}
-                    type="button"
-                    className={cn(
-                      'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
-                      'ring-2 ring-transparent transition-all duration-200',
-                      'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
-                      isSelected && 'ring-primary',
-                    )}
-                    onClick={e => {
-                      e.stopPropagation();
-                      if (image.url === selectedUrl) {
-                        onSelect?.('');
-                      } else {
-                        onSelect?.(image.url);
-                      }
-                    }}
-                  >
-                    <Image
-                      src={image.url}
-                      alt={`Media ${image.type}`}
-                      fill
-                      className="object-cover absolute inset-0"
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                      unoptimized
-                    />
-                    {image?.createdAt && (
-                      <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
-                        {image?.createdAt?.toLocaleString()?.split(' ')[1]}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+    <div onClick={handleContainerClick} className="p-1 space-y-6">
+      {groups.map((group, groupIdx) => (
+        <div key={groupIdx}>
+          <div className="flex items-center gap-3 my-2">
+            <span className="text-xs font-medium text-muted-foreground">
+              {getDateLabel(group.date, t)}
+            </span>
+            <div className="flex-1 h-px bg-border" />
           </div>
-        ))}
 
-        <div ref={loadMoreRef} className="h-4">
-          {isFetchingNextPage && (
-            <div className="flex justify-center py-4">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
-            </div>
-          )}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {group.items.map((image, idx) => {
+              const isSelected = selectedUrl === image.url;
+
+              return (
+                <button
+                  key={image.id || idx}
+                  type="button"
+                  className={cn(
+                    'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
+                    'ring-2 ring-transparent transition-all duration-200',
+                    'after:content-[""] after:absolute after:inset-0 after:bg-transparent after:transition-colors after:duration-300 hover:after:bg-white/10',
+                    isSelected && 'ring-primary',
+                  )}
+                  onClick={e => {
+                    e.stopPropagation();
+                    if (image.url === selectedUrl) {
+                      onSelect?.('');
+                    } else {
+                      onSelect?.(image.url);
+                    }
+                  }}
+                >
+                  <Image
+                    src={image.url}
+                    alt={`Media ${image.type}`}
+                    fill
+                    className="object-cover absolute inset-0"
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    unoptimized
+                  />
+                  {image?.createdAt && (
+                    <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
+                      {image?.createdAt?.toLocaleString()?.split(' ')[1]}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
+      ))}
+
+      <div ref={loadMoreRef} className="h-4">
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+          </div>
+        )}
       </div>
     </div>
   );
