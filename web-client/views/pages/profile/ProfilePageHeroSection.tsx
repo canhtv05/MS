@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar
 import images from '@/public/imgs';
 import { IProfilePageProps } from './ProfilePage';
 import { useAuthStore } from '@/stores/auth';
-import { Settings } from '@solar-icons/react-perf/Bold';
 import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
 import {
   CameraMinimalistic,
@@ -33,6 +32,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
+import MeProfilePageHeroSectionButton from './ProfilePageHeroSectionButton';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -73,23 +73,6 @@ const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
             </Tooltip>
           ),
         )}
-      </div>
-    </>
-  );
-};
-
-const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
-  return (
-    <>
-      <div className="flex items-center justify-center gap-2">
-        <Button variant="default" className="gap-2">
-          {t?.('edit_profile')}
-        </Button>
-        <IconButton variant="outline" className="cursor-pointer">
-          <div className="flex items-center justify-center w-full h-full">
-            <Settings />
-          </div>
-        </IconButton>
       </div>
     </>
   );

@@ -41,7 +41,7 @@ const AuthLayout = () => {
               className={`${itemClassName} flex items-center gap-2 cursor-pointer`}
             >
               <span
-                className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400' : 'bg-foreground/20'}`}
+                className={`relative inline-flex size-2 rounded-full ${currentLang === 'vi' ? 'bg-emerald-400 shadow-[0_0_8px_#50fa7b]' : 'bg-foreground/20'}`}
               ></span>
               <div className="size-5 relative">
                 <Image
