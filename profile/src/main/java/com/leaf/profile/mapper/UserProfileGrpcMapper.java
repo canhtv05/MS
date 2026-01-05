@@ -1,17 +1,11 @@
 package com.leaf.profile.mapper;
 
-import com.google.protobuf.Timestamp;
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.PrivacyLevel;
 import com.leaf.common.grpc.UserProfileDTO;
-import com.leaf.common.utils.ConvertProto;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
-import java.time.Instant;
-import java.time.LocalDate;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
@@ -31,46 +25,14 @@ public interface UserProfileGrpcMapper {
         }
 
         com.leaf.common.grpc.UserProfileResponse.Builder builder = com.leaf.common.grpc.UserProfileResponse.newBuilder()
-            .setId(nullToEmpty(response.getId()))
-            .setUserId(nullToEmpty(response.getUserId()))
-            .setFullname(nullToEmpty(response.getFullname()))
-            .setCity(nullToEmpty(response.getCity()))
-            .setBio(nullToEmpty(response.getBio()))
-            .setCoverUrl(nullToEmpty(response.getCoverUrl()))
-            .setAvatarUrl(nullToEmpty(response.getAvatarUrl()))
-            .setPhoneNumber(nullToEmpty(response.getPhoneNumber()))
-            .setTiktokUrl(nullToEmpty(response.getTiktokUrl()))
-            .setXUrl(nullToEmpty(response.getXUrl()))
-            .setInstagramUrl(nullToEmpty(response.getInstagramUrl()))
-            .setFacebookUrl(nullToEmpty(response.getFacebookUrl()))
-            .setGender(response.getGender() != null ? response.getGender() : Gender.GENDER_UNSPECIFIED)
-            .setProfileVisibility(
-                response.getProfileVisibility() != null
-                    ? response.getProfileVisibility()
-                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
-            )
-            .setFriendsVisibility(
-                response.getFriendsVisibility() != null
-                    ? response.getFriendsVisibility()
-                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
-            )
-            .setPostsVisibility(
-                response.getPostsVisibility() != null
-                    ? response.getPostsVisibility()
-                    : PrivacyLevel.PRIVACY_LEVEL_UNSPECIFIED
-            )
-            .setFollowersCount(response.getFollowersCount() != null ? response.getFollowersCount() : 0L)
-            .setFollowingCount(response.getFollowingCount() != null ? response.getFollowingCount() : 0L);
-
-        if (response.getDob() != null) {
-            builder.setDob(toTimestamp(response.getDob()));
-        }
-        if (response.getLastOnlineAt() != null) {
-            builder.setLastOnlineAt(toTimestamp(response.getLastOnlineAt()));
-        }
-        if (response.getCreatedDate() != null) {
-            builder.setCreatedDate(toTimestamp(response.getCreatedDate()));
-        }
+            .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
+            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
+            .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
+            .setBio(CommonUtils.getSafeObject(response.getBio(), String.class, ""))
+            .setCoverUrl(CommonUtils.getSafeObject(response.getCoverUrl(), String.class, ""))
+            .setAvatarUrl(CommonUtils.getSafeObject(response.getAvatarUrl(), String.class, ""))
+            .setFollowersCount(CommonUtils.getSafeObject(response.getFollowersCount(), Long.class, 0L))
+            .setFollowingCount(CommonUtils.getSafeObject(response.getFollowingCount(), Long.class, 0L));
 
         return builder.build();
     }
@@ -79,20 +41,9 @@ public interface UserProfileGrpcMapper {
         if (response == null) {
             return null;
         }
-        return UserProfileDTO.newBuilder().setUserId(nullToEmpty(response.getUserId())).build();
-    }
-
-    @Named("toTimestamp")
-    default Timestamp toTimestamp(LocalDate localDate) {
-        return ConvertProto.convertLocalDateToTimestamp(localDate);
-    }
-
-    @Named("toTimestamp")
-    default Timestamp toTimestamp(Instant instant) {
-        return ConvertProto.convertInstantToTimestamp(instant);
-    }
-
-    default String nullToEmpty(String value) {
-        return value != null ? value : "";
+        return UserProfileDTO.newBuilder()
+            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
+            .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
+            .build();
     }
 }

@@ -333,3 +333,23 @@
 span:has(> [data-slot='dropdown-menu-arrow']) {
   top: 2px !important;
 }
+
+.monaco-editor {
+  @apply rounded-lg overflow-hidden;
+}
+
+.monaco-editor [data-mprt='3'] {
+  @apply rounded-lg;
+}
+
+.monaco-editor .overflow-guard {
+  @apply rounded-lg;
+}
+
+.monaco-editor .monaco-scrollable-element {
+  @apply rounded-lg;
+}
+
+.monaco-editor .lines-content {
+  @apply rounded-lg;
+}

@@ -28,6 +28,7 @@ import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
 import { Skeleton } from '@/components/customs/skeleton';
 import ProfilePageChooseImage from './ProfilePageChooseImage';
+import { getImageSrcOrNull } from '@/lib/image-utils';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -102,8 +103,12 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             );
           }
 
-          const coverSrc = coverImagePreview || data?.data?.coverUrl || user?.profile?.coverUrl;
-          if (coverSrc && coverSrc !== '') {
+          const coverSrc =
+            getImageSrcOrNull(coverImagePreview) ||
+            getImageSrcOrNull(data?.data?.coverUrl) ||
+            getImageSrcOrNull(user?.profile?.coverUrl);
+
+          if (coverSrc) {
             return (
               <Zoom
                 zoomMargin={20}

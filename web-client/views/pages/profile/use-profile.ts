@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
 
 const useProfile = ({ username }: { username: string }) => {
-  const { data, isLoading, isError, error, refetch } = useUserProfileQuery(username);
+  const { data, isLoading, isError, error } = useUserProfileQuery(username);
   const queryClient = useQueryClient();
   const { t } = useTranslation('profile');
   const { changeCoverImageMutation, changeCoverImageFromMediaHistoryMutation } =
@@ -50,7 +50,6 @@ const useProfile = ({ username }: { username: string }) => {
 
     try {
       await changeCoverImageMutation.mutateAsync({ file: pendingFile });
-      await refetch();
       queryClient.invalidateQueries({
         queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'cover'],
       });
@@ -63,14 +62,7 @@ const useProfile = ({ username }: { username: string }) => {
       setPendingFile(null);
       setShowConfirmChangeCoverUrl(false);
     }
-  }, [
-    pendingFile,
-    changeCoverImageMutation,
-    refetch,
-    queryClient,
-    user?.auth?.username,
-    coverImagePreview,
-  ]);
+  }, [pendingFile, changeCoverImageMutation, queryClient, user?.auth?.username, coverImagePreview]);
 
   const cancelUpload = useCallback(() => {
     if (coverImagePreview) {
@@ -98,7 +90,6 @@ const useProfile = ({ username }: { username: string }) => {
 
     try {
       await changeCoverImageFromMediaHistoryMutation.mutateAsync({ url: selectedCoverFromHistory });
-      await refetch();
       queryClient.invalidateQueries({
         queryKey: ['profile', 'media-history-infinite', user?.auth?.username, 'cover'],
       });
@@ -113,7 +104,6 @@ const useProfile = ({ username }: { username: string }) => {
     user?.auth?.username,
     t,
     changeCoverImageFromMediaHistoryMutation,
-    refetch,
     queryClient,
   ]);
 

@@ -100,17 +100,17 @@ const ProfilePageTabs = () => {
     <div className="w-full">
       <div className="relative md:px-6 px-[10px] rounded-b-lg w-full bg-white dark:bg-gray-800">
         <div className="relative">
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-border w-full" />
+          <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
           <div className="relative">
             <div className="flex">
               {visibleTabs.map((tab, index) => (
                 <button
                   key={tab.id}
-                  className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium transition-colors duration-300 cursor-pointer
+                  className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer
                   ${
                     activeTab === index
                       ? 'text-primary'
-                      : 'text-muted-foreground hover:text-foreground'
+                      : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
                   }`}
                   onClick={() => handleTabClick(index)}
                   onMouseEnter={() => setHoverIndex(index)}
@@ -127,11 +127,11 @@ const ProfilePageTabs = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium transition-colors duration-300 cursor-pointer outline-none
+                      className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
                       ${
                         isHiddenActive
                           ? 'text-primary'
-                          : 'text-muted-foreground hover:text-foreground'
+                          : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
                       }`}
                       onMouseEnter={() => setHoverIndex(visibleTabs.length)}
                       onMouseLeave={() => setHoverIndex(null)}
@@ -149,7 +149,7 @@ const ProfilePageTabs = () => {
                         key={tab.id}
                         onClick={() => handleHiddenTabSelect(tab.id)}
                         className={cn(
-                          'cursor-pointer outline-none focus:bg-muted/50 transition-colors duration-200',
+                          'cursor-pointer outline-none focus:bg-muted/50 transition-[background-color] duration-200',
                           'text-muted-foreground focus:text-primary!',
                           activeTabId === tab.id
                             ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'
@@ -167,7 +167,7 @@ const ProfilePageTabs = () => {
               )}
             </div>
             <div
-              className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-all duration-300 ease-out"
+              className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,transform] duration-300 ease-out"
               style={{
                 width: `${100 / renderItemsCount}%`,
                 transform: `translateX(${indicatorIndex * 100}%)`,

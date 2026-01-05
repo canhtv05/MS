@@ -112,7 +112,7 @@ function Input({
 
   return (
     <>
-      <div className="mb-0">
+      <div className="mb-0 w-auto">
         {!!label && (
           <Label htmlFor={id} className="mb-1 text-foreground/60 text-sm flex gap-1">
             {label}
@@ -122,8 +122,9 @@ function Input({
         <div
           className={cn(
             'flex items-center relative autofill:bg-transparent! rounded-xl border border-input bg-background group',
-            'focus-within:border-purple-300',
-            isInvalid && 'border-red-500',
+            'focus-within:transition-colors focus-within:duration-200 focus-within:ease-in-out',
+            'focus-within:border-purple-300 focus-within:ring-1 focus-within:ring-purple-300/20',
+            isInvalid && 'border-red-500 ring-1 ring-red-500/20',
             className,
             classNameIcon,
           )}
@@ -144,16 +145,17 @@ function Input({
             type={typeInput}
             data-slot="input"
             className={cn(
-              'rounded-xl autofill:bg-transparent! h-full p-2.5 bg-background border focus:outline-none focus:border-purple-300',
+              'rounded-xl autofill:bg-transparent! h-full p-2.5 bg-background border focus:outline-none',
+              'transition-colors duration-200 ease-in-out focus:border-purple-300',
               'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-foreground/70',
               'focus-visible:transform focus-visible:placeholder:translate-x-0.5 not-focus-visible:placeholder:-translate-x-0.5 focus-visible:placeholder:transition-transform transition-transform focus-visible:placeholder:duration-150 not-focus-visible:placeholder:duration-300',
-              'placeholder:pl-1 text-foreground mt-0! placeholder:transition-none placeholder:transition-transform dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
+              'placeholder:pl-1 text-foreground mt-0! placeholder:transition-transform dark:text-secondary-foreground disabled:border-[rgba(255 255 255 0.15)] disabled:bg-[#efefef] placeholder:text-[rgb(110,107,123)/50]',
               !!validate && isEmpty && 'border-red-500',
               (typeInput === 'password' || prevType === 'password') && 'pr-11',
               className,
               (icon || endIcon) &&
-                'border-none shadow-none bg-transparent! focus-visible:ring-0 focus-visible:shadow-none py-0',
+                'border-none shadow-none bg-transparent! focus-visible:ring-0 focus-visible:shadow-none py-0 transition-none',
               icon && 'pl-1!',
               endIcon && 'pr-1!',
               icon && !endIcon && 'pr-3!',
@@ -199,11 +201,12 @@ function Input({
 
           {isEmpty && !!validate && (
             <DangerCircle
-              className={`absolute ${
-                typeInput === 'password' || prevType === 'password' || type === 'password'
-                  ? 'right-12'
-                  : 'right-4'
-              } top-1/2 -translate-y-1/2 size-3.5 text-red-500`}
+              className={cn(
+                'absolute top-1/2 -translate-y-1/2 size-3.5 text-red-500',
+                type === 'password' && 'right-12',
+                type !== 'password' && (shouldShowClear || endIcon) && 'right-12',
+                type !== 'password' && !shouldShowClear && !endIcon && 'right-4',
+              )}
             />
           )}
 
@@ -221,11 +224,10 @@ function Input({
           )}
         </div>
       </div>
-      {isEmpty && !!validate && touched && (
-        <span className="text-[12px] text-red-500 font-light text-left">Thông tin bắt buộc</span>
-      )}
-      {!touched && (
-        <span className="text-[12px] text-red-500 font-light text-left">{errorText}</span>
+      {isInvalid && (
+        <span className="text-[12px] text-red-500 font-light text-left">
+          {errorText || 'Thông tin bắt buộc'}
+        </span>
       )}
     </>
   );

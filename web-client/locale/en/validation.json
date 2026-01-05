@@ -1,8 +1,9 @@
 {
   "string": {
-    "min": "{{field}} must be at least {min} characters",
-    "max": "{{field}} must be at most {max} characters",
-    "email": "{{field}} must be a valid email"
+    "min": "{{field}} must be at least {{min}} characters",
+    "max": "{{field}} has maximum {{max}} characters",
+    "email": "{{field}} must be a valid email",
+    "url": "{{field}} must be a valid url"
   },
   "required": "{{field}} is required"
 }

@@ -92,7 +92,7 @@ public class UserProfileService {
 
             ImageResponse res = grpcFileClient.uploadImage(
                 file,
-                isAvatar ? ResourceType.AVATAR : ResourceType.COVER,
+                isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
                 username
             );
             if (isAvatar) {
@@ -103,7 +103,7 @@ public class UserProfileService {
             mediaHistoryRepository.saveMediaHistory(
                 username,
                 res.getImageUrl(),
-                isAvatar ? ResourceType.AVATAR.name() : ResourceType.COVER.name()
+                isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR.name() : ResourceType.RESOURCE_TYPE_COVER.name()
             );
             UserProfile saved = userProfileRepository.save(userProfile);
             String cacheKey = "USER_PROFILE:" + username;

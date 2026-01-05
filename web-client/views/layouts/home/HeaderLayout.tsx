@@ -35,6 +35,7 @@ import HomeHeaderSearchLG from './HomeHeaderSearchLG';
 import { Logout3, Settings, LockPassword } from '@solar-icons/react-perf/BoldDuotone';
 import { Bell } from '@solar-icons/react-perf/Outline';
 import { UserCircle } from '@solar-icons/react-perf/BoldDuotone';
+import { getValidImageSrc } from '@/lib/image-utils';
 
 const HeaderLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -148,7 +149,7 @@ const HeaderLayout = () => {
                   <DropdownMenuTrigger>
                     <div className="relative">
                       <HomeHeaderAvatar
-                        src={user?.profile?.avatarUrl || images.avt1.src}
+                        src={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
                         fallback={user?.auth?.username}
                       />
                     </div>
@@ -163,7 +164,7 @@ const HeaderLayout = () => {
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
                         username={user?.auth?.username || ''}
-                        avatarUrl={user?.profile?.avatarUrl || images.avt1.src}
+                        avatarUrl={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
                         fullName={user?.profile?.fullname || ''}
                       />
                     </DropdownMenuLabel>

@@ -23,24 +23,13 @@ message UserProfileIdRequest {
 
 message UserProfileResponse {
     string userId = 1;
-    google.protobuf.Timestamp dob = 2;
-    string city = 3;
-    Gender gender = 4;
-    string bio = 5;
-    string coverUrl = 6;
-    string fullname = 7;
-    google.protobuf.Timestamp createdDate = 8;
-    string phoneNumber = 9;
-    string avatarUrl = 10;
-    string tiktokUrl = 11;
-    string xUrl = 12;
-    string instagramUrl = 13;
-    string facebookUrl = 14;
-    PrivacyLevel profileVisibility = 15;
-    PrivacyLevel friendsVisibility = 16;
-    PrivacyLevel postsVisibility = 17;
-    google.protobuf.Timestamp lastOnlineAt = 18;
-    int64 followersCount = 19;
-    int64 followingCount = 20;
-    string id = 21;
+    string fullname = 2;
+    google.protobuf.Timestamp createdDate = 3;
+    string avatarUrl = 4;
+    string coverUrl = 5;
+    google.protobuf.Timestamp lastOnlineAt = 6;
+    int64 followersCount = 7;
+    int64 followingCount = 8;
+    string id = 9;
+    string bio = 10;
 }

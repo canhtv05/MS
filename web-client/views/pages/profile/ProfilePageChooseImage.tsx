@@ -33,7 +33,7 @@ const ProfilePageChooseImage = ({
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useMyMediaHistoryInfiniteQuery(true, user?.auth?.username, {
-      searchText: isAvatar ? ResourceType.AVATAR : ResourceType.COVER,
+      searchText: isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
     });
 
   const pages = data?.pages;

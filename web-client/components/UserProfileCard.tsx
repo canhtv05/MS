@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from './customs/avatar';
 import Ring from './customs/ring';
 import { Activity } from 'react';
+import { getValidImageSrc } from '@/lib/image-utils';
+import images from '@/public/imgs';
 
 interface IUserProfileCard {
   username: string;
@@ -24,6 +26,8 @@ const UserProfileCard = ({
   hideInfo = false,
   className,
 }: IUserProfileCard) => {
+  const validAvatarUrl = getValidImageSrc(avatarUrl, images.avt1.src);
+
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <div className="relative">
@@ -32,7 +36,7 @@ const UserProfileCard = ({
             width={35}
             height={35}
             className="rounded-full border-2 border-purple-300 cursor-pointer"
-            src={avatarUrl}
+            src={validAvatarUrl}
             alt={username}
           />
           <AvatarFallback>{username.charAt(0)}</AvatarFallback>

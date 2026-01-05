@@ -208,3 +208,109 @@ export const MinusIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
+
+export const FaceBookTwoOneIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(props.className)}
+      viewBox="0 0 48 48"
+    >
+      <defs>
+        <mask id="SVGfIrXF2an">
+          <path
+            fill="#555555"
+            stroke="#fff"
+            strokeLinejoin="round"
+            strokeWidth={3.8}
+            d="M36 12.6h-6.013c-1.086 0-1.967.88-1.967 1.967v6.9H36l-1.169 7.597h-6.81V43h-8.776V29.064H12v-7.597h7.151l.094-7.21l-.013-1.31A7.87 7.87 0 0 1 27.099 5H36z"
+          ></path>
+        </mask>
+      </defs>
+      <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGfIrXF2an)"></path>
+    </svg>
+  );
+};
+
+export const InstagramTwoOneIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(props.className)}
+      viewBox="0 0 48 48"
+    >
+      <defs>
+        <mask id="SVGNCk1AeEo">
+          <g fill="none">
+            <path
+              fill="#555555"
+              stroke="#fff"
+              strokeLinejoin="round"
+              strokeWidth={4}
+              d="M34 6H14a8 8 0 0 0-8 8v20a8 8 0 0 0 8 8h20a8 8 0 0 0 8-8V14a8 8 0 0 0-8-8Z"
+            ></path>
+            <path
+              fill="#555555"
+              stroke="#fff"
+              strokeLinejoin="round"
+              strokeWidth={4}
+              d="M24 32a8 8 0 1 0 0-16a8 8 0 0 0 0 16Z"
+            ></path>
+            <path fill="#fff" d="M35 15a2 2 0 1 0 0-4a2 2 0 0 0 0 4"></path>
+          </g>
+        </mask>
+      </defs>
+      <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGNCk1AeEo)"></path>
+    </svg>
+  );
+};
+
+export const XTwitterIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(props.className)}
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="m13.081 10.712l-4.786-6.71a.6.6 0 0 0-.489-.252H5.28a.6.6 0 0 0-.488.948l6.127 8.59m2.162-2.576l6.127 8.59a.6.6 0 0 1-.488.948h-2.526a.6.6 0 0 1-.489-.252l-4.786-6.71m2.162-2.576l5.842-6.962m-8.004 9.538L5.077 20.25"
+      ></path>
+    </svg>
+  );
+};
+
+export const TiktokIcon = ({ ...props }: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(props.className)}
+      width={48}
+      height={48}
+      viewBox="0 0 48 48"
+    >
+      <defs>
+        <mask id="SVGkWEIQcHM">
+          <path
+            fill="#555555"
+            stroke="#fff"
+            strokeLinejoin="round"
+            strokeWidth={3.833}
+            d="M21.358 19.14q-8.833-.426-12.28 6.298c-3.446 6.725-.598 17.729 10.9 17.729c11.5 0 11.832-11.112 11.832-12.276V17.875q3.69 2.336 6.22 2.813q2.533.476 3.22.422v-6.476q-2.342-.282-4.05-1.076c-1.709-.794-5.096-2.997-5.096-6.226q.003.024 0-2.499h-7.118q-.031 23.724 0 26.058c.031 2.334-1.78 5.6-5.45 5.6c-3.672 0-5.483-3.263-5.483-5.367c0-1.288.443-3.155 2.272-4.538c1.085-.82 2.59-1.148 5.033-1.148z"
+          ></path>
+        </mask>
+      </defs>
+      <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGkWEIQcHM)"></path>
+    </svg>
+  );
+};

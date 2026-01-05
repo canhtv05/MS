@@ -1,9 +1,6 @@
 package com.leaf.profile.domain;
 
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.PrivacyLevel;
 import java.time.Instant;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +12,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Getter
@@ -38,20 +36,7 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     String fullname = "";
 
     @Builder.Default
-    LocalDate dob = null;
-
-    @Builder.Default
-    String city = "";
-
-    @Builder.Default
-    Gender gender = null;
-
-    @Builder.Default
     String bio = "";
-
-    @Builder.Default
-    @Property("phone_number")
-    String phoneNumber = "";
 
     @Builder.Default
     @Property("cover_url")
@@ -61,33 +46,11 @@ public class UserProfile extends AbstractAuditingNeo4jEntity {
     @Property("avatar_url")
     String avatarUrl = "";
 
-    @Builder.Default
-    @Property("x_url")
-    String xUrl = "";
+    @Relationship(type = "HAS_INTRODUCE", direction = Relationship.Direction.OUTGOING)
+    UserProfileIntroduce introduce;
 
-    @Builder.Default
-    @Property("instagram_url")
-    String instagramUrl = "";
-
-    @Builder.Default
-    @Property("tiktok_url")
-    String tiktokUrl = "";
-
-    @Builder.Default
-    @Property("facebook_url")
-    String facebookUrl = "";
-
-    @Builder.Default
-    @Property("profile_visibility")
-    PrivacyLevel profileVisibility = PrivacyLevel.PUBLIC;
-
-    @Builder.Default
-    @Property("friends_visibility")
-    PrivacyLevel friendsVisibility = PrivacyLevel.PUBLIC;
-
-    @Builder.Default
-    @Property("posts_visibility")
-    PrivacyLevel postsVisibility = PrivacyLevel.PUBLIC;
+    @Relationship(type = "HAS_PRIVACY", direction = Relationship.Direction.OUTGOING)
+    UserProfilePrivacy privacy;
 
     @Builder.Default
     @Property("last_online_at")

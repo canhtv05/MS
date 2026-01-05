@@ -15,22 +15,11 @@ export const ME_QUERY = `
         id
         userId
         fullname
-        dob
-        city
         bio
         coverUrl
         avatarUrl
-        gender
-        phoneNumber
         createdDate
         lastOnlineAt
-        tiktokUrl
-        xUrl
-        instagramUrl
-        facebookUrl
-        profileVisibility
-        friendsVisibility
-        postsVisibility
         followersCount
         followingCount
       }

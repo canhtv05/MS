@@ -75,10 +75,10 @@ message FileResponse {
 
 enum ResourceType {
     RESOURCE_TYPE_UNSPECIFIED = 0;
-    AVATAR = 1;
-    COVER = 2;
-    POST = 3;
-    COMMENT = 4;
-    MESSAGE = 5;
-    RESOURCE_OTHER = 6;
+    RESOURCE_TYPE_AVATAR = 1;
+    RESOURCE_TYPE_COVER = 2;
+    RESOURCE_TYPE_POST = 3;
+    RESOURCE_TYPE_COMMENT = 4;
+    RESOURCE_TYPE_MESSAGE = 5;
+    RESOURCE_TYPE_OTHER = 6;
 }

@@ -42,9 +42,17 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
-      });
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'me'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'user-profile'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+        }),
+      ]);
       toast.success(t('change_cover_image_success'), {
         id: 'change-cover-image-toast',
       });
@@ -74,9 +82,17 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
-      });
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'me'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'user-profile'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+        }),
+      ]);
       toast.success(t('change_avatar_image_success'), {
         id: 'change-avatar-image-toast',
       });
@@ -103,6 +119,13 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
+      // Invalidate both me profile and user profile queries
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'me'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'user-profile'],
+      });
       queryClient.invalidateQueries({
         queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
       });

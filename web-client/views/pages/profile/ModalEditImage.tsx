@@ -10,9 +10,9 @@ import Cropper from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import { useProfileMutation } from '@/services/mutations/profile';
-import { useUserProfileQuery } from '@/services/queries/profile';
 import Image from 'next/image';
 import { useProfileModalStore } from './use-profile-modal';
+import { getValidImageSrc } from '@/lib/image-utils';
 
 interface IModalEditImage {
   open: boolean;
@@ -30,7 +30,6 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const { changeAvatarImageMutation } = useProfileMutation();
-  const { refetch } = useUserProfileQuery(user?.auth?.username);
   const avatarUrl = user?.profile?.avatarUrl;
   const closeParentDialog = useProfileModalStore(state => state.closeParentDialog);
   const setIsPending = useProfileModalStore(state => state.setIsPending);
@@ -56,11 +55,8 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       croppedAreaPixels: { x: number; y: number; width: number; height: number },
     ) => {
       try {
-        const croppedImage = await getCroppedImg(
-          avatarPreview || avatarUrl || images.goku.src,
-          croppedAreaPixels,
-          rotation,
-        );
+        const imageSrc = getValidImageSrc(avatarPreview || avatarUrl, images.goku.src);
+        const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels, rotation);
         setCroppedImage(croppedImage);
       } catch (e) {
         console.error(e);
@@ -94,7 +90,6 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       const croppedFile = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
 
       await changeAvatarImageMutation.mutateAsync({ file: croppedFile });
-      await refetch();
     } catch {
     } finally {
       onClose(false);
@@ -108,7 +103,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       setCroppedImage(null);
       closeParentDialog();
     }
-  }, [croppedImage, changeAvatarImageMutation, refetch, onClose, avatarPreview, closeParentDialog]);
+  }, [croppedImage, changeAvatarImageMutation, onClose, avatarPreview, closeParentDialog]);
 
   return (
     <>
@@ -125,7 +120,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
         <div className="flex flex-col gap-2">
           <div className="relative w-full h-[300px]">
             <Cropper
-              image={avatarPreview || avatarUrl || images.goku.src}
+              image={getValidImageSrc(avatarPreview || avatarUrl, images.goku.src)}
               crop={crop}
               zoom={zoom}
               rotation={rotation}

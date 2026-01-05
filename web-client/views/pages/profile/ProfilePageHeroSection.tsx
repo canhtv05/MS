@@ -32,7 +32,8 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
-import MeProfilePageHeroSectionButton from './ProfilePageHeroSectionButton';
+import MeProfilePageHeroSectionButton from './EditProfileContainer';
+import { getValidImageSrc } from '@/lib/image-utils';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -103,7 +104,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
     <>
       {isLoading && !data?.data ? (
         <div className="flex flex-1 flex-col lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full lg:w-auto">
-          <div className="w-32 h-32 rounded-full shrink-0 relative border-4 border-white dark:border-gray-800 before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0 -mt-16">
+          <div className="w-32 h-32 rounded-full shrink-0 relative shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)] before:absolute before:inset-0 before:bg-white dark:before:bg-gray-800 before:rounded-full before:z-0 -mt-16">
             <Skeleton className="w-full h-full rounded-full relative z-10" />
           </div>
           <div className="flex flex-col mb-2 gap-1 items-center lg:items-start justify-end w-full lg:w-auto">
@@ -115,14 +116,10 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
         <div className="flex flex-col flex-1 lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full min-w-0">
           <div className="relative -mt-16 shrink-0 z-10">
             {(() => {
-              const avatarSrc =
-                user?.profile?.avatarUrl && user.profile.avatarUrl !== ''
-                  ? user.profile.avatarUrl
-                  : userProfile?.avatarUrl && userProfile.avatarUrl !== ''
-                    ? userProfile.avatarUrl
-                    : data?.data?.avatarUrl && data.data.avatarUrl !== ''
-                      ? data.data.avatarUrl
-                      : images.avt1.src;
+              const avatarSrc = getValidImageSrc(
+                user?.profile?.avatarUrl || userProfile?.avatarUrl || data?.data?.avatarUrl,
+                images.avt1.src,
+              );
               return (
                 <ControlledZoom
                   isZoomed={isClickViewAvatar}
@@ -155,17 +152,15 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
                   type="button"
                   className="cursor-pointer focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full"
                 >
-                  <Avatar className="w-32 h-32 border-4 border-white dark:border-gray-800">
+                  <Avatar className="w-32 h-32 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)]">
                     <AvatarImage
                       width={128}
                       height={128}
                       className="rounded-full cursor-pointer"
-                      src={
-                        user?.profile?.avatarUrl ||
-                        userProfile?.avatarUrl ||
-                        data?.data?.avatarUrl ||
-                        images.avt1.src
-                      }
+                      src={getValidImageSrc(
+                        user?.profile?.avatarUrl || userProfile?.avatarUrl || data?.data?.avatarUrl,
+                        images.avt1.src,
+                      )}
                       alt={user?.profile?.fullname || userProfile?.fullname || data?.data?.fullname}
                     />
                     <AvatarFallback className="text-2xl font-bold">
@@ -197,7 +192,7 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
             )}
           </div>
           <div className="flex flex-col items-center lg:items-start justify-end gap-1 mb-2 flex-1 min-w-0 w-full lg:w-auto text-center lg:text-left">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white leading-7 wrap-break-word break-all w-full">
+            <h2 className="md:mt-0 mt-2 text-2xl font-bold text-gray-800 dark:text-white leading-7 wrap-break-word break-all w-full">
               {data?.data?.fullname}
             </h2>
             <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center justify-center lg:justify-start gap-1.5 w-full">

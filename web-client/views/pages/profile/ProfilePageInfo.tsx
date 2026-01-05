@@ -1,35 +1,36 @@
 import { detectLanguage } from '@/utils/common';
-import Link from 'next/link';
-// import { formatNumberString } from '@/lib/utils';
 import { IProfilePageProps } from './ProfilePage';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
-import { LinkMinimalistic2, MapPointWave } from '@solar-icons/react-perf/Outline';
+import { useTranslation } from 'react-i18next';
+import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
 
-// interface StatItemProps {
-//   value: number;
-//   label: string;
-//   isLoading?: boolean;
-// }
+interface StatItemProps {
+  value: number;
+  label: string;
+  isLoading?: boolean;
+}
 
-// const StatItem = ({ value, label, isLoading }: StatItemProps) => {
-//   if (isLoading) {
-//     return <Skeleton className="h-5 w-20" />;
-//   }
-//   return (
-//     <span className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-white transition-colors">
-//       <strong className="font-bold text-gray-800 dark:text-white">
-//         {formatNumberString(value)}
-//       </strong>{' '}
-//       <span className="text-gray-500 dark:text-gray-400">{label}</span>
-//     </span>
-//   );
-// };
+const StatItem = ({ value, label, isLoading }: StatItemProps) => {
+  if (isLoading) {
+    return <Skeleton className="h-5 w-20" />;
+  }
+  return (
+    <span className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-white transition-colors">
+      <strong className="">
+        <CountingNumber number={value} className="font-bold text-gray-800 dark:text-white" />
+      </strong>{' '}
+      <span className="text-gray-500 dark:text-gray-400">{label}</span>
+    </span>
+  );
+};
 
 const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
+  const { t } = useTranslation('profile');
+
   return (
     <>
-      <div className="mt-4 space-y-3">
+      {/* <div className="mt-4 space-y-3">
         {!isLoading &&
           (data?.data?.city ||
             data?.data?.tiktokUrl ||
@@ -46,12 +47,12 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
                   </div>
                 )}
 
-                {/* {data?.data?.createdDate && (
+                {data?.data?.createdDate && (
                   <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
                     <Calendar size={14} className="shrink-0" />
                     <span className="text-xs">{data.data.createdDate.substring(0, 10)}</span>
                   </div>
-                )} */}
+                )}
               </div>
 
               {data?.data?.tiktokUrl && (
@@ -101,33 +102,34 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
             <Skeleton className="h-5 w-[100px]" />
           </div>
         )}
-      </div>
-
-      {/* <div className="flex flex-wrap items-center md:gap-4 gap-1 mt-2">
-        <StatItem value={80} label={t?.('posts') || 'posts'} isLoading={isLoading} />
-        <span className="text-gray-300 dark:text-gray-600">·</span>
-        <StatItem value={2300} label={t?.('followers') || 'followers'} isLoading={isLoading} />
-        <span className="text-gray-300 dark:text-gray-600">·</span>
-        <StatItem value={150} label={t?.('following') || 'following'} isLoading={isLoading} />
       </div> */}
 
       <div className="mt-3">
-        {isLoading || !data?.data?.bio ? (
-          !data?.data?.bio && (
-            <div className="space-y-2">
-              <Skeleton className="h-14 w-full" />
-            </div>
-          )
+        {isLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-14 w-full" />
+          </div>
         ) : (
-          <Code code={data.data.bio}>
-            <CodeBlock
-              className="max-h-[200px]"
-              cursor={false}
-              lang={detectLanguage(data.data.bio)}
-              writing={true}
-            />
-          </Code>
+          <>
+            {data?.data?.bio && (
+              <Code code={data.data.bio}>
+                <CodeBlock
+                  className="max-h-[200px]"
+                  cursor={false}
+                  lang={detectLanguage(data.data.bio)}
+                  writing={true}
+                />
+              </Code>
+            )}
+          </>
         )}
+      </div>
+      <div className="flex flex-wrap items-center md:justify-start justify-center md:gap-4 gap-1 mt-2">
+        <StatItem value={80} label={t('posts') || 'posts'} isLoading={isLoading} />
+        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <StatItem value={230000} label={t('followers') || 'followers'} isLoading={isLoading} />
+        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <StatItem value={150} label={t('following') || 'following'} isLoading={isLoading} />
       </div>
     </>
   );

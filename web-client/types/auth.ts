@@ -1,5 +1,3 @@
-import { Gender, PrivacyLevel } from '@/enums/common';
-
 // Auth response
 export interface IAuthMeDTO {
   username: string;
@@ -17,22 +15,11 @@ export interface IProfileDTO {
   id: string;
   userId: string;
   fullname: string;
-  dob: string;
-  city: string;
-  bio: string;
   coverUrl: string;
+  bio: string;
   avatarUrl: string;
-  gender: Gender;
-  phoneNumber: string;
   createdDate: string;
   lastOnlineAt: string;
-  tiktokUrl: string;
-  xUrl: string;
-  instagramUrl: string;
-  facebookUrl: string;
-  profileVisibility: PrivacyLevel;
-  friendsVisibility: PrivacyLevel;
-  postsVisibility: PrivacyLevel;
   followersCount: number;
   followingCount: number;
 }

@@ -5,6 +5,7 @@ import images from '@/public/imgs';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
+import { getValidImageSrc } from '@/lib/image-utils';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { user } = useNavigationLayout();
@@ -23,7 +24,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
       >
         <UserProfileCard
           username={user?.auth?.username || ''}
-          avatarUrl={user?.profile?.avatarUrl || images.avt1.src}
+          avatarUrl={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
           fullName={user?.profile?.fullname || ''}
           hasRing={false}
           responsive

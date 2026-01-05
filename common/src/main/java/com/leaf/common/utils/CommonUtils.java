@@ -12,4 +12,8 @@ public class CommonUtils {
     public static boolean isNotEmpty(Object... args) {
         return Arrays.stream(args).allMatch(ObjectUtils::isNotEmpty);
     }
+
+    public static <T> T getSafeObject(Object obj, Class<T> clazz, T defaultValue) {
+        return obj == null ? defaultValue : clazz.cast(obj);
+    }
 }

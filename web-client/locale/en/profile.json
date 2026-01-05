@@ -36,5 +36,11 @@
   "yesterday": "Yesterday",
   "change_cover_image_same": "You have selected the same cover image",
   "edit_avatar_title": "Update Profile Picture",
-  "edit_avatar_description": "A clear, high-quality photo helps people recognize you easily. Supports JPG, PNG or GIF"
+  "edit_avatar_description": "A clear, high-quality photo helps people recognize you easily. Supports JPG, PNG or GIF",
+  "bio": "Bio",
+  "city": "Province/City",
+  "facebookUrl": "Facebook URL",
+  "instagramUrl": "Instagram URL",
+  "tiktokUrl": "Tiktok URL",
+  "xUrl": "X URL"
 }
