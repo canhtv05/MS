@@ -1,24 +1,27 @@
-package com.leaf.common.dto;
+package com.leaf.graphql_bff.profile.dto;
 
+import com.leaf.common.grpc.PrivacyLevel;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserSessionDTO implements Serializable {
+public class UserProfilePrivacyDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    String sessionId;
-    String channel;
-    String username;
-    String secretKey;
+    String id;
+    PrivacyLevel profileVisibility;
+    PrivacyLevel friendsVisibility;
+    PrivacyLevel postsVisibility;
 }

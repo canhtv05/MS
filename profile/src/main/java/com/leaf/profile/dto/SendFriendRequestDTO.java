@@ -3,6 +3,7 @@ package com.leaf.profile.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.enums.FriendRequestStatus;
+import java.io.Serializable;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SendFriendRequestDTO {
+public class SendFriendRequestDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     String senderId;
     String receiverId;

@@ -3,6 +3,7 @@ package com.leaf.profile.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.domain.MediaHistory;
+import java.io.Serializable;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MediaHistoryDTO {
+public class MediaHistoryDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     String id;
     String userId;

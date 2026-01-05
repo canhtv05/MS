@@ -2,6 +2,7 @@ package com.leaf.auth.dto;
 
 import com.leaf.auth.domain.UserPermission;
 import com.leaf.auth.enums.PermissionAction;
+import java.io.Serializable;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPermissionDTO {
+public class UserPermissionDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String permissionCode;
     private PermissionAction action;

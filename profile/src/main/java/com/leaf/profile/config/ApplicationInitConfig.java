@@ -17,7 +17,7 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner() {
         return args -> {
             try (Session session = driver.session()) {
-                String cypher = """
+                String loadProfilesCypher = """
                     LOAD CSV WITH HEADERS FROM 'file:///user_profile.csv' AS row
 
                     MERGE (profile:user_profile {id: row.id})
@@ -35,19 +35,31 @@ public class ApplicationInitConfig {
                         profile.modified_date = datetime(row.created_date)
 
                     MERGE (introduce:user_profile_introduce {id: row.id + '-introduce'})
-                    SET introduce.city = row.city,
+                    SET introduce.user_id = row.user_id,
+                        introduce.city = row.city,
+                        introduce.hometown = row.hometown,
+                        introduce.job_title = row.job_title,
+                        introduce.company = row.company,
+                        introduce.school = row.school,
+                        introduce.website_url = row.website_url,
+                        introduce.github_url = row.github_url,
+                        introduce.linkedin_url = row.linkedin_url,
+                        introduce.x_url = row.x_url,
+                        introduce.instagram_url = row.instagram_url,
+                        introduce.tiktok_url = row.tiktok_url,
+                        introduce.facebook_url = row.facebook_url,
                         introduce.dob = date(row.dob),
                         introduce.gender = row.gender,
+                        introduce.relationship_status = row.relationship_status,
                         introduce.phone_number = row.phone_number,
-                        introduce.facebook_url = row.facebook_url,
-                        introduce.tiktok_url = row.tiktok_url,
                         introduce.created_by = row.created_by,
                         introduce.modified_by = row.modified_by,
                         introduce.created_date = datetime(row.created_date),
                         introduce.modified_date = datetime(row.created_date)
 
                     MERGE (privacy:user_profile_privacy {id: row.id + '-privacy'})
-                    SET privacy.profile_visibility = row.profile_visibility,
+                    SET privacy.user_id = row.user_id,
+                        privacy.profile_visibility = row.profile_visibility,
                         privacy.friends_visibility = row.friends_visibility,
                         privacy.posts_visibility = row.posts_visibility,
                         privacy.created_by = row.created_by,
@@ -59,8 +71,27 @@ public class ApplicationInitConfig {
                     MERGE (profile)-[:HAS_PRIVACY]->(privacy)
                     """;
 
+                String loadInterestsCypher = """
+                    LOAD CSV WITH HEADERS FROM 'file:///interests.csv' AS row
+
+                    MERGE (interest:interest {id: row.id})
+                    SET interest.title = row.title,
+                        interest.color = row.color
+                    """;
+
+                String loadUserInterestsCypher = """
+                    LOAD CSV WITH HEADERS FROM 'file:///user_interests.csv' AS row
+
+                    MATCH (introduce:user_profile_introduce {id: row.user_profile_introduce_id})
+                    MATCH (interest:interest {id: row.interest_id})
+
+                    MERGE (introduce)-[:INTERESTED_IN]->(interest)
+                    """;
+
                 session.executeWrite(ex -> {
-                    ex.run(cypher);
+                    ex.run(loadProfilesCypher);
+                    ex.run(loadInterestsCypher);
+                    ex.run(loadUserInterestsCypher);
                     return null;
                 });
             }

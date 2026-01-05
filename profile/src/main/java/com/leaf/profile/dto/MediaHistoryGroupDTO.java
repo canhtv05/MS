@@ -1,5 +1,6 @@
 package com.leaf.profile.dto;
 
+import java.io.Serializable;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MediaHistoryGroupDTO {
+public class MediaHistoryGroupDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     String date;
     List<MediaHistoryDTO> items;

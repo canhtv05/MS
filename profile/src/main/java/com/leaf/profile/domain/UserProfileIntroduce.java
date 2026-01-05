@@ -11,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Getter
@@ -25,6 +26,10 @@ public class UserProfileIntroduce extends AbstractAuditingNeo4jEntity {
     @Id
     @GeneratedValue(UUIDStringGenerator.class)
     String id;
+
+    @Builder.Default
+    @Property("user_id")
+    String userId = "";
 
     @Builder.Default
     String city = "";
@@ -85,5 +90,6 @@ public class UserProfileIntroduce extends AbstractAuditingNeo4jEntity {
     String phoneNumber = "";
 
     @Builder.Default
-    List<String> interests = new ArrayList<>();
+    @Relationship(type = "INTERESTED_IN", direction = Relationship.Direction.OUTGOING)
+    List<Interest> interests = new ArrayList<>();
 }

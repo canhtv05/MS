@@ -1,0 +1,21 @@
+id,title,color
+interest-java,Java,#f89820
+interest-react,React,#61dafb
+interest-springboot,Spring Boot,#6db33f
+interest-docker,Docker,#2496ed
+interest-kubernetes,Kubernetes,#326ce5
+interest-nodejs,Node.js,#339933
+interest-python,Python,#3776ab
+interest-typescript,TypeScript,#3178c6
+interest-postgresql,PostgreSQL,#336791
+interest-mongodb,MongoDB,#47a248
+interest-redis,Redis,#dc382d
+interest-aws,AWS,#ff9900
+interest-git,Git,#f05032
+interest-nextjs,Next.js,#000000
+interest-tailwind,Tailwind CSS,#06b6d4
+interest-graphql,GraphQL,#e10098
+interest-microservices,Microservices,#00d8ff
+interest-ci-cd,CI/CD,#2088ff
+interest-agile,Agile,#ff6b6b
+interest-design-patterns,Design Patterns,#9b59b6

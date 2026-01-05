@@ -1,9 +1,9 @@
-id,user_id,fullname,dob,city,gender,bio,cover_url,phone_number,avatar_url,facebook_url,tiktok_url,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date
-"1-1",admin,"Trần Văn Cảnh",2005-10-17,"Trung Văn, Nam Từ Liêm, Hà Nội","GENDER_MALE","while(!success) {
+id,user_id,fullname,dob,city,hometown,job_title,company,school,website_url,github_url,linkedin_url,x_url,instagram_url,tiktok_url,facebook_url,gender,relationship_status,bio,cover_url,phone_number,avatar_url,profile_visibility,friends_visibility,posts_visibility,followers_count,following_count,created_by,modified_by,created_date,last_online_at
+"1-1",admin,"Trần Văn Cảnh",2000-05-15,"Hà Nội","Hà Nam","Intern Web Engineer at LeafHub","LeafHub","Cao đẳng FPT","https://canhtv.com","https://github.com/canhtv","https://linkedin.com/in/canhtv","https://x.com/canhtv","https://instagram.com/canhtv","https://www.tiktok.com/@rainrain9982","https://www.facebook.com/rain.857382","GENDER_MALE","RELATIONSHIP_STATUS_SINGLE","while(!success) {
     if (youFail) improvement++;
     if (improvement > fear) success = true;
-}",,"0987654321",,"https://www.facebook.com/rain.857382","https://www.tiktok.com/@rainrain9982",PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_PUBLIC,0,0,system,system,2025-01-01T10:00:00Z
-"2-2",user,"User",2005-05-20,Ho Chi Minh,"GENDER_FEMALE","while(!success) {
+}",,0987654321,,PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_PUBLIC,230000,150,system,system,2025-01-01T10:00:00Z,2025-01-05T16:00:00Z
+"2-2",user,"User",2005-05-20,"Ho Chi Minh",,"Software Developer",,,,,,,,"https://www.tiktok.com/@user123","https://www.facebook.com/user","GENDER_FEMALE","RELATIONSHIP_STATUS_SINGLE","while(!success) {
     if (youFail) improvement++;
     if (improvement > fear) success = true;
-}",,"0123456789",,"https://www.facebook.com/rain.857382","https://www.tiktok.com/@rainrain9982",PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_FRIENDS_ONLY,PRIVACY_LEVEL_PUBLIC,0,0,system,system,2025-01-01T11:00:00Z
+}",,0123456789,,PRIVACY_LEVEL_PUBLIC,PRIVACY_LEVEL_FRIENDS_ONLY,PRIVACY_LEVEL_PUBLIC,100,50,system,system,2025-01-01T11:00:00Z,2025-01-05T15:30:00Z

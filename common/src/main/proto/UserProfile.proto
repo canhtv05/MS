@@ -10,6 +10,8 @@ option java_outer_classname = "UserProfile";
 service UserProfileGrpcService {
     rpc createUserProfile(UserProfileDTO) returns (UserProfileDTO);
     rpc getUserProfile(UserProfileIdRequest) returns (UserProfileResponse);
+    rpc getUserProfilePrivacy(UserProfileIdRequest) returns (UserProfilePrivacyDTO);
+    rpc getUserProfileIntroduce(UserProfileIdRequest) returns (UserProfileIntroduceDTO);
 }
 
 message UserProfileDTO {
@@ -32,4 +34,38 @@ message UserProfileResponse {
     int64 followingCount = 8;
     string id = 9;
     string bio = 10;
+}
+
+message UserProfilePrivacyDTO {
+    string userId = 1;
+    PrivacyLevel profileVisibility = 2;
+    PrivacyLevel friendsVisibility = 3;
+    PrivacyLevel postsVisibility = 4;
+}
+
+message UserProfileIntroduceDTO {
+    string userId = 1;
+    string city = 2;
+    string hometown = 3;
+    string jobTitle = 4;
+    string company = 5;
+    string school = 6;
+    string websiteUrl = 7;
+    string githubUrl = 8;
+    string linkedinUrl = 9;
+    string xUrl = 10;
+    string instagramUrl = 11;
+    string tiktokUrl = 12;
+    string facebookUrl = 13;
+    google.protobuf.Timestamp dob = 14;
+    Gender gender = 15;
+    RelationshipStatus relationshipStatus = 16;
+    string phoneNumber = 17;
+    repeated InterestDTO interests = 18;
+}
+
+message InterestDTO {
+    string id = 1;
+    string title = 2;
+    string color = 3;
 }

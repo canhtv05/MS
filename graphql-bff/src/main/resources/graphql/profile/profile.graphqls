@@ -1,3 +1,7 @@
+extend type Query {
+  userDetail: (username: String!): DetailUserProfileDTO
+}
+
 type ProfileDTO {
   id: String
   userId: String
@@ -9,4 +13,54 @@ type ProfileDTO {
   lastOnlineAt: String
   followersCount: Int
   followingCount: Int
+}
+
+type DetailUserProfileDTO {
+  id: String
+  userId: String
+  fullname: String
+  bio: String
+  coverUrl: String
+  avatarUrl: String
+  introduce: UserProfileIntroduceDTO
+  privacy: UserProfilePrivacyDTO
+  lastOnlineAt: String
+  followersCount: Int
+  followingCount: Int
+}
+
+type UserProfilePrivacyDTO {
+  id: String
+  userId: String
+  profileVisibility: PrivacyLevel
+  friendsVisibility: PrivacyLevel
+  postsVisibility: PrivacyLevel
+}
+
+type UserProfileIntroduceDTO {
+  id: String
+  userId: String
+  city: String
+  hometown: String
+  jobTitle: String
+  company: String
+  school: String
+  websiteUrl: String
+  githubUrl: String
+  linkedinUrl: String
+  xUrl: String
+  instagramUrl: String
+  tiktokUrl: String
+  facebookUrl: String
+  dob: LocalDate
+  gender: Gender
+  relationshipStatus: RelationshipStatus
+  phoneNumber: String
+  interests: [InterestDTO]
+}
+
+type InterestDTO {
+  id: String
+  title: String
+  color: String
 }

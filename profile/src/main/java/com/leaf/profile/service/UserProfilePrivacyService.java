@@ -2,9 +2,9 @@ package com.leaf.profile.service;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.profile.domain.UserProfileIntroduce;
-import com.leaf.profile.dto.UserProfileIntroduceDTO;
-import com.leaf.profile.repository.UserProfileIntroduceRepository;
+import com.leaf.profile.domain.UserProfilePrivacy;
+import com.leaf.profile.dto.UserProfilePrivacyDTO;
+import com.leaf.profile.repository.UserProfilePrivacyRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserProfileIntroduceService {
+public class UserProfilePrivacyService {
 
-    UserProfileIntroduceRepository userProfileIntroduceRepository;
+    UserProfilePrivacyRepository userProfilePrivacyRepository;
 
-    public UserProfileIntroduceDTO getUserProfileIntroduce(String userId) {
-        UserProfileIntroduce userProfileIntroduce = userProfileIntroduceRepository
+    public UserProfilePrivacyDTO getUserProfilePrivacy(String userId) {
+        UserProfilePrivacy userProfilePrivacy = userProfilePrivacyRepository
             .findByUserId(userId)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-        return UserProfileIntroduceDTO.toUserProfileIntroduceDTO(userProfileIntroduce);
+        return UserProfilePrivacyDTO.toUserProfilePrivacyDTO(userProfilePrivacy);
     }
 }

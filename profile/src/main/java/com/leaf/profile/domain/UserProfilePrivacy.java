@@ -28,6 +28,10 @@ public class UserProfilePrivacy extends AbstractAuditingNeo4jEntity {
     String id;
 
     @Builder.Default
+    @Property("user_id")
+    String userId = "";
+
+    @Builder.Default
     @Property("profile_visibility")
     PrivacyLevel profileVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
 

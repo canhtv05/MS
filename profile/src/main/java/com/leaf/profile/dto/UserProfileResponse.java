@@ -22,16 +22,6 @@ public class UserProfileResponse {
     String userId;
     String fullname;
 
-    // @JsonSerialize(using = LocalDateToStringSerializer.class)
-    // LocalDate dob;
-    // String city;
-    // Gender gender;
-    // String phoneNumber;
-    // String tiktokUrl;
-    // String xUrl;
-    // String instagramUrl;
-    // String facebookUrl;
-
     @JsonSerialize(using = InstantToStringSerializer.class)
     Instant createdDate;
 
