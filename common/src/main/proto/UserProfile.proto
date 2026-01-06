@@ -41,6 +41,7 @@ message UserProfilePrivacyDTO {
     PrivacyLevel profileVisibility = 2;
     PrivacyLevel friendsVisibility = 3;
     PrivacyLevel postsVisibility = 4;
+    string id = 5;
 }
 
 message UserProfileIntroduceDTO {
@@ -62,6 +63,7 @@ message UserProfileIntroduceDTO {
     RelationshipStatus relationshipStatus = 16;
     string phoneNumber = 17;
     repeated InterestDTO interests = 18;
+    string id = 19;
 }
 
 message InterestDTO {

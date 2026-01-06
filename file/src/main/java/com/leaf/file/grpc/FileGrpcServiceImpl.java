@@ -1,7 +1,6 @@
 package com.leaf.file.grpc;
 
 import com.google.protobuf.ByteString;
-import com.leaf.common.exception.ApiException;
 import com.leaf.common.grpc.*;
 import com.leaf.file.mapper.FileProtoMapper;
 import com.leaf.file.service.FileService;
@@ -20,37 +19,23 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
 
     @Override
     public void deleteById(DeleteByIdRequest request, StreamObserver<DeleteByIdResponse> responseObserver) {
-        try {
-            fileService.deleteById(request.getFileId());
+        fileService.deleteById(request.getFileId());
 
-            DeleteByIdResponse response = DeleteByIdResponse.newBuilder().setSuccess(true).build();
+        DeleteByIdResponse response = DeleteByIdResponse.newBuilder().setSuccess(true).build();
 
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            if (e instanceof ApiException) {
-                throw (ApiException) e;
-            }
-            responseObserver.onError(e);
-        }
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override
     public void getFileByIds(GetFilesByIdsRequest request, StreamObserver<GetFilesByIdsResponse> responseObserver) {
-        try {
-            List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(request.getIdsList());
+        List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(request.getIdsList());
 
-            GetFilesByIdsResponse.Builder builder = GetFilesByIdsResponse.newBuilder();
-            files.forEach(f -> builder.addFiles(FileProtoMapper.toProto(f)));
+        GetFilesByIdsResponse.Builder builder = GetFilesByIdsResponse.newBuilder();
+        files.forEach(f -> builder.addFiles(FileProtoMapper.toProto(f)));
 
-            responseObserver.onNext(builder.build());
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            if (e instanceof ApiException) {
-                throw (ApiException) e;
-            }
-            responseObserver.onError(e);
-        }
+        responseObserver.onNext(builder.build());
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -67,10 +52,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            if (e instanceof ApiException) {
-                throw (ApiException) e;
-            }
-            responseObserver.onError(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -92,10 +74,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            if (e instanceof ApiException) {
-                throw (ApiException) e;
-            }
-            responseObserver.onError(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,10 +96,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            if (e instanceof ApiException) {
-                throw (ApiException) e;
-            }
-            responseObserver.onError(e);
+            throw new RuntimeException(e);
         }
     }
 

@@ -24,24 +24,21 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
     private final UserProfileService userProfileService;
     private final UserProfilePrivacyService userProfilePrivacyService;
     private final UserProfileIntroduceService userProfileIntroduceService;
-    private final UserProfileGrpcMapper userProfileGrpcMapper;
-    private final UserProfilePrivacyGrpcMapper userProfilePrivacyGrpcMapper;
-    private final UserProfileIntroduceGrpcMapper userProfileIntroduceGrpcMapper;
+
+    private final UserProfileGrpcMapper userProfileGrpcMapper = UserProfileGrpcMapper.getInstance();
+    private final UserProfilePrivacyGrpcMapper userProfilePrivacyGrpcMapper =
+        UserProfilePrivacyGrpcMapper.getInstance();
+    private final UserProfileIntroduceGrpcMapper userProfileIntroduceGrpcMapper =
+        UserProfileIntroduceGrpcMapper.getInstance();
 
     @Override
     public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
-        try {
-            UserProfileCreationReq userProfileCreationReq = userProfileGrpcMapper.toUserProfileCreationReq(request);
-            UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
-            UserProfileDTO response = userProfileGrpcMapper.toGrpcUserProfileDTO(newUserProfile);
+        UserProfileCreationReq userProfileCreationReq = userProfileGrpcMapper.toUserProfileCreationReq(request);
+        UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
+        UserProfileDTO response = userProfileGrpcMapper.toGrpcUserProfileDTO(newUserProfile);
 
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            responseObserver.onError(
-                io.grpc.Status.ALREADY_EXISTS.withDescription(e.getMessage()).asRuntimeException()
-            );
-        }
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -49,24 +46,13 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
         UserProfileIdRequest request,
         StreamObserver<com.leaf.common.grpc.UserProfileResponse> responseObserver
     ) {
-        try {
-            UserProfileResponse userProfile = userProfileService.getUserProfile(request.getUserId());
-            com.leaf.common.grpc.UserProfileResponse grpcResponse = userProfileGrpcMapper.toGrpcUserProfileResponse(
-                userProfile
-            );
+        UserProfileResponse userProfile = userProfileService.getUserProfile(request.getUserId());
+        com.leaf.common.grpc.UserProfileResponse grpcResponse = userProfileGrpcMapper.toGrpcUserProfileResponse(
+            userProfile
+        );
 
-            responseObserver.onNext(grpcResponse);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getMessage().contains("NOT_FOUND")) {
-                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
-            } else {
-                responseObserver.onError(
-                    io.grpc.Status.INTERNAL.withDescription("Internal error: " + e.getMessage()).asRuntimeException()
-                );
-            }
-        }
+        responseObserver.onNext(grpcResponse);
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -74,24 +60,14 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
         UserProfileIdRequest request,
         StreamObserver<UserProfilePrivacyDTO> responseObserver
     ) {
-        try {
-            com.leaf.profile.dto.UserProfilePrivacyDTO userProfilePrivacy =
-                userProfilePrivacyService.getUserProfilePrivacy(request.getUserId());
-            com.leaf.common.grpc.UserProfilePrivacyDTO grpcResponse =
-                userProfilePrivacyGrpcMapper.toGrpcUserProfilePrivacyDTO(userProfilePrivacy);
+        com.leaf.profile.dto.UserProfilePrivacyDTO userProfilePrivacy = userProfilePrivacyService.getUserProfilePrivacy(
+            request.getUserId()
+        );
+        com.leaf.common.grpc.UserProfilePrivacyDTO grpcResponse =
+            userProfilePrivacyGrpcMapper.toGrpcUserProfilePrivacyDTO(userProfilePrivacy);
 
-            responseObserver.onNext(grpcResponse);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getMessage().contains("NOT_FOUND")) {
-                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
-            } else {
-                responseObserver.onError(
-                    io.grpc.Status.INTERNAL.withDescription("Internal error: " + e.getMessage()).asRuntimeException()
-                );
-            }
-        }
+        responseObserver.onNext(grpcResponse);
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -99,23 +75,12 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
         UserProfileIdRequest request,
         StreamObserver<UserProfileIntroduceDTO> responseObserver
     ) {
-        try {
-            com.leaf.profile.dto.UserProfileIntroduceDTO userProfileIntroduce =
-                userProfileIntroduceService.getUserProfileIntroduce(request.getUserId());
-            com.leaf.common.grpc.UserProfileIntroduceDTO grpcResponse =
-                userProfileIntroduceGrpcMapper.toGrpcUserProfileIntroduceDTO(userProfileIntroduce);
+        com.leaf.profile.dto.UserProfileIntroduceDTO userProfileIntroduce =
+            userProfileIntroduceService.getUserProfileIntroduce(request.getUserId());
+        com.leaf.common.grpc.UserProfileIntroduceDTO grpcResponse =
+            userProfileIntroduceGrpcMapper.toGrpcUserProfileIntroduceDTO(userProfileIntroduce);
 
-            responseObserver.onNext(grpcResponse);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getMessage().contains("NOT_FOUND")) {
-                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
-            } else {
-                responseObserver.onError(
-                    io.grpc.Status.INTERNAL.withDescription("Internal error: " + e.getMessage()).asRuntimeException()
-                );
-            }
-        }
+        responseObserver.onNext(grpcResponse);
+        responseObserver.onCompleted();
     }
 }

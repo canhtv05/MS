@@ -1,6 +1,5 @@
 package com.leaf.auth.exception;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
@@ -18,11 +17,6 @@ public class ExceptionTranslator {
         return ResponseEntity.badRequest().body(
             ResponseObject.error(String.valueOf(HttpStatus.BAD_REQUEST.value()), ex.getMessage())
         );
-    }
-
-    @ExceptionHandler(JsonParseException.class)
-    public <T> ResponseEntity<T> handleParserCookie(JsonParseException ex) {
-        return ResponseEntity.badRequest().body(null);
     }
 
     @ExceptionHandler(ApiException.class)

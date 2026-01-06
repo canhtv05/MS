@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 
 @EnableConfigurationProperties({ ApplicationProperties.class })
-@SpringBootApplication(scanBasePackages = { "com.leaf", "com.leaf.common" })
+@SpringBootApplication(scanBasePackages = { "com.leaf.auth", "com.leaf.common", "com.leaf.framework" })
 @EnableCaching
 public class AuthApplication {
 

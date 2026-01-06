@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     exclude = {
         net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class,
         net.devh.boot.grpc.client.autoconfigure.GrpcClientHealthAutoConfiguration.class
-    }
+    },
+    scanBasePackages = { "com.leaf.file", "com.leaf.common", "com.leaf" }
 )
 public class FileApplication {
 

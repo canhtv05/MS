@@ -31,31 +31,15 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
 
     @Override
     public void verifyEmailToken(VerifyEmailTokenDTO request, StreamObserver<VerifyEmailTokenDTO> responseObserver) {
-        try {
-            var response = userService.activeUserByUserName(request);
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            if (e.getMessage().contains("NOT_FOUND")) {
-                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
-            } else {
-                responseObserver.onError(io.grpc.Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
-            }
-        }
+        var response = userService.activeUserByUserName(request);
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
     @Override
     public void authMe(AuthMeRequest request, StreamObserver<AuthMeResponse> responseObserver) {
-        try {
-            var response = authService.getProfile(request.getUserId());
-            responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeResponse(response));
-            responseObserver.onCompleted();
-        } catch (Exception e) {
-            if (e.getMessage().contains("NOT_FOUND")) {
-                responseObserver.onError(io.grpc.Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException());
-            } else {
-                responseObserver.onError(io.grpc.Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
-            }
-        }
+        var response = authService.getProfile(request.getUserId());
+        responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeResponse(response));
+        responseObserver.onCompleted();
     }
 }

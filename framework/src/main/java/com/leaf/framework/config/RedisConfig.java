@@ -1,5 +1,7 @@
 package com.leaf.framework.config;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
@@ -19,9 +21,19 @@ public class RedisConfig {
     @Bean
     Config config() {
         Config config = new Config();
+
+        String password = appConfigs.getRedis().getPassword();
+        String address = appConfigs.getRedis().getAddress();
+        if (StringUtils.isNotBlank(password)) {
+            String enCodePassword = URLEncoder.encode(password, StandardCharsets.UTF_8);
+            String rawAddress = address.replace("redis://", "").replace("rediss://", "");
+            address = "redis://" + enCodePassword + "@" + rawAddress;
+        }
+        if (!address.startsWith("redis://") && !address.startsWith("rediss://")) address = "redis://" + address;
+
         var single = config
             .useSingleServer()
-            .setAddress(appConfigs.getRedis().getAddress())
+            .setAddress(address)
             .setConnectionPoolSize(appConfigs.getRedis().getMaxPoolSize())
             .setTimeout(10000)
             .setConnectTimeout(10000)
@@ -29,10 +41,6 @@ public class RedisConfig {
 
         if (StringUtils.isNotBlank(appConfigs.getRedis().getClientName())) single.setClientName(
             appConfigs.getRedis().getClientName()
-        );
-
-        if (StringUtils.isNotBlank(appConfigs.getRedis().getPassword())) single.setPassword(
-            appConfigs.getRedis().getPassword()
         );
         return config;
     }

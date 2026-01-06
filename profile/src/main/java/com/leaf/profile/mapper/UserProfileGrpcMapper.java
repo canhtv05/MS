@@ -4,22 +4,28 @@ import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
 
-@Mapper(
-    componentModel = "spring",
-    unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
-public interface UserProfileGrpcMapper {
-    @Mapping(target = "userId", source = "userId")
-    @Mapping(target = "fullname", source = "fullname")
-    UserProfileCreationReq toUserProfileCreationReq(UserProfileDTO grpcRequest);
+public class UserProfileGrpcMapper {
 
-    default com.leaf.common.grpc.UserProfileResponse toGrpcUserProfileResponse(UserProfileResponse response) {
+    private static final UserProfileGrpcMapper INSTANCE = new UserProfileGrpcMapper();
+
+    private UserProfileGrpcMapper() {}
+
+    public static UserProfileGrpcMapper getInstance() {
+        return INSTANCE;
+    }
+
+    public UserProfileCreationReq toUserProfileCreationReq(UserProfileDTO grpcRequest) {
+        if (grpcRequest == null) {
+            return null;
+        }
+        return UserProfileCreationReq.builder()
+            .userId(grpcRequest.getUserId())
+            .fullname(grpcRequest.getFullname())
+            .build();
+    }
+
+    public com.leaf.common.grpc.UserProfileResponse toGrpcUserProfileResponse(UserProfileResponse response) {
         if (response == null) {
             return null;
         }
@@ -37,7 +43,7 @@ public interface UserProfileGrpcMapper {
         return builder.build();
     }
 
-    default UserProfileDTO toGrpcUserProfileDTO(UserProfileResponse response) {
+    public UserProfileDTO toGrpcUserProfileDTO(UserProfileResponse response) {
         if (response == null) {
             return null;
         }

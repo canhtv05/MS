@@ -4,8 +4,8 @@ import com.leaf.common.grpc.AuthMeResponse;
 import com.leaf.common.grpc.UserProfileIdRequest;
 import com.leaf.common.grpc.UserProfileResponse;
 import com.leaf.framework.service.RedisService;
-import com.leaf.graphql_bff.auth.client.GrpcAuthClient;
-import com.leaf.graphql_bff.auth.client.GrpcProfileClient;
+import com.leaf.graphql_bff.auth.client.AuthGrpcAuthClient;
+import com.leaf.graphql_bff.auth.client.AuthGrpcProfileClient;
 import com.leaf.graphql_bff.auth.dto.UserProfileDTO;
 import com.leaf.graphql_bff.auth.mapper.UserProfileMapper;
 import com.leaf.graphql_bff.util.SecurityUtils;
@@ -24,8 +24,8 @@ import reactor.core.scheduler.Schedulers;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthQueryResolver {
 
-    GrpcAuthClient grpcAuthClient;
-    GrpcProfileClient grpcProfileClient;
+    AuthGrpcAuthClient grpcAuthClient;
+    AuthGrpcProfileClient grpcProfileClient;
     RedisService redisService;
 
     @DgsQuery(field = "me")

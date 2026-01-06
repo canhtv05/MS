@@ -8,7 +8,7 @@ import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
 @ComponentScan(
-    basePackages = { "com.leaf.graphql_bff", "com.leaf.framework" },
+    basePackages = { "com.leaf.graphql_bff", "com.leaf.framework", "com.leaf.common" },
     excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionTranslator.class)
 )
 public class GraphqlBffApplication {

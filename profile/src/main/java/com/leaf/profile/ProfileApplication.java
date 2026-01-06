@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@SpringBootApplication(scanBasePackages = { "com.leaf.profile", "com.leaf" })
+@SpringBootApplication(scanBasePackages = { "com.leaf.profile", "com.leaf.framework", "com.leaf.common" })
 @EnableConfigurationProperties({ KafkaConsumerProperties.class })
 public class ProfileApplication {
 

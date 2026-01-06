@@ -1,3 +1,6 @@
+scalar DateTime # cho Instant
+scalar Date # cho LocalDate
+
 type Query {
 }
 

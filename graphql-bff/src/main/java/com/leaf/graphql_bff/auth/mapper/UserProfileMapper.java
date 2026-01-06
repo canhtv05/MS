@@ -9,12 +9,9 @@ import com.leaf.graphql_bff.auth.dto.UserProfileDTO;
 
 public class UserProfileMapper {
 
-    private static UserProfileMapper instance;
+    private static final UserProfileMapper instance = new UserProfileMapper();
 
     public static UserProfileMapper getInstance() {
-        if (instance == null) {
-            instance = new UserProfileMapper();
-        }
         return instance;
     }
 

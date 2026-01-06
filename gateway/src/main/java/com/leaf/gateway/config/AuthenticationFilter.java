@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -31,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -49,14 +51,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        if (isPublicEndpoint(exchange.getRequest())) {
-            return chain.filter(exchange);
-        }
+        log.info("GATEWAY_DEBUG: Request URI: " + exchange.getRequest().getURI());
+        log.info("GATEWAY_DEBUG: Request Path: " + exchange.getRequest().getURI().getPath());
 
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         String token = null;
         if (CollectionUtils.isEmpty(authHeader)) {
             HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
+            log.info("GATEWAY_DEBUG: No auth header, checking cookie: " + (cookie != null ? "found" : "not found"));
             if (Objects.nonNull(cookie)) {
                 String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
                 @SuppressWarnings("unchecked")
@@ -67,9 +69,27 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             }
         } else {
             token = authHeader.getFirst().replace("Bearer ", "");
+            log.info("GATEWAY_DEBUG: Auth header found");
         }
 
+        if (isPublicEndpoint(exchange.getRequest())) {
+            log.info("GATEWAY_DEBUG: Public endpoint - allowing through");
+            if (StringUtils.isNotBlank(token)) {
+                log.info("GATEWAY_DEBUG: Forwarding token to downstream service");
+                ServerHttpRequest request = exchange
+                    .getRequest()
+                    .mutate()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .build();
+                return chain.filter(exchange.mutate().request(request).build());
+            }
+            return chain.filter(exchange);
+        }
+
+        log.info("GATEWAY_DEBUG: Protected endpoint - checking auth");
+
         if (StringUtils.isBlank(token)) {
+            log.info("GATEWAY_DEBUG: No token found - returning 401");
             return unauthenticated(exchange.getResponse());
         }
 
@@ -95,9 +115,18 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private boolean isPublicEndpoint(ServerHttpRequest request) {
         String path = request.getURI().getPath();
-        return Arrays.stream(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).anyMatch(s ->
-            pathMatcher.match(API_PREFIX + s, path)
-        );
+        log.info("GATEWAY_DEBUG: Checking if public - path: " + path);
+        log.info("GATEWAY_DEBUG: API_PREFIX: " + API_PREFIX);
+
+        boolean isPublic = Arrays.stream(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).anyMatch(s -> {
+            String pattern = API_PREFIX + s;
+            boolean matches = pathMatcher.match(pattern, path);
+            log.info("GATEWAY_DEBUG: Pattern: " + pattern + " matches: " + matches);
+            return matches;
+        });
+
+        log.info("GATEWAY_DEBUG: Final result: " + isPublic);
+        return isPublic;
     }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {

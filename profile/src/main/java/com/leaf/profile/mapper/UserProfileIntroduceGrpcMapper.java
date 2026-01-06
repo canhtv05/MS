@@ -6,23 +6,25 @@ import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.ConvertProto;
 import com.leaf.profile.dto.UserProfileIntroduceDTO;
 import java.util.ArrayList;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
 
-@Mapper(
-    componentModel = "spring",
-    unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
-public interface UserProfileIntroduceGrpcMapper {
-    default com.leaf.common.grpc.UserProfileIntroduceDTO toGrpcUserProfileIntroduceDTO(
+public class UserProfileIntroduceGrpcMapper {
+
+    private static final UserProfileIntroduceGrpcMapper INSTANCE = new UserProfileIntroduceGrpcMapper();
+
+    private UserProfileIntroduceGrpcMapper() {}
+
+    public static UserProfileIntroduceGrpcMapper getInstance() {
+        return INSTANCE;
+    }
+
+    public com.leaf.common.grpc.UserProfileIntroduceDTO toGrpcUserProfileIntroduceDTO(
         UserProfileIntroduceDTO response
     ) {
         if (response == null) {
             return null;
         }
         return com.leaf.common.grpc.UserProfileIntroduceDTO.newBuilder()
+            .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
             .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
             .setCity(CommonUtils.getSafeObject(response.getCity(), String.class, ""))
             .setHometown(CommonUtils.getSafeObject(response.getHometown(), String.class, ""))
@@ -54,7 +56,7 @@ public interface UserProfileIntroduceGrpcMapper {
             .build();
     }
 
-    default com.leaf.common.grpc.InterestDTO toGrpcInterestDTO(com.leaf.profile.dto.InterestDTO interest) {
+    public com.leaf.common.grpc.InterestDTO toGrpcInterestDTO(com.leaf.profile.dto.InterestDTO interest) {
         if (interest == null) {
             return null;
         }

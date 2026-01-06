@@ -38,6 +38,11 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphql-java-extended-scalars</artifactId>
+			<version>24.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.leaf</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1</version>

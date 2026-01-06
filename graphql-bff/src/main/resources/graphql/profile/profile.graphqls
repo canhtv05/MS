@@ -1,5 +1,5 @@
 extend type Query {
-  userDetail: (username: String!): DetailUserProfileDTO
+  userDetail(username: String!): DetailUserProfileDTO
 }
 
 type ProfileDTO {
@@ -9,8 +9,8 @@ type ProfileDTO {
   bio: String
   coverUrl: String
   avatarUrl: String
-  createdDate: String
-  lastOnlineAt: String
+  createdDate: DateTime
+  lastOnlineAt: DateTime
   followersCount: Int
   followingCount: Int
 }
@@ -24,9 +24,10 @@ type DetailUserProfileDTO {
   avatarUrl: String
   introduce: UserProfileIntroduceDTO
   privacy: UserProfilePrivacyDTO
-  lastOnlineAt: String
+  lastOnlineAt: DateTime
   followersCount: Int
   followingCount: Int
+  createdDate: DateTime
 }
 
 type UserProfilePrivacyDTO {
@@ -52,7 +53,7 @@ type UserProfileIntroduceDTO {
   instagramUrl: String
   tiktokUrl: String
   facebookUrl: String
-  dob: LocalDate
+  dob: Date
   gender: Gender
   relationshipStatus: RelationshipStatus
   phoneNumber: String
