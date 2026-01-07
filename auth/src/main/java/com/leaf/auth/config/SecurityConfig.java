@@ -4,7 +4,7 @@ import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomAuthenticationProvider;
 import com.leaf.auth.security.jwt.JWTConfigurer;
 import com.leaf.auth.security.jwt.TokenProvider;
-import com.leaf.auth.util.AuthUtil;
+import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.constant.CommonConstants;
@@ -35,28 +35,28 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final AuthUtil authUtil;
+    private final CookieUtil cookieUtil;
     private final CorsFilter corsFilter;
 
-    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, AuthUtil authUtil) {
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, CookieUtil cookieUtil) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
-        this.authUtil = authUtil;
+        this.cookieUtil = cookieUtil;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, CustomAuthenticationProvider customProvider)
+    AuthenticationManager authenticationManager(HttpSecurity http, CustomAuthenticationProvider customProvider)
         throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).authenticationProvider(customProvider).build();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -82,11 +82,11 @@ public class SecurityConfig {
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider, authUtil);
+        return new JWTConfigurer(tokenProvider, cookieUtil);
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
+    AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             if (authException instanceof CustomAuthenticationException ex) {
@@ -112,7 +112,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
+    AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);

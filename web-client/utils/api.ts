@@ -25,7 +25,6 @@ export const AUTH_PUBLIC_ENDPOINTS: string[] = [
   '/me/p/forgot-password',
   '/me/p/reset-password',
   '/me/p/verify-forgot-password-otp',
-  '/me/p/refresh-token',
 ];
 export const NOTIFICATION_PUBLIC_ENDPOINTS: string[] = ['/verify-email', '/resend-verify-email'];
 export const PROFILE_PUBLIC_ENDPOINTS: string[] = ['/profile/**'];

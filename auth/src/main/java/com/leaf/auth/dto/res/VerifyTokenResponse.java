@@ -13,4 +13,6 @@ import lombok.experimental.SuperBuilder;
 public class VerifyTokenResponse {
 
     Boolean valid;
+    String accessToken;
+    String refreshToken;
 }

@@ -24,6 +24,31 @@
       "name": "application.security.cookie-domain",
       "type": "java.lang.String",
       "description": "A description for 'application.security.cookie-domain'"
+    },
+    {
+      "name": "application.redis.client-name",
+      "type": "java.lang.String",
+      "description": "A description for 'application.redis.client-name'"
+    },
+    {
+      "name": "application.redis.address",
+      "type": "java.lang.String",
+      "description": "A description for 'application.redis.address'"
+    },
+    {
+      "name": "application.redis.password",
+      "type": "java.lang.String",
+      "description": "A description for 'application.redis.password'"
+    },
+    {
+      "name": "application.redis.minimumIdle",
+      "type": "java.lang.String",
+      "description": "A description for 'application.redis.minimumIdle'"
+    },
+    {
+      "name": "application.redis.maxPoolSize",
+      "type": "java.lang.String",
+      "description": "A description for 'application.redis.maxPoolSize'"
     }
   ]
 }

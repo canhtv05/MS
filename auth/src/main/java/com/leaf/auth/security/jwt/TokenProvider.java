@@ -1,6 +1,5 @@
 package com.leaf.auth.security.jwt;
 
-import com.leaf.auth.config.ApplicationProperties;
 import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.NotificationPayload;
@@ -15,7 +14,9 @@ import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.AESUtils;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
+import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.security.SecurityUtils;
 import com.leaf.framework.service.RedisService;
 import io.jsonwebtoken.Claims;
@@ -31,13 +32,13 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
@@ -79,12 +80,12 @@ public class TokenProvider {
         this.redisService = redisService;
         this.userRepository = userRepository;
         this.cookieUtil = cookieUtil;
-        String secret = cookieUtil.getProperties().getSecurity().getBase64Secret();
+        String secret = applicationProperties.getSecurity().getBase64Secret();
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parser().verifyWith(key).build();
-        this.tokenValidityDuration = cookieUtil.getProperties().getSecurity().getValidDurationInSeconds();
-        this.refreshTokenValidityDuration = cookieUtil.getProperties().getSecurity().getRefreshDurationInSeconds();
+        this.tokenValidityDuration = applicationProperties.getSecurity().getValidDurationInSeconds();
+        this.refreshTokenValidityDuration = applicationProperties.getSecurity().getRefreshDurationInSeconds();
     }
 
     public String createToken(
@@ -98,9 +99,9 @@ public class TokenProvider {
         String name = authentication.getName();
         String keyToken = redisService.getKeyToken(name, channel);
         String tokenExisting = redisService.get(keyToken, String.class);
-        HttpSession session = request.getSession(true);
-        String sessionId = session.getId();
+        String sessionId = UUID.randomUUID().toString();
 
+        // chưa làm
         if (tokenExisting != null) {
             NotificationPayload<?> payload = NotificationPayload.builder()
                 .type(NotificationType.FORCE_LOGOUT)
@@ -122,8 +123,8 @@ public class TokenProvider {
             redisService.evict(keyToken);
         }
 
-        String token = this.generateToken(authentication, this.tokenValidityDuration, request, channel);
-        String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, request, channel);
+        String token = this.generateToken(authentication, this.tokenValidityDuration, channel, sessionId);
+        String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, channel, sessionId);
         this.cacheUserToken(name, channel, sessionId, token);
 
         Cookie cookie = cookieUtil.setTokenCookie(token, refreshToken);
@@ -139,7 +140,6 @@ public class TokenProvider {
     }
 
     public RefreshTokenResponse refreshToken(
-        Authentication authentication,
         String cookieValue,
         HttpServletRequest request,
         HttpServletResponse response,
@@ -192,24 +192,78 @@ public class TokenProvider {
         );
 
         Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-
-        String newToken = this.generateToken(newAuthentication, this.tokenValidityDuration, request, channel);
+        String sessionId = UUID.randomUUID().toString();
+        String newToken = this.generateToken(newAuthentication, this.tokenValidityDuration, channel, sessionId);
         String newRefreshToken = this.generateToken(
             newAuthentication,
             this.refreshTokenValidityDuration,
-            request,
-            channel
+            channel,
+            sessionId
         );
         user.setRefreshToken(newRefreshToken);
         userRepository.save(user);
-
-        String sessionId = request.getSession().getId();
         this.cacheUserToken(username, channel, sessionId, newToken);
 
         Cookie cookie = cookieUtil.setTokenCookie(newToken, newRefreshToken);
         response.addCookie(cookie);
 
         return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
+    }
+
+    public RefreshTokenResponse processRefreshInternal(String refreshToken, String channel) {
+        if (CommonUtils.isEmpty(refreshToken)) {
+            throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
+        }
+        if (CommonUtils.isEmpty(channel)) {
+            throw new ApiException(ErrorMessage.CHANNEL_INVALID);
+        }
+
+        try {
+            Claims claims = jwtParser.parseSignedClaims(refreshToken).getPayload();
+            String username = claims.getSubject();
+            String id = claims.getId();
+            User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+
+            if (!Objects.equals(user.getRefreshToken(), refreshToken) || StringUtils.isBlank(user.getRefreshToken())) {
+                throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
+            }
+
+            Collection<? extends GrantedAuthority> authorities = user
+                .getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
+
+            String rolesStr = user.getRoles().stream().map(Role::getName).collect(Collectors.joining(","));
+
+            CustomUserDetails userDetails = new CustomUserDetails(
+                user.getUsername(),
+                user.getPassword(),
+                authorities,
+                rolesStr,
+                user.getIsGlobal(),
+                channel
+            );
+
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+            String newToken = this.generateToken(newAuthentication, this.tokenValidityDuration, channel, id);
+            String newRefreshToken = this.generateToken(
+                newAuthentication,
+                this.refreshTokenValidityDuration,
+                channel,
+                id
+            );
+            user.setRefreshToken(newRefreshToken);
+            userRepository.save(user);
+            this.cacheUserToken(username, channel, id, newToken);
+
+            log.info("Auth Log:: Refresh Token Processed");
+            return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
+        } catch (Exception e) {
+            throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
+        }
     }
 
     public Authentication getAuthentication(String token) {
@@ -274,8 +328,8 @@ public class TokenProvider {
     private String generateToken(
         Authentication authentication,
         long validityTimeInSeconds,
-        HttpServletRequest request,
-        String channel
+        String channel,
+        String sessionId
     ) {
         String authorities = authentication
             .getAuthorities()
@@ -287,9 +341,6 @@ public class TokenProvider {
         long now = System.currentTimeMillis();
         long validityMillis = validityTimeInSeconds * 1000L;
         Date validity = new Date(now + validityMillis);
-
-        HttpSession session = request.getSession(true);
-        String sessionId = session.getId();
 
         return Jwts.builder()
             .id(sessionId)

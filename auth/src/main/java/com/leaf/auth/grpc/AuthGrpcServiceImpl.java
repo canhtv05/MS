@@ -22,9 +22,17 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
 
     @Override
     public void verifyToken(VerifyTokenRequest request, StreamObserver<VerifyTokenResponse> responseObserver) {
-        var valid = authService.verifyToken(request.getToken(), true);
+        var valid = authService.verifyTokenInternal(
+            request.getAccessToken(),
+            request.getRefreshToken(),
+            request.getChannel()
+        );
 
-        VerifyTokenResponse response = VerifyTokenResponse.newBuilder().setValid(valid.getValid()).build();
+        VerifyTokenResponse response = VerifyTokenResponse.newBuilder()
+            .setValid(valid.getValid())
+            .setAccessToken(valid.getAccessToken())
+            .setRefreshToken(valid.getRefreshToken())
+            .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

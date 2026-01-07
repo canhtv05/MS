@@ -1,8 +1,8 @@
 package com.leaf.auth.util;
 
-import com.leaf.auth.config.ApplicationProperties;
-import com.leaf.auth.dto.CookieValue;
+import com.leaf.auth.dto.TokenPair;
 import com.leaf.common.utils.JsonF;
+import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,9 +23,9 @@ public class CookieUtil {
     private final ApplicationProperties properties;
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
-        CookieValue cookieValue = CookieValue.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        TokenPair tokenPair = TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
-        String jsonData = JsonF.toJson(cookieValue);
+        String jsonData = JsonF.toJson(tokenPair);
 
         // replace các kí tự sao cho giống với thư viện js-cookie
         // https://www.npmjs.com/package/js-cookie
@@ -56,14 +56,14 @@ public class CookieUtil {
         response.addCookie(cookie);
     }
 
-    public CookieValue getTokenCookie(HttpServletRequest request) {
+    public TokenPair getTokenCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie c : cookies) {
                 if (c.getName().equals(CommonConstants.COOKIE_NAME)) try {
                     String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
 
-                    CookieValue cookieValue = JsonF.jsonToObject(decoded, CookieValue.class);
+                    TokenPair cookieValue = JsonF.jsonToObject(decoded, TokenPair.class);
                     return cookieValue;
                 } catch (Exception e) {
                     e.printStackTrace();

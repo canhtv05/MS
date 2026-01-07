@@ -10,12 +10,11 @@ public class CommonConstants {
         "/me/c/create",
         "/me/p/forgot-password",
         "/me/p/reset-password",
-        "/me/p/verify-forgot-password-otp",
-        "/me/p/refresh-token"
+        "/me/p/verify-forgot-password-otp"
     };
     public static final String[] NOTIFICATION_PUBLIC_ENDPOINTS = { "/verify-email", "/resend-verify-email" };
     public static final String[] PROFILE_PUBLIC_ENDPOINTS = { "/profile/**" };
-    public static final String[] GRAPHQL_PUBLIC_ENDPOINTS = { "/graphiql/**", "/graphiql", "", "/**" };
+    public static final String[] GRAPHQL_PUBLIC_ENDPOINTS = { "/graphiql/**", "/graphiql" };
 
     public static final String[] PREFIX_AUTH_PUBLIC_ENDPOINTS = Arrays.stream(AUTH_PUBLIC_ENDPOINTS)
         .map(res -> "/auth" + res)

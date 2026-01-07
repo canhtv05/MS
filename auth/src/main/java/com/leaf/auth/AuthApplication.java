@@ -1,12 +1,9 @@
 package com.leaf.auth;
 
-import com.leaf.auth.config.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 
-@EnableConfigurationProperties({ ApplicationProperties.class })
 @SpringBootApplication(scanBasePackages = { "com.leaf.auth", "com.leaf.common", "com.leaf.framework" })
 @EnableCaching
 public class AuthApplication {

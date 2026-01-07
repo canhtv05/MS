@@ -8,7 +8,7 @@ import org.springframework.web.filter.CorsFilter;
 public class WebConfig {
 
     @Bean
-    public CorsFilter corsFilter() {
+    CorsFilter corsFilter() {
         return new CorsFilter(request -> null);
     }
 }

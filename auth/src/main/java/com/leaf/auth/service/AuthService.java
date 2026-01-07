@@ -4,6 +4,7 @@ import com.leaf.auth.context.AuthenticationContext;
 import com.leaf.auth.domain.Permission;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
+import com.leaf.auth.dto.TokenPair;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.LoginRequest;
 import com.leaf.auth.dto.res.AuthenticateResponse;
@@ -17,6 +18,7 @@ import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.security.SecurityUtils;
 import io.micrometer.common.util.StringUtils;
@@ -36,6 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 @RequiredArgsConstructor
@@ -88,32 +92,81 @@ public class AuthService {
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
     ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return tokenProvider.refreshToken(
-            authentication,
-            cookieValue,
-            httpServletRequest,
-            httpServletResponse,
-            channel
-        );
+        return tokenProvider.refreshToken(cookieValue, httpServletRequest, httpServletResponse, channel);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public VerifyTokenResponse verifyToken(String cookieValueOrTokenString, boolean isInternal) {
-        String accessToken = getAccessToken(cookieValueOrTokenString, isInternal);
-        if (StringUtils.isBlank(accessToken)) {
+        TokenPair tokenPair = getTokenPair(cookieValueOrTokenString, isInternal);
+        if (StringUtils.isBlank(tokenPair.getAccessToken())) {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
 
-        boolean valid = this.tokenProvider.validateToken(accessToken);
+        boolean valid = this.tokenProvider.validateToken(tokenPair.getAccessToken());
+        if (valid) {
+            return VerifyTokenResponse.builder()
+                .valid(valid)
+                .accessToken(tokenPair.getAccessToken())
+                .refreshToken(tokenPair.getRefreshToken())
+                .build();
+        }
 
-        return VerifyTokenResponse.builder().valid(valid).build();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest httpServletRequest = attributes.getRequest();
+        HttpServletResponse httpServletResponse = attributes.getResponse();
+        TokenPair cookieTokenPair = cookieUtil.getTokenCookie(httpServletRequest);
+        if (StringUtils.isBlank(cookieTokenPair.getAccessToken())) {
+            throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
+        }
+        RefreshTokenResponse refreshTokenResponse = refreshToken(
+            cookieTokenPair.getRefreshToken(),
+            cookieTokenPair.getAccessToken(),
+            httpServletRequest,
+            httpServletResponse
+        );
+        if (Objects.isNull(refreshTokenResponse)) {
+            throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
+        } else {
+            valid = true;
+        }
+        return VerifyTokenResponse.builder()
+            .valid(valid)
+            .accessToken(refreshTokenResponse.getAccessToken())
+            .refreshToken(refreshTokenResponse.getRefreshToken())
+            .build();
+    }
+
+    @Transactional
+    public VerifyTokenResponse verifyTokenInternal(String accessToken, String refreshToken, String channel) {
+        boolean valid = this.tokenProvider.validateToken(accessToken);
+        if (valid) {
+            return VerifyTokenResponse.builder()
+                .valid(valid)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+        }
+
+        if (StringUtils.isBlank(refreshToken)) {
+            throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
+        }
+        RefreshTokenResponse refreshTokenResponse = tokenProvider.processRefreshInternal(refreshToken, channel);
+        if (Objects.isNull(refreshTokenResponse)) {
+            throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
+        } else {
+            valid = true;
+        }
+        return VerifyTokenResponse.builder()
+            .valid(valid)
+            .accessToken(refreshTokenResponse.getAccessToken())
+            .refreshToken(refreshTokenResponse.getRefreshToken())
+            .build();
     }
 
     @Transactional
     public void logout(String cookieValue, String channel, HttpServletResponse response) {
-        String accessToken = getAccessToken(cookieValue, false);
-        tokenProvider.revokeToken(accessToken, channel);
+        TokenPair tokenPair = getTokenPair(cookieValue, false);
+        tokenProvider.revokeToken(tokenPair.getAccessToken(), channel);
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();
     }
@@ -165,23 +218,24 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    protected String getAccessToken(String cookieValueOrTokenString, boolean isInternal) {
-        if (isInternal) {
-            return cookieValueOrTokenString;
+    protected TokenPair getTokenPair(String cookieValueOrTokenString, boolean isInternal) {
+        if (StringUtils.isBlank(cookieValueOrTokenString) || isInternal) {
+            return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
         }
         try {
             @SuppressWarnings("unchecked")
             Map<String, String> tokenData = JsonF.jsonToObject(cookieValueOrTokenString, Map.class);
             if (CollectionUtils.isEmpty(tokenData)) {
-                return cookieValueOrTokenString;
+                return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
             }
             String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-            if (StringUtils.isBlank(accessToken)) {
-                throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
+            String refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+            if (CommonUtils.isEmpty(accessToken, refreshToken)) {
+                throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
             }
-            return accessToken;
+            return TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
         } catch (JsonParseException e) {
-            return cookieValueOrTokenString;
+            return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
         }
     }
 }

@@ -13,11 +13,15 @@ service AuthGrpcService {
 }
 
 message VerifyTokenRequest {
-  string token = 1;
+  string accessToken = 1;
+  string refreshToken = 2;
+  string channel = 3;
 }
 
 message VerifyTokenResponse {
   bool valid = 1;
+  string accessToken = 2;
+  string refreshToken = 3;
 }
 
 message VerifyEmailTokenDTO {

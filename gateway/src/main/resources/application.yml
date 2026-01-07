@@ -8,6 +8,9 @@ spring:
   application:
     name: gateway
 
+  profiles:
+    include: framework
+
   output:
     ansi:
       enabled: always

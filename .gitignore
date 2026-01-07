@@ -1,3 +1,14 @@
 .idea/
 # .vscode/
 /node_modules/
+.env
+.env.*
+!.env.example
+target/
+build/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+spring-boot-*.log

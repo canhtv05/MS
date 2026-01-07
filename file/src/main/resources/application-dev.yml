@@ -5,7 +5,7 @@ logging:
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URI}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/file}
 
 cloudinary:
   url: ${CLOUDINARY_URL}

@@ -5,9 +5,9 @@ logging:
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URI}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/notification}
   app:
-    secret-key: ${BASE_64_SECRET}
+    secret-key: ${BASE_64_SECRET:${APPLICATION_SECURITY_BASE64SECRET}}
 
   mail:
     host: smtp.gmail.com
@@ -23,7 +23,7 @@ spring:
             enable: true
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

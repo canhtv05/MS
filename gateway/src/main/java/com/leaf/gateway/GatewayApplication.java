@@ -5,12 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
-@SpringBootApplication(
-    exclude = {
-        net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class,
-        net.devh.boot.grpc.client.autoconfigure.GrpcClientHealthAutoConfiguration.class
-    }
-)
+@SpringBootApplication
 @ComponentScan(
     basePackages = { "com.leaf.gateway", "com.leaf.common", "com.leaf.framework" },
     excludeFilters = @ComponentScan.Filter(

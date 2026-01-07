@@ -14,8 +14,12 @@ public class GrpcAuthClient {
     @GrpcClient("auth-service")
     private AuthGrpcServiceGrpc.AuthGrpcServiceStub asyncStub;
 
-    public Mono<VerifyTokenResponse> verifyToken(String token) {
-        VerifyTokenRequest request = VerifyTokenRequest.newBuilder().setToken(token).build();
+    public Mono<VerifyTokenResponse> verifyToken(String accessToken, String refreshToken, String channel) {
+        VerifyTokenRequest request = VerifyTokenRequest.newBuilder()
+            .setAccessToken(accessToken)
+            .setRefreshToken(refreshToken)
+            .setChannel(channel)
+            .build();
 
         return Mono.create(sink ->
             asyncStub.verifyToken(

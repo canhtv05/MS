@@ -15,7 +15,6 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: '/auth/me/p/forgot-password',
     VERIFY_FORGOT_PASSWORD_OTP: '/auth/me/p/verify-forgot-password-otp',
     RESET_PASSWORD: '/auth/me/p/reset-password',
-    REFRESH_TOKEN: '/auth/me/p/refresh-token',
   },
   PROFILE: {
     ME: '/user-profile/me',

@@ -10,15 +10,26 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
 
     private RedisConfig redis = new RedisConfig();
+    private SecurityConfig security = new SecurityConfig();
+
+    @Getter
+    @Setter
+    public static class SecurityConfig {
+
+        private String base64Secret;
+        private Long validDurationInSeconds;
+        private Long refreshDurationInSeconds;
+        private String cookieDomain;
+    }
 
     @Getter
     @Setter
     public static class RedisConfig {
 
-        private String clientName = "leaf-client";
-        private String address = "redis://localhost:6379";
-        private String password = "";
-        private Integer minimumIdle = 5;
-        private Integer maxPoolSize = 10;
+        private String clientName;
+        private String address;
+        private String password;
+        private Integer minimumIdle;
+        private Integer maxPoolSize;
     }
 }

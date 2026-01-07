@@ -14,6 +14,8 @@ public class CommonUtils {
     }
 
     public static <T> T getSafeObject(Object obj, Class<T> clazz, T defaultValue) {
-        return obj == null ? defaultValue : clazz.cast(obj);
+        return obj == null || (obj instanceof String && ((String) obj).trim().isEmpty())
+            ? defaultValue
+            : clazz.cast(obj);
     }
 }
