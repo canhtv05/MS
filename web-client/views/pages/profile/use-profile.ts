@@ -80,7 +80,7 @@ const useProfile = ({ username }: { username: string }) => {
   const handleChangeCoverFromHistory = useCallback(async () => {
     if (!selectedCoverFromHistory) return;
 
-    const currentCoverUrl = data?.data?.coverUrl;
+    const currentCoverUrl = data?.coverUrl;
     if (selectedCoverFromHistory === currentCoverUrl) {
       toast.error(t('change_cover_image_same'), {
         id: 'change-cover-image-from-media-history-toast',
@@ -100,7 +100,7 @@ const useProfile = ({ username }: { username: string }) => {
     }
   }, [
     selectedCoverFromHistory,
-    data?.data?.coverUrl,
+    data?.coverUrl,
     user?.auth?.username,
     t,
     changeCoverImageFromMediaHistoryMutation,

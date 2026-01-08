@@ -3,6 +3,7 @@ package com.leaf.common.utils;
 import com.google.protobuf.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 public class ConvertProto {
@@ -40,5 +41,13 @@ public class ConvertProto {
 
     public static String nullToEmpty(String value) {
         return value != null ? value : "";
+    }
+
+    public static OffsetDateTime convertTimestampToOffsetDateTime(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+        return instant.atOffset(ZoneOffset.of("+07:00"));
     }
 }

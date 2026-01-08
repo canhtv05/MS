@@ -39,15 +39,15 @@ public class MediaHistoryService {
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
 
-        Pageable pageable = searchRequest.toPageable(Sort.Direction.DESC, "createdAt");
-
+        Pageable pageable;
         Page<MediaHistory> page;
         if (StringUtils.isNotBlank(searchRequest.searchText())) {
+            pageable = searchRequest.toPageable();
             page = mediaHistoryRepository.searchByUserIdAndText(username, searchRequest.searchText(), pageable);
         } else {
+            pageable = searchRequest.toPageable(Sort.Direction.DESC, "createdAt");
             page = mediaHistoryRepository.findByUserId(username, pageable);
         }
-
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy").withZone(ZoneId.systemDefault());
 
         Map<String, List<MediaHistoryDTO>> groupedByDate = page

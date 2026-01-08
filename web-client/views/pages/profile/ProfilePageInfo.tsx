@@ -4,8 +4,6 @@ import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
-import { MapPointWave, LinkMinimalistic2 } from '@solar-icons/react-perf/Outline';
-import Link from 'next/link';
 
 interface StatItemProps {
   value: number;
@@ -19,9 +17,7 @@ const StatItem = ({ value, label, isLoading }: StatItemProps) => {
   }
   return (
     <span className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-white transition-colors">
-      <strong className="">
-        <CountingNumber number={value} className="font-bold text-gray-800 dark:text-white" />
-      </strong>{' '}
+      <CountingNumber number={value} className="font-medium text-gray-500 dark:text-white" />{' '}
       <span className="text-gray-500 dark:text-gray-400">{label}</span>
     </span>
   );
@@ -30,70 +26,8 @@ const StatItem = ({ value, label, isLoading }: StatItemProps) => {
 const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
   const { t } = useTranslation('profile');
 
-  // Fake data matching the UI design
-  const fakeData = {
-    jobTitle: 'Senior Backend Engineer',
-    company: 'LeafHub',
-    school: 'Bách Khoa',
-    city: 'Hà Nội',
-    websiteUrl: 'https://canhtv.com',
-    githubUrl: 'https://github.com/canhtv',
-    linkedinUrl: 'https://linkedin.com/in/canhtv',
-    facebookUrl: 'https://facebook.com/canhtv',
-    xUrl: 'https://x.com/canhtv',
-  };
-
   return (
     <>
-      <div className="mt-4 space-y-3">
-        {!isLoading && (
-          <div className="flex flex-wrap flex-col items-start gap-x-4 gap-y-1 pt-1">
-            <div className="flex gap-2 group items-center flex-wrap justify-start">
-              {/* Job Info */}
-              <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-                <MapPointWave size={14} className="shrink-0" />
-                <p className="max-w-[250px] md:max-w-[300px] text-xs truncate">
-                  {fakeData.jobTitle} tại {fakeData.company}
-                </p>
-              </div>
-
-              {/* School Info */}
-              <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-                <MapPointWave size={14} className="shrink-0" />
-                <span className="text-xs">Cựu sinh viên {fakeData.school}</span>
-              </div>
-
-              {/* Location */}
-              <div className="text-xs group text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1.5">
-                <MapPointWave size={14} className="shrink-0" />
-                <p className="max-w-[250px] md:max-w-[300px] text-xs truncate">
-                  Sống tại {fakeData.city}
-                </p>
-              </div>
-            </div>
-
-            {/* Website Link */}
-            <Link
-              target="_blank"
-              href={fakeData.websiteUrl}
-              className="text-xs hover:underline font-medium flex items-center gap-1.5 group"
-            >
-              <LinkMinimalistic2 size={14} className="shrink-0" />
-              <span className="max-w-[250px] md:max-w-[300px] truncate text-gray-500 dark:text-gray-400">
-                {fakeData.websiteUrl.replace(/^https?:\/\/(www\.)?/, '')}
-              </span>
-            </Link>
-          </div>
-        )}
-        {isLoading && (
-          <div className="flex flex-col flex-wrap items-start gap-1">
-            <Skeleton className="h-5 w-[120px]" />
-            <Skeleton className="h-5 w-[150px]" />
-            <Skeleton className="h-5 w-[100px]" />
-          </div>
-        )}
-      </div>
-
       <div className="mt-3">
         {isLoading ? (
           <div className="space-y-2">
@@ -101,12 +35,12 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
           </div>
         ) : (
           <>
-            {data?.data?.bio && (
-              <Code code={data.data.bio}>
+            {data?.bio && (
+              <Code code={data.bio} className="border-none">
                 <CodeBlock
                   className="max-h-[200px]"
                   cursor={false}
-                  lang={detectLanguage(data.data.bio)}
+                  lang={detectLanguage(data.bio)}
                   writing={true}
                 />
               </Code>

@@ -1,9 +1,10 @@
 'use client';
 
-import { Heart } from '@solar-icons/react-perf/category/style/BoldDuotone';
+import { Heart } from '@solar-icons/react-perf/BoldDuotone';
 import { TFunction } from 'i18next';
 import Image from 'next/image';
 import { ITabs } from './ProfilePageTabs';
+import { IDetailUserProfileDTO } from '@/types/profile';
 
 // Fake data for posts
 const fakePosts = [
@@ -75,7 +76,8 @@ const fakeLiked = [
 interface IProfilePageTabsItem {
   tabs: ITabs[];
   activeTab: number;
-  t: TFunction<'translation', undefined>;
+  t: TFunction<'profile', undefined>;
+  data?: IDetailUserProfileDTO;
 }
 
 interface PostCardProps {
@@ -121,9 +123,10 @@ const PostCard = ({ post }: PostCardProps) => (
   </div>
 );
 
-const ProfilePageTabsItem = ({ tabs, activeTab, t }: IProfilePageTabsItem) => {
+const ProfilePageTabsItem = ({ tabs, activeTab, t, data }: IProfilePageTabsItem) => {
+  const currentTab = tabs[activeTab];
+
   const getEmptyMessage = () => {
-    const currentTab = tabs[activeTab];
     if (!currentTab) return t('no_posts');
     switch (currentTab.id) {
       default:
@@ -132,7 +135,6 @@ const ProfilePageTabsItem = ({ tabs, activeTab, t }: IProfilePageTabsItem) => {
   };
 
   const getCurrentTabContent = () => {
-    const currentTab = tabs[activeTab];
     if (!currentTab) return fakePosts;
     switch (currentTab.id) {
       case 'posts':
@@ -145,25 +147,25 @@ const ProfilePageTabsItem = ({ tabs, activeTab, t }: IProfilePageTabsItem) => {
         return fakePosts; // Mock content
       case 'friends':
         return []; // Mock
-      case 'introduce':
-        return []; // Mock
       default:
         return fakePosts;
     }
   };
 
+  const content = getCurrentTabContent();
+
   return (
     <div className="md:mt-6 mt-[10px] ">
-      {getCurrentTabContent().length > 0 ? (
+      {content.length > 0 ? (
         <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
-          {getCurrentTabContent().map(post => (
+          {content.map(post => (
             <PostCard key={post.id} post={post} />
           ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-            {tabs[activeTab].icon}
+            {currentTab?.icon}
           </div>
           <p className="text-lg font-medium">{getEmptyMessage()}</p>
         </div>

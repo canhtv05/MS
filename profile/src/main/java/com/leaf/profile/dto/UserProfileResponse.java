@@ -28,7 +28,10 @@ public class UserProfileResponse {
     String avatarUrl;
     String bio;
     String coverUrl;
+
+    @JsonSerialize(using = InstantToStringSerializer.class)
     Instant lastOnlineAt;
+
     Long followersCount;
     Long followingCount;
 
@@ -42,6 +45,8 @@ public class UserProfileResponse {
             .lastOnlineAt(userProfile.getLastOnlineAt())
             .followersCount(userProfile.getFollowersCount())
             .followingCount(userProfile.getFollowingCount())
+            .lastOnlineAt(userProfile.getLastOnlineAt())
+            .createdDate(userProfile.getCreatedDate())
             .coverUrl(userProfile.getCoverUrl())
             .avatarUrl(userProfile.getAvatarUrl());
         return builder.build();

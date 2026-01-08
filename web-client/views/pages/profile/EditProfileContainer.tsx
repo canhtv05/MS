@@ -25,7 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/customs/input';
 import { MapPointWave } from '@solar-icons/react-perf/Outline';
 import {
-  FaceBookTwoOneIcon,
+  FaceBookBoldDuotoneIcon,
   InstagramTwoOneIcon,
   TiktokIcon,
   XTwitterIcon,
@@ -212,7 +212,7 @@ const EditProfileContainer = ({ form }: IEditProfileContainerProps) => {
                   inputSize="md"
                   errorText={fieldState.error?.message}
                   value={field.value}
-                  icon={<FaceBookTwoOneIcon className="size-5 p-0.5 text-foreground/70" />}
+                  icon={<FaceBookBoldDuotoneIcon className="size-5 p-0.5 text-foreground/70" />}
                 />
               </div>
             )}

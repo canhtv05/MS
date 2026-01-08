@@ -1,13 +1,14 @@
 package com.leaf.graphql_bff.profile.resolver;
 
 import com.leaf.common.grpc.UserProfileIdRequest;
-import com.leaf.common.grpc.UserProfileIntroduceDTO;
-import com.leaf.common.grpc.UserProfilePrivacyDTO;
-import com.leaf.common.grpc.UserProfileResponse;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcProfileClient;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
+import com.leaf.graphql_bff.profile.dto.UserProfileIntroduceDTO;
+import com.leaf.graphql_bff.profile.dto.UserProfilePrivacyDTO;
 import com.leaf.graphql_bff.profile.mapper.UserProfileMapper;
 import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsData;
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsQuery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,27 +25,38 @@ public class ProfileQueryResolver {
 
     @DgsQuery(field = "userDetail")
     public Mono<DetailUserProfileDTO> userDetail(String username) {
-        Mono<UserProfileResponse> userProfileMono = Mono.fromCallable(() ->
+        return Mono.fromCallable(() ->
             grpcProfileClient.getUserProfile(UserProfileIdRequest.newBuilder().setUserId(username).build())
-        ).subscribeOn(Schedulers.boundedElastic());
-
-        Mono<UserProfileIntroduceDTO> userProfileIntroduceMono = Mono.fromCallable(() ->
-            grpcProfileClient.getUserProfileIntroduce(UserProfileIdRequest.newBuilder().setUserId(username).build())
-        ).subscribeOn(Schedulers.boundedElastic());
-
-        Mono<UserProfilePrivacyDTO> userProfilePrivacyMono = Mono.fromCallable(() ->
-            grpcProfileClient.getUserProfilePrivacy(UserProfileIdRequest.newBuilder().setUserId(username).build())
-        ).subscribeOn(Schedulers.boundedElastic());
-
-        return Mono.zip(userProfileMono, userProfileIntroduceMono, userProfilePrivacyMono).map(tuple -> {
-            UserProfileResponse userProfileResponse = tuple.getT1();
-            UserProfileIntroduceDTO userProfileIntroduceDTO = tuple.getT2();
-            UserProfilePrivacyDTO userProfilePrivacyDTO = tuple.getT3();
-            return UserProfileMapper.getInstance().toDetailUserProfileDTO(
-                userProfileResponse,
-                userProfileIntroduceDTO,
-                userProfilePrivacyDTO
+        )
+            .subscribeOn(Schedulers.boundedElastic())
+            .flatMap(userProfileResponse ->
+                Mono.justOrEmpty(UserProfileMapper.getInstance().toDetailUserProfileDTO(userProfileResponse))
             );
-        });
+    }
+
+    @DgsData(parentType = "DetailUserProfileDTO", field = "introduce")
+    public Mono<UserProfileIntroduceDTO> introduce(DgsDataFetchingEnvironment dfe) {
+        DetailUserProfileDTO parent = dfe.getSource();
+        return Mono.fromCallable(() ->
+            grpcProfileClient.getUserProfileIntroduce(
+                UserProfileIdRequest.newBuilder().setUserId(parent.getUserId()).build()
+            )
+        )
+            .subscribeOn(Schedulers.boundedElastic())
+            .flatMap(introduce ->
+                Mono.justOrEmpty(UserProfileMapper.getInstance().toUserProfileIntroduceDTO(introduce))
+            );
+    }
+
+    @DgsData(parentType = "DetailUserProfileDTO", field = "privacy")
+    public Mono<UserProfilePrivacyDTO> privacy(DgsDataFetchingEnvironment dfe) {
+        DetailUserProfileDTO parent = dfe.getSource();
+        return Mono.fromCallable(() ->
+            grpcProfileClient.getUserProfilePrivacy(
+                UserProfileIdRequest.newBuilder().setUserId(parent.getUserId()).build()
+            )
+        )
+            .subscribeOn(Schedulers.boundedElastic())
+            .flatMap(privacy -> Mono.justOrEmpty(UserProfileMapper.getInstance().toUserProfilePrivacyDTO(privacy)));
     }
 }

@@ -8,8 +8,7 @@ import { AxiosError } from 'axios';
 import { ErrorMessage } from '@/enums/error-message';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
-import { IResponseObject } from '@/types/common';
-import { IUserProfileDTO } from '@/types/profile';
+import { IDetailUserProfileDTO } from '@/types/profile';
 import ProfilePageInfo from './ProfilePageInfo';
 import ProfilePageHeroSection from './ProfilePageHeroSection';
 import ProfilePageTabs from './ProfilePageTabs';
@@ -33,7 +32,7 @@ import { getImageSrcOrNull } from '@/lib/image-utils';
 export interface IProfilePageProps {
   isLoading: boolean;
   t?: TFunction<'translation', undefined>;
-  data?: IResponseObject<IUserProfileDTO>;
+  data?: IDetailUserProfileDTO;
 }
 
 const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
@@ -58,7 +57,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
     setSelectedCoverFromHistory,
     handleChangeCoverFromHistory,
   } = useProfile({
-    username: decodedUsername,
+    username: decodedUsername.startsWith('@') ? decodedUsername.slice(1) : decodedUsername,
   });
   const { t } = useTranslation(['profile', 'layout', 'common']);
 
@@ -105,7 +104,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
 
           const coverSrc =
             getImageSrcOrNull(coverImagePreview) ||
-            getImageSrcOrNull(data?.data?.coverUrl) ||
+            getImageSrcOrNull(data?.coverUrl) ||
             getImageSrcOrNull(user?.profile?.coverUrl);
 
           if (coverSrc) {
@@ -146,7 +145,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             </div>
           );
         })()}
-        {user?.auth?.username === data?.data?.userId && !isLoading && (
+        {user?.auth?.username === data?.userId && !isLoading && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -177,7 +176,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
           <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
           <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
         </div>
-        <ProfilePageTabs />
+        <ProfilePageTabs data={data} />
       </div>
       <Dialog
         open={showDialogMediaHistory}

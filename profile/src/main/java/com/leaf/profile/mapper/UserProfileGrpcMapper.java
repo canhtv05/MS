@@ -2,8 +2,10 @@ package com.leaf.profile.mapper;
 
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.utils.CommonUtils;
+import com.leaf.common.utils.ConvertProto;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
+import java.time.Instant;
 
 public class UserProfileGrpcMapper {
 
@@ -38,8 +40,17 @@ public class UserProfileGrpcMapper {
             .setCoverUrl(CommonUtils.getSafeObject(response.getCoverUrl(), String.class, ""))
             .setAvatarUrl(CommonUtils.getSafeObject(response.getAvatarUrl(), String.class, ""))
             .setFollowersCount(CommonUtils.getSafeObject(response.getFollowersCount(), Long.class, 0L))
-            .setFollowingCount(CommonUtils.getSafeObject(response.getFollowingCount(), Long.class, 0L));
-
+            .setFollowingCount(CommonUtils.getSafeObject(response.getFollowingCount(), Long.class, 0L))
+            .setLastOnlineAt(
+                ConvertProto.convertInstantToTimestamp(
+                    CommonUtils.getSafeObject(response.getLastOnlineAt(), Instant.class, Instant.now())
+                )
+            )
+            .setCreatedDate(
+                ConvertProto.convertInstantToTimestamp(
+                    CommonUtils.getSafeObject(response.getCreatedDate(), Instant.class, Instant.now())
+                )
+            );
         return builder.build();
     }
 

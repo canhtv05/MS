@@ -1,12 +1,18 @@
 'use client';
 
-import { IMediaHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
+import { IDetailUserProfileDTO, IMediaHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
 import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
+import { GET_USER_DETAIL_QUERY } from '../graphql/query';
+import { getGraphQLClient } from '@/utils/graphql';
+
+interface GetUserDetailResponse {
+  userDetail: IDetailUserProfileDTO;
+}
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useProfileStore(state => state.userProfile);
@@ -82,9 +88,12 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
 
   const query = useQuery({
     queryKey: ['profile', 'user-profile', us],
-    queryFn: async (): Promise<IResponseObject<IUserProfileDTO>> => {
-      const res = await api.get(API_ENDPOINTS.PROFILE.GET_USER_PROFILE.replace('{username}', us));
-      return res.data;
+    queryFn: async (): Promise<IDetailUserProfileDTO> => {
+      const client = getGraphQLClient();
+      const res = await client.request<GetUserDetailResponse>(GET_USER_DETAIL_QUERY, {
+        username: us,
+      });
+      return res.userDetail;
     },
     enabled: enabled && !!us,
     retry: 1,

@@ -21,6 +21,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { cn } from '@/lib/utils';
 import ProfilePageTabsItem from './ProfilePageTabsItem';
+import { IDetailUserProfileDTO } from '@/types/profile';
 
 export interface ITabs {
   id: string;
@@ -31,11 +32,6 @@ export interface ITabs {
 const tabs: ITabs[] = [
   { id: 'posts', labelKey: 'posts', icon: <Bookmark className="text-current size-[16px]" /> },
   {
-    id: 'introduce',
-    labelKey: 'introduce',
-    icon: <ClipboardText className="text-current size-[16px]" />,
-  },
-  {
     id: 'friends',
     labelKey: 'friends',
     icon: <UsersGroupTwoRounded className="text-current size-[16px]" />,
@@ -43,7 +39,11 @@ const tabs: ITabs[] = [
   { id: 'pictures', labelKey: 'pictures', icon: <Library className="text-current size-[16px]" /> },
 ];
 
-const ProfilePageTabs = () => {
+interface ProfilePageTabsProps {
+  data?: IDetailUserProfileDTO;
+}
+
+const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
   const { t } = useTranslation('profile');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -177,7 +177,7 @@ const ProfilePageTabs = () => {
         </div>
       </div>
       <div className="mt-3 md:px-6 px-[10px] md:pb-6 pb-[10px] w-full bg-white dark:bg-gray-800 pt-2 rounded-lg">
-        <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} />
+        <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
       </div>
     </div>
   );

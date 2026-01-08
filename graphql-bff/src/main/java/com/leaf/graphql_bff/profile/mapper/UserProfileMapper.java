@@ -36,7 +36,7 @@ public class UserProfileMapper {
         return interestDTOList.stream().map(this::tInterestDTO).toList();
     }
 
-    private UserProfileIntroduceDTO toUserProfileIntroduceDTO(
+    public UserProfileIntroduceDTO toUserProfileIntroduceDTO(
         com.leaf.common.grpc.UserProfileIntroduceDTO userProfileIntroduceDTO
     ) {
         if (userProfileIntroduceDTO == null) {
@@ -64,7 +64,7 @@ public class UserProfileMapper {
             .build();
     }
 
-    private UserProfilePrivacyDTO toUserProfilePrivacyDTO(
+    public UserProfilePrivacyDTO toUserProfilePrivacyDTO(
         com.leaf.common.grpc.UserProfilePrivacyDTO userProfilePrivacyDTO
     ) {
         if (userProfilePrivacyDTO == null) {
@@ -78,26 +78,22 @@ public class UserProfileMapper {
             .build();
     }
 
-    public DetailUserProfileDTO toDetailUserProfileDTO(
-        com.leaf.common.grpc.UserProfileResponse userProfileResponse,
-        com.leaf.common.grpc.UserProfileIntroduceDTO userProfileIntroduceDTO,
-        com.leaf.common.grpc.UserProfilePrivacyDTO userProfilePrivacyDTO
-    ) {
-        if (userProfileResponse == null || userProfileIntroduceDTO == null || userProfilePrivacyDTO == null) {
+    public DetailUserProfileDTO toDetailUserProfileDTO(com.leaf.common.grpc.UserProfileResponse userProfileResponse) {
+        if (userProfileResponse == null) {
             return null;
         }
 
         return DetailUserProfileDTO.builder()
             .id(ConvertProto.nullToEmpty(userProfileResponse.getId()))
             .userId(ConvertProto.nullToEmpty(userProfileResponse.getUserId()))
-            .introduce(toUserProfileIntroduceDTO(userProfileIntroduceDTO))
-            .privacy(toUserProfilePrivacyDTO(userProfilePrivacyDTO))
+            .bio(userProfileResponse.getBio())
+            .fullname(userProfileResponse.getFullname())
             .coverUrl(ConvertProto.nullToEmpty(userProfileResponse.getCoverUrl()))
             .avatarUrl(ConvertProto.nullToEmpty(userProfileResponse.getAvatarUrl()))
-            .lastOnlineAt(ConvertProto.convertTimestampToInstant(userProfileResponse.getLastOnlineAt()))
+            .lastOnlineAt(ConvertProto.convertTimestampToOffsetDateTime(userProfileResponse.getLastOnlineAt()))
             .followersCount(userProfileResponse.getFollowersCount())
             .followingCount(userProfileResponse.getFollowingCount())
-            .createdDate(ConvertProto.convertTimestampToInstant(userProfileResponse.getCreatedDate()))
+            .createdDate(ConvertProto.convertTimestampToOffsetDateTime(userProfileResponse.getCreatedDate()))
             .build();
     }
 }

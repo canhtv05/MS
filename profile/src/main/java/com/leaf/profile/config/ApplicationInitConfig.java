@@ -27,8 +27,6 @@ public class ApplicationInitConfig {
                         profile.following_count = toInteger(row.following_count),
                         profile.created_by = row.created_by,
                         profile.bio = row.bio,
-                        profile.cover_url = row.cover_url,
-                        profile.avatar_url = row.avatar_url,
                         profile.last_online_at = datetime(row.last_online_at),
                         profile.modified_by = row.modified_by,
                         profile.created_date = datetime(row.created_date),

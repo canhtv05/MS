@@ -1,7 +1,7 @@
 package com.leaf.graphql_bff.profile.dto;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +28,8 @@ public class DetailUserProfileDTO implements Serializable {
     String avatarUrl;
     UserProfileIntroduceDTO introduce;
     UserProfilePrivacyDTO privacy;
-    Instant lastOnlineAt;
+    OffsetDateTime lastOnlineAt;
     Long followersCount;
     Long followingCount;
-    Instant createdDate;
+    OffsetDateTime createdDate;
 }

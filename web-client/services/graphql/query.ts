@@ -1,3 +1,5 @@
+import { USER_PROFILE_FRAGMENTS } from './fragments';
+
 export const ME_QUERY = `
   query Me {
     me {
@@ -22,6 +24,19 @@ export const ME_QUERY = `
         lastOnlineAt
         followersCount
         followingCount
+      }
+    }
+  }
+`;
+
+export const GET_USER_DETAIL_QUERY = `
+  ${USER_PROFILE_FRAGMENTS}
+
+  query UserDetail($username: String!) {
+    userDetail(username: $username) {
+      ...UserProfileResponseFragment
+      privacy {
+        ...UserProfilePrivacyFragment
       }
     }
   }
