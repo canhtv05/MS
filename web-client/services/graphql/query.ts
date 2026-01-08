@@ -1,4 +1,4 @@
-import { USER_PROFILE_FRAGMENTS } from './fragments';
+import { USER_PROFILE_FRAGMENTS, FILE_FRAGMENTS } from './fragments';
 
 export const ME_QUERY = `
   query Me {
@@ -31,23 +31,19 @@ export const ME_QUERY = `
 
 export const GET_USER_DETAIL_QUERY = `
   ${USER_PROFILE_FRAGMENTS}
+  ${FILE_FRAGMENTS}
 
-  query UserDetail($username: String!) {
+  query UserDetail($username: String!, $page: Int, $size: Int) {
     userDetail(username: $username) {
       ...UserProfileResponseFragment
       introduce {
-        websiteUrl
-        jobTitle
-        company
-        school
-        interests {
-          id
-          title
-          color
-        }
+        ...UserProfileIntroduceFragment
       }
       privacy {
         ...UserProfilePrivacyFragment
+      }
+      images(page: $page, size: $size) {
+        ...GetFileImagesResponseFragment
       }
     }
   }

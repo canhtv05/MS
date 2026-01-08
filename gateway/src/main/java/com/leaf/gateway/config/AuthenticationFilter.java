@@ -57,37 +57,40 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        if (isPublicEndpoint(exchange.getRequest())) {
-            return chain.filter(exchange);
-        }
+        boolean isPublic = isPublicEndpoint(exchange.getRequest());
 
         log.info("GATEWAY_DEBUG: Request URI: " + exchange.getRequest().getURI());
         log.info("GATEWAY_DEBUG: Request Path: " + exchange.getRequest().getURI().getPath());
+        log.info("GATEWAY_DEBUG: Is Public: " + isPublic);
 
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
         String accessToken = null;
         String refreshToken = null;
+
         if (CollectionUtils.isEmpty(authHeader)) {
             HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
-            log.info("GATEWAY_DEBUG: No auth header, checking cookie: " + (cookie != null ? "found" : "not found"));
             if (Objects.nonNull(cookie)) {
-                String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                @SuppressWarnings("unchecked")
-                Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
-                if (!CollectionUtils.isEmpty(tokenData)) {
-                    accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-                    refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+                try {
+                    String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                    @SuppressWarnings("unchecked")
+                    Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
+                    if (!CollectionUtils.isEmpty(tokenData)) {
+                        accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
+                        refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+                    }
+                } catch (Exception e) {
+                    log.error("Error decoding auth cookie", e);
                 }
             }
         } else {
             accessToken = authHeader.getFirst().replace("Bearer ", "");
-            log.info("GATEWAY_DEBUG: Auth header found");
         }
 
-        log.info("GATEWAY_DEBUG: Protected endpoint - checking auth");
-
         if (StringUtils.isEmpty(accessToken)) {
-            log.info("GATEWAY_DEBUG: No token found - returning 401");
+            if (isPublic) {
+                return chain.filter(exchange);
+            }
+            log.info("GATEWAY_DEBUG: No token found for protected endpoint - returning 401");
             return unauthenticated(exchange.getResponse());
         }
 
@@ -95,11 +98,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         final String finalRefreshToken = refreshToken;
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
         final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
+
         return grpcAuthClient
             .verifyToken(finalAccessToken, finalRefreshToken, finalChannel)
-            .flatMap(verifyTokenResponseApiResponse -> {
-                var verifyTokenResponse = verifyTokenResponseApiResponse;
-                log.info("GATEWAY_DEBUG: Token verification result - valid: " + verifyTokenResponse.getValid());
+            .flatMap(verifyTokenResponse -> {
                 if (Boolean.TRUE.equals(verifyTokenResponse.getValid())) {
                     String accessTokenForward = StringUtils.defaultString(
                         StringUtils.isNoneEmpty(verifyTokenResponse.getAccessToken())
@@ -119,18 +121,20 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                         .build();
                     ServerWebExchange newExchange = exchange.mutate().request(request).build();
                     if (!accessTokenForward.equals(finalAccessToken)) {
-                        log.info("GATEWAY_DEBUG: Token refreshed, updating cookie");
                         addAuthCookie(newExchange.getResponse(), accessTokenForward, refreshTokenForward);
                     }
-                    log.info("GATEWAY_DEBUG: Forwarding request to downstream service");
                     return chain.filter(newExchange);
                 } else {
-                    log.info("GATEWAY_DEBUG: Token verification failed - valid=false");
+                    if (isPublic) {
+                        return chain.filter(exchange);
+                    }
                     return unauthenticated(exchange.getResponse());
                 }
             })
             .onErrorResume(throwable -> {
-                log.error("GATEWAY_DEBUG: Error during token verification", throwable);
+                if (isPublic) {
+                    return chain.filter(exchange);
+                }
                 return unauthenticated(exchange.getResponse());
             });
     }

@@ -6,7 +6,7 @@ import { Button } from './animate-ui/components/buttons/button';
 
 const FriendRequest = () => {
   return (
-    <div className="dark:bg-gray-800 p-4 w-full bg-white rounded-md flex flex-col gap-2">
+    <div className="custom-bg-1 p-4 w-full rounded-md flex flex-col gap-2">
       <div className="flex items-center gap-2 justify-start">
         <CustomImage
           src={images.avt1.src}

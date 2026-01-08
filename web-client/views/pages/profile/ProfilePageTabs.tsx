@@ -22,6 +22,9 @@ import {
 import { cn } from '@/lib/utils';
 import ProfilePageTabsItem from './ProfilePageTabsItem';
 import { IDetailUserProfileDTO } from '@/types/profile';
+import ProfilePageIntroduceSection from './ProfilePageIntroduceSection';
+import ProfilePageWrapper from './ProfilePageWrapper';
+import ProfilePageImageSection from './ProfilePageImageSection';
 
 export interface ITabs {
   id: string;
@@ -46,9 +49,10 @@ const tabs: ITabs[] = [
 
 interface ProfilePageTabsProps {
   data?: IDetailUserProfileDTO;
+  isLoading?: boolean;
 }
 
-const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
+const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
   const { t } = useTranslation('profile');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -103,7 +107,7 @@ const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
 
   return (
     <div className="w-full border-t dark:border-foreground/20">
-      <div className="relative md:px-6 px-[10px] rounded-b-lg w-full bg-white dark:bg-gray-800 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+      <div className="relative md:px-6 px-[10px] rounded-b-lg w-full custom-bg-1 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
         <div className="relative">
           <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
           <div className="relative">
@@ -181,10 +185,21 @@ const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
           </div>
         </div>
       </div>
-      <div className="mt-3 md:px-6 px-4 md:py-6 py-4 w-full bg-white dark:bg-gray-800 rounded-lg shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
-        <div className="flex lg:flex-row flex-col gap-3 items-center justify-between">
-          <div className="bg-red-500 lg:w-[50%] w-full h-full rounded-md">k</div>
-          <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+      <div className="mt-3 w-full rounded-lg">
+        <div className="flex lg:flex-row flex-col gap-3 items-start justify-between">
+          <div className="lg:w-[40%] w-full space-y-3 h-auto">
+            <ProfilePageWrapper title="Giới thiệu">
+              <ProfilePageIntroduceSection data={data} isLoading={isLoading} />
+            </ProfilePageWrapper>
+            <ProfilePageWrapper title="Ảnh">
+              <ProfilePageImageSection data={data} isLoading={isLoading} />
+            </ProfilePageWrapper>
+          </div>
+          <div className="custom-bg-1 w-full rounded-md">
+            <ProfilePageWrapper>
+              <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+            </ProfilePageWrapper>
+          </div>
         </div>
       </div>
     </div>

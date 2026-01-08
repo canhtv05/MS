@@ -76,7 +76,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
     <div className="lg:flex flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
       <div
         className={cn(
-          'md:w-full w-[220px] dark:bg-gray-800 bg-white md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
+          'md:w-full w-[220px] custom-bg-1 md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
           isCollapsed ? 'w-full' : 'md:p-3 md:w-full w-[220px]',
         )}
       >

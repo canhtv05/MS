@@ -1,5 +1,6 @@
 package com.leaf.file.domain;
 
+import com.leaf.common.grpc.ResourceType;
 import java.time.Instant;
 import java.util.List;
 import lombok.*;
@@ -25,6 +26,7 @@ public class File {
     Long totalSize;
     List<Image> images;
     List<Video> videos;
+    ResourceType resourceType;
 
     @CreatedDate
     Instant createdAt;

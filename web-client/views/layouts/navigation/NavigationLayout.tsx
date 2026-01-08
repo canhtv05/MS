@@ -33,7 +33,7 @@ const NavigationLayout = () => {
               style={{ filter: 'drop-shadow(1px 0 5px rgba(0,0,0,0.09))' }}
             >
               <div
-                className="w-full h-full bg-white dark:bg-gray-800"
+                className="w-full h-full custom-bg-1"
                 style={{ clipPath: "path('M 16,0 A 16,16 0 0,1 16,32 L 16,0 Z')" }}
               />
             </div>
@@ -41,7 +41,7 @@ const NavigationLayout = () => {
               onClick={() => {
                 setIsCollapsed(!isCollapsed);
               }}
-              className="relative z-10 w-8 h-8 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
+              className="relative z-10 w-8 h-8 rounded-full custom-bg-1 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
             >
               {isCollapsed ? (
                 <AltArrowRight className="size-4" />

@@ -13,7 +13,7 @@ import { IMediaHistoryGroupDTO } from '@/types/profile';
 import { ResourceType } from '@/enums/common';
 
 interface ProfilePageChooseImageProps {
-  onSelect?: (url: string) => void;
+  onSelect?: (url: string | null) => void;
   selectedUrl?: string | null;
   isAvatar?: boolean;
 }
@@ -28,7 +28,7 @@ const ProfilePageChooseImage = ({
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const handleContainerClick = useCallback(() => {
-    onSelect?.('');
+    onSelect?.(null);
   }, [onSelect]);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
@@ -134,20 +134,22 @@ const ProfilePageChooseImage = ({
                   onClick={e => {
                     e.stopPropagation();
                     if (image.url === selectedUrl) {
-                      onSelect?.('');
+                      onSelect?.(null);
                     } else {
                       onSelect?.(image.url);
                     }
                   }}
                 >
-                  <Image
-                    src={image.url}
-                    alt={`Media ${image.type}`}
-                    fill
-                    className="object-cover absolute inset-0"
-                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
-                    unoptimized
-                  />
+                  {image.url && (
+                    <Image
+                      src={image.url}
+                      alt={`Media ${image.type}`}
+                      fill
+                      className="object-cover absolute inset-0"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      unoptimized
+                    />
+                  )}
                   {image?.createdAt && (
                     <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
                       {image?.createdAt?.toLocaleString()?.split(' ')[1]}

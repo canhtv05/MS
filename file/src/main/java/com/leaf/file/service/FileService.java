@@ -5,9 +5,12 @@ import com.cloudinary.EagerTransformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.ResponseObject;
+import com.leaf.common.dto.search.SearchResponse;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.SearchRequest;
+import com.leaf.file.domain.File;
 import com.leaf.file.domain.Image;
 import com.leaf.file.domain.Video;
 import com.leaf.file.dto.FileResponse;
@@ -17,6 +20,7 @@ import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
 import com.leaf.framework.security.SecurityUtils;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +30,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -60,9 +66,9 @@ public class FileService {
             totalSize += file.getSize();
 
             if (contentType.startsWith("image")) {
-                imageResponses.add(processImageUpload(file, resourceType, userId));
+                imageResponses.add(processImageUpload(file, resourceType, userId, true));
             } else if (contentType.startsWith("video")) {
-                videoResponses.add(processVideoUpload(file, resourceType, userId));
+                videoResponses.add(processVideoUpload(file, resourceType, userId, true));
             }
         }
 
@@ -70,11 +76,15 @@ public class FileService {
             throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
         }
 
-        return saveFileMetadata(userId, totalSize, imageResponses, videoResponses);
+        return saveFileMetadata(userId, totalSize, imageResponses, videoResponses, resourceType);
     }
 
-    public ImageResponse processImageUpload(MultipartFile file, ResourceType resourceType, String userId)
-        throws IOException {
+    public ImageResponse processImageUpload(
+        MultipartFile file,
+        ResourceType resourceType,
+        String userId,
+        boolean isUploadMany
+    ) throws IOException {
         Long size = file.getSize();
         if (size > 20 * 1024 * 1024) {
             throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
@@ -93,6 +103,26 @@ public class FileService {
                 )
             );
 
+        if (!isUploadMany) {
+            Image image = Image.builder()
+                .contentType(file.getContentType())
+                .imageUrl(result.get("secure_url").toString())
+                .fileSize(file.getSize())
+                .originFileName(file.getOriginalFilename())
+                .publicId(result.get("public_id").toString())
+                .build();
+            fileRepository.save(
+                File.builder()
+                    .createdAt(Instant.now())
+                    .updatedAt(Instant.now())
+                    .ownerId(userId)
+                    .resourceType(resourceType)
+                    .totalSize(file.getSize())
+                    .images(List.of(image))
+                    .build()
+            );
+        }
+
         return ImageResponse.builder()
             .contentType(file.getContentType())
             .imageUrl(result.get("secure_url").toString())
@@ -102,8 +132,12 @@ public class FileService {
             .build();
     }
 
-    public VideoResponse processVideoUpload(MultipartFile file, ResourceType resourceType, String userId)
-        throws IOException {
+    public VideoResponse processVideoUpload(
+        MultipartFile file,
+        ResourceType resourceType,
+        String userId,
+        boolean isUploadMany
+    ) throws IOException {
         Long size = file.getSize();
         if (size > 20 * 1024 * 1024) {
             throw new ApiException(ErrorMessage.FILE_SIZE_EXCEEDED);
@@ -138,6 +172,30 @@ public class FileService {
         @SuppressWarnings("unchecked")
         String previewVttUrl = ((List<Map<String, String>>) videoResult.get("eager")).get(1).get("secure_url");
 
+        if (!isUploadMany) {
+            Video video = Video.builder()
+                .contentType(file.getContentType())
+                .videoUrl(videoUrl)
+                .thumbnailUrl(thumbnailUrl)
+                .playtimeSeconds(durationSec)
+                .playtimeString(formatDuration(durationMillis))
+                .fileSize(file.getSize())
+                .originFileName(file.getOriginalFilename())
+                .publicId(videoPublicId)
+                .previewVttUrl(previewVttUrl)
+                .build();
+            fileRepository.save(
+                File.builder()
+                    .createdAt(Instant.now())
+                    .updatedAt(Instant.now())
+                    .ownerId(userId)
+                    .resourceType(resourceType)
+                    .totalSize(file.getSize())
+                    .videos(List.of(video))
+                    .build()
+            );
+        }
+
         return VideoResponse.builder()
             .contentType(file.getContentType())
             .videoUrl(videoUrl)
@@ -155,7 +213,8 @@ public class FileService {
         String userId,
         long totalSize,
         List<ImageResponse> imageResponses,
-        List<VideoResponse> videoResponses
+        List<VideoResponse> videoResponses,
+        ResourceType resourceType
     ) {
         String id = UUID.randomUUID().toString();
 
@@ -194,6 +253,7 @@ public class FileService {
                     )
                     .toList()
             )
+            .resourceType(resourceType)
             .build();
 
         fileRepository.save(fileEntity);
@@ -204,6 +264,7 @@ public class FileService {
             .totalSize(totalSize)
             .images(imageResponses)
             .videos(videoResponses)
+            .resourceType(resourceType)
             .build();
     }
 
@@ -310,5 +371,33 @@ public class FileService {
             LocalDate.now().toString()
         );
         return result;
+    }
+
+    public SearchResponse<ImageResponse> getFileImageByUserIdAndResourceType(
+        String userId,
+        List<ResourceType> resourceTypes,
+        SearchRequest searchRequest
+    ) {
+        if (!fileRepository.existsByOwnerId(userId)) {
+            return new SearchResponse<ImageResponse>(new ArrayList<>(), PageResponse.builder().build());
+        }
+        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
+        List<Image> images = fileRepository.findImagesByOwnerIdAndResourceType(userId, resourceTypes, pageable);
+        long totalCount = 0;
+        List<Document> countResult = fileRepository.countImagesByOwnerIdAndResourceType(userId, resourceTypes);
+        if (!countResult.isEmpty()) {
+            totalCount = ((Number) countResult.get(0).get("total")).longValue();
+        }
+        Page<Image> pageResponse = new PageImpl<>(images, pageable, totalCount);
+        return new SearchResponse<ImageResponse>(
+            pageResponse.getContent().stream().map(ImageResponse::toImageResponse).toList(),
+            PageResponse.builder()
+                .currentPage(pageResponse.getNumber() + 1)
+                .size(pageResponse.getSize())
+                .total(pageResponse.getTotalElements())
+                .totalPages(pageResponse.getTotalPages())
+                .count(pageResponse.getContent().size())
+                .build()
+        );
     }
 }

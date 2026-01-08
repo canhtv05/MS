@@ -22,7 +22,7 @@ const SidebarLayout = () => {
   return (
     <div className="h-full flex flex-col justify-start items-start gap-7 w-full">
       <div className="w-full">
-        <div className="dark:bg-gray-800 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto bg-white rounded-lg">
+        <div className="custom-bg-1 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto rounded-lg">
           <div className="flex justify-between group items-center px-4 pt-4">
             <h3 className="text-sm font-black">Messages</h3>
             <PenNewSquare size={18} />
@@ -43,7 +43,7 @@ const SidebarLayout = () => {
           <div className="pt-3">
             <div className="flex max-h-[50vh] overflow-y-auto w-full max-w-sm flex-col gap-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <div className="sticky top-0 z-20 bg-white dark:bg-gray-800 flex px-4 items-center justify-between gap-3 pb-2 pt-1">
+                <div className="sticky top-0 z-20 custom-bg-1 flex px-4 items-center justify-between gap-3 pb-2 pt-1">
                   <div className="relative flex-1">
                     <TabsHighlightPrimitive
                       mode="parent"

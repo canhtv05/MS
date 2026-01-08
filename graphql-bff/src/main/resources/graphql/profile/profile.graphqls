@@ -24,6 +24,7 @@ type DetailUserProfileDTO {
   avatarUrl: String
   introduce: UserProfileIntroduceDTO
   privacy: UserProfilePrivacyDTO
+  images(page: Int, size: Int): GetFileImagesResponse
   lastOnlineAt: DateTime
   followersCount: Int
   followingCount: Int
@@ -64,4 +65,9 @@ type InterestDTO {
   id: String
   title: String
   color: String
+}
+
+type GetFileImagesResponse {
+  data: [ImageDTO]
+  pagination: PageResponse
 }

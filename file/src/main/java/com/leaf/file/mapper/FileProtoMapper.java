@@ -1,11 +1,22 @@
 package com.leaf.file.mapper;
 
+import com.leaf.common.dto.PageResponse;
 import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.ImageResponse;
 import com.leaf.file.dto.VideoResponse;
 import java.util.List;
 
 public class FileProtoMapper {
+
+    public static com.leaf.common.grpc.PageResponse toProto(PageResponse page) {
+        return com.leaf.common.grpc.PageResponse.newBuilder()
+            .setCurrentPage(page.getCurrentPage())
+            .setSize(page.getSize())
+            .setTotal(page.getTotal())
+            .setTotalPages(page.getTotalPages())
+            .setCount(page.getCount())
+            .build();
+    }
 
     public static com.leaf.common.grpc.FileResponse toProto(FileResponse response) {
         List<com.leaf.common.grpc.ImageResponse> images = response

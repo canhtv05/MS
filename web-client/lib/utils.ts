@@ -51,13 +51,17 @@ export function detectLocale(): string {
 export function formatDateFromISOString(dateString: string): string {
   const date = new Date(dateString);
 
-  return new Intl.DateTimeFormat(detectLocale(), {
+  const res = new Intl.DateTimeFormat(detectLocale(), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   }).format(date);
+  const resSplit = res.split(' ');
+  return resSplit[0].includes(',')
+    ? `${resSplit[0].split(',')[0]} ${resSplit[1]}`
+    : `${resSplit[0]} ${resSplit[1]}`;
 }
 
 export function formatWebsiteUrl(url: string): string {

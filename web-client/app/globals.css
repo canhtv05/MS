@@ -235,6 +235,10 @@
   animation: gradientShift 8s ease infinite;
 }
 
+@utility custom-bg-1 {
+  @apply bg-white dark:bg-gray-800;
+}
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;

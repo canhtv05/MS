@@ -3,6 +3,7 @@ package com.leaf.file.dto;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.leaf.common.grpc.ResourceType;
 import com.leaf.file.domain.File;
 import java.util.List;
 import lombok.*;
@@ -25,6 +26,7 @@ public class FileResponse {
 
     List<VideoResponse> videos;
     List<ImageResponse> images;
+    ResourceType resourceType;
 
     public static FileResponse toFileResponse(File file) {
         FileResponse fileResponse = new FileResponse();

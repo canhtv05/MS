@@ -1,4 +1,4 @@
-import { IProfilePageProps } from './ProfilePage';
+import { IProfilePageProps } from './ProfilePageContainer';
 import { Settings } from '@solar-icons/react-perf/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';

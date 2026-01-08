@@ -1,6 +1,13 @@
 package com.leaf.graphql_bff.profile.resolver;
 
+import com.leaf.common.dto.PageResponse;
+import com.leaf.common.dto.search.SearchResponse;
+import com.leaf.common.grpc.GetFileImagesRequest;
+import com.leaf.common.grpc.ImageResponse;
+import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.SearchRequest;
 import com.leaf.common.grpc.UserProfileIdRequest;
+import com.leaf.graphql_bff.profile.client.ProfileGrpcFileClient;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcProfileClient;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfileIntroduceDTO;
@@ -10,6 +17,8 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.InputArgument;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +31,7 @@ import reactor.core.scheduler.Schedulers;
 public class ProfileQueryResolver {
 
     ProfileGrpcProfileClient grpcProfileClient;
+    ProfileGrpcFileClient grpcFileClient;
 
     @DgsQuery(field = "userDetail")
     public Mono<DetailUserProfileDTO> userDetail(String username) {
@@ -58,5 +68,40 @@ public class ProfileQueryResolver {
         )
             .subscribeOn(Schedulers.boundedElastic())
             .flatMap(privacy -> Mono.justOrEmpty(UserProfileMapper.getInstance().toUserProfilePrivacyDTO(privacy)));
+    }
+
+    @DgsData(parentType = "DetailUserProfileDTO", field = "images")
+    public Mono<SearchResponse<ImageResponse>> images(
+        DgsDataFetchingEnvironment dfe,
+        @InputArgument Integer page,
+        @InputArgument Integer size
+    ) {
+        DetailUserProfileDTO parent = dfe.getSource();
+
+        int safePage = (page == null || page < 1) ? 1 : page;
+        int safeSize = (size == null || size < 1) ? 20 : size;
+
+        return Mono.fromCallable(() ->
+            grpcFileClient.getFileImagesResponse(
+                GetFileImagesRequest.newBuilder()
+                    .setSearchRequest(SearchRequest.newBuilder().setPage(safePage).setSize(safeSize).build())
+                    .addAllResourceTypes(List.of(ResourceType.RESOURCE_TYPE_AVATAR, ResourceType.RESOURCE_TYPE_COVER))
+                    .setUserId(parent.getUserId())
+                    .build()
+            )
+        )
+            .subscribeOn(Schedulers.boundedElastic())
+            .map(response -> {
+                var protoPage = response.getPagination();
+                PageResponse pageResponse = PageResponse.builder()
+                    .currentPage(protoPage.getCurrentPage())
+                    .totalPages(protoPage.getTotalPages())
+                    .size(protoPage.getSize())
+                    .count(protoPage.getCount())
+                    .total(protoPage.getTotal())
+                    .build();
+
+                return new SearchResponse<>(response.getDataList(), pageResponse);
+            });
     }
 }

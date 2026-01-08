@@ -19,7 +19,7 @@ public class ImageResponse implements Serializable {
     String originFileName;
     String publicId;
 
-    public static ImageResponse toEmImageResponse(Image file) {
+    public static ImageResponse toImageResponse(Image file) {
         ImageResponse imageResponse = new ImageResponse();
         BeanUtils.copyProperties(file, imageResponse);
         return imageResponse;

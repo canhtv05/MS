@@ -4,6 +4,22 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "CommonProto";
 
+message SearchRequest {
+    string searchText = 1;
+    int32 page = 2;
+    int32 size = 3;
+    string sortOrder = 4;
+    string sortField = 5;
+}
+
+message PageResponse {  
+    int32 currentPage = 1;
+    int32 size = 2;
+    int64 total = 3;
+    int32 totalPages = 4;
+    int32 count = 5;
+}
+
 enum Gender {
     GENDER_UNSPECIFIED = 0;
     GENDER_MALE = 1;

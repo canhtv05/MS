@@ -12,7 +12,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const router = useRouter();
 
   return (
-    <div className="dark:bg-gray-800 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex bg-white rounded-lg">
+    <div className="custom-bg-1 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex rounded-lg">
       <div
         onClick={() => router.push(`/@${user?.auth?.username}`)}
         className={cn(

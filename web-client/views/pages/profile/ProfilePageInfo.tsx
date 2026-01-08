@@ -1,11 +1,16 @@
 import { detectLanguage } from '@/utils/common';
-import { IProfilePageProps } from './ProfilePage';
+import { IProfilePageProps } from './ProfilePageContainer';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
 import { formatDateFromISOString, formatWebsiteUrl } from '@/lib/utils';
-import { LinkMinimalistic2, Calendar } from '@solar-icons/react-perf/BoldDuotone';
+import {
+  LinkMinimalistic2,
+  Calendar,
+  Case,
+  SquareAcademicCap,
+} from '@solar-icons/react-perf/BoldDuotone';
 import Link from 'next/link';
 
 interface StatItemProps {
@@ -41,7 +46,7 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
             {data?.bio && (
               <Code code={data.bio} className="border-none">
                 <CodeBlock
-                  className="max-h-[200px] px-0 pb-4 pt-1 bg-white dark:bg-gray-800 transition-none"
+                  className="max-h-[200px] px-0 pb-4 pt-1 custom-bg-1 transition-none"
                   cursor={false}
                   lang={detectLanguage(data.bio)}
                   writing={true}
@@ -59,21 +64,57 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
         </div>
       ) : (
         <div className="flex flex-col gap-1 mt-2 max-w-full">
-          {data?.introduce?.jobTitle && (
+          {(() => {
+            const jobTitle = data?.introduce?.jobTitle?.trim();
+            const company = data?.introduce?.company?.trim();
+
+            if (jobTitle && company) {
+              return (
+                <p className="text-xs text-foreground/60 leading-relaxed flex flex-wrap items-center gap-1">
+                  <Case className="w-3.5 h-3.5 text-foreground/40" />
+                  <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                    {jobTitle}
+                  </span>
+                  <span className="text-foreground/40">{t('at')}</span>
+                  <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                    {company}
+                  </span>
+                </p>
+              );
+            }
+
+            if (jobTitle && !company) {
+              return (
+                <p className="text-xs text-foreground/60 leading-relaxed flex flex-wrap items-center gap-1">
+                  <Case className="w-3.5 h-3.5 text-foreground/40" />
+                  <span className="text-foreground/40">{t('works_as')}</span>
+                  <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                    {jobTitle}
+                  </span>
+                </p>
+              );
+            }
+
+            if (!jobTitle && company) {
+              return (
+                <p className="text-xs text-foreground/60 leading-relaxed flex flex-wrap items-center gap-1">
+                  <Case className="w-3.5 h-3.5 text-foreground/40" />
+                  <span className="text-foreground/40">{t('works_at')}</span>
+                  <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                    {company}
+                  </span>
+                </p>
+              );
+            }
+
+            return null;
+          })()}
+
+          {data?.introduce?.school?.trim() && (
             <p className="text-xs text-foreground/60 leading-relaxed flex flex-wrap items-center gap-1">
-              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
-                {data.introduce.jobTitle}
-              </span>
-              <span className="text-foreground/40">{t('at')}</span>
-              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
-                {data.introduce.company}
-              </span>
-            </p>
-          )}
-          {data?.introduce?.school && (
-            <p className="text-xs text-foreground/60 leading-relaxed">
-              <span className="text-foreground/40">{t('studied_at')}</span>{' '}
-              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[250px] inline-block align-bottom">
+              <SquareAcademicCap className="w-3.5 h-3.5 text-foreground/40" />
+              <span className="text-foreground/40">{t('studied_at')}</span>
+              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[250px]">
                 {data.introduce.school}
               </span>
             </p>
@@ -107,9 +148,7 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
               <span className="text-foreground/40">
                 {t('joined')}{' '}
                 <span className="font-medium text-foreground/60">
-                  {formatDateFromISOString(data.createdDate).split(' ')[0].includes(',')
-                    ? formatDateFromISOString(data.createdDate).split(' ')[0].replace(',', '')
-                    : formatDateFromISOString(data.createdDate).split(' ')[0]}
+                  {formatDateFromISOString(data.createdDate).split(' ')[0]}
                 </span>
               </span>
             </span>

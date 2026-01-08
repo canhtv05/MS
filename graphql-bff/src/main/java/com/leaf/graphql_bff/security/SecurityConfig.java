@@ -31,6 +31,8 @@ public class SecurityConfig {
                 exchanges
                     .pathMatchers(CommonConstants.GRAPHQL_PUBLIC_ENDPOINTS)
                     .permitAll()
+                    .pathMatchers("/graphql")
+                    .permitAll()
                     .pathMatchers("/")
                     .permitAll()
                     .anyExchange()

@@ -1,0 +1,28 @@
+type FileDTO {
+  id: String
+  ownerId: String
+  totalSize: Float
+  images: [ImageDTO]
+  videos: [VideoDTO]
+  resourceType: ResourceType
+}
+
+type ImageDTO {
+  contentType: String
+  imageUrl: String
+  fileSize: Float
+  originFileName: String
+  publicId: String
+}
+
+type VideoDTO {
+  playtimeSeconds: Float
+  playtimeString: String
+  contentType: String
+  videoUrl: String
+  thumbnailUrl: String
+  previewVttUrl: String
+  fileSize: Float
+  originFileName: String
+  publicId: String
+}

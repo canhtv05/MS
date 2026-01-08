@@ -4,12 +4,15 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "FileProto";
 
+import "Common.proto";
+
 service FileGrpcService {
     rpc uploadFiles(UploadFilesRequest) returns (FileResponse);
     rpc uploadImage(UploadOneImageRequest) returns (ImageResponse);
     rpc uploadVideo(UploadOneVideoRequest) returns (VideoResponse);
     rpc getFileByIds(GetFilesByIdsRequest) returns (GetFilesByIdsResponse);
     rpc deleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
+    rpc getFileImages(GetFileImagesRequest) returns (GetFileImagesResponse);
 }
 
 message UploadOneImageRequest {
@@ -71,6 +74,17 @@ message FileResponse {
 
     repeated VideoResponse videos = 3;
     repeated ImageResponse images = 4;
+}
+
+message GetFileImagesRequest {
+    string userId = 1;
+    repeated ResourceType resourceTypes = 2;
+    SearchRequest searchRequest = 3;
+}
+
+message GetFileImagesResponse {
+    repeated ImageResponse data = 1;
+    PageResponse pagination = 2;
 }
 
 enum ResourceType {

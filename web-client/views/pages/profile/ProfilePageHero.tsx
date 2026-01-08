@@ -8,7 +8,7 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import images from '@/public/imgs';
-import { IProfilePageProps } from './ProfilePage';
+import { IProfilePageProps } from './ProfilePageContainer';
 import { useAuthStore } from '@/stores/auth';
 import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
 import {
@@ -79,7 +79,7 @@ const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   );
 };
 
-const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
+const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
   const { userProfile } = useProfileStore(state => state);
   const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
@@ -121,66 +121,67 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
                 images.avt1.src,
               );
               return (
-                <ControlledZoom
-                  isZoomed={isClickViewAvatar}
-                  onZoomChange={setIsClickViewAvatar}
-                  classDialog="!z-[9999]"
-                  zoomMargin={20}
-                  zoomImg={{
-                    src: avatarSrc,
-                    alt: 'Avatar',
-                    loading: 'eager',
-                  }}
-                >
-                  <Image
-                    src={avatarSrc}
-                    alt="Avatar"
-                    fill
-                    className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
-                    loading="eager"
-                    quality={100}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
-                    unoptimized
-                  />
-                </ControlledZoom>
+                <>
+                  <ControlledZoom
+                    isZoomed={isClickViewAvatar}
+                    onZoomChange={setIsClickViewAvatar}
+                    classDialog="!z-[9999]"
+                    zoomMargin={20}
+                    zoomImg={{
+                      src: avatarSrc,
+                      alt: 'Avatar',
+                      loading: 'eager',
+                    }}
+                  >
+                    {avatarSrc && avatarSrc.trim() !== '' && (
+                      <Image
+                        src={avatarSrc}
+                        alt="Avatar"
+                        fill
+                        className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
+                        loading="eager"
+                        quality={100}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+                        unoptimized
+                      />
+                    )}
+                  </ControlledZoom>
+
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        className="cursor-pointer focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full"
+                      >
+                        <Avatar className="w-32 h-32 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)]">
+                          <AvatarImage
+                            width={128}
+                            height={128}
+                            className="rounded-full cursor-pointer"
+                            src={avatarSrc}
+                            alt={user?.profile?.fullname || userProfile?.fullname || data?.fullname}
+                          />
+                          <AvatarFallback className="text-2xl font-bold">
+                            {data?.fullname?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="center" side="bottom" sideOffset={-2}>
+                      <DropdownMenuArrow />
+                      <DropdownMenuItem onClick={() => setIsClickViewAvatar(true)}>
+                        <UserCircle />
+                        <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={openParentDialog}>
+                        <Gallery />
+                        <span className="md:text-sm text-xs">{t?.('profile:choose_avatar')}</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
               );
             })()}
-
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  className="cursor-pointer focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full"
-                >
-                  <Avatar className="w-32 h-32 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)]">
-                    <AvatarImage
-                      width={128}
-                      height={128}
-                      className="rounded-full cursor-pointer"
-                      src={getValidImageSrc(
-                        user?.profile?.avatarUrl || userProfile?.avatarUrl || data?.avatarUrl,
-                        images.avt1.src,
-                      )}
-                      alt={user?.profile?.fullname || userProfile?.fullname || data?.fullname}
-                    />
-                    <AvatarFallback className="text-2xl font-bold">
-                      {data?.fullname?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" side="bottom" sideOffset={-2}>
-                <DropdownMenuArrow />
-                <DropdownMenuItem onClick={() => setIsClickViewAvatar(true)}>
-                  <UserCircle />
-                  <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={openParentDialog}>
-                  <Gallery />
-                  <span className="md:text-sm text-xs">{t?.('profile:choose_avatar')}</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
             {user?.auth?.username === data?.userId && (
               <IconButton
                 className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
@@ -248,4 +249,4 @@ const ProfilePageHeroSection = ({ isLoading, t, data }: IProfilePageProps) => {
   );
 };
 
-export default ProfilePageHeroSection;
+export default ProfilePageHero;

@@ -67,7 +67,8 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             com.leaf.file.dto.ImageResponse dto = fileService.processImageUpload(
                 file,
                 request.getResourceType(),
-                userId
+                userId,
+                false
             );
             com.leaf.common.grpc.ImageResponse protoResponse = FileProtoMapper.mapImage(dto);
 
@@ -89,7 +90,8 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             com.leaf.file.dto.VideoResponse dto = fileService.processVideoUpload(
                 file,
                 request.getResourceType(),
-                userId
+                userId,
+                false
             );
             com.leaf.common.grpc.VideoResponse protoResponse = FileProtoMapper.mapVideo(dto);
 
@@ -114,5 +116,30 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert gRPC bytes to MultipartFile", e);
         }
+    }
+
+    @Override
+    public void getFileImages(GetFileImagesRequest request, StreamObserver<GetFileImagesResponse> responseObserver) {
+        SearchRequest searchRequest = SearchRequest.newBuilder()
+            .setSearchText(request.getSearchRequest().getSearchText())
+            .setPage(request.getSearchRequest().getPage())
+            .setSize(request.getSearchRequest().getSize())
+            .setSortOrder(request.getSearchRequest().getSortOrder())
+            .setSortField(request.getSearchRequest().getSortField())
+            .build();
+
+        var result = fileService.getFileImageByUserIdAndResourceType(
+            request.getUserId(),
+            request.getResourceTypesList(),
+            searchRequest
+        );
+
+        GetFileImagesResponse response = GetFileImagesResponse.newBuilder()
+            .addAllData(result.data().stream().map(FileProtoMapper::mapImage).toList())
+            .setPagination(FileProtoMapper.toProto(result.pagination()))
+            .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

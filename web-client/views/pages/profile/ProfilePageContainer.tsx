@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import ProfilePageInfo from './ProfilePageInfo';
-import ProfilePageHeroSection from './ProfilePageHeroSection';
+import ProfilePageHero from './ProfilePageHero';
 import ProfilePageTabs from './ProfilePageTabs';
 import Zoom from 'react-medium-image-zoom';
 import { Button } from '@/components/animate-ui/components/buttons/button';
@@ -35,7 +35,7 @@ export interface IProfilePageProps {
   data?: IDetailUserProfileDTO;
 }
 
-const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
+const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
   const { user } = useAuthStore();
@@ -107,14 +107,13 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
             getImageSrcOrNull(data?.coverUrl) ||
             getImageSrcOrNull(user?.profile?.coverUrl);
 
-          if (coverSrc) {
+          if (coverSrc && coverSrc.trim() !== '') {
             return (
               <Zoom
                 zoomMargin={20}
                 zoomImg={{
                   src: coverSrc,
                   alt: 'bg',
-                  loading: 'eager',
                 }}
               >
                 <div className="relative w-full h-[200px]">
@@ -172,11 +171,11 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         )}
       </div>
       <div className="rounded-b-lg">
-        <div className="md:px-6 px-4 md:pb-4 pb-4 bg-white dark:bg-gray-800 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
-          <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
+        <div className="md:px-6 px-4 md:pb-4 pb-4 custom-bg-1 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
+          <ProfilePageHero isLoading={isLoading} t={t} data={data} />
           <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
         </div>
-        <ProfilePageTabs data={data} />
+        <ProfilePageTabs data={data} isLoading={isLoading} />
       </div>
       <Dialog
         open={showDialogMediaHistory}
@@ -213,4 +212,4 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   );
 };
 
-export default ProfilePage;
+export default ProfilePageContainer;

@@ -9,6 +9,14 @@ type UserProfileDTO {
   profile: ProfileDTO
 }
 
+type PageResponse {
+  currentPage: Int
+  size: Int
+  total: Int
+  totalPages: Int
+  count: Int
+}
+
 enum Gender {
   GENDER_UNSPECIFIED
   GENDER_MALE
@@ -37,4 +45,14 @@ enum RelationshipStatus {
   RELATIONSHIP_STATUS_DIVORCED
   RELATIONSHIP_STATUS_HIDDEN
   RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP
+}
+
+enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED
+  RESOURCE_TYPE_AVATAR
+  RESOURCE_TYPE_COVER
+  RESOURCE_TYPE_POST
+  RESOURCE_TYPE_COMMENT
+  RESOURCE_TYPE_MESSAGE
+  RESOURCE_TYPE_OTHER
 }

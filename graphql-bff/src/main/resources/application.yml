@@ -11,6 +11,9 @@ grpc:
     auth-service:
       address: static://localhost:9001
       negotiationType: plaintext
+    file-service:
+      address: static://localhost:9002
+      negotiationType: plaintext
 
 spring:
   application:
