@@ -42,5 +42,8 @@
   "facebookUrl": "Facebook URL",
   "instagramUrl": "Instagram URL",
   "tiktokUrl": "Tiktok URL",
-  "xUrl": "X URL"
+  "xUrl": "X URL",
+  "at": "tại",
+  "studied_at": "Từng học tại",
+  "joined": "Tham gia từ"
 }

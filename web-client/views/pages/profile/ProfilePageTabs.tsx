@@ -32,6 +32,11 @@ export interface ITabs {
 const tabs: ITabs[] = [
   { id: 'posts', labelKey: 'posts', icon: <Bookmark className="text-current size-[16px]" /> },
   {
+    id: 'introduce',
+    labelKey: 'introduce',
+    icon: <ClipboardText className="text-current size-[16px]" />,
+  },
+  {
     id: 'friends',
     labelKey: 'friends',
     icon: <UsersGroupTwoRounded className="text-current size-[16px]" />,
@@ -97,8 +102,8 @@ const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
   };
 
   return (
-    <div className="w-full">
-      <div className="relative md:px-6 px-[10px] rounded-b-lg w-full bg-white dark:bg-gray-800">
+    <div className="w-full border-t dark:border-foreground/20">
+      <div className="relative md:px-6 px-[10px] rounded-b-lg w-full bg-white dark:bg-gray-800 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
         <div className="relative">
           <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
           <div className="relative">
@@ -176,8 +181,11 @@ const ProfilePageTabs = ({ data }: ProfilePageTabsProps) => {
           </div>
         </div>
       </div>
-      <div className="mt-3 md:px-6 px-[10px] md:pb-6 pb-[10px] w-full bg-white dark:bg-gray-800 pt-2 rounded-lg">
-        <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+      <div className="mt-3 md:px-6 px-4 md:py-6 py-4 w-full bg-white dark:bg-gray-800 rounded-lg shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
+        <div className="flex lg:flex-row flex-col gap-3 items-center justify-between">
+          <div className="bg-red-500 lg:w-[50%] w-full h-full rounded-md">k</div>
+          <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+        </div>
       </div>
     </div>
   );

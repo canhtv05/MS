@@ -90,9 +90,12 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
     queryKey: ['profile', 'user-profile', us],
     queryFn: async (): Promise<IDetailUserProfileDTO> => {
       const client = getGraphQLClient();
-      const res = await client.request<GetUserDetailResponse>(GET_USER_DETAIL_QUERY, {
-        username: us,
-      });
+      const res = await client.request<GetUserDetailResponse, { username: string }>(
+        GET_USER_DETAIL_QUERY,
+        {
+          username: us,
+        },
+      );
       return res.userDetail;
     },
     enabled: enabled && !!us,

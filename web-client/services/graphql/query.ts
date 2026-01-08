@@ -35,6 +35,17 @@ export const GET_USER_DETAIL_QUERY = `
   query UserDetail($username: String!) {
     userDetail(username: $username) {
       ...UserProfileResponseFragment
+      introduce {
+        websiteUrl
+        jobTitle
+        company
+        school
+        interests {
+          id
+          title
+          color
+        }
+      }
       privacy {
         ...UserProfilePrivacyFragment
       }

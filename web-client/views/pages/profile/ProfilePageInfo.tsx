@@ -4,6 +4,9 @@ import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
+import { formatDateFromISOString, formatWebsiteUrl } from '@/lib/utils';
+import { LinkMinimalistic2, Calendar } from '@solar-icons/react-perf/BoldDuotone';
+import Link from 'next/link';
 
 interface StatItemProps {
   value: number;
@@ -13,12 +16,12 @@ interface StatItemProps {
 
 const StatItem = ({ value, label, isLoading }: StatItemProps) => {
   if (isLoading) {
-    return <Skeleton className="h-5 w-20" />;
+    return <Skeleton className="h-4 w-16" />;
   }
   return (
-    <span className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-white transition-colors">
-      <CountingNumber number={value} className="font-medium text-gray-500 dark:text-white" />{' '}
-      <span className="text-gray-500 dark:text-gray-400">{label}</span>
+    <span className="text-xs text-foreground/70 cursor-pointer hover:text-foreground transition-colors">
+      <CountingNumber number={value} className="font-semibold text-foreground" />{' '}
+      <span className="text-foreground/50">{label}</span>
     </span>
   );
 };
@@ -38,7 +41,7 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
             {data?.bio && (
               <Code code={data.bio} className="border-none">
                 <CodeBlock
-                  className="max-h-[200px]"
+                  className="max-h-[200px] px-0 pb-4 pt-1 bg-white dark:bg-gray-800 transition-none"
                   cursor={false}
                   lang={detectLanguage(data.bio)}
                   writing={true}
@@ -49,29 +52,76 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
         )}
       </div>
 
-      {/* Technology Badges */}
-      {!isLoading && (
-        <div className="flex flex-wrap items-center gap-2 mt-3">
-          <div className="px-3 py-1.5 rounded-lg bg-[#f89820]/10 dark:bg-[#f89820]/20 border border-[#f89820]/30">
-            <span className="text-xs font-medium text-[#f89820]">☕ Java</span>
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-[#61dafb]/10 dark:bg-[#61dafb]/20 border border-[#61dafb]/30">
-            <span className="text-xs font-medium text-[#61dafb]">⚛️ React</span>
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-[#6db33f]/10 dark:bg-[#6db33f]/20 border border-[#6db33f]/30">
-            <span className="text-xs font-medium text-[#6db33f]">🍃 Spring Boot</span>
-          </div>
-          <div className="px-3 py-1.5 rounded-lg bg-[#2496ed]/10 dark:bg-[#2496ed]/20 border border-[#2496ed]/30">
-            <span className="text-xs font-medium text-[#2496ed]">🐳 Docker</span>
-          </div>
+      {isLoading ? (
+        <div className="flex gap-1 flex-col mt-2 max-w-full">
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-5 w-1/2" />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1 mt-2 max-w-full">
+          {data?.introduce?.jobTitle && (
+            <p className="text-xs text-foreground/60 leading-relaxed flex flex-wrap items-center gap-1">
+              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                {data.introduce.jobTitle}
+              </span>
+              <span className="text-foreground/40">{t('at')}</span>
+              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[200px]">
+                {data.introduce.company}
+              </span>
+            </p>
+          )}
+          {data?.introduce?.school && (
+            <p className="text-xs text-foreground/60 leading-relaxed">
+              <span className="text-foreground/40">{t('studied_at')}</span>{' '}
+              <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer truncate max-w-[250px] inline-block align-bottom">
+                {data.introduce.school}
+              </span>
+            </p>
+          )}
         </div>
       )}
 
-      <div className="flex flex-wrap items-center md:justify-start justify-center md:gap-4 gap-1 mt-2">
+      {isLoading ? (
+        <div className="flex flex-wrap items-center gap-3 mt-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+          {data?.introduce?.websiteUrl && (
+            <Link
+              href={formatWebsiteUrl(data.introduce.websiteUrl)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-foreground/60 hover:text-foreground flex items-center gap-1 group"
+            >
+              <LinkMinimalistic2 />
+              <span className="truncate max-w-[180px] font-medium text-cyan-400 group-hover:text-cyan-500 group-hover:underline">
+                {formatWebsiteUrl(data.introduce.websiteUrl)}
+              </span>
+            </Link>
+          )}
+          {data?.createdDate && (
+            <span className="text-xs text-foreground/50 flex items-center gap-1">
+              <Calendar />
+              <span className="text-foreground/40">
+                {t('joined')}{' '}
+                <span className="font-medium text-foreground/60">
+                  {formatDateFromISOString(data.createdDate).split(' ')[0].includes(',')
+                    ? formatDateFromISOString(data.createdDate).split(' ')[0].replace(',', '')
+                    : formatDateFromISOString(data.createdDate).split(' ')[0]}
+                </span>
+              </span>
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center justify-start gap-2 mt-3">
         <StatItem value={80} label={t('posts') || 'posts'} isLoading={isLoading} />
-        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <span className="text-foreground/20">·</span>
         <StatItem value={230000} label={t('followers') || 'followers'} isLoading={isLoading} />
-        <span className="text-gray-300 dark:text-gray-600">·</span>
+        <span className="text-foreground/20">·</span>
         <StatItem value={150} label={t('following') || 'following'} isLoading={isLoading} />
       </div>
     </>

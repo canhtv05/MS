@@ -84,7 +84,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
   }
 
   return (
-    <div className="h-full w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex flex-col lg:w-full rounded-lg">
+    <div className="h-full w-full lg:block inline-flex flex-col lg:w-full rounded-lg">
       <div className="relative w-full h-[200px]!">
         <input
           ref={fileInputRef}
@@ -172,7 +172,7 @@ const ProfilePage = ({ params }: { params: Promise<IProfileParams> }) => {
         )}
       </div>
       <div className="rounded-b-lg">
-        <div className="md:px-6 px-[10px] md:pb-6 pb-[10px] bg-white dark:bg-gray-800 w-full">
+        <div className="md:px-6 px-4 md:pb-4 pb-4 bg-white dark:bg-gray-800 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
           <ProfilePageHeroSection isLoading={isLoading} t={t} data={data} />
           <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
         </div>

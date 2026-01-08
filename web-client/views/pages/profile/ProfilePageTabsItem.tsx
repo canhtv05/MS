@@ -155,7 +155,7 @@ const ProfilePageTabsItem = ({ tabs, activeTab, t, data }: IProfilePageTabsItem)
   const content = getCurrentTabContent();
 
   return (
-    <div className="md:mt-6 mt-[10px] ">
+    <div className="w-full">
       {content.length > 0 ? (
         <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
           {content.map(post => (

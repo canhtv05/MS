@@ -34,8 +34,32 @@ export function formatNumberString(num: number | null | undefined): string {
     return '0';
   }
 
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat(detectLocale(), {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(num);
+}
+
+export function detectLocale(): string {
+  if (typeof window !== 'undefined') {
+    return navigator.language || navigator.languages?.[0] || 'vi-VN';
+  }
+
+  return 'vi-VN';
+}
+
+export function formatDateFromISOString(dateString: string): string {
+  const date = new Date(dateString);
+
+  return new Intl.DateTimeFormat(detectLocale(), {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+export function formatWebsiteUrl(url: string): string {
+  return url.replace(/^https?:\/\//, '');
 }

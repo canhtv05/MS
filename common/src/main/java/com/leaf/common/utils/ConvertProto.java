@@ -4,7 +4,7 @@ import com.google.protobuf.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 
 public class ConvertProto {
 
@@ -27,7 +27,7 @@ public class ConvertProto {
             return null;
         }
         Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
-        LocalDate time = instant.atZone(ZoneOffset.of("+07:00")).toLocalDate();
+        LocalDate time = instant.atZone(ZoneId.systemDefault()).toLocalDate();
         return time;
     }
 
@@ -35,7 +35,7 @@ public class ConvertProto {
         if (localDate == null) {
             return null;
         }
-        Instant instant = localDate.atStartOfDay(ZoneOffset.of("+07:00")).toInstant();
+        Instant instant = localDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
         return Timestamp.newBuilder().setSeconds(instant.getEpochSecond()).setNanos(instant.getNano()).build();
     }
 
@@ -48,6 +48,6 @@ public class ConvertProto {
             return null;
         }
         Instant instant = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
-        return instant.atOffset(ZoneOffset.of("+07:00"));
+        return instant.atZone(ZoneId.systemDefault()).toOffsetDateTime();
     }
 }
