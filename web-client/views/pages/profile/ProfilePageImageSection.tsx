@@ -1,18 +1,9 @@
 'use client';
 
 import { IDetailUserProfileDTO } from '@/types/profile';
-import { useTranslation } from 'react-i18next';
-import {
-  User,
-  MapPoint,
-  Donut,
-  Smartphone,
-  MapPointWave,
-} from '@solar-icons/react-perf/BoldDuotone';
-import { Heart } from '@solar-icons/react-perf/Bold';
-import { Gender, RelationshipStatus } from '@/enums/common';
-import { formatDateFromISOString } from '@/lib/utils';
 import { Skeleton } from '@/components/customs/skeleton';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 interface IProfilePageImageSectionProps {
   data?: IDetailUserProfileDTO;
@@ -20,86 +11,50 @@ interface IProfilePageImageSectionProps {
 }
 
 const ProfilePageImageSection = ({ data, isLoading }: IProfilePageImageSectionProps) => {
-  const { t } = useTranslation('profile');
-  const introduce = data?.introduce;
-
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2 mt-2">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-        <Skeleton className="h-4 w-2/3" />
-        <Skeleton className="h-4 w-1/3" />
+      <div className="grid grid-cols-3 gap-1.5 mt-2">
+        {[...Array(9)].map((_, i) => (
+          <Skeleton key={i} className="aspect-square w-full rounded-lg" />
+        ))}
       </div>
     );
   }
 
-  if (!introduce) return null;
+  const list = data?.images?.data || [];
+  if (!list.length) {
+    return null;
+  }
 
   return (
-    <div className="flex flex-col gap-2 mt-2">
-      {introduce.relationshipStatus &&
-        introduce.relationshipStatus !== RelationshipStatus.RELATIONSHIP_STATUS_UNSPECIFIED && (
-          <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-            <Heart className="w-3.5 h-3.5 text-foreground/40" />
-            <span className="truncate max-w-full font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {t(introduce.relationshipStatus)}
-            </span>
-          </div>
-        )}
+    <div className="grid grid-cols-3 gap-1 mt-2 rounded-md overflow-hidden">
+      {list.map((img, idx) => {
+        const isTopLeft = idx === 0;
+        const isTopRight = idx === 2 || (list.length < 3 && idx === list.length - 1);
+        const isBottomLeft = idx === Math.floor((list.length - 1) / 3) * 3;
+        const isBottomRight = idx === list.length - 1;
 
-      {introduce.gender && introduce.gender !== Gender.GENDER_UNSPECIFIED && (
-        <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-          <User className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-            {t(introduce.gender)}
-          </span>
-        </div>
-      )}
-      {introduce.city && (
-        <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-          <MapPointWave className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full flex-1">
-            <span className="text-foreground/40">{t('lives_in')}</span>{' '}
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.city}
-            </span>
-          </span>
-        </div>
-      )}
-      {introduce.hometown && (
-        <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-          <MapPoint className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full flex-1">
-            <span className="text-foreground/40">{t('from')}</span>{' '}
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.hometown}
-            </span>
-          </span>
-        </div>
-      )}
-      {introduce.dob && (
-        <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-          <Donut className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full">
-            <span className="text-foreground/40">{t('birthday')}: </span>
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {formatDateFromISOString(introduce.dob).split(' ')[0]}
-            </span>
-          </span>
-        </div>
-      )}
-      {introduce.phoneNumber && (
-        <div className="flex items-center gap-2 text-xs text-foreground/60 group">
-          <Smartphone className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full">
-            <span className="text-foreground/40">{t('phone')}: </span>
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.phoneNumber}
-            </span>
-          </span>
-        </div>
-      )}
+        return (
+          <div
+            key={idx}
+            className={cn(
+              'relative aspect-square overflow-hidden group cursor-pointer',
+              isTopLeft && 'rounded-tl-md',
+              isTopRight && 'rounded-tr-md',
+              isBottomLeft && 'rounded-bl-md',
+              isBottomRight && 'rounded-br-md',
+            )}
+          >
+            <Image
+              src={img.imageUrl}
+              alt={img.originFileName}
+              fill
+              sizes="(max-width: 768px) 33vw, 200px"
+              className="object-cover transition-all duration-300 group-hover:scale-110 group-hover:brightness-110"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { Gender, PrivacyLevel, RelationshipStatus, ResourceType } from '@/enums/common';
+import { IMediaHistoryGroupDTO } from './file';
 
 export type { IProfileDTO as IUserProfileDTO } from './auth';
 
@@ -64,6 +65,7 @@ export interface IDetailUserProfileDTO {
   avatarUrl: string;
   introduce: IUserProfileIntroduceDTO;
   privacy: IUserProfilePrivacyDTO;
+  images: IMediaHistoryGroupDTO;
   lastOnlineAt: string;
   followersCount: number;
   followingCount: number;

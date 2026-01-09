@@ -42,7 +42,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
         introduce.relationshipStatus !== RelationshipStatus.RELATIONSHIP_STATUS_UNSPECIFIED && (
           <div className="flex items-center gap-2 text-xs text-foreground/60 group">
             <Heart className="w-3.5 h-3.5 text-foreground/40" />
-            <span className="truncate max-w-full font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
+            <span className="truncate max-w-full font-medium">
               {t(introduce.relationshipStatus)}
             </span>
           </div>
@@ -51,9 +51,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
       {introduce.gender && introduce.gender !== Gender.GENDER_UNSPECIFIED && (
         <div className="flex items-center gap-2 text-xs text-foreground/60 group">
           <User className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-            {t(introduce.gender)}
-          </span>
+          <span className="truncate max-w-full font-medium">{t(introduce.gender)}</span>
         </div>
       )}
       {introduce.city && (
@@ -61,9 +59,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
           <MapPointWave className="w-3.5 h-3.5 text-foreground/40" />
           <span className="truncate max-w-full flex-1">
             <span className="text-foreground/40">{t('lives_in')}</span>{' '}
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.city}
-            </span>
+            <span className="font-medium">{introduce.city}</span>
           </span>
         </div>
       )}
@@ -72,9 +68,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
           <MapPoint className="w-3.5 h-3.5 text-foreground/40" />
           <span className="truncate max-w-full flex-1">
             <span className="text-foreground/40">{t('from')}</span>{' '}
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.hometown}
-            </span>
+            <span className="font-medium">{introduce.hometown}</span>
           </span>
         </div>
       )}
@@ -83,7 +77,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
           <Donut className="w-3.5 h-3.5 text-foreground/40" />
           <span className="truncate max-w-full">
             <span className="text-foreground/40">{t('birthday')}: </span>
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
+            <span className="font-medium">
               {formatDateFromISOString(introduce.dob).split(' ')[0]}
             </span>
           </span>
@@ -94,9 +88,7 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
           <Smartphone className="w-3.5 h-3.5 text-foreground/40" />
           <span className="truncate max-w-full">
             <span className="text-foreground/40">{t('phone')}: </span>
-            <span className="font-medium text-foreground/80 hover:text-foreground cursor-pointer transition-colors">
-              {introduce.phoneNumber}
-            </span>
+            <span className="font-medium">{introduce.phoneNumber}</span>
           </span>
         </div>
       )}

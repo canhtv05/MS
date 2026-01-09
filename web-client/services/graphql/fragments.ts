@@ -60,12 +60,5 @@ export const FILE_FRAGMENTS = `
     data {
       ...ImageFragment
     }
-    pagination {
-      currentPage
-      size
-      total
-      totalPages
-      count
-    }
   }
 `;

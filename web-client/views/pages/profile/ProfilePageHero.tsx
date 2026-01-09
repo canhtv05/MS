@@ -173,10 +173,12 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
                         <UserCircle />
                         <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={openParentDialog}>
-                        <Gallery />
-                        <span className="md:text-sm text-xs">{t?.('profile:choose_avatar')}</span>
-                      </DropdownMenuItem>
+                      {data?.userId === user?.auth?.username && (
+                        <DropdownMenuItem onClick={openParentDialog}>
+                          <Gallery />
+                          <span className="md:text-sm text-xs">{t?.('profile:choose_avatar')}</span>
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </>

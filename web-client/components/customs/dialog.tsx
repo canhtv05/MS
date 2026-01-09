@@ -36,11 +36,11 @@ interface IDialog<T extends FieldValues = FieldValues> {
 }
 
 const sizeClasses: Record<DialogSize, string> = {
-  sm: 'max-w-sm! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
-  md: 'max-w-lg! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
-  lg: 'max-w-2xl! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
-  xl: 'max-w-4xl! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
-  full: 'max-w-[90vw]! w-[calc(100%-2rem)] md:w-full h-[calc(100%-28px)] rounded-lg',
+  sm: 'max-w-sm! w-[calc(100%-2rem)] md:w-full max-h-[calc(100%-28px)] h-auto rounded-lg',
+  md: 'max-w-lg! w-[calc(100%-2rem)] md:w-full max-h-[calc(100%-28px)] h-auto rounded-lg',
+  lg: 'max-w-2xl! w-[calc(100%-2rem)] md:w-full max-h-[calc(100%-28px)] h-auto rounded-lg',
+  xl: 'max-w-4xl! w-[calc(100%-2rem)] md:w-full max-h-[calc(100%-28px)] h-auto rounded-lg',
+  full: 'max-w-[90vw]! w-[calc(100%-2rem)] md:w-full max-h-[calc(100%-28px)] h-auto rounded-lg',
 };
 
 const Dialog = <T extends FieldValues = FieldValues>({
@@ -109,7 +109,9 @@ const Dialog = <T extends FieldValues = FieldValues>({
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div className={cn('flex-1 overflow-y-auto', hasBorder && 'px-5')}>{children}</div>
+        {children && (
+          <div className={cn('flex-1 overflow-y-auto', hasBorder && 'px-5')}>{children}</div>
+        )}
         {!disableFooter && (
           <DialogFooter
             className={cn(

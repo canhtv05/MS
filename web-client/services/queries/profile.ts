@@ -92,10 +92,11 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
     queryKey: ['profile', 'user-profile', us],
     queryFn: async (): Promise<IDetailUserProfileDTO> => {
       const client = getGraphQLClient();
-      const res = await client.request<GetUserDetailResponse, { username: string }>(
+      const res = await client.request<GetUserDetailResponse, { username: string; size: number }>(
         GET_USER_DETAIL_QUERY,
         {
           username: us,
+          size: 9,
         },
       );
       return res.userDetail;
