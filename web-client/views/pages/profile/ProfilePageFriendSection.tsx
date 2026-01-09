@@ -40,7 +40,9 @@ const ProfilePageFriendSection = ({ data, isLoading }: IProfilePageImageSectionP
                 className="object-cover transition-all rounded-md duration-300 group-hover:scale-110 group-hover:brightness-110"
               />
             </div>
-            <h3 className="text-xs text-center text-wrap wrap-break-word mt-2">{img.imageUrl}</h3>
+            <h3 className="text-xs text-center text-wrap whitespace-normal break-normal wrap-break-word mt-2">
+              {img.imageUrl}
+            </h3>
           </div>
         );
       })}

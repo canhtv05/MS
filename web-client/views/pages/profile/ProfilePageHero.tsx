@@ -195,7 +195,7 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
             )}
           </div>
           <div className="flex flex-col items-center lg:items-start justify-end gap-1 mb-2 flex-1 min-w-0 w-full lg:w-auto text-center lg:text-left">
-            <h2 className="md:mt-0 mt-2 text-2xl font-bold text-gray-800 dark:text-white leading-7 wrap-break-word break-all w-full">
+            <h2 className="md:mt-0 mt-2 text-2xl font-bold text-gray-800 dark:text-white leading-7 whitespace-normal break-normal w-full">
               {data?.fullname}
             </h2>
             <div className="text-sm group text-gray-500 dark:text-gray-400 font-medium flex items-center justify-center lg:justify-start gap-1.5 w-full">
