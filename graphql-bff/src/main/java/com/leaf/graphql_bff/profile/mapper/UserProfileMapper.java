@@ -96,4 +96,38 @@ public class UserProfileMapper {
             .createdDate(ConvertProto.convertTimestampToOffsetDateTime(userProfileResponse.getCreatedDate()))
             .build();
     }
+
+    public com.leaf.graphql_bff.profile.dto.ImageDTO toImageDTO(com.leaf.common.grpc.ImageResponse imageResponse) {
+        if (imageResponse == null) {
+            return null;
+        }
+        return com.leaf.graphql_bff.profile.dto.ImageDTO.builder()
+            .imageUrl(imageResponse.getImageUrl())
+            .contentType(imageResponse.getContentType())
+            .fileSize(imageResponse.getFileSize())
+            .originFileName(imageResponse.getOriginFileName())
+            .publicId(imageResponse.getPublicId())
+            .createdAt(ConvertProto.convertTimestampToOffsetDateTime(imageResponse.getCreatedAt()))
+            .resourceType(imageResponse.getResourceType())
+            .build();
+    }
+
+    public com.leaf.graphql_bff.profile.dto.VideoDTO toVideoDTO(com.leaf.common.grpc.VideoResponse videoResponse) {
+        if (videoResponse == null) {
+            return null;
+        }
+        return com.leaf.graphql_bff.profile.dto.VideoDTO.builder()
+            .videoUrl(videoResponse.getVideoUrl())
+            .playtimeSeconds(videoResponse.getPlaytimeSeconds())
+            .playtimeString(videoResponse.getPlaytimeString())
+            .thumbnailUrl(videoResponse.getThumbnailUrl())
+            .previewVttUrl(videoResponse.getPreviewVttUrl())
+            .contentType(videoResponse.getContentType())
+            .fileSize(videoResponse.getFileSize())
+            .originFileName(videoResponse.getOriginFileName())
+            .publicId(videoResponse.getPublicId())
+            .createdAt(ConvertProto.convertTimestampToOffsetDateTime(videoResponse.getCreatedAt()))
+            .resourceType(videoResponse.getResourceType())
+            .build();
+    }
 }

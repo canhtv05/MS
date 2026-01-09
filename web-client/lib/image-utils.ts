@@ -1,6 +1,8 @@
 export function getValidImageSrc(url: string | null | undefined, fallback: string): string {
+  const safeFallback =
+    fallback && typeof fallback === 'string' && fallback.trim() !== '' ? fallback : '';
   if (!url || typeof url !== 'string' || url.trim() === '') {
-    return fallback;
+    return safeFallback;
   }
   return url;
 }

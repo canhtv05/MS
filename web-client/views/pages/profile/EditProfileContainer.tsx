@@ -70,14 +70,19 @@ const EditProfileContainer = ({ form }: IEditProfileContainerProps) => {
           </Button>
         </div>
         <div className="flex items-center justify-center w-full py-4 rounded-xl">
-          <Image
-            width={150}
-            height={150}
-            src={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
-            alt="Avatar"
-            className="object-cover rounded-full ring-4 ring-zinc-800 shadow-xl"
-            unoptimized
-          />
+          {(() => {
+            const src = getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src);
+            return src ? (
+              <Image
+                width={150}
+                height={150}
+                src={src}
+                alt="Avatar"
+                className="object-cover rounded-full ring-4 ring-zinc-800 shadow-xl"
+                unoptimized
+              />
+            ) : null;
+          })()}
         </div>
       </div>
 
@@ -92,14 +97,19 @@ const EditProfileContainer = ({ form }: IEditProfileContainerProps) => {
           </Button>
         </div>
         <div className="flex items-center justify-center w-full">
-          <Image
-            height={100}
-            width={500}
-            src={getValidImageSrc(user?.profile?.coverUrl, images.avt1.src)}
-            alt="Cover"
-            className="object-cover h-[180px] w-full rounded-xl shadow-lg border border-zinc-800"
-            unoptimized
-          />
+          {(() => {
+            const src = getValidImageSrc(user?.profile?.coverUrl, images.avt1.src);
+            return src ? (
+              <Image
+                height={100}
+                width={500}
+                src={src}
+                alt="Cover"
+                className="object-cover h-[180px] w-full rounded-xl shadow-lg border border-zinc-800"
+                unoptimized
+              />
+            ) : null;
+          })()}
         </div>
       </div>
 
@@ -287,8 +297,6 @@ const EditProfileContainer = ({ form }: IEditProfileContainerProps) => {
 };
 
 const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
-  const { user } = useAuthStore();
-
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {

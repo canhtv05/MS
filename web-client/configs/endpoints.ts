@@ -22,10 +22,12 @@ export const API_ENDPOINTS = {
     CHANGE_COVER_IMAGE: '/user-profile/me/change-cover-image',
     CHANGE_AVATAR_IMAGE: '/user-profile/me/change-avatar-image',
     CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY: '/user-profile/me/change-cover-image-from-media-history',
-    MY_MEDIA_HISTORY: '/user-profile/me/search-media-history',
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: '/notifications/verify-email',
     RESEND_VERIFY_EMAIL: '/notifications/resend-verify-email',
+  },
+  FILES: {
+    SEARCH_MEDIA_HISTORY: '/files/search-media-history',
   },
 };

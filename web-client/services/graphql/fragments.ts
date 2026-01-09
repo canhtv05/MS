@@ -52,6 +52,8 @@ export const FILE_FRAGMENTS = `
     fileSize
     originFileName
     publicId
+    createdAt
+    resourceType
   }
 
   fragment GetFileImagesResponseFragment on GetFileImagesResponse {

@@ -15,6 +15,7 @@ import com.leaf.file.domain.Image;
 import com.leaf.file.domain.Video;
 import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.ImageResponse;
+import com.leaf.file.dto.MediaHistoryGroupDTO;
 import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
@@ -22,20 +23,25 @@ import com.leaf.framework.security.SecurityUtils;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +55,7 @@ public class FileService {
 
     Cloudinary cloudinary;
     FileRepository fileRepository;
+    MongoTemplate mongoTemplate;
 
     public FileResponse upload(MultipartFile[] files, ResourceType resourceType) throws IOException {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
@@ -110,6 +117,8 @@ public class FileService {
                 .fileSize(file.getSize())
                 .originFileName(file.getOriginalFilename())
                 .publicId(result.get("public_id").toString())
+                .createdAt(Instant.now())
+                .resourceType(resourceType)
                 .build();
             fileRepository.save(
                 File.builder()
@@ -129,6 +138,8 @@ public class FileService {
             .fileSize(file.getSize())
             .originFileName(file.getOriginalFilename())
             .publicId(result.get("public_id").toString())
+            .createdAt(Instant.now())
+            .resourceType(resourceType)
             .build();
     }
 
@@ -183,6 +194,8 @@ public class FileService {
                 .originFileName(file.getOriginalFilename())
                 .publicId(videoPublicId)
                 .previewVttUrl(previewVttUrl)
+                .createdAt(Instant.now())
+                .resourceType(resourceType)
                 .build();
             fileRepository.save(
                 File.builder()
@@ -206,6 +219,8 @@ public class FileService {
             .originFileName(file.getOriginalFilename())
             .publicId(videoPublicId)
             .previewVttUrl(previewVttUrl)
+            .createdAt(Instant.now())
+            .resourceType(resourceType)
             .build();
     }
 
@@ -221,6 +236,8 @@ public class FileService {
         com.leaf.file.domain.File fileEntity = com.leaf.file.domain.File.builder()
             .id(id)
             .ownerId(userId)
+            .createdAt(Instant.now())
+            .updatedAt(Instant.now())
             .totalSize(totalSize)
             .images(
                 imageResponses
@@ -232,6 +249,8 @@ public class FileService {
                             .fileSize(img.getFileSize())
                             .originFileName(img.getOriginFileName())
                             .publicId(img.getPublicId())
+                            .resourceType(img.getResourceType())
+                            .createdAt(img.getCreatedAt())
                             .build()
                     )
                     .toList()
@@ -249,6 +268,8 @@ public class FileService {
                             .fileSize(vid.getFileSize())
                             .originFileName(vid.getOriginFileName())
                             .publicId(vid.getPublicId())
+                            .createdAt(vid.getCreatedAt())
+                            .resourceType(vid.getResourceType())
                             .build()
                     )
                     .toList()
@@ -381,23 +402,102 @@ public class FileService {
         if (!fileRepository.existsByOwnerId(userId)) {
             return new SearchResponse<ImageResponse>(new ArrayList<>(), PageResponse.builder().build());
         }
-        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
-        List<Image> images = fileRepository.findImagesByOwnerIdAndResourceType(userId, resourceTypes, pageable);
+
+        List<String> typeStrings = resourceTypes
+            .stream()
+            .map(r -> r.name())
+            .toList();
+        List<Integer> typeInts = resourceTypes
+            .stream()
+            .map(r -> r.getNumber())
+            .toList();
+
+        Criteria criteria = Criteria.where("ownerId")
+            .is(userId)
+            .orOperator(Criteria.where("resourceType").in(typeStrings), Criteria.where("resourceType").in(typeInts));
+
+        Aggregation countAgg = Aggregation.newAggregation(
+            Aggregation.match(criteria),
+            Aggregation.unwind("images"),
+            Aggregation.count().as("total")
+        );
+
+        Document countResult = mongoTemplate.aggregate(countAgg, "files", Document.class).getUniqueMappedResult();
         long totalCount = 0;
-        List<Document> countResult = fileRepository.countImagesByOwnerIdAndResourceType(userId, resourceTypes);
-        if (!countResult.isEmpty()) {
-            totalCount = ((Number) countResult.get(0).get("total")).longValue();
+        if (countResult != null && countResult.containsKey("total")) {
+            totalCount = ((Number) countResult.get("total")).longValue();
         }
-        Page<Image> pageResponse = new PageImpl<>(images, pageable, totalCount);
+
+        long skip = (long) searchRequest.getPage() * searchRequest.getSize();
+        int limit = searchRequest.getSize();
+
+        Aggregation dataAgg = Aggregation.newAggregation(
+            Aggregation.match(criteria),
+            Aggregation.unwind("images"),
+            Aggregation.addFields()
+                .addField("images.createdAt")
+                .withValue("$createdAt")
+                .addField("images.resourceType")
+                .withValue("$resourceType")
+                .build(),
+            Aggregation.sort(Sort.Direction.DESC, "images.createdAt"),
+            Aggregation.skip(skip),
+            Aggregation.limit(limit),
+            Aggregation.replaceRoot("images")
+        );
+
+        List<Image> images = mongoTemplate.aggregate(dataAgg, "files", Image.class).getMappedResults();
+
+        int totalPages = (int) Math.ceil((double) totalCount / searchRequest.getSize());
+
         return new SearchResponse<ImageResponse>(
-            pageResponse.getContent().stream().map(ImageResponse::toImageResponse).toList(),
+            images.stream().map(ImageResponse::toImageResponse).toList(),
             PageResponse.builder()
-                .currentPage(pageResponse.getNumber() + 1)
-                .size(pageResponse.getSize())
-                .total(pageResponse.getTotalElements())
-                .totalPages(pageResponse.getTotalPages())
-                .count(pageResponse.getContent().size())
+                .currentPage(searchRequest.getPage() + 1)
+                .size(searchRequest.getSize())
+                .total(totalCount)
+                .totalPages(totalPages)
+                .count(images.size())
                 .build()
         );
+    }
+
+    public ResponseObject<SearchResponse<MediaHistoryGroupDTO>> getUserMediaHistory(
+        com.leaf.common.dto.search.SearchRequest criteria,
+        List<ResourceType> resourceType
+    ) {
+        SearchRequest searchRequest = SearchRequest.newBuilder()
+            .setPage(Math.max(0, criteria.page() - 1))
+            .setSize(criteria.size())
+            .build();
+
+        SearchResponse<ImageResponse> result = getFileImageByUserIdAndResourceType(
+            criteria.searchText(), // userId
+            resourceType,
+            searchRequest
+        );
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy").withZone(ZoneId.systemDefault());
+
+        Map<String, List<ImageResponse>> groupedByDate = result
+            .data()
+            .stream()
+            .collect(
+                Collectors.groupingBy(
+                    img -> {
+                        Instant createdAt = img.getCreatedAt();
+                        return dateFormatter.format(createdAt);
+                    },
+                    LinkedHashMap::new,
+                    Collectors.toList()
+                )
+            );
+
+        List<MediaHistoryGroupDTO> groupedResult = groupedByDate
+            .entrySet()
+            .stream()
+            .map(entry -> MediaHistoryGroupDTO.builder().date(entry.getKey()).items(entry.getValue()).build())
+            .toList();
+
+        return ResponseObject.success(new SearchResponse<>(groupedResult, result.pagination()));
     }
 }

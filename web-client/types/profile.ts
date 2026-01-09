@@ -1,18 +1,20 @@
-import { Gender, PrivacyLevel, RelationshipStatus } from '@/enums/common';
+import { Gender, PrivacyLevel, RelationshipStatus, ResourceType } from '@/enums/common';
 
 export type { IProfileDTO as IUserProfileDTO } from './auth';
 
-export interface IMediaHistoryDTO {
-  id: string;
-  userId: string;
-  url: string;
-  type: string;
+export interface IImageHistoryDTO {
+  imageUrl: string;
+  contentType: string;
+  fileSize: number;
+  originFileName: string;
+  publicId: string;
   createdAt: string;
+  resourceType: ResourceType;
 }
 
-export interface IMediaHistoryGroupDTO {
+export interface IImageHistoryGroupDTO {
   date: string;
-  items: IMediaHistoryDTO[];
+  items: IImageHistoryDTO[];
 }
 
 export interface ChangeCoverByUrlReq {

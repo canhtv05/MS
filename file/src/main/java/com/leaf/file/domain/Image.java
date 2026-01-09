@@ -1,5 +1,7 @@
 package com.leaf.file.domain;
 
+import com.leaf.common.grpc.ResourceType;
+import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,4 +20,6 @@ public class Image {
     Long fileSize;
     String originFileName;
     String publicId;
+    Instant createdAt;
+    ResourceType resourceType;
 }

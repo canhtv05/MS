@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { GalleryMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
-import { IMediaHistoryGroupDTO } from '@/types/profile';
+import { IImageHistoryGroupDTO } from '@/types/profile';
 import { ResourceType } from '@/enums/common';
 
 interface ProfilePageChooseImageProps {
@@ -32,15 +32,17 @@ const ProfilePageChooseImage = ({
   }, [onSelect]);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } =
-    useMyMediaHistoryInfiniteQuery(true, user?.auth?.username, {
-      searchText: isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
-    });
+    useMyMediaHistoryInfiniteQuery(
+      true,
+      user?.auth?.username,
+      isAvatar ? [ResourceType.RESOURCE_TYPE_AVATAR] : [ResourceType.RESOURCE_TYPE_COVER],
+    );
 
   const pages = data?.pages;
   const groups = useMemo(() => {
     if (!pages) return [];
 
-    const groupMap = new Map<string, IMediaHistoryGroupDTO>();
+    const groupMap = new Map<string, IImageHistoryGroupDTO>();
 
     pages.forEach(page => {
       const pageGroups = page?.data?.data || [];
@@ -119,11 +121,11 @@ const ProfilePageChooseImage = ({
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {group.items.map((image, idx) => {
-              const isSelected = selectedUrl === image.url;
+              const isSelected = selectedUrl === image.imageUrl;
 
               return (
                 <button
-                  key={image.id || idx}
+                  key={image.createdAt || idx}
                   type="button"
                   className={cn(
                     'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',
@@ -133,17 +135,17 @@ const ProfilePageChooseImage = ({
                   )}
                   onClick={e => {
                     e.stopPropagation();
-                    if (image.url === selectedUrl) {
+                    if (image.imageUrl === selectedUrl) {
                       onSelect?.(null);
                     } else {
-                      onSelect?.(image.url);
+                      onSelect?.(image.imageUrl);
                     }
                   }}
                 >
-                  {image.url && (
+                  {image.imageUrl && image.imageUrl.trim() !== '' && (
                     <Image
-                      src={image.url}
-                      alt={`Media ${image.type}`}
+                      src={image.imageUrl}
+                      alt={`Media ${image.resourceType}`}
                       fill
                       className="object-cover absolute inset-0"
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"

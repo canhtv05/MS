@@ -122,18 +122,18 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
               );
               return (
                 <>
-                  <ControlledZoom
-                    isZoomed={isClickViewAvatar}
-                    onZoomChange={setIsClickViewAvatar}
-                    classDialog="!z-[9999]"
-                    zoomMargin={20}
-                    zoomImg={{
-                      src: avatarSrc,
-                      alt: 'Avatar',
-                      loading: 'eager',
-                    }}
-                  >
-                    {avatarSrc && avatarSrc.trim() !== '' && (
+                  {avatarSrc && avatarSrc.trim() !== '' && (
+                    <ControlledZoom
+                      isZoomed={isClickViewAvatar}
+                      onZoomChange={setIsClickViewAvatar}
+                      classDialog="!z-[9999]"
+                      zoomMargin={20}
+                      zoomImg={{
+                        src: avatarSrc,
+                        alt: 'Avatar',
+                        loading: 'eager',
+                      }}
+                    >
                       <Image
                         src={avatarSrc}
                         alt="Avatar"
@@ -144,8 +144,8 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
                         unoptimized
                       />
-                    )}
-                  </ControlledZoom>
+                    </ControlledZoom>
+                  )}
 
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>

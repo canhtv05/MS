@@ -220,7 +220,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
         description={t?.('profile:edit_avatar_description') || ''}
         isPending={changeAvatarImageMutation.isPending}
       >
-        {croppedImage && (
+        {croppedImage && croppedImage.trim() !== '' && (
           <div className="flex justify-center mt-4">
             <Image
               src={croppedImage}

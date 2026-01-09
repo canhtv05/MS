@@ -3,13 +3,13 @@ package com.leaf.graphql_bff.profile.resolver;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchResponse;
 import com.leaf.common.grpc.GetFileImagesRequest;
-import com.leaf.common.grpc.ImageResponse;
 import com.leaf.common.grpc.ResourceType;
 import com.leaf.common.grpc.SearchRequest;
 import com.leaf.common.grpc.UserProfileIdRequest;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcFileClient;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcProfileClient;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
+import com.leaf.graphql_bff.profile.dto.ImageDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfileIntroduceDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfilePrivacyDTO;
 import com.leaf.graphql_bff.profile.mapper.UserProfileMapper;
@@ -71,7 +71,7 @@ public class ProfileQueryResolver {
     }
 
     @DgsData(parentType = "DetailUserProfileDTO", field = "images")
-    public Mono<SearchResponse<ImageResponse>> images(
+    public Mono<SearchResponse<ImageDTO>> images(
         DgsDataFetchingEnvironment dfe,
         @InputArgument Integer page,
         @InputArgument Integer size
@@ -84,7 +84,7 @@ public class ProfileQueryResolver {
         return Mono.fromCallable(() ->
             grpcFileClient.getFileImagesResponse(
                 GetFileImagesRequest.newBuilder()
-                    .setSearchRequest(SearchRequest.newBuilder().setPage(safePage).setSize(safeSize).build())
+                    .setSearchRequest(SearchRequest.newBuilder().setPage(safePage - 1).setSize(safeSize).build())
                     .addAllResourceTypes(List.of(ResourceType.RESOURCE_TYPE_AVATAR, ResourceType.RESOURCE_TYPE_COVER))
                     .setUserId(parent.getUserId())
                     .build()
@@ -101,7 +101,13 @@ public class ProfileQueryResolver {
                     .total(protoPage.getTotal())
                     .build();
 
-                return new SearchResponse<>(response.getDataList(), pageResponse);
+                List<ImageDTO> data = response
+                    .getDataList()
+                    .stream()
+                    .map(img -> UserProfileMapper.getInstance().toImageDTO(img))
+                    .toList();
+
+                return new SearchResponse<>(data, pageResponse);
             });
     }
 }

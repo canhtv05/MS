@@ -4,6 +4,7 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "FileProto";
 
+import "google/protobuf/timestamp.proto";
 import "Common.proto";
 
 service FileGrpcService {
@@ -55,9 +56,12 @@ message VideoResponse {
     string contentType = 3;
     string videoUrl = 4;
     string thumbnailUrl = 5;
-    int64 fileSize = 6;
-    string originFileName = 7;
-    string publicId = 8;
+    string previewVttUrl = 6;
+    int64 fileSize = 7;
+    string originFileName = 8;
+    string publicId = 9;
+    google.protobuf.Timestamp createdAt = 10;
+    ResourceType resourceType = 11;
 }
 
 message ImageResponse {
@@ -66,14 +70,18 @@ message ImageResponse {
     int64 fileSize = 3;
     string originFileName = 4;
     string publicId = 5;
+    google.protobuf.Timestamp createdAt = 6;
+    ResourceType resourceType = 7;
 }
 
 message FileResponse {
     string ownerId = 1;
     int64 totalSize = 2;
-
-    repeated VideoResponse videos = 3;
-    repeated ImageResponse images = 4;
+    repeated VideoResponse videos = 4;
+    repeated ImageResponse images = 5;
+    ResourceType resourceType = 6;
+    google.protobuf.Timestamp createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
 }
 
 message GetFileImagesRequest {

@@ -1,7 +1,7 @@
 'use client';
 
-import { IDetailUserProfileDTO, IMediaHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
-import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common';
+import { IDetailUserProfileDTO, IImageHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
+import { IResponseObject, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
@@ -9,6 +9,7 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
 import { GET_USER_DETAIL_QUERY } from '../graphql/query';
 import { getGraphQLClient } from '@/utils/graphql';
+import { ResourceType } from '@/enums/common';
 
 interface GetUserDetailResponse {
   userDetail: IDetailUserProfileDTO;
@@ -43,21 +44,22 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
 export const useMyMediaHistoryInfiniteQuery = (
   enabled: boolean = true,
   userID?: string,
-  searchRequest?: ISearchRequest,
+  resourceType?: ResourceType[],
 ) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'media-history-infinite', userID, { ...searchRequest }],
+    queryKey: ['profile', 'media-history-infinite', userID, resourceType],
     queryFn: async ({
       pageParam = 1,
-    }): Promise<IResponseObject<ISearchResponse<IMediaHistoryGroupDTO[]>>> => {
+    }): Promise<IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>> => {
       const res = await api.post(
-        API_ENDPOINTS.PROFILE.MY_MEDIA_HISTORY,
+        API_ENDPOINTS.FILES.SEARCH_MEDIA_HISTORY,
         {},
         {
           params: {
             page: pageParam,
             size: 20,
-            ...searchRequest,
+            searchText: userID,
+            resourceType: resourceType,
           },
         },
       );

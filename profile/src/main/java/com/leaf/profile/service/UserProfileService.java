@@ -12,7 +12,6 @@ import com.leaf.profile.dto.SendFriendRequestDTO;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.grpc.GrpcFileClient;
-import com.leaf.profile.repository.MediaHistoryRepository;
 import com.leaf.profile.repository.UserProfileRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -33,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserProfileService {
 
     UserProfileRepository userProfileRepository;
-    MediaHistoryRepository mediaHistoryRepository;
     GrpcFileClient grpcFileClient;
     RedisService redisService;
     ExecutorService executorService = Executors.newFixedThreadPool(2);
@@ -100,11 +98,6 @@ public class UserProfileService {
             } else {
                 userProfile.setCoverUrl(res.getImageUrl());
             }
-            mediaHistoryRepository.saveMediaHistory(
-                username,
-                res.getImageUrl(),
-                isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR.name() : ResourceType.RESOURCE_TYPE_COVER.name()
-            );
             UserProfile saved = userProfileRepository.save(userProfile);
             String cacheKey = "USER_PROFILE:" + username;
             redisService.evict(cacheKey);
@@ -119,20 +112,15 @@ public class UserProfileService {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
-        List<Callable<Object>> tasks = List.of(
-            () ->
-                mediaHistoryRepository
-                    .findByUserIdAndUrl(username, req.getUrl())
-                    .orElseThrow(() -> new ApiException(ErrorMessage.MEDIA_HISTORY_NOT_FOUND)),
-            () ->
-                userProfileRepository
-                    .findByUserId(username)
-                    .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND))
+        List<Callable<Object>> tasks = List.of(() ->
+            userProfileRepository
+                .findByUserId(username)
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND))
         );
 
         List<Future<Object>> futures = executorService.invokeAll(tasks);
         try {
-            UserProfile userProfile = (UserProfile) futures.get(1).get();
+            UserProfile userProfile = (UserProfile) futures.get(0).get();
             userProfile.setCoverUrl(req.getUrl());
             userProfileRepository.save(userProfile);
             String cacheKey = "USER_PROFILE:" + username;

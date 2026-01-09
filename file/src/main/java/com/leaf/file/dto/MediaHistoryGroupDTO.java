@@ -1,4 +1,4 @@
-package com.leaf.profile.dto;
+package com.leaf.file.dto;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,5 +19,5 @@ public class MediaHistoryGroupDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     String date;
-    List<MediaHistoryDTO> items;
+    List<ImageResponse> items;
 }
