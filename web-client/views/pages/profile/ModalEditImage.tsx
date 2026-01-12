@@ -40,13 +40,14 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   }, [isPending, setIsPending]);
 
   useEffect(() => {
-    return () => {
+    if (!open) {
       setCroppedImage(null);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
       setRotation(0);
       setSliderZoom(1);
-    };
+      setShowConfirm(false);
+    }
   }, [open]);
 
   const onCropComplete = useCallback(
@@ -119,19 +120,27 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       >
         <div className="flex flex-col gap-2">
           <div className="relative w-full h-[300px]">
-            <Cropper
-              image={getValidImageSrc(avatarPreview || avatarUrl, images.goku.src)}
-              crop={crop}
-              zoom={zoom}
-              rotation={rotation}
-              aspect={1 / 1}
-              cropShape="round"
-              showGrid={true}
-              onCropChange={setCrop}
-              onRotationChange={setRotation}
-              onCropComplete={onCropComplete}
-              onZoomChange={handleCropperZoomChange}
-            />
+            {open && (
+              <Cropper
+                image={getValidImageSrc(avatarPreview || avatarUrl, images.goku.src)}
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                aspect={1 / 1}
+                cropShape="round"
+                showGrid={true}
+                onCropChange={setCrop}
+                onRotationChange={setRotation}
+                onCropComplete={onCropComplete}
+                onZoomChange={handleCropperZoomChange}
+                style={{
+                  containerStyle: {
+                    width: '100%',
+                    height: '100%',
+                  },
+                }}
+              />
+            )}
           </div>
           <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
             <span>Zoom</span>

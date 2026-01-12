@@ -1,13 +1,13 @@
 'use client';
 
 import {
-  Dialog as DialogAnimate,
+  Dialog as DialogRoot,
+  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogPanel,
   DialogTitle,
-} from '@/components/animate-ui/components/headless/dialog';
+} from '@/components/animate-ui/primitives/base/dialog';
 import { Button } from '../animate-ui/components/buttons/button';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -83,12 +83,29 @@ const Dialog = <T extends FieldValues = FieldValues>({
   const isAcceptDisabled = isPending || (form ? !form.formState.isValid : disableAccept);
 
   return (
-    <DialogAnimate open={open} onClose={handleClose}>
-      <DialogPanel className={cn(sizeClasses[size], hasBorder && 'p-0 gap-5', 'flex flex-col')}>
+    <DialogRoot open={open} onOpenChange={isOpen => !isOpen && handleClose()}>
+      <DialogContent
+        className={cn(
+          sizeClasses[size],
+          hasBorder && 'p-0 gap-5',
+          'flex flex-col max-h-[calc(100%-28px)]',
+        )}
+        showCloseButton={false}
+        onEscapeKeyDown={e => {
+          if (isPending) {
+            e.preventDefault();
+          }
+        }}
+        onInteractOutside={e => {
+          if (isPending) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle
             className={cn(
-              'flex items-start justify-center w-full flex-col gap-1',
+              'flex items-start justify-center w-full flex-col gap-2',
               hasBorder ? 'border-b p-5' : '',
             )}
           >
@@ -141,8 +158,8 @@ const Dialog = <T extends FieldValues = FieldValues>({
             </Button>
           </DialogFooter>
         )}
-      </DialogPanel>
-    </DialogAnimate>
+      </DialogContent>
+    </DialogRoot>
   );
 };
 

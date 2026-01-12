@@ -147,6 +147,7 @@ export async function getCroppedImg(
   pixelCrop: { x: number; y: number; width: number; height: number },
   rotation = 0,
   flip = { horizontal: false, vertical: false },
+  circular = false,
 ): Promise<string | null> {
   if (!imageSrc || !pixelCrop || pixelCrop.width <= 0 || pixelCrop.height <= 0) {
     return null;
@@ -196,12 +197,39 @@ export async function getCroppedImg(
 
   const data = ctx.getImageData(pixelCropX, pixelCropY, pixelCropWidth, pixelCropHeight);
 
+  // Create a temporary canvas to hold the cropped image data
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = pixelCropWidth;
+  tempCanvas.height = pixelCropHeight;
+  const tempCtx = tempCanvas.getContext('2d');
+
+  if (!tempCtx) {
+    return null;
+  }
+
+  // Put the cropped image data into temp canvas
+  tempCtx.putImageData(data, 0, 0);
+
   // set canvas width to final desired crop size - this will clear existing context
   canvas.width = pixelCropWidth;
   canvas.height = pixelCropHeight;
 
-  // paste generated rotate image at the top left corner
-  ctx.putImageData(data, 0, 0);
+  if (circular) {
+    // For circular crop, create a clipping path
+    const centerX = pixelCropWidth / 2;
+    const centerY = pixelCropHeight / 2;
+    const radius = Math.min(pixelCropWidth, pixelCropHeight) / 2;
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.clip();
+
+    // Draw the cropped image from temp canvas into the circular clip
+    ctx.drawImage(tempCanvas, 0, 0);
+  } else {
+    // For rectangular crop, just paste the image data
+    ctx.putImageData(data, 0, 0);
+  }
 
   // As Base64 string
   // return canvas.toDataURL('image/jpeg');

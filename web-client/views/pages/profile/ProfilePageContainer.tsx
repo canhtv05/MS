@@ -104,6 +104,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
 
           const coverSrc =
             getImageSrcOrNull(coverImagePreview) ||
+            getImageSrcOrNull(selectedCoverFromHistory) ||
             getImageSrcOrNull(data?.coverUrl) ||
             getImageSrcOrNull(user?.profile?.coverUrl);
 

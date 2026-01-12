@@ -78,6 +78,13 @@ const useProfile = ({ username }: { username: string }) => {
   };
 
   const handleChangeCoverFromHistory = useCallback(async () => {
+    if (pendingFile) {
+      await confirmUpload();
+      setShowDialogMediaHistory(false);
+      setSelectedCoverFromHistory(null);
+      return;
+    }
+
     if (!selectedCoverFromHistory) return;
 
     const currentCoverUrl = data?.coverUrl;
@@ -105,6 +112,8 @@ const useProfile = ({ username }: { username: string }) => {
     t,
     changeCoverImageFromMediaHistoryMutation,
     queryClient,
+    pendingFile,
+    confirmUpload,
   ]);
 
   useEffect(() => {

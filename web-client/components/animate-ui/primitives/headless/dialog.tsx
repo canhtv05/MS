@@ -98,7 +98,7 @@ function DialogPanel<TTag extends React.ElementType = typeof motion.div>(
         as={as as React.ElementType}
         initial={{
           opacity: 0,
-          scale: 0.95,
+          scale: 0.5,
           x: '-50%',
           y: '-50%',
         }}
@@ -111,9 +111,10 @@ function DialogPanel<TTag extends React.ElementType = typeof motion.div>(
         }}
         exit={{
           opacity: 0,
-          scale: 0.95,
+          scale: 0.5,
           x: '-50%',
           y: '-50%',
+          transition,
         }}
         {...rest}
       >

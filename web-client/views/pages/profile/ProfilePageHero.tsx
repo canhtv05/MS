@@ -85,18 +85,21 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
   const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
     useProfileModalStore();
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
+  const [avatarFilePreview, setAvatarFilePreview] = useState<string | null>(null);
   const [isClickViewAvatar, setIsClickViewAvatar] = useState(false);
 
   useEffect(() => {
     if (!isParentDialogOpen) {
       const handleSelectedCoverFromHistory = () => {
         setSelectedCoverFromHistory(null);
+        setAvatarFilePreview(null);
       };
       handleSelectedCoverFromHistory();
     }
 
     return () => {
       setSelectedCoverFromHistory(null);
+      setAvatarFilePreview(null);
     };
   }, [isParentDialogOpen]);
 
@@ -117,7 +120,11 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
           <div className="relative -mt-16 shrink-0 z-10">
             {(() => {
               const avatarSrc = getValidImageSrc(
-                user?.profile?.avatarUrl || userProfile?.avatarUrl || data?.avatarUrl,
+                avatarFilePreview ||
+                  selectedCoverFromHistory ||
+                  user?.profile?.avatarUrl ||
+                  userProfile?.avatarUrl ||
+                  data?.avatarUrl,
                 images.avt1.src,
               );
               return (
@@ -238,11 +245,21 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
           if (!selectedCoverFromHistory) return;
           useProfileModalStore.getState().openChildDialog();
         }}
-        titleNode={<ProfilePageChangeAvatar selectHistoryAvatarUrl={selectedCoverFromHistory} />}
+        titleNode={
+          <ProfilePageChangeAvatar
+            selectHistoryAvatarUrl={selectedCoverFromHistory}
+            avatarFilePreview={avatarFilePreview}
+            onFilePreviewChange={setAvatarFilePreview}
+            onHistorySelect={setSelectedCoverFromHistory}
+          />
+        }
         isPending={isPending}
       >
         <ProfilePageChooseImage
-          onSelect={setSelectedCoverFromHistory}
+          onSelect={url => {
+            setSelectedCoverFromHistory(url);
+            if (url) setAvatarFilePreview(null);
+          }}
           selectedUrl={selectedCoverFromHistory}
           isAvatar
         />

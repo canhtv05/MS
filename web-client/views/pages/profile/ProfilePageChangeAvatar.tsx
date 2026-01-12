@@ -11,11 +11,18 @@ import { useProfileModalStore } from './use-profile-modal';
 
 interface IProfilePageChangeAvatar {
   selectHistoryAvatarUrl?: string | null;
+  avatarFilePreview?: string | null;
+  onFilePreviewChange?: (url: string | null) => void;
+  onHistorySelect?: (url: string | null) => void;
 }
 
-const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeAvatar) => {
+const ProfilePageChangeAvatar = ({
+  selectHistoryAvatarUrl,
+  avatarFilePreview,
+  onFilePreviewChange,
+  onHistorySelect,
+}: IProfilePageChangeAvatar) => {
   const { t } = useTranslation('profile');
-  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuthStore();
   const [openModalEditImage, setOpenModalEditImage] = useState(false);
@@ -35,7 +42,8 @@ const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeA
       }
 
       const previewUrl = URL.createObjectURL(selectedFile);
-      setCoverImagePreview(previewUrl);
+      onFilePreviewChange?.(previewUrl);
+      onHistorySelect?.(null);
       setOpenModalEditImage(true);
     }
     event.target.value = '';
@@ -81,8 +89,14 @@ const ProfilePageChangeAvatar = ({ selectHistoryAvatarUrl }: IProfilePageChangeA
         onClose={() => {
           setOpenModalEditImage(false);
           useProfileModalStore.getState().closeChildDialog();
+          if (avatarFilePreview) {
+            URL.revokeObjectURL(avatarFilePreview);
+            onFilePreviewChange?.(null);
+            // Clear history selection when closing after file upload
+            onHistorySelect?.(null);
+          }
         }}
-        avatarPreview={selectHistoryAvatarUrl || coverImagePreview}
+        avatarPreview={avatarFilePreview || selectHistoryAvatarUrl}
       />
     </>
   );
