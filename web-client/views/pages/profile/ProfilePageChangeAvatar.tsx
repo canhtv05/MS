@@ -4,7 +4,7 @@ import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { AddCircle, Pen } from '@solar-icons/react-perf/category/style/Bold';
 import { useTranslation } from 'react-i18next';
 import { useRef, useState } from 'react';
-import ModalEditImage from './ModalEditImage';
+import ModalEditImage from './ProfilePageModalEditImage';
 import { useAuthStore } from '@/stores/auth';
 import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
 import { useProfileModalStore } from './use-profile-modal';

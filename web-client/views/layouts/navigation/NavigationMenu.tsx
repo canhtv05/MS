@@ -22,7 +22,7 @@ interface IMenuNavigation {
   isActive?: boolean;
 }
 
-const menu: IMenuNavigation[] = [
+const MENU: IMenuNavigation[] = [
   {
     title: 'navigation.home',
     href: APP_CONFIGS.ROUTES.home,
@@ -80,7 +80,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
           isCollapsed ? 'w-full' : 'md:p-3 md:w-full w-[220px]',
         )}
       >
-        {menu.map((item, index) => {
+        {MENU.map((item, index) => {
           const linkContent = (
             <>
               <span
