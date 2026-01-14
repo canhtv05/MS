@@ -11,7 +11,7 @@ interface ProfilePageWrapper {
 
 const ProfilePageWrapper = ({ children, title, description, button }: ProfilePageWrapper) => {
   return (
-    <div className="p-4 flex-1 custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+    <div className="p-3 flex-1 custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
       {!!title && (
         <div className="flex items-center justify-between">
           <div className="flex items-start justify-start flex-col">

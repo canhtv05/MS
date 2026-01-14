@@ -357,3 +357,11 @@ span:has(> [data-slot='dropdown-menu-arrow']) {
 .monaco-editor .lines-content {
   @apply rounded-lg;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

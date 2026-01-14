@@ -32,7 +32,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
-import MeProfilePageHeroSectionButton from './EditProfileContainer';
+import MeProfilePageHeroSectionButton from './ProfilePageEditContainer';
 import { getValidImageSrc } from '@/lib/image-utils';
 
 const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
