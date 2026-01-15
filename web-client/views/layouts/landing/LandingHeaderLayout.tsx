@@ -78,15 +78,10 @@ const Resources = () => {
   const { repos } = useHeaderHomeRepo();
 
   return (
-    <HoverCard openDelay={0} closeDelay={100} open={open} onOpenChange={setOpen}>
+    <HoverCard openDelay={50} closeDelay={100} open={open} onOpenChange={setOpen}>
       <HoverCardTrigger className="cursor-pointer font-normal flex justify-center items-center gap-2">
         <span className="text-black">Resource</span>
-        <AltArrowDown
-          className={cn(
-            'size-3 text-black transition-transform duration-200 h-full block',
-            open && 'rotate-180',
-          )}
-        />
+        <AltArrowDown className={cn('size-3 text-black h-full block', open && 'rotate-180')} />
       </HoverCardTrigger>
       <HoverCardContent
         className="border-0 w-lg bg-white"
@@ -145,7 +140,6 @@ const HeaderLG = () => {
           </div>
           <div className="flex items-center">
             <motion.div
-              layout
               animate={{
                 x: showSignup ? -10 : 0,
               }}
@@ -164,12 +158,11 @@ const HeaderLG = () => {
                 <span className="font-medium text-black">Sign in</span>
               </Button>
             </motion.div>
-            <motion.div layout className="flex items-center">
+            <motion.div className="flex items-center">
               <AnimatePresence mode="popLayout">
                 {showSignup && (
                   <motion.div
                     key="signup"
-                    layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
@@ -202,7 +195,6 @@ const HeaderMD = () => {
         <div className={cn('flex gap-10 items-center', showSignup && 'mr-5')}>
           <div className="flex items-center">
             <motion.div
-              layout
               animate={{
                 x: showSignup ? -10 : 0,
               }}
@@ -218,12 +210,11 @@ const HeaderMD = () => {
                 <span className="font-medium text-black">Sign in</span>
               </Button>
             </motion.div>
-            <motion.div layout className="flex items-center">
+            <motion.div className="flex items-center">
               <AnimatePresence mode="popLayout">
                 {showSignup && (
                   <motion.div
                     key="signup"
-                    layout
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
@@ -301,7 +292,7 @@ const HeaderMD = () => {
 
 const LandingHeaderLayout = () => {
   return (
-    <header className="fixed w-full transform -translate-x-1/2 top-4 left-1/2 z-50">
+    <header className="fixed w-full transform -translate-x-1/2! top-4! left-1/2! z-50!">
       <ReposProvider>
         <div className="hidden justify-center lg:flex">
           <HeaderLG />

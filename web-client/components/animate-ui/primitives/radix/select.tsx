@@ -51,7 +51,12 @@ function Select(props: SelectProps) {
   return (
     <SelectOpenProvider value={openValue}>
       <SelectHighlightProvider value={highlightValue}>
-        <SelectPrimitive.Root data-slot="select" {...props} onOpenChange={setIsOpen} />
+        <SelectPrimitive.Root
+          data-slot="select"
+          open={isOpen}
+          {...props}
+          onOpenChange={setIsOpen}
+        />
       </SelectHighlightProvider>
     </SelectOpenProvider>
   );
@@ -65,20 +70,23 @@ function SelectGroup(props: SelectGroupProps) {
 
 type SelectValueProps = React.ComponentProps<typeof SelectPrimitive.Value>;
 
-function SelectValue(props: SelectValueProps) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
-}
+const SelectValue = SelectPrimitive.Value;
 
 type SelectTriggerProps = Omit<React.ComponentProps<typeof SelectPrimitive.Trigger>, 'asChild'> &
   HTMLMotionProps<'button'>;
 
-function SelectTrigger({ disabled, ...props }: SelectTriggerProps) {
-  return (
-    <SelectPrimitive.Trigger disabled={disabled} asChild>
-      <motion.button data-slot="select-trigger" data-disabled={disabled} {...props} />
-    </SelectPrimitive.Trigger>
-  );
-}
+const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
+  ({ disabled, children, ...props }, ref) => {
+    return (
+      <SelectPrimitive.Trigger disabled={disabled} asChild>
+        <motion.button ref={ref} data-slot="select-trigger" data-disabled={disabled} {...props}>
+          {children}
+        </motion.button>
+      </SelectPrimitive.Trigger>
+    );
+  },
+);
+SelectTrigger.displayName = 'SelectTrigger';
 
 type SelectPortalProps = React.ComponentProps<typeof SelectPrimitive.Portal>;
 
@@ -115,65 +123,75 @@ type SelectContentProps = Omit<
   Omit<React.ComponentProps<typeof SelectPrimitive.Portal>, 'forceMount'> &
   HTMLMotionProps<'div'>;
 
-function SelectContent({
-  onCloseAutoFocus,
-  onEscapeKeyDown,
-  onPointerDownOutside,
-  side,
-  sideOffset,
-  align,
-  alignOffset,
-  avoidCollisions,
-  collisionBoundary,
-  collisionPadding,
-  arrowPadding,
-  sticky,
-  hideWhenDetached,
-  position,
-  transition = { duration: 0.2 },
-  style,
-  container,
-  ...props
-}: SelectContentProps) {
-  const { isOpen } = useSelectOpen();
+const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
+  (
+    {
+      onCloseAutoFocus,
+      onEscapeKeyDown,
+      onPointerDownOutside,
+      side,
+      sideOffset,
+      align,
+      alignOffset,
+      avoidCollisions,
+      collisionBoundary,
+      collisionPadding,
+      arrowPadding,
+      sticky,
+      hideWhenDetached,
+      position,
+      transition = { duration: 0.2 },
+      style,
+      container,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const { isOpen } = useSelectOpen();
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <SelectPortal container={container}>
-          <SelectPrimitive.Content
-            asChild
-            onCloseAutoFocus={onCloseAutoFocus}
-            onEscapeKeyDown={onEscapeKeyDown}
-            onPointerDownOutside={onPointerDownOutside}
-            side={side}
-            sideOffset={sideOffset}
-            align={align}
-            alignOffset={alignOffset}
-            avoidCollisions={avoidCollisions}
-            collisionBoundary={collisionBoundary}
-            collisionPadding={collisionPadding}
-            arrowPadding={arrowPadding}
-            sticky={sticky}
-            hideWhenDetached={hideWhenDetached}
-            position={position}
-          >
-            <motion.div
-              key="select-content"
-              data-slot="select-content"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={transition}
-              style={{ willChange: 'opacity, transform', ...style }}
-              {...props}
-            />
-          </SelectPrimitive.Content>
-        </SelectPortal>
-      )}
-    </AnimatePresence>
-  );
-}
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <SelectPortal container={container}>
+            <SelectPrimitive.Content
+              asChild
+              onCloseAutoFocus={onCloseAutoFocus}
+              onEscapeKeyDown={onEscapeKeyDown}
+              onPointerDownOutside={onPointerDownOutside}
+              side={side}
+              sideOffset={sideOffset}
+              align={align}
+              alignOffset={alignOffset}
+              avoidCollisions={avoidCollisions}
+              collisionBoundary={collisionBoundary}
+              collisionPadding={collisionPadding}
+              arrowPadding={arrowPadding}
+              sticky={sticky}
+              hideWhenDetached={hideWhenDetached}
+              position={position}
+            >
+              <motion.div
+                ref={ref}
+                key="select-content"
+                data-slot="select-content"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={transition}
+                style={{ willChange: 'opacity, transform', ...style }}
+                {...props}
+              >
+                {children}
+              </motion.div>
+            </SelectPrimitive.Content>
+          </SelectPortal>
+        )}
+      </AnimatePresence>
+    );
+  },
+);
+SelectContent.displayName = 'SelectContent';
 
 type SelectHighlightItemProps = HighlightItemProps;
 
@@ -184,34 +202,45 @@ function SelectHighlightItem(props: SelectHighlightItemProps) {
 type SelectItemProps = Omit<React.ComponentProps<typeof SelectPrimitive.Item>, 'asChild'> &
   HTMLMotionProps<'div'>;
 
-function SelectItem({ value, disabled, textValue, ...props }: SelectItemProps) {
-  const { setHighlightedValue } = useSelectHighlight();
-  const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, val => {
-    if (val === true) {
-      const el = highlightedRef.current;
-      const v = el?.dataset.value || el?.id || null;
-      if (v) setHighlightedValue(v);
-    }
-  });
+const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+  ({ value, disabled, textValue, children, ...props }, ref) => {
+    const { setHighlightedValue } = useSelectHighlight();
+    const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, val => {
+      if (val === true) {
+        const el = highlightedRef.current;
+        const v = el?.dataset.value || el?.id || null;
+        if (v) setHighlightedValue(v);
+      }
+    });
 
-  return (
-    <SelectPrimitive.Item
-      ref={highlightedRef}
-      value={value}
-      disabled={disabled}
-      textValue={textValue}
-      asChild
-    >
-      <motion.div data-slot="select-item" data-disabled={disabled} data-value={value} {...props} />
-    </SelectPrimitive.Item>
-  );
-}
+    return (
+      <SelectPrimitive.Item
+        ref={node => {
+          if (typeof ref === 'function') {
+            ref(node);
+          } else if (ref && 'current' in ref) {
+            (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }
+          if (highlightedRef && 'current' in highlightedRef) {
+            (highlightedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }
+        }}
+        value={value}
+        disabled={disabled}
+        textValue={textValue}
+        asChild
+      >
+        <motion.div data-slot="select-item" data-disabled={disabled} data-value={value} {...props}>
+          {children}
+        </motion.div>
+      </SelectPrimitive.Item>
+    );
+  },
+);
+SelectItem.displayName = 'SelectItem';
 
 type SelectItemTextProps = React.ComponentProps<typeof SelectPrimitive.ItemText>;
-
-function SelectItemText(props: SelectItemTextProps) {
-  return <SelectPrimitive.ItemText data-slot="select-item-text" {...props} />;
-}
+const SelectItemText = SelectPrimitive.ItemText;
 
 type SelectItemIndicatorProps = Omit<
   React.ComponentProps<typeof SelectPrimitive.ItemIndicator>,
@@ -228,16 +257,10 @@ function SelectItemIndicator(props: SelectItemIndicatorProps) {
 }
 
 type SelectLabelProps = React.ComponentProps<typeof SelectPrimitive.Label>;
-
-function SelectLabel(props: SelectLabelProps) {
-  return <SelectPrimitive.Label data-slot="select-label" {...props} />;
-}
+const SelectLabel = SelectPrimitive.Label;
 
 type SelectSeparatorProps = React.ComponentProps<typeof SelectPrimitive.Separator>;
-
-function SelectSeparator(props: SelectSeparatorProps) {
-  return <SelectPrimitive.Separator data-slot="select-separator" {...props} />;
-}
+const SelectSeparator = SelectPrimitive.Separator;
 
 type SelectScrollUpButtonProps = React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>;
 
@@ -267,16 +290,10 @@ function SelectArrow({ children, ...props }: SelectArrowProps) {
 }
 
 type SelectIconProps = React.ComponentProps<typeof SelectPrimitive.Icon>;
-
-function SelectIcon(props: SelectIconProps) {
-  return <SelectPrimitive.Icon data-slot="select-icon" {...props} />;
-}
+const SelectIcon = SelectPrimitive.Icon;
 
 type SelectViewportProps = React.ComponentProps<typeof SelectPrimitive.Viewport>;
-
-function SelectViewport(props: SelectViewportProps) {
-  return <SelectPrimitive.Viewport data-slot="select-viewport" {...props} />;
-}
+const SelectViewport = SelectPrimitive.Viewport;
 
 export {
   Select,

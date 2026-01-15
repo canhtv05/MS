@@ -26,6 +26,9 @@ import {
   type SelectSeparatorProps as SelectSeparatorPrimitiveProps,
   type SelectTriggerProps as SelectTriggerPrimitiveProps,
   type SelectValueProps as SelectValuePrimitiveProps,
+  type SelectItemTextProps as SelectItemTextPrimitiveProps,
+  type SelectViewportProps as SelectViewportPrimitiveProps,
+  type SelectIconProps as SelectIconPrimitiveProps,
   type SelectScrollUpButtonProps as SelectScrollUpButtonPrimitiveProps,
   type SelectScrollDownButtonProps as SelectScrollDownButtonPrimitiveProps,
   type SelectArrowProps as SelectArrowPrimitiveProps,
@@ -47,28 +50,30 @@ function SelectGroup(props: SelectGroupProps) {
 
 type SelectValueProps = SelectValuePrimitiveProps;
 
-function SelectValue(props: SelectValueProps) {
-  return <SelectValuePrimitive {...props} />;
-}
+const SelectValue = SelectValuePrimitive;
 
 type SelectTriggerProps = SelectTriggerPrimitiveProps;
 
-function SelectTrigger({ className, children, ...props }: SelectTriggerProps) {
-  return (
-    <SelectTriggerPrimitive
-      className={cn(
-        'border-input ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-10 w-full items-center justify-between rounded-xl border bg-white/50 px-3 py-2 text-sm backdrop-blur-sm transition-all focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900/50 [&>span]:line-clamp-1',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <SelectIconPrimitive asChild>
-        <AltArrowDown className="size-4 opacity-50" />
-      </SelectIconPrimitive>
-    </SelectTriggerPrimitive>
-  );
-}
+const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <SelectTriggerPrimitive
+        ref={ref}
+        className={cn(
+          'border-input ring-offset-background placeholder:text-muted-foreground flex h-10 w-full items-center justify-between rounded-md border bg-white/50 px-3 py-2 text-sm backdrop-blur-sm focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900/50',
+          className,
+        )}
+        {...props}
+      >
+        <span className="flex-1 truncate text-left">{children}</span>
+        <SelectIconPrimitive>
+          <AltArrowDown className="size-4 opacity-50 shrink-0" />
+        </SelectIconPrimitive>
+      </SelectTriggerPrimitive>
+    );
+  },
+);
+SelectTrigger.displayName = 'SelectTrigger';
 
 type SelectScrollUpButtonProps = SelectScrollUpButtonPrimitiveProps;
 
@@ -98,6 +103,9 @@ function SelectScrollDownButton({ className, ...props }: SelectScrollDownButtonP
 
 type SelectContentProps = SelectContentPrimitiveProps;
 
+type SelectViewportProps = SelectViewportPrimitiveProps;
+type SelectIconProps = SelectIconPrimitiveProps;
+
 function SelectContent({
   sideOffset = 4,
   position = 'popper',
@@ -120,10 +128,7 @@ function SelectContent({
       sideOffset={sideOffset}
       position={position}
       className={cn(
-        'bg-popover/80 text-popover-foreground relative z-50 max-h-96 min-w-32 overflow-visible rounded-xl border border-white/20 shadow-2xl backdrop-blur-xl dark:border-white/10',
-        'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
-        position === 'popper' &&
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+        'bg-popover text-popover-foreground relative z-50 max-h-96 min-w-32 overflow-visible rounded-md border shadow-md outline-none',
         className,
       )}
       {...props}
@@ -131,12 +136,12 @@ function SelectContent({
       <SelectScrollUpButton />
       <SelectViewportPrimitive
         className={cn(
-          'p-1.5',
+          'p-1',
           position === 'popper' &&
             'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)',
         )}
       >
-        <SelectHighlightPrimitive className="absolute inset-x-0 z-0 rounded-lg bg-accent/50 shadow-inner ring-1 ring-white/20 dark:bg-accent dark:ring-white/10">
+        <SelectHighlightPrimitive className="absolute inset-0 z-0 rounded-sm bg-accent">
           {otherChildren}
         </SelectHighlightPrimitive>
       </SelectViewportPrimitive>
@@ -156,30 +161,37 @@ function SelectLabel({ className, ...props }: SelectLabelProps) {
 
 type SelectItemProps = SelectItemPrimitiveProps;
 
-function SelectItem({ className, children, disabled, ...props }: SelectItemProps) {
-  return (
-    <SelectHighlightItemPrimitive disabled={disabled}>
-      <SelectItemPrimitive
-        disabled={disabled}
-        className={cn(
-          "focus:text-accent-foreground hover:cursor-pointer [\u0026_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-lg px-3 py-2 pr-10 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [\u0026_svg]:pointer-events-none [\u0026_svg]:shrink-0 [\u0026_svg:not([class*='size-'])]:size-4",
-          className,
-        )}
-        {...props}
-      >
-        <span className="pointer-events-none absolute right-3 flex size-3.5 items-center justify-center">
-          <SelectItemIndicatorPrimitive
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
-            <CheckRead className="size-4" />
-          </SelectItemIndicatorPrimitive>
-        </span>
-        <SelectItemTextPrimitive>{children}</SelectItemTextPrimitive>
-      </SelectItemPrimitive>
-    </SelectHighlightItemPrimitive>
-  );
-}
+type SelectItemTextProps = SelectItemTextPrimitiveProps;
+const SelectItemText = SelectItemTextPrimitive;
+
+const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+  ({ className, children, disabled, ...props }, ref) => {
+    return (
+      <SelectHighlightItemPrimitive disabled={disabled}>
+        <SelectItemPrimitive
+          ref={ref}
+          disabled={disabled}
+          className={cn(
+            "focus:text-accent-foreground hover:cursor-pointer [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 pr-10 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+            className,
+          )}
+          {...props}
+        >
+          <span className="pointer-events-none absolute right-3 flex size-3.5 items-center justify-center">
+            <SelectItemIndicatorPrimitive
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <CheckRead className="size-4" />
+            </SelectItemIndicatorPrimitive>
+          </span>
+          <SelectItemTextPrimitive>{children}</SelectItemTextPrimitive>
+        </SelectItemPrimitive>
+      </SelectHighlightItemPrimitive>
+    );
+  },
+);
+SelectItem.displayName = 'SelectItem';
 
 type SelectSeparatorProps = SelectSeparatorPrimitiveProps;
 
@@ -217,6 +229,9 @@ function SelectArrow({ className, children, ...props }: SelectArrowProps) {
 }
 SelectArrow.displayName = 'SelectArrow';
 
+const SelectViewport = SelectViewportPrimitive;
+const SelectIcon = SelectIconPrimitive;
+
 export {
   Select,
   SelectGroup,
@@ -225,10 +240,13 @@ export {
   SelectContent,
   SelectLabel,
   SelectItem,
+  SelectItemText,
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
   SelectArrow,
+  SelectViewport,
+  SelectIcon,
   type SelectProps,
   type SelectGroupProps,
   type SelectValueProps,
@@ -236,8 +254,11 @@ export {
   type SelectContentProps,
   type SelectLabelProps,
   type SelectItemProps,
+  type SelectItemTextProps,
   type SelectSeparatorProps,
   type SelectScrollUpButtonProps,
   type SelectScrollDownButtonProps,
   type SelectArrowProps,
+  type SelectViewportProps,
+  type SelectIconProps,
 };

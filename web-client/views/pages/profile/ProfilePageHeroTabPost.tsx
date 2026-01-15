@@ -56,9 +56,9 @@ const RICH_CONTENT_MENU: IRichContent[] = [
 
 const RichContent = ({ label, icon }: IRichContent) => {
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex shrink-0 items-center justify-center gap-1 whitespace-nowrap">
       {icon}
-      <span className="text-[13px] leading-none">{label}</span>
+      <span className="text-[13px] leading-none font-medium text-foreground/80">{label}</span>
     </div>
   );
 };
@@ -68,52 +68,60 @@ const ProfilePageHeroTabPost = ({ data }: IProfilePageHeroTabPost) => {
   if (user?.auth.username !== data?.userId || !data) return;
 
   return (
-    <>
-      <div className=" border-b border-border pb-3 flex gap-3 items-center justify-between">
+    <div className="flex flex-col w-full overflow-hidden">
+      <div className="border-b border-border pb-3 flex gap-3 items-center justify-between">
         <Image
           src={data.avatarUrl}
           alt="Profile Image"
           width={40}
           height={40}
-          className="rounded-full object-cover"
+          className="size-10 rounded-full object-cover shrink-0"
         />
-        <div className="flex-1 w-full">
+        <div className="flex-1 min-w-0">
           <Input
-            id="newPassword"
-            className="dark:bg-gray-700 bg-gray-100 placeholder:font-medium rounded-lg border-transparent"
+            id="post-input"
+            className="dark:bg-gray-700 bg-gray-100 placeholder:font-medium rounded-lg border-transparent w-full"
             placeholder="Bạn đang nghĩ gì vậy?"
             type="text"
             inputSize="md"
             endIcon={<SmileCircle className="size-5 p-0.5 text-foreground/70" />}
           />
         </div>
-        <Button className="h-[40px]">Chia sẻ</Button>
+        <Button className="h-10 shrink-0 px-6">Chia sẻ</Button>
       </div>
-      <div className="overflow-x-auto no-scrollbar flex pt-3 justify-between items-center">
-        <div className="flex items-center flex-nowrap gap-5 w-max">
+
+      <div className="no-scrollbar flex w-full items-center justify-between gap-6 overflow-x-auto pt-3 pb-1 flex-nowrap">
+        <div className="flex items-center flex-nowrap gap-4 shrink-0">
           {RICH_CONTENT_MENU.map((item, index) => (
             <RichContent key={index} label={item.label} icon={item.icon} />
           ))}
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="" size={'sm'} variant="outline">
-              <span className="md:text-sm text-xs">{'layout:header.change_cover'}</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" sideOffset={-2}>
-            <DropdownMenuArrow />
-            <DropdownMenuItem>
-              <Gallery />
-              <span className="md:text-sm text-xs">{'profile:choose_cover_image'}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <span className="md:text-sm text-xs">{'profile:upload_new_cover'}</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+        <div className="shrink-0">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 whitespace-nowrap shadow-none border-foreground/10"
+              >
+                <span className="text-xs font-semibold">Công khai</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={8}>
+              <DropdownMenuArrow />
+              <DropdownMenuItem className="gap-2">
+                <Gallery className="size-4" />
+                <span className="text-sm">Chọn từ thư viện</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2">
+                <span className="text-sm">Chỉ mình tôi</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

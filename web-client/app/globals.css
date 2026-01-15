@@ -123,13 +123,31 @@
 
 @layer base {
   html {
-    scrollbar-gutter: stable;
+    scrollbar-gutter: stable !important;
   }
+
+  :root {
+    --removed-body-scroll-bar-size: 0px !important;
+    --scrollbar-width: 0px !important;
+  }
+
+  body {
+    padding-right: 0px !important;
+    margin-right: 0px !important;
+    position: relative;
+    @apply bg-background text-foreground/70 font-nunito;
+  }
+
+  header.fixed,
+  header[class*='fixed'],
+  div[class*='fixed'] {
+    padding-right: 0px;
+    margin-right: 0px;
+  }
+
+  header.fixed.w-full,
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground/70 font-nunito;
   }
 
   html.changing-theme,
@@ -169,9 +187,8 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent);
+    background: color-mix(in oklch, var(--color-muted-foreground) 30%, transparent);
     border-radius: 10px;
-    /* Scrollbar transition specific */
     transition: background-color 0.3s ease;
     background-clip: padding-box;
     border: 2px solid transparent;
@@ -183,11 +200,8 @@
     background-clip: padding-box;
   }
 
+  /* Keep it visible always to prevent "missing piece" feeling */
   ::-webkit-scrollbar-thumb {
-    visibility: hidden;
-  }
-
-  *:hover::-webkit-scrollbar-thumb {
     visibility: visible;
   }
 

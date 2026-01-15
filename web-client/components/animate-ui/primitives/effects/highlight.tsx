@@ -252,7 +252,7 @@ function Highlight<T extends React.ElementType = 'div'>({ ref, ...props }: Highl
           style={{ position: 'relative', zIndex: 1 }}
           className={(props as ParentModeHighlightProps)?.containerClassName}
         >
-          <AnimatePresence initial={false} mode="wait">
+          <AnimatePresence initial={false}>
             {boundsState && (
               <motion.div
                 data-slot="motion-highlight"
@@ -448,7 +448,7 @@ function HighlightItem<T extends React.ElementType>({
     if (isActive) {
       updateBounds();
       setActiveClassName(activeClassName ?? '');
-    } else if (!activeValue) clearBounds();
+    }
 
     if (shouldUpdateBounds) return () => cancelAnimationFrame(rafId);
   }, [
