@@ -8,7 +8,7 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
 import images from '@/public/imgs';
-import { IProfilePageProps } from './ProfilePageContainer';
+import { IProfilePageProps } from '../ProfilePageContainer';
 import { useAuthStore } from '@/stores/auth';
 import { UserPlusRounded, Letter } from '@solar-icons/react-perf/Bold';
 import {
@@ -18,9 +18,9 @@ import {
 } from '@solar-icons/react-perf/category/style/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
 import { useEffect, useState } from 'react';
-import ProfilePageChooseImage from './ProfilePageChooseImage';
-import { useProfileModalStore } from './use-profile-modal';
-import ProfilePageChangeAvatar from './ProfilePageChangeAvatar';
+import ChooseImage from '../modals/ChooseImage';
+import { useProfileModalStore } from '../use-profile-modal';
+import ChangeAvatar from '../modals/ChangeAvatar';
 import { Controlled as ControlledZoom } from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import {
@@ -32,10 +32,10 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
-import MeProfilePageHeroSectionButton from './ProfilePageEditContainer';
+import MeHeroSectionButton from '../edit/EditContainer';
 import { getValidImageSrc } from '@/lib/image-utils';
 
-const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
+const HeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
     <>
       <div className="md:flex hidden items-center justify-center gap-2">
@@ -79,7 +79,7 @@ const ProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   );
 };
 
-const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
+const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
   const { userProfile } = useProfileStore(state => state);
   const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
@@ -224,9 +224,9 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
             ) : (
               <>
                 {user?.auth?.username === data?.userId ? (
-                  <MeProfilePageHeroSectionButton t={t} />
+                  <MeHeroSectionButton t={t} />
                 ) : (
-                  <ProfilePageHeroSectionButton t={t} />
+                  <HeroSectionButton t={t} />
                 )}
               </>
             )}
@@ -246,7 +246,7 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
           useProfileModalStore.getState().openChildDialog();
         }}
         titleNode={
-          <ProfilePageChangeAvatar
+          <ChangeAvatar
             selectHistoryAvatarUrl={selectedCoverFromHistory}
             avatarFilePreview={avatarFilePreview}
             onFilePreviewChange={setAvatarFilePreview}
@@ -255,7 +255,7 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
         }
         isPending={isPending}
       >
-        <ProfilePageChooseImage
+        <ChooseImage
           onSelect={url => {
             setSelectedCoverFromHistory(url);
             if (url) setAvatarFilePreview(null);
@@ -268,4 +268,4 @@ const ProfilePageHero = ({ isLoading, t, data }: IProfilePageProps) => {
   );
 };
 
-export default ProfilePageHero;
+export default Hero;

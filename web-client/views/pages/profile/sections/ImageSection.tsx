@@ -5,12 +5,12 @@ import { Skeleton } from '@/components/customs/skeleton';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-interface IProfilePageImageSectionProps {
+interface IImageSectionProps {
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
 }
 
-const ProfilePageImageSection = ({ data, isLoading }: IProfilePageImageSectionProps) => {
+const ImageSection = ({ data, isLoading }: IImageSectionProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-3 gap-1.5 mt-2">
@@ -59,4 +59,4 @@ const ProfilePageImageSection = ({ data, isLoading }: IProfilePageImageSectionPr
   );
 };
 
-export default ProfilePageImageSection;
+export default ImageSection;

@@ -29,7 +29,7 @@ import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import UserProfileCard from '@/components/UserProfileCard';
 import { useRouter } from 'next/navigation';
-import HomeHeaderAvatar from './HomeHeaderAvatar';
+import HomeHeaderAvatar from '../../../components/AvatarStatus';
 import HomeHeaderDropdown from './HomeHeaderDropdown';
 import HomeHeaderSearchLG from './HomeHeaderSearchLG';
 import { Logout3, Settings, LockPassword } from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import { IProfilePageProps } from './ProfilePageContainer';
+import { IProfilePageProps } from '../ProfilePageContainer';
 import { Settings } from '@solar-icons/react-perf/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
@@ -296,7 +296,7 @@ const EditProfileContainer = ({ form }: IEditProfileContainerProps) => {
   );
 };
 
-const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
+const MeHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -343,4 +343,4 @@ const MeProfilePageHeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => 
   );
 };
 
-export default MeProfilePageHeroSectionButton;
+export default MeHeroSectionButton;

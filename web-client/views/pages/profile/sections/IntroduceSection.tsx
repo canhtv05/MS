@@ -14,12 +14,12 @@ import { Gender, RelationshipStatus } from '@/enums/common';
 import { formatDateFromISOString } from '@/lib/utils';
 import { Skeleton } from '@/components/customs/skeleton';
 
-interface IProfilePageIntroduceSectionProps {
+interface IIntroduceSectionProps {
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
 }
 
-const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceSectionProps) => {
+const IntroduceSection = ({ data, isLoading }: IIntroduceSectionProps) => {
   const { t } = useTranslation('profile');
   const introduce = data?.introduce;
 
@@ -96,4 +96,4 @@ const ProfilePageIntroduceSection = ({ data, isLoading }: IProfilePageIntroduceS
   );
 };
 
-export default ProfilePageIntroduceSection;
+export default IntroduceSection;

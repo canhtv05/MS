@@ -2,14 +2,14 @@
 
 import { ReactNode } from 'react';
 
-interface ProfilePageWrapper {
+interface Wrapper {
   children: ReactNode;
   title?: string;
   description?: string;
   button?: ReactNode;
 }
 
-const ProfilePageWrapper = ({ children, title, description, button }: ProfilePageWrapper) => {
+const Wrapper = ({ children, title, description, button }: Wrapper) => {
   return (
     <div className="p-3 flex-1 custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
       {!!title && (
@@ -26,4 +26,4 @@ const ProfilePageWrapper = ({ children, title, description, button }: ProfilePag
   );
 };
 
-export default ProfilePageWrapper;
+export default Wrapper;

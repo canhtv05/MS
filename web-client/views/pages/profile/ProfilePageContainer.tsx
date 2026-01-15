@@ -9,9 +9,9 @@ import { ErrorMessage } from '@/enums/error-message';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import ProfilePageInfo from './ProfilePageInfo';
-import ProfilePageHero from './ProfilePageHero';
-import ProfilePageTabs from './ProfilePageTabs';
+import Info from './sections/Info';
+import Hero from './hero/Hero';
+import Tabs from './tabs/Tabs';
 import Zoom from 'react-medium-image-zoom';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { CameraMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
@@ -26,7 +26,7 @@ import {
 import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
 import Dialog from '@/components/customs/dialog';
 import { Skeleton } from '@/components/customs/skeleton';
-import ProfilePageChooseImage from './ProfilePageChooseImage';
+import ChooseImage from './modals/ChooseImage';
 import { getImageSrcOrNull } from '@/lib/image-utils';
 
 export interface IProfilePageProps {
@@ -173,10 +173,10 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
       </div>
       <div className="rounded-b-lg">
         <div className="md:px-4 px-4 md:pb-4 pb-4 custom-bg-1 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
-          <ProfilePageHero isLoading={isLoading} t={t} data={data} />
-          <ProfilePageInfo isLoading={isLoading} t={t} data={data} />
+          <Hero isLoading={isLoading} t={t} data={data} />
+          <Info isLoading={isLoading} t={t} data={data} />
         </div>
-        <ProfilePageTabs data={data} isLoading={isLoading} />
+        <Tabs data={data} isLoading={isLoading} />
       </div>
       <Dialog
         open={showDialogMediaHistory}
@@ -191,7 +191,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
         disableAccept={!selectedCoverFromHistory || isUploading}
         isPending={isUploading}
       >
-        <ProfilePageChooseImage
+        <ChooseImage
           onSelect={setSelectedCoverFromHistory}
           selectedUrl={selectedCoverFromHistory}
         />

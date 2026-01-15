@@ -15,6 +15,7 @@ interface IUserProfileCard {
   responsive?: boolean;
   hideInfo?: boolean;
   className?: string;
+  size?: number;
 }
 
 const UserProfileCard = ({
@@ -25,16 +26,15 @@ const UserProfileCard = ({
   responsive = false,
   hideInfo = false,
   className,
+  size = 35,
 }: IUserProfileCard) => {
   const validAvatarUrl = getValidImageSrc(avatarUrl, images.avt1.src);
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <div className="relative">
-        <Avatar className="relative">
+        <Avatar className="relative" style={{ width: `${size}px`, height: `${size}px` }}>
           <AvatarImage
-            width={35}
-            height={35}
             className="rounded-full border-2 border-purple-300 cursor-pointer"
             src={validAvatarUrl}
             alt={username}

@@ -20,13 +20,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { cn } from '@/lib/utils';
-import ProfilePageTabsItem from './ProfilePageTabsItem';
+import TabsItem from './TabsItem';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import ProfilePageIntroduceSection from './ProfilePageIntroduceSection';
-import ProfilePageWrapper from './ProfilePageWrapper';
-import ProfilePageImageSection from './ProfilePageImageSection';
+import IntroduceSection from '../sections/IntroduceSection';
+import Wrapper from '../components/Wrapper';
+import ImageSection from '../sections/ImageSection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import ProfilePageFriendSection from './ProfilePageFriendSection';
+import FriendSection from '../sections/FriendSection';
 
 export interface ITabs {
   id: string;
@@ -49,12 +49,12 @@ const tabs: ITabs[] = [
   { id: 'pictures', labelKey: 'pictures', icon: <Library className="text-current size-[16px]" /> },
 ];
 
-interface ProfilePageTabsProps {
+interface TabsProps {
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
 }
 
-const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
+const Tabs = ({ data, isLoading }: TabsProps) => {
   const { t } = useTranslation('profile');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -190,11 +190,11 @@ const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
       <div className="mt-3 w-full rounded-lg">
         <div className="flex lg:flex-row flex-col gap-3 items-start justify-between">
           <div className="lg:w-[40%] w-full flex flex-col gap-3 h-auto">
-            <ProfilePageWrapper title="Giới thiệu">
-              <ProfilePageIntroduceSection data={data} isLoading={isLoading} />
-            </ProfilePageWrapper>
+            <Wrapper title="Giới thiệu">
+              <IntroduceSection data={data} isLoading={isLoading} />
+            </Wrapper>
             <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
-              <ProfilePageWrapper
+              <Wrapper
                 title="Ảnh"
                 button={
                   <Button size={'sm'} variant="secondary">
@@ -202,9 +202,9 @@ const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
                   </Button>
                 }
               >
-                <ProfilePageImageSection data={data} isLoading={isLoading} />
-              </ProfilePageWrapper>
-              <ProfilePageWrapper
+                <ImageSection data={data} isLoading={isLoading} />
+              </Wrapper>
+              <Wrapper
                 title="Bạn bè"
                 description="75 người bạn"
                 button={
@@ -213,14 +213,14 @@ const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
                   </Button>
                 }
               >
-                <ProfilePageFriendSection data={data} isLoading={isLoading} />
-              </ProfilePageWrapper>
+                <FriendSection data={data} isLoading={isLoading} />
+              </Wrapper>
             </div>
           </div>
-          <div className="custom-bg-1 w-full rounded-md">
-            <ProfilePageWrapper>
-              <ProfilePageTabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
-            </ProfilePageWrapper>
+          <div className="w-full rounded-md">
+            <Wrapper>
+              <TabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+            </Wrapper>
           </div>
         </div>
       </div>
@@ -228,4 +228,4 @@ const ProfilePageTabs = ({ data, isLoading }: ProfilePageTabsProps) => {
   );
 };
 
-export default ProfilePageTabs;
+export default Tabs;

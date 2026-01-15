@@ -1,5 +1,5 @@
 import { detectLanguage } from '@/utils/common';
-import { IProfilePageProps } from './ProfilePageContainer';
+import { IProfilePageProps } from '../ProfilePageContainer';
 import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const StatItem = ({ value, label, isLoading }: StatItemProps) => {
   );
 };
 
-const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
+const Info = ({ isLoading, data }: IProfilePageProps) => {
   const { t } = useTranslation('profile');
 
   return (
@@ -167,4 +167,4 @@ const ProfilePageInfo = ({ isLoading, data }: IProfilePageProps) => {
   );
 };
 
-export default ProfilePageInfo;
+export default Info;

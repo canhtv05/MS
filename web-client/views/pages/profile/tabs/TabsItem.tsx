@@ -1,11 +1,11 @@
 'use client';
 
-import { ITabs } from './ProfilePageTabs';
+import { ITabs } from './Tabs';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import ProfilePageTabPost from './ProfilePageTabPost';
+import TabPost from './TabPost';
 import { TFunction } from 'i18next';
 
-interface IProfilePageTabsItem {
+interface ITabsItem {
   tabs: ITabs[];
   activeTab: number;
   t: TFunction<'profile', undefined>;
@@ -15,24 +15,24 @@ interface IProfilePageTabsItem {
 const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO) => {
   switch (tab) {
     case 'posts':
-      return <ProfilePageTabPost data={data} />;
+      return <TabPost data={data} />;
     case 'liked':
-      return <ProfilePageTabPost data={data} />;
+      return <TabPost data={data} />;
     case 'saved':
       return [];
     case 'pictures':
-      return <ProfilePageTabPost data={data} />;
+      return <TabPost data={data} />;
     case 'friends':
       return [];
     default:
-      return <ProfilePageTabPost data={data} />;
+      return <TabPost data={data} />;
   }
 };
 
-const ProfilePageTabsItem = ({ tabs, activeTab, t, data }: IProfilePageTabsItem) => {
+const TabsItem = ({ tabs, activeTab, t, data }: ITabsItem) => {
   const currentTab = tabs[activeTab];
 
   return <div className="w-full">{switchTab(currentTab.id, data)}</div>;
 };
 
-export default ProfilePageTabsItem;
+export default TabsItem;

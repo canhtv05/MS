@@ -5,12 +5,12 @@ import { Skeleton } from '@/components/customs/skeleton';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-interface IProfilePageImageSectionProps {
+interface IFriendSectionProps {
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
 }
 
-const ProfilePageFriendSection = ({ data, isLoading }: IProfilePageImageSectionProps) => {
+const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-3 gap-1.5 mt-2">
@@ -30,15 +30,21 @@ const ProfilePageFriendSection = ({ data, isLoading }: IProfilePageImageSectionP
     <div className="grid grid-cols-3 gap-2 mt-2 rounded-md overflow-hidden">
       {list.map((img, idx) => {
         return (
-          <div key={idx} className={cn('overflow-hidden group cursor-pointer rounded-md')}>
-            <div className="relative aspect-square">
-              <Image
-                src={img.imageUrl}
-                alt={img.originFileName}
-                fill
-                sizes="(max-width: 768px) 33vw, 200px"
-                className="object-cover transition-all rounded-md duration-300 group-hover:scale-110 group-hover:brightness-110"
-              />
+          <div key={idx}>
+            <div
+              className={cn(
+                'overflow-hidden relative aspect-square group cursor-pointer rounded-md',
+              )}
+            >
+              <div className="relative aspect-square">
+                <Image
+                  src={img.imageUrl}
+                  alt={img.originFileName}
+                  fill
+                  sizes="(max-width: 768px) 33vw, 200px"
+                  className="object-cover transition-all rounded-md duration-300 group-hover:scale-110 group-hover:brightness-110"
+                />
+              </div>
             </div>
             <h3 className="text-xs text-center text-wrap whitespace-normal break-normal wrap-break-word mt-2">
               {img.imageUrl}
@@ -50,4 +56,4 @@ const ProfilePageFriendSection = ({ data, isLoading }: IProfilePageImageSectionP
   );
 };
 
-export default ProfilePageFriendSection;
+export default FriendSection;

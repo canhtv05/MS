@@ -3,7 +3,6 @@
 import { Input } from '@/components/customs/input';
 import { useAuthStore } from '@/stores/auth';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import Image from 'next/image';
 import { SmileCircle } from '@solar-icons/react-perf/Outline';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { ReactNode } from 'react';
@@ -21,8 +20,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
+import AvatarStatus from '@/components/AvatarStatus';
 
-interface IProfilePageHeroTabPost {
+interface IHeroTabPost {
   data?: IDetailUserProfileDTO;
 }
 
@@ -54,33 +54,34 @@ const RICH_CONTENT_MENU: IRichContent[] = [
   },
 ];
 
-const RichContent = ({ label, icon }: IRichContent) => {
+const RichContentButton = ({ label, icon }: IRichContent) => {
   return (
-    <div className="flex shrink-0 items-center justify-center gap-1 whitespace-nowrap">
-      {icon}
+    <button className="flex shrink-0 items-center justify-center gap-1 whitespace-nowrap cursor-pointer">
+      <span className="size-5 p-px text-foreground/70 leading-none">{icon}</span>
       <span className="text-[13px] leading-none font-medium text-foreground/80">{label}</span>
-    </div>
+    </button>
   );
 };
 
-const ProfilePageHeroTabPost = ({ data }: IProfilePageHeroTabPost) => {
+const HeroTabPost = ({ data }: IHeroTabPost) => {
   const { user } = useAuthStore();
   if (user?.auth.username !== data?.userId || !data) return;
 
   return (
-    <div className="flex flex-col w-full overflow-hidden">
-      <div className="border-b border-border pb-3 flex gap-3 items-center justify-between">
-        <Image
+    <div className="flex flex-col w-full overflow-hidden rounded-md border group border-border/50 group-hover:border-border backdrop-blur-xl p-4">
+      <div className="border-b group-hover:border-border border-border pb-3 flex gap-3 items-center justify-between">
+        <AvatarStatus
+          fallback={data.fullname}
           src={data.avatarUrl}
-          alt="Profile Image"
-          width={40}
-          height={40}
-          className="size-10 rounded-full object-cover shrink-0"
+          isOnline={true}
+          hasAnimation={true}
+          size={42}
+          hasRing={false}
         />
         <div className="flex-1 min-w-0">
           <Input
             id="post-input"
-            className="dark:bg-gray-700 bg-gray-100 placeholder:font-medium rounded-lg border-transparent w-full"
+            className="dark:bg-gray-700 bg-gray-100 placeholder:font-medium rounded-md border-transparent w-full"
             placeholder="Bạn đang nghĩ gì vậy?"
             type="text"
             inputSize="md"
@@ -93,7 +94,7 @@ const ProfilePageHeroTabPost = ({ data }: IProfilePageHeroTabPost) => {
       <div className="no-scrollbar flex w-full items-center justify-between gap-6 overflow-x-auto pt-3 pb-1 flex-nowrap">
         <div className="flex items-center flex-nowrap gap-4 shrink-0">
           {RICH_CONTENT_MENU.map((item, index) => (
-            <RichContent key={index} label={item.label} icon={item.icon} />
+            <RichContentButton key={index} {...item} />
           ))}
         </div>
 
@@ -125,4 +126,4 @@ const ProfilePageHeroTabPost = ({ data }: IProfilePageHeroTabPost) => {
   );
 };
 
-export default ProfilePageHeroTabPost;
+export default HeroTabPost;

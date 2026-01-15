@@ -12,17 +12,13 @@ import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IImageHistoryGroupDTO } from '@/types/profile';
 import { ResourceType } from '@/enums/common';
 
-interface ProfilePageChooseImageProps {
+interface ChooseImageProps {
   onSelect?: (url: string | null) => void;
   selectedUrl?: string | null;
   isAvatar?: boolean;
 }
 
-const ProfilePageChooseImage = ({
-  onSelect,
-  selectedUrl,
-  isAvatar = false,
-}: ProfilePageChooseImageProps) => {
+const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImageProps) => {
   const { user } = useAuthStore();
   const { t } = useTranslation('profile');
   const loadMoreRef = useRef<HTMLDivElement>(null);
@@ -175,4 +171,4 @@ const ProfilePageChooseImage = ({
   );
 };
 
-export default ProfilePageChooseImage;
+export default ChooseImage;

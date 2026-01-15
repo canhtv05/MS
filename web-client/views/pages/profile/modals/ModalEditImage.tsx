@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import { useProfileMutation } from '@/services/mutations/profile';
 import Image from 'next/image';
-import { useProfileModalStore } from './use-profile-modal';
+import { useProfileModalStore } from '../use-profile-modal';
 import { getValidImageSrc } from '@/lib/image-utils';
 
 interface IModalEditImage {
