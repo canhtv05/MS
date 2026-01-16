@@ -22,6 +22,7 @@ interface IModalEditImage {
 
 const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   const { t } = useTranslation('profile');
+  const CROP_SIZE = 200;
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -57,7 +58,13 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
     ) => {
       try {
         const imageSrc = getValidImageSrc(avatarPreview || avatarUrl, images.goku.src);
-        const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels, rotation);
+        const croppedImage = await getCroppedImg(
+          imageSrc,
+          croppedAreaPixels,
+          rotation,
+          { horizontal: false, vertical: false },
+          true, // circular crop
+        );
         setCroppedImage(croppedImage);
       } catch (e) {
         console.error(e);
@@ -126,9 +133,12 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={1 / 1}
+                aspect={1}
                 cropShape="round"
+                cropSize={{ width: CROP_SIZE, height: CROP_SIZE }}
                 showGrid={true}
+                objectFit="contain"
+                restrictPosition={false}
                 onCropChange={setCrop}
                 onRotationChange={setRotation}
                 onCropComplete={onCropComplete}

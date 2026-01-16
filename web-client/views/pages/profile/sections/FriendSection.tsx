@@ -27,7 +27,7 @@ const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2 mt-2 rounded-md overflow-hidden">
+    <div className="grid grid-cols-3 gap-2 rounded-md overflow-hidden">
       {list.map((img, idx) => {
         return (
           <div key={idx}>

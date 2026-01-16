@@ -43,7 +43,7 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
   };
 
   return (
-    <div className="group relative w-full overflow-hidden rounded-md border border-border/50 backdrop-blur-xl group-hover:border-border">
+    <div className="group relative w-full overflow-hidden rounded-md border border-border/50 backdrop-blur-xl hover:border-border transition-[color,background-color,opacity,box-shadow,transform] duration-300">
       <div className="flex items-center justify-between p-4 pb-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
               <MenuDots className="size-5" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" sideOffset={8}>
+          <DropdownMenuContent align="end" sideOffset={2}>
             <DropdownMenuArrow />
             <DropdownMenuItem>Lưu bài viết</DropdownMenuItem>
             <DropdownMenuItem>Ẩn bài viết</DropdownMenuItem>
@@ -86,7 +86,6 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
         </div>
       )}
 
-      {/* Images */}
       {post.images && post.images.length > 0 && (
         <div
           className={`relative w-full ${
@@ -119,7 +118,6 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
         </div>
       )}
 
-      {/* Stats */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2 text-sm text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <div className="flex -space-x-1">
@@ -139,7 +137,6 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="border-t border-border/50 px-2 py-1.5">
         <div className="flex items-center justify-around gap-1">
           <button

@@ -131,13 +131,14 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
           {data?.introduce?.websiteUrl && (
             <Link
+              title={formatWebsiteUrl(data.introduce.websiteUrl)}
               href={formatWebsiteUrl(data.introduce.websiteUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-foreground/60 hover:text-foreground flex items-center gap-1 group"
             >
-              <LinkMinimalistic2 />
-              <span className="truncate max-w-[180px] font-medium text-cyan-400 group-hover:text-cyan-500 group-hover:underline">
+              <LinkMinimalistic2 className="text-link group-hover:text-link" />
+              <span className="truncate max-w-[180px] font-medium text-link group-hover:text-link hover:underline">
                 {formatWebsiteUrl(data.introduce.websiteUrl)}
               </span>
             </Link>

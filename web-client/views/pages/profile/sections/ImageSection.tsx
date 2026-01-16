@@ -27,7 +27,7 @@ const ImageSection = ({ data, isLoading }: IImageSectionProps) => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-1 mt-2 rounded-md overflow-hidden">
+    <div className="grid grid-cols-3 gap-1 rounded-md overflow-hidden">
       {list.map((img, idx) => {
         const isTopLeft = idx === 0;
         const isTopRight = idx === 2 || (list.length < 3 && idx === list.length - 1);

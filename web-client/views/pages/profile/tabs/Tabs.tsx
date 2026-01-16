@@ -196,6 +196,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
               <Wrapper
                 title="Ảnh"
+                description="Danh sách ảnh của bạn"
                 button={
                   <Button size={'sm'} variant="secondary">
                     <span className="font-bold text-foreground/70">{t('common:button.view')}</span>
@@ -206,7 +207,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
               </Wrapper>
               <Wrapper
                 title="Bạn bè"
-                description="75 người bạn"
+                description="Danh sách bạn bè của bạn"
                 button={
                   <Button size={'sm'} variant="secondary">
                     <span className="font-bold text-foreground/70">{t('common:button.view')}</span>

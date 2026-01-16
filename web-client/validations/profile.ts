@@ -2,6 +2,7 @@
 
 import { z } from 'zod/v4';
 import i18next from 'i18next';
+import { Gender, RelationshipStatus } from '@/enums/common';
 
 const t = i18next.t;
 
@@ -18,6 +19,33 @@ const validDomain = (value: string | null | undefined, allowOrigins: string[]) =
 export const updateProfileSchema = z.object({
   bio: z.string().max(255, t('validation:string.max', { field: t('profile:bio'), max: 255 })),
   city: z.string().max(255, t('validation:string.max', { field: t('profile:city'), max: 255 })),
+  hometown: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:hometown'), max: 255 })),
+  jobTitle: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:jobTitle'), max: 255 })),
+  company: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:company'), max: 255 })),
+  school: z.string().max(255, t('validation:string.max', { field: t('profile:school'), max: 255 })),
+  websiteUrl: z.string().optional().or(z.literal('')),
+  githubUrl: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .refine(
+      value => validDomain(value, ['github.com', 'git.io']),
+      t('validation:string.url', { field: t('profile:githubUrl') }),
+    ),
+  linkedinUrl: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .refine(
+      value => validDomain(value, ['linkedin.com', 'in.com']),
+      t('validation:string.url', { field: t('profile:linkedinUrl') }),
+    ),
   facebookUrl: z
     .string()
     .optional()
@@ -50,4 +78,33 @@ export const updateProfileSchema = z.object({
       value => validDomain(value, ['x.com', 'x.app']),
       t('validation:string.url', { field: t('profile:xUrl') }),
     ),
+  dob: z.date().optional().default(new Date()),
+  gender: z
+    .enum([
+      Gender.GENDER_MALE,
+      Gender.GENDER_FEMALE,
+      Gender.GENDER_OTHER,
+      Gender.GENDER_UNSPECIFIED,
+    ])
+    .optional()
+    .default(Gender.GENDER_OTHER),
+  relationshipStatus: z
+    .enum([
+      RelationshipStatus.RELATIONSHIP_STATUS_SINGLE,
+      RelationshipStatus.RELATIONSHIP_STATUS_IN_A_RELATIONSHIP,
+      RelationshipStatus.RELATIONSHIP_STATUS_ENGAGED,
+      RelationshipStatus.RELATIONSHIP_STATUS_MARRIED,
+      RelationshipStatus.RELATIONSHIP_STATUS_ITS_COMPLICATED,
+      RelationshipStatus.RELATIONSHIP_STATUS_IN_LOVE,
+      RelationshipStatus.RELATIONSHIP_STATUS_WIDOWED,
+      RelationshipStatus.RELATIONSHIP_STATUS_SEPARATED,
+      RelationshipStatus.RELATIONSHIP_STATUS_DIVORCED,
+      RelationshipStatus.RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP,
+    ])
+    .optional()
+    .default(RelationshipStatus.RELATIONSHIP_STATUS_SINGLE),
+  phoneNumber: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:phoneNumber'), max: 255 })),
+  interests: z.array(z.string()).optional(),
 });

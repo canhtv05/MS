@@ -32,8 +32,8 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
-import MeHeroSectionButton from '../edit/EditContainer';
 import { getValidImageSrc } from '@/lib/image-utils';
+import Container from '../edit/Container';
 
 const HeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -128,7 +128,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                 images.avt1.src,
               );
               return (
-                <>
+                <div className="relative w-32 h-32 aspect-square">
                   {avatarSrc && avatarSrc.trim() !== '' && (
                     <ControlledZoom
                       isZoomed={isClickViewAvatar}
@@ -141,16 +141,19 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                         loading: 'eager',
                       }}
                     >
-                      <Image
-                        src={avatarSrc}
-                        alt="Avatar"
-                        fill
-                        className="w-32 h-32 rounded-full object-cover fixed -top-[9999px] -left-[9999px]"
-                        loading="eager"
-                        quality={100}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
-                        unoptimized
-                      />
+                      <div className="absolute inset-0 pointer-events-none">
+                        <div className="relative w-full h-full">
+                          <Image
+                            fill
+                            src={avatarSrc}
+                            alt="Avatar"
+                            className="rounded-full object-cover opacity-0"
+                            loading="eager"
+                            quality={100}
+                            unoptimized
+                          />
+                        </div>
+                      </div>
                     </ControlledZoom>
                   )}
 
@@ -188,7 +191,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                       )}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </>
+                </div>
               );
             })()}
             {user?.auth?.username === data?.userId && (
@@ -224,7 +227,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
             ) : (
               <>
                 {user?.auth?.username === data?.userId ? (
-                  <MeHeroSectionButton t={t} />
+                  <Container />
                 ) : (
                   <HeroSectionButton t={t} />
                 )}

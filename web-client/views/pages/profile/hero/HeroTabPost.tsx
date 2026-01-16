@@ -9,7 +9,7 @@ import { ReactNode } from 'react';
 import {
   Gallery,
   LinkMinimalistic2,
-  VideocameraRecord,
+  // VideocameraRecord,
   Hashtag,
   MentionCircle,
 } from '@solar-icons/react-perf/Outline';
@@ -40,10 +40,10 @@ const RICH_CONTENT_MENU: IRichContent[] = [
     label: 'Attachment',
     icon: <LinkMinimalistic2 className="size-[18px] p-px text-orange-500" />,
   },
-  {
-    label: 'Live',
-    icon: <VideocameraRecord className="size-[18px] p-px text-red-500" />,
-  },
+  // {
+  //   label: 'Live',
+  //   icon: <VideocameraRecord className="size-[18px] p-px text-red-500" />,
+  // },
   {
     label: 'Hashtag',
     icon: <Hashtag className="size-[18px] p-px text-green-500" />,
@@ -91,11 +91,13 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
         <Button className="h-10 shrink-0 px-6">Chia sẻ</Button>
       </div>
 
-      <div className="no-scrollbar flex w-full items-center justify-between gap-6 overflow-x-auto pt-3 pb-1 flex-nowrap">
-        <div className="flex items-center flex-nowrap gap-4 shrink-0">
-          {RICH_CONTENT_MENU.map((item, index) => (
-            <RichContentButton key={index} {...item} />
-          ))}
+      <div className="flex w-full items-center gap-6 pt-3 pb-1">
+        <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-4 flex-nowrap">
+            {RICH_CONTENT_MENU.map((item, index) => (
+              <RichContentButton key={index} {...item} />
+            ))}
+          </div>
         </div>
 
         <div className="shrink-0">
@@ -109,7 +111,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
                 <span className="text-xs font-semibold">Công khai</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={8}>
+            <DropdownMenuContent align="end" sideOffset={2}>
               <DropdownMenuArrow />
               <DropdownMenuItem className="gap-2">
                 <Gallery className="size-4" />
