@@ -190,13 +190,13 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
       <div className="mt-3 w-full rounded-lg">
         <div className="flex lg:flex-row flex-col gap-3 items-start justify-between">
           <div className="lg:w-[40%] w-full flex flex-col gap-3 h-auto">
-            <Wrapper title="Giới thiệu">
+            <Wrapper title={t('introduce')}>
               <IntroduceSection data={data} isLoading={isLoading} />
             </Wrapper>
             <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
               <Wrapper
-                title="Ảnh"
-                description="Danh sách ảnh của bạn"
+                title={t('pictures')}
+                description={t('pictures_description')}
                 button={
                   <Button size={'sm'} variant="secondary">
                     <span className="font-bold text-foreground/70">{t('common:button.view')}</span>
@@ -206,8 +206,8 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                 <ImageSection data={data} isLoading={isLoading} />
               </Wrapper>
               <Wrapper
-                title="Bạn bè"
-                description="Danh sách bạn bè của bạn"
+                title={t('friends')}
+                description={t('friends_description')}
                 button={
                   <Button size={'sm'} variant="secondary">
                     <span className="font-bold text-foreground/70">{t('common:button.view')}</span>

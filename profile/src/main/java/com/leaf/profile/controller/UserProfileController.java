@@ -3,6 +3,7 @@ package com.leaf.profile.controller;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.profile.dto.ChangeCoverByUrlReq;
 import com.leaf.profile.dto.SendFriendRequestDTO;
+import com.leaf.profile.dto.UpdateBioProfileReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.service.UserProfileService;
 import jakarta.validation.Valid;
@@ -59,5 +60,12 @@ public class UserProfileController {
         @Valid @RequestBody ChangeCoverByUrlReq req
     ) throws InterruptedException {
         return ResponseEntity.ok(ResponseObject.success(userProfileService.changeCoverImageFromMediaHistory(req)));
+    }
+
+    @PostMapping("/me/update-bio")
+    public ResponseEntity<ResponseObject<UserProfileResponse>> updateBioProfile(
+        @Valid @RequestBody UpdateBioProfileReq req
+    ) {
+        return ResponseEntity.ok(ResponseObject.success(userProfileService.updateBioProfile(req)));
     }
 }

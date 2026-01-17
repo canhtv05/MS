@@ -18,7 +18,11 @@ export interface IImageHistoryGroupDTO {
   items: IImageHistoryDTO[];
 }
 
-export interface ChangeCoverByUrlReq {
+export interface IUpdateBioProfileReq {
+  bio: string;
+}
+
+export interface IChangeCoverByUrlReq {
   url: string;
 }
 

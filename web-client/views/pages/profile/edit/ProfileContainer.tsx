@@ -19,6 +19,7 @@ import { AltArrowDown } from '@solar-icons/react-perf/Outline';
 import { UpdateProfileFormValues } from './Introduce';
 import { IUserProfileDTO } from '@/types/profile';
 import { useTheme } from 'next-themes';
+import { useTranslation } from 'react-i18next';
 
 interface IProfileContainerProps {
   form: UseFormReturn<UpdateProfileFormValues>;
@@ -35,6 +36,7 @@ const LANGUAGE_OPTIONS = [
 ];
 
 const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
+  const { t } = useTranslation('profile');
   const [language, setLanguage] = useState('javascript');
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
@@ -65,12 +67,12 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
     <>
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="md:text-lg font-semibold">Ảnh đại diện</h3>
+          <h3 className="md:text-lg font-semibold">{t('avatar_image')}</h3>
           <Button
             variant="ghost"
             className="text-primary md:text-lg font-semibold hover:bg-primary/10"
           >
-            Sửa
+            {t('edit')}
           </Button>
         </div>
         <div className="flex items-center justify-center w-full py-4 rounded-xl">
@@ -95,12 +97,12 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="md:text-lg font-semibold">Ảnh bìa</h3>
+          <h3 className="md:text-lg font-semibold">{t('cover_image')}</h3>
           <Button
             variant="ghost"
             className="text-primary md:text-lg font-semibold hover:bg-primary/10"
           >
-            Sửa
+            {t('edit')}
           </Button>
         </div>
         <div className="flex items-center justify-center w-full">
@@ -125,7 +127,7 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="md:text-lg font-semibold">Tiểu sử</h3>
+          <h3 className="md:text-lg font-semibold">{t('bio_editor')}</h3>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -140,7 +142,7 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
                     resolvedTheme === 'dark' ? 'text-[#6272a4]' : 'text-gray-500',
                   )}
                 >
-                  Language:
+                  {t('language')}
                 </span>
                 <span
                   className={cn(

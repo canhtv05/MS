@@ -8,18 +8,29 @@ import { Toaster } from 'sonner';
 import RouteGuard from '@/guard/RouteGuard';
 import { AuthRefreshProvider } from '@/guard/AuthRefreshContext';
 import { APP_CONFIGS } from '@/configs';
-import '@/locale/i18n';
+import i18next from '@/locale/i18n';
 
 import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
 
 interface AppLayoutProps {
   children: ReactNode;
+  initialLanguage: 'vi' | 'en';
 }
 
-const AppLayout = ({ children }: AppLayoutProps) => {
+const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
+  if (i18next.language !== initialLanguage) {
+    i18next.changeLanguage(initialLanguage);
+  }
+
   return (
     <>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableColorScheme>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem={false}
+        enableColorScheme
+        storageKey="theme"
+      >
         <ThemeTransitionHandler />
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>

@@ -33,6 +33,7 @@ const SidebarLayout = () => {
               showClear
               inputSize="md"
               id="search_messages"
+              suppressHydrationWarning
               placeholder={t('header.search_placeholder')}
               className="dark:bg-gray-700 bg-gray-100 h-8 placeholder:font-medium rounded-lg border-transparent"
               classNameIcon="dark:bg-gray-700 bg-gray-100 h-8"

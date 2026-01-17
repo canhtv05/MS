@@ -110,6 +110,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 key={index}
                 href={item.href}
                 title={t(item.title)}
+                suppressHydrationWarning
                 className={cn(
                   `flex lg:p-4 p-3 rounded-lg lg:w-full w-auto hover:bg-gray-100 dark:hover:bg-gray-900 items-center justify-start`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
@@ -132,6 +133,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 <Link
                   href={item.href}
                   title={t(item.title)}
+                  suppressHydrationWarning
                   className={cn('grid place-content-start pl-[2px] w-full')}
                 >
                   {linkContent}

@@ -153,7 +153,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
             )}
           </div>
           <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
-            <span>Zoom</span>
+            <span>{t?.('zoom')}</span>
             <div className="flex items-center gap-2 w-full">
               <Button
                 onClick={() => {
@@ -191,7 +191,7 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
             </div>
           </div>
           <div className="w-full px-5 flex flex-col items-start justify-start gap-2">
-            <span>Rotate</span>
+            <span>{t?.('rotate')}</span>
             <div className="flex items-center gap-2 w-full">
               <Button
                 onClick={() => {

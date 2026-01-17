@@ -78,6 +78,7 @@ const HeaderLayout = () => {
                   showClear
                   inputSize="md"
                   id="search"
+                  suppressHydrationWarning
                   className="dark:bg-gray-700 bg-gray-100 h-8 placeholder:font-medium rounded-lg border-transparent"
                   classNameIcon="dark:bg-gray-700 bg-gray-100 h-8"
                   icon={
@@ -173,7 +174,7 @@ const HeaderLayout = () => {
                       <DropdownMenuItem onClick={() => router.push(`/@${user?.auth?.username}`)}>
                         <div className="flex items-center justify-center gap-2">
                           <UserCircle />
-                          <span>{t('header.view_profile')}</span>
+                          <span suppressHydrationWarning>{t('header.view_profile')}</span>
                         </div>
                         <DropdownMenuShortcut>⌘⇧P</DropdownMenuShortcut>
                       </DropdownMenuItem>
@@ -182,12 +183,12 @@ const HeaderLayout = () => {
                         className="group cursor-pointer flex items-center justify-start gap-2"
                       >
                         <LockPassword className="text-foreground/70" />
-                        <span>{t('header.change_password')}</span>
+                        <span suppressHydrationWarning>{t('header.change_password')}</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <div className="flex items-center justify-center gap-2">
                           <Settings />
-                          <span>{t('header.settings')}</span>
+                          <span suppressHydrationWarning>{t('header.settings')}</span>
                         </div>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
@@ -203,7 +204,9 @@ const HeaderLayout = () => {
                     <DropdownMenuItem variant={'destructive'} onClick={() => setOpenLogout(true)}>
                       <div className="flex items-center justify-center gap-2">
                         <Logout3 className="size-5" />
-                        <span className="text-sm">{t('header.logout')}</span>
+                        <span suppressHydrationWarning className="text-sm">
+                          {t('header.logout')}
+                        </span>
                       </div>
                       <DropdownMenuShortcut>⌘⇧L</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -214,7 +217,7 @@ const HeaderLayout = () => {
               <div className="flex gap-5 items-center justify-center">
                 <div className="flex items-center justify-center gap-2">
                   <Link href="/sign-in">
-                    <Button variant={'destructive'} className="h-8 px-4">
+                    <Button suppressHydrationWarning variant={'destructive'} className="h-8 px-4">
                       {t('auth:sign_in.sign_in_button')}
                     </Button>
                   </Link>

@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { AddSquare } from '@solar-icons/react-perf/Outline';
+import { useTranslation } from 'react-i18next';
 
 export type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
@@ -20,110 +21,112 @@ export interface IIntroduceContentProps {
   form: UseFormReturn<UpdateProfileFormValues>;
 }
 
-const INTRODUCE_FIELDS = [
-  {
-    label: 'Tỉnh/Thành phố hiện tại',
-    children: [
-      {
-        label: 'Thêm thành phố',
-        url: '/profile/introduce/city',
-      },
-      {
-        label: 'Thêm quê hương',
-        url: '/profile/introduce/hometown',
-      },
-    ],
-  },
-  {
-    label: 'Sự nghiệp',
-    children: [
-      {
-        label: 'Thêm sự nghiệp',
-        url: '/profile/introduce/jobTitle',
-      },
-      {
-        label: 'Thêm công ty',
-        url: '/profile/introduce/company',
-      },
-    ],
-  },
-  {
-    label: 'Trường học',
-    children: [
-      {
-        label: 'Thêm trường học',
-        url: '/profile/introduce/school',
-      },
-    ],
-  },
-  {
-    label: 'Mạng xã hội',
-    children: [
-      {
-        label: 'Thêm website',
-        url: '/profile/introduce/website',
-      },
-      {
-        label: 'Thêm GitHub',
-        url: '/profile/introduce/github',
-      },
-      {
-        label: 'Thêm LinkedIn',
-        url: '/profile/introduce/linkedin',
-      },
-      {
-        label: 'Thêm Facebook',
-        url: '/profile/introduce/social',
-      },
-      {
-        label: 'Thêm Instagram',
-        url: '/profile/introduce/instagram',
-      },
-      {
-        label: 'Thêm Tiktok',
-        url: '/profile/introduce/tiktok',
-      },
-      {
-        label: 'Thêm X',
-        url: '/profile/introduce/x',
-      },
-    ],
-  },
-  {
-    label: 'Cá nhân',
-    children: [
-      {
-        label: 'Thêm ngày sinh',
-        url: '/profile/introduce/dob',
-      },
-      {
-        label: 'Thêm giới tính',
-        url: '/profile/introduce/gender',
-      },
-      {
-        label: 'Thêm tình trạng quan hệ',
-        url: '/profile/introduce/relationshipStatus',
-      },
-      {
-        label: 'Thêm số điện thoại',
-        url: '/profile/introduce/phoneNumber',
-      },
-    ],
-  },
-  {
-    label: 'Sở thích',
-    children: [
-      {
-        label: 'Thêm sở thích',
-        url: '/profile/introduce/interests',
-      },
-    ],
-  },
-];
-
 const IntroduceContent = ({ form }: IIntroduceContentProps) => {
+  const { t } = useTranslation('profile');
+
+  const INTRODUCE_FIELDS = [
+    {
+      label: t('province_city_current'),
+      children: [
+        {
+          label: t('add_city'),
+          url: '/profile/introduce/city',
+        },
+        {
+          label: t('add_hometown'),
+          url: '/profile/introduce/hometown',
+        },
+      ],
+    },
+    {
+      label: t('career'),
+      children: [
+        {
+          label: t('add_career'),
+          url: '/profile/introduce/jobTitle',
+        },
+        {
+          label: t('add_company'),
+          url: '/profile/introduce/company',
+        },
+      ],
+    },
+    {
+      label: t('school_label'),
+      children: [
+        {
+          label: t('add_school'),
+          url: '/profile/introduce/school',
+        },
+      ],
+    },
+    {
+      label: t('social_network'),
+      children: [
+        {
+          label: t('add_website'),
+          url: '/profile/introduce/website',
+        },
+        {
+          label: t('add_github'),
+          url: '/profile/introduce/github',
+        },
+        {
+          label: t('add_linkedin'),
+          url: '/profile/introduce/linkedin',
+        },
+        {
+          label: t('add_facebook'),
+          url: '/profile/introduce/social',
+        },
+        {
+          label: t('add_instagram'),
+          url: '/profile/introduce/instagram',
+        },
+        {
+          label: t('add_tiktok'),
+          url: '/profile/introduce/tiktok',
+        },
+        {
+          label: t('add_x'),
+          url: '/profile/introduce/x',
+        },
+      ],
+    },
+    {
+      label: t('personal'),
+      children: [
+        {
+          label: t('add_dob'),
+          url: '/profile/introduce/dob',
+        },
+        {
+          label: t('add_gender'),
+          url: '/profile/introduce/gender',
+        },
+        {
+          label: t('add_relationship_status'),
+          url: '/profile/introduce/relationshipStatus',
+        },
+        {
+          label: t('add_phone'),
+          url: '/profile/introduce/phoneNumber',
+        },
+      ],
+    },
+    {
+      label: t('interests'),
+      children: [
+        {
+          label: t('add_interests'),
+          url: '/profile/introduce/interests',
+        },
+      ],
+    },
+  ];
+
   return (
-    <>
+    <div className="pb-6">
       {INTRODUCE_FIELDS.map(field => (
         <div key={field.label}>
           <h3 className="font-medium">{field.label}</h3>
@@ -249,7 +252,7 @@ const IntroduceContent = ({ form }: IIntroduceContentProps) => {
           )}
         />
       </div> */}
-    </>
+    </div>
   );
 };
 

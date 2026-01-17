@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import AvatarStatus from '@/components/AvatarStatus';
+import { useTranslation } from 'react-i18next';
 
 interface IHeroTabPost {
   data?: IDetailUserProfileDTO;
@@ -30,29 +31,6 @@ interface IRichContent {
   label: string;
   icon: ReactNode;
 }
-
-const RICH_CONTENT_MENU: IRichContent[] = [
-  {
-    label: 'Image/Video',
-    icon: <Gallery className="size-[18px] p-px text-blue-500" />,
-  },
-  {
-    label: 'Attachment',
-    icon: <LinkMinimalistic2 className="size-[18px] p-px text-orange-500" />,
-  },
-  // {
-  //   label: 'Live',
-  //   icon: <VideocameraRecord className="size-[18px] p-px text-red-500" />,
-  // },
-  {
-    label: 'Hashtag',
-    icon: <Hashtag className="size-[18px] p-px text-green-500" />,
-  },
-  {
-    label: 'Mention',
-    icon: <MentionCircle className="size-[18px] p-px text-foreground" />,
-  },
-];
 
 const RichContentButton = ({ label, icon }: IRichContent) => {
   return (
@@ -65,6 +43,31 @@ const RichContentButton = ({ label, icon }: IRichContent) => {
 
 const HeroTabPost = ({ data }: IHeroTabPost) => {
   const { user } = useAuthStore();
+  const { t } = useTranslation('profile');
+
+  const RICH_CONTENT_MENU: IRichContent[] = [
+    {
+      label: t('image_video'),
+      icon: <Gallery className="size-[18px] p-px text-blue-500" />,
+    },
+    {
+      label: t('attachment'),
+      icon: <LinkMinimalistic2 className="size-[18px] p-px text-orange-500" />,
+    },
+    // {
+    //   label: 'Live',
+    //   icon: <VideocameraRecord className="size-[18px] p-px text-red-500" />,
+    // },
+    {
+      label: t('hashtag'),
+      icon: <Hashtag className="size-[18px] p-px text-green-500" />,
+    },
+    {
+      label: t('mention'),
+      icon: <MentionCircle className="size-[18px] p-px text-foreground" />,
+    },
+  ];
+
   if (user?.auth.username !== data?.userId || !data) return;
 
   return (
@@ -82,13 +85,13 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
           <Input
             id="post-input"
             className="dark:bg-gray-700 bg-gray-100 placeholder:font-medium rounded-md border-transparent w-full"
-            placeholder="Bạn đang nghĩ gì vậy?"
+            placeholder={t('thinking_placeholder')}
             type="text"
             inputSize="md"
             endIcon={<SmileCircle className="size-5 p-0.5 text-foreground/70" />}
           />
         </div>
-        <Button className="h-10 shrink-0 px-6">Chia sẻ</Button>
+        <Button className="h-10 shrink-0 px-6">{t('share')}</Button>
       </div>
 
       <div className="flex w-full items-center gap-6 pt-3 pb-1">
@@ -108,17 +111,17 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
                 variant="outline"
                 className="h-8 whitespace-nowrap shadow-none border-foreground/10"
               >
-                <span className="text-xs font-semibold">Công khai</span>
+                <span className="text-xs font-semibold">{t('public')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={2}>
               <DropdownMenuArrow />
               <DropdownMenuItem className="gap-2">
                 <Gallery className="size-4" />
-                <span className="text-sm">Chọn từ thư viện</span>
+                <span className="text-sm">{t('choose_from_gallery')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem className="gap-2">
-                <span className="text-sm">Chỉ mình tôi</span>
+                <span className="text-sm">{t('only_me')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

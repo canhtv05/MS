@@ -26,6 +26,7 @@ interface IInputProps extends React.ComponentProps<'input'> {
   inputSize?: 'md' | 'lg' | 'sm';
   classNameIcon?: string;
   showClear?: boolean;
+  suppressHydrationWarning?: boolean;
 }
 
 function Input({
@@ -47,6 +48,7 @@ function Input({
   value,
   defaultValue,
   onChange,
+  suppressHydrationWarning,
   ...props
 }: IInputProps) {
   const [isEmpty, setIsEmpty] = React.useState(false);
@@ -141,6 +143,7 @@ function Input({
             </div>
           )}
           <input
+            suppressHydrationWarning={suppressHydrationWarning}
             ref={inputRef}
             type={typeInput}
             data-slot="input"

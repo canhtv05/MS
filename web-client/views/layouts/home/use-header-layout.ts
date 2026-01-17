@@ -72,6 +72,7 @@ const useHeaderLayout = () => {
   }, [router, user?.auth?.username]);
 
   const handleChangeLang = (lang: 'vi' | 'en') => {
+    document.cookie = `language=${lang}; path=/; max-age=31536000`;
     setStorage({ language: lang });
     i18next.changeLanguage(lang);
     setCurrentLang(lang);

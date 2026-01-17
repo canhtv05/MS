@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { IProfileDTO } from '@/types/auth';
 import { MultipartFile } from '@/types/common';
-import { ChangeCoverByUrlReq } from '@/types/profile';
+import { IChangeCoverByUrlReq, IUpdateBioProfileReq } from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
 
@@ -101,7 +101,7 @@ export const useProfileMutation = () => {
 
   const changeCoverImageFromMediaHistoryMutation = useMutation({
     mutationKey: [API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY],
-    mutationFn: async (payload: ChangeCoverByUrlReq): Promise<IResponseObject<IProfileDTO>> => {
+    mutationFn: async (payload: IChangeCoverByUrlReq): Promise<IResponseObject<IProfileDTO>> => {
       const response = await api.post(
         API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY,
         payload,
@@ -119,25 +119,57 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      // Invalidate both me profile and user profile queries
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'me'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'user-profile'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
-      });
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'me'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'user-profile'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+        }),
+      ]);
       toast.success(t('change_cover_image_success'), {
         id: 'change-cover-image-from-media-history-toast',
       });
     },
   });
 
+  const updateBioProfileMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.PROFILE.UPDATE_BIO],
+    mutationFn: async (payload: IUpdateBioProfileReq): Promise<IResponseObject<IProfileDTO>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_BIO, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'update-bio-profile-toast'),
+    onMutate: () => {
+      toast.loading(t('update_bio_profile_loading'), {
+        id: 'update-bio-profile-toast',
+      });
+    },
+    onSuccess: async data => {
+      setUserProfile(data?.data);
+      if (user && data?.data) {
+        setUser({ ...user, profile: data.data });
+      }
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'me'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'user-profile'],
+        }),
+      ]);
+      toast.success(t('update_bio_profile_success'), {
+        id: 'update-bio-profile-toast',
+      });
+    },
+  });
   return {
     changeCoverImageMutation,
     changeCoverImageFromMediaHistoryMutation,
     changeAvatarImageMutation,
+    updateBioProfileMutation,
   };
 };

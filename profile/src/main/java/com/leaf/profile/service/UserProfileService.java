@@ -1,5 +1,6 @@
 package com.leaf.profile.service;
 
+import com.leaf.common.enums.CacheKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.ImageResponse;
@@ -9,6 +10,7 @@ import com.leaf.framework.service.RedisService;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.ChangeCoverByUrlReq;
 import com.leaf.profile.dto.SendFriendRequestDTO;
+import com.leaf.profile.dto.UpdateBioProfileReq;
 import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.grpc.GrpcFileClient;
@@ -99,7 +101,7 @@ public class UserProfileService {
                 userProfile.setCoverUrl(res.getImageUrl());
             }
             UserProfile saved = userProfileRepository.save(userProfile);
-            String cacheKey = "USER_PROFILE:" + username;
+            String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
             redisService.evict(cacheKey);
             return UserProfileResponse.toUserProfileResponse(saved);
         } catch (Exception e) {
@@ -123,11 +125,25 @@ public class UserProfileService {
             UserProfile userProfile = (UserProfile) futures.get(0).get();
             userProfile.setCoverUrl(req.getUrl());
             userProfileRepository.save(userProfile);
-            String cacheKey = "USER_PROFILE:" + username;
+            String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
             redisService.evict(cacheKey);
             return UserProfileResponse.toUserProfileResponse(userProfile);
         } catch (Exception e) {
             throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
         }
+    }
+
+    public UserProfileResponse updateBioProfile(UpdateBioProfileReq req) {
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
+        UserProfile userProfile = userProfileRepository
+            .findByUserId(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+        userProfile.setBio(req.getBio());
+        UserProfile saved = userProfileRepository.save(userProfile);
+        String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
+        redisService.evict(cacheKey);
+        return UserProfileResponse.toUserProfileResponse(saved);
     }
 }

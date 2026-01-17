@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/customs/skeleton';
 import dynamic from 'next/dynamic';
 import Dialog from '@/components/customs/dialog';
 import { IIntroduceContentProps } from '../edit/Introduce';
+import { useTranslation } from 'react-i18next';
 
 type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
@@ -26,39 +27,6 @@ interface IIntroduceProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-
-const INTRODUCE_FIELDS = [
-  {
-    label: 'Tỉnh/Thành phố',
-    name: 'city',
-    icon: <MapPointWave className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-  {
-    label: 'Sự nghiệp',
-    name: 'jobTitle',
-    icon: <Suitcase className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-  {
-    label: 'Trường học',
-    name: 'school',
-    icon: <SquareAcademicCap2 className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-  {
-    label: 'Mạng xã hội',
-    name: 'social',
-    icon: <Share className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-  {
-    label: 'Cá nhân',
-    name: 'personal',
-    icon: <UserCircle className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-  {
-    label: 'Sở thích',
-    name: 'interests',
-    icon: <Heart className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-  },
-];
 
 const IntroduceContent = dynamic<IIntroduceContentProps>(() => import('../edit/Introduce'), {
   ssr: false,
@@ -74,26 +42,62 @@ const IntroduceContent = dynamic<IIntroduceContentProps>(() => import('../edit/I
 });
 
 const Introduce = ({ form, open, setOpen }: IIntroduceProps) => {
+  const { t } = useTranslation('profile');
+
+  const INTRODUCE_FIELDS = [
+    {
+      label: t('province_city'),
+      name: 'city',
+      icon: <MapPointWave className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('career'),
+      name: 'jobTitle',
+      icon: <Suitcase className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('school_label'),
+      name: 'school',
+      icon: <SquareAcademicCap2 className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('social_network'),
+      name: 'social',
+      icon: <Share className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('personal'),
+      name: 'personal',
+      icon: <UserCircle className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('interests'),
+      name: 'interests',
+      icon: <Heart className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+  ];
+
   return (
     <>
       <div className="flex items-center justify-between">
-        <h3 className="md:text-lg font-semibold">Giới thiệu</h3>
+        <h3 className="md:text-lg font-semibold">{t('introduce')}</h3>
         <Button
           onClick={() => setOpen(true)}
           variant="ghost"
           className="text-primary md:text-lg font-semibold hover:bg-primary/10"
         >
-          Sửa
+          {t('edit')}
         </Button>
         <Dialog
           form={form}
           open={open}
           onClose={() => setOpen(false)}
-          title="Sửa thông tin giới thiệu"
+          title={t('edit_introduce_info')}
           id="edit-introduce-confirm"
           size="sm"
           disableAccept={false}
           hasBorder
+          disableFooter
         >
           <IntroduceContent form={form} />
         </Dialog>

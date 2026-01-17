@@ -110,7 +110,9 @@ const Dialog = <T extends FieldValues = FieldValues>({
             )}
           >
             <div className="relative w-full flex items-center justify-between">
-              <span className="font-semibold text-center flex-1">{title}</span>
+              <span suppressHydrationWarning className="font-semibold text-center flex-1">
+                {title}
+              </span>
               <IconButton
                 disabled={isPending}
                 className="rounded-full absolute! right-0"
@@ -122,7 +124,10 @@ const Dialog = <T extends FieldValues = FieldValues>({
             </div>
             {titleNode}
           </DialogTitle>
-          <DialogDescription className={description ? 'text-muted-foreground' : 'sr-only'}>
+          <DialogDescription
+            suppressHydrationWarning
+            className={description ? 'text-muted-foreground' : 'sr-only'}
+          >
             {description}
           </DialogDescription>
         </DialogHeader>
@@ -137,6 +142,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
             )}
           >
             <Button
+              suppressHydrationWarning
               className="w-auto"
               variant={'outline'}
               onClick={handleClose}
@@ -145,6 +151,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
               {t('button.close')}
             </Button>
             <Button
+              suppressHydrationWarning
               className="w-auto"
               variant={'destructive'}
               onClick={() => {

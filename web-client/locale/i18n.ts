@@ -3,65 +3,27 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import commonEN from './en/common.json';
-import commonVI from './vi/common.json';
-import layoutEN from './en/layout.json';
-import layoutVI from './vi/layout.json';
-import authEN from './en/auth.json';
-import authVI from './vi/auth.json';
-import validationEN from './en/validation.json';
-import validationVI from './vi/validation.json';
-import navigationEN from './en/navigation.json';
-import navigationVI from './vi/navigation.json';
-import notificationEN from './en/notification.json';
-import notificationVI from './vi/notification.json';
-import profileEN from './en/profile.json';
-import profileVI from './vi/profile.json';
-import { APP_KEY } from '@/utils/cookieUtils';
+const namespaces = [
+  'common',
+  'layout',
+  'auth',
+  'validation',
+  'navigation',
+  'notification',
+  'profile',
+] as const;
 
-// the translations
+/* eslint-disable @typescript-eslint/no-require-imports */
 const resources = {
-  en: {
-    auth: authEN,
-    validation: validationEN,
-    common: commonEN,
-    layout: layoutEN,
-    navigation: navigationEN,
-    notification: notificationEN,
-    profile: profileEN,
-  },
-  vi: {
-    auth: authVI,
-    validation: validationVI,
-    common: commonVI,
-    layout: layoutVI,
-    navigation: navigationVI,
-    notification: notificationVI,
-    profile: profileVI,
-  },
+  en: Object.fromEntries(namespaces.map(ns => [ns, require(`./en/${ns}.json`)])),
+  vi: Object.fromEntries(namespaces.map(ns => [ns, require(`./vi/${ns}.json`)])),
 };
 
-let currentLang: 'vi' | 'en' = 'vi';
-
-if (typeof window !== 'undefined') {
-  const json = localStorage.getItem(APP_KEY);
-  let dataStorage: { language?: string } = {};
-
-  if (json) {
-    try {
-      dataStorage = JSON.parse(json);
-    } catch {
-      dataStorage = {};
-    }
-  }
-
-  if (!dataStorage.language) {
-    dataStorage.language = 'vi';
-    localStorage.setItem(APP_KEY, JSON.stringify(dataStorage));
-  }
-
-  currentLang = dataStorage.language! as 'vi' | 'en';
-}
+const getLanguageFromCookie = (): 'vi' | 'en' => {
+  if (typeof document === 'undefined') return 'vi';
+  const match = document.cookie.match(/language=(vi|en)/);
+  return (match?.[1] as 'vi' | 'en') || 'vi';
+};
 
 if (!i18next.isInitialized) {
   i18next.use(initReactI18next).init({
@@ -69,11 +31,19 @@ if (!i18next.isInitialized) {
     fallbackLng: 'vi',
     debug: false,
     interpolation: { escapeValue: false },
-    ns: ['auth', 'validation', 'common', 'layout', 'navigation', 'profile'],
+    ns: [...namespaces],
     defaultNS: 'common',
-    lng: 'vi', // default language SSR
+    lng: 'vi',
   });
 }
 
-export { currentLang };
+export const syncLanguageFromCookie = () => {
+  if (typeof window === 'undefined') return;
+
+  const cookieLang = getLanguageFromCookie();
+  if (cookieLang !== i18next.language) {
+    i18next.changeLanguage(cookieLang);
+  }
+};
+
 export default i18next;
