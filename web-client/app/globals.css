@@ -3,6 +3,7 @@
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
+@import 'swiper/css/effect-fade';
 @import 'react-medium-image-zoom/dist/styles.css';
 
 @custom-variant dark (&:is(.dark *));
@@ -85,6 +86,8 @@
 
   /* custom colors */
   --color-link: #5aa7ff;
+  --swiper-navigation-color: #007aff;
+  --swiper-navigation-size: 30px;
 }
 
 .dark {
@@ -385,4 +388,65 @@ span:has(> [data-slot='dropdown-menu-arrow']) {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--background) 12%, transparent);
+  border: 1px solid color-mix(in oklch, var(--border) 100%, transparent);
+  border-radius: 9999px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  transition:
+    transform 200ms ease,
+    background-color 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease;
+}
+
+.swiper-button-next:hover {
+  transform: translateX(4px);
+  background-color: var(--background);
+}
+
+.swiper-button-prev:hover {
+  transform: translateX(-4px);
+  background-color: var(--background);
+}
+
+.swiper-button-next:active,
+.swiper-button-prev:active {
+  transform: scale(0.96);
+}
+
+.swiper-button-next.swiper-button-disabled,
+.swiper-button-prev.swiper-button-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.swiper-button-next {
+  right: 12px !important;
+}
+
+.swiper-button-prev {
+  left: 12px !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.swiper-button-next > .swiper-navigation-icon,
+.swiper-button-prev > .swiper-navigation-icon {
+  width: 12px;
+  height: 12px;
 }

@@ -61,13 +61,24 @@ export function formatDateFromISOString(dateString: string): string {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
   }).format(date);
   const resSplit = res.split(' ');
   return resSplit[0].includes(',')
     ? `${resSplit[0].split(',')[0]} ${resSplit[1]}`
-    : `${resSplit[0]} ${resSplit[1]}`;
+    : `${resSplit[1]} ${resSplit[0]}`;
 }
 
 export function formatWebsiteUrl(url: string): string {
-  return url.replace(/^https?:\/\//, '');
+  return url
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/\/$/, '');
+}
+
+export function normalizeWebsiteUrl(url: string): string {
+  const trimmedUrl = url.trim();
+  if (trimmedUrl === '') return trimmedUrl;
+  if (/^https?:\/\//i.test(trimmedUrl)) return trimmedUrl;
+  return `https://${trimmedUrl}`;
 }

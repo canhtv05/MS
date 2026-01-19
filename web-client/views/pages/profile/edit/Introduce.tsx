@@ -1,27 +1,14 @@
 'use client';
 
-import {
-  FaceBookBoldDuotoneIcon,
-  InstagramTwoOneIcon,
-  TiktokIcon,
-  XTwitterIcon,
-} from '@/components/animate-ui/icons';
-import { Input } from '@/components/customs/input';
 import { updateProfileSchema } from '@/validations/profile';
-import { MapPointWave } from '@solar-icons/react-perf/category/style/BoldDuotone';
 import Link from 'next/link';
-import { Controller, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { AddSquare } from '@solar-icons/react-perf/Outline';
 import { useTranslation } from 'react-i18next';
 
 export type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
-export interface IIntroduceContentProps {
-  form: UseFormReturn<UpdateProfileFormValues>;
-}
-
-const IntroduceContent = ({ form }: IIntroduceContentProps) => {
+const IntroduceContent = () => {
   const { t } = useTranslation('profile');
 
   const INTRODUCE_FIELDS = [

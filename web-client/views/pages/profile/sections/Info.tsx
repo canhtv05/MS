@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/customs/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
-import { formatDateFromISOString, formatWebsiteUrl } from '@/lib/utils';
+import { formatDateFromISOString, formatWebsiteUrl, normalizeWebsiteUrl } from '@/lib/utils';
 import {
   LinkMinimalistic2,
   Calendar,
@@ -132,7 +132,7 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
           {data?.introduce?.websiteUrl && (
             <Link
               title={formatWebsiteUrl(data.introduce.websiteUrl)}
-              href={formatWebsiteUrl(data.introduce.websiteUrl)}
+              href={normalizeWebsiteUrl(data.introduce.websiteUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-foreground/60 hover:text-foreground flex items-center gap-1 group"
@@ -149,7 +149,7 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
               <span className="text-foreground/40">
                 {t('joined')}{' '}
                 <span className="font-medium text-foreground/60">
-                  {formatDateFromISOString(data.createdDate).split(' ')[0]}
+                  {formatDateFromISOString(data.createdDate)}
                 </span>
               </span>
             </span>

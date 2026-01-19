@@ -150,7 +150,7 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
                   )}
                   {image?.createdAt && (
                     <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
-                      {formatDateFromISOString(image.createdAt).split(' ')[0]}
+                      {formatDateFromISOString(image.createdAt).split(' ')[1]}
                     </span>
                   )}
                 </button>

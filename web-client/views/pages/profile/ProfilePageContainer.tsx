@@ -152,7 +152,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="absolute bg-background! right-2 bottom-2 z-10"
+                className="absolute bg-background! right-2 px-[8px]! bottom-2 z-10"
                 variant="outline"
                 disabled={isUploading}
               >

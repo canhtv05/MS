@@ -16,12 +16,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { AltArrowDown } from '@solar-icons/react-perf/Outline';
-import { UpdateProfileFormValues } from './Introduce';
 import { IUserProfileDTO } from '@/types/profile';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
 import { useProfileModalStore } from '../use-profile-modal';
 import ChangeCover from '../modals/ChangeCover';
+import { UpdateProfileFormValues } from './Introduce';
 
 interface IProfileContainerProps {
   form: UseFormReturn<UpdateProfileFormValues>;
