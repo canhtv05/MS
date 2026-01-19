@@ -47,7 +47,7 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
               <Code code={data.bio} className="border-none">
                 <CodeBlock
                   className="max-h-[200px] px-0 pb-4 pt-1 custom-bg-1 transition-none"
-                  cursor={false}
+                  cursor={true}
                   lang={detectLanguage(data.bio)}
                   writing={true}
                 />

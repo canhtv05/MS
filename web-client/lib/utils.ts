@@ -1,3 +1,4 @@
+import { APP_KEY } from '@/utils/cookieUtils';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -42,6 +43,9 @@ export function formatNumberString(num: number | null | undefined): string {
 
 export function detectLocale(): string {
   if (typeof window !== 'undefined') {
+    const { language } = JSON.parse(localStorage.getItem(APP_KEY) || '{}') as { language: string };
+    if (language === 'vi') return 'vi-VN';
+    else if (language === 'en') return 'en-US';
     return navigator.language || navigator.languages?.[0] || 'vi-VN';
   }
 

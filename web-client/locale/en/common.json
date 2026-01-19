@@ -16,6 +16,7 @@
   },
   "button": {
     "accept": "Accept",
+    "accept_disabled": "Accept button is disabled",
     "close": "Close",
     "cancel": "Cancel",
     "confirm": "Confirm",

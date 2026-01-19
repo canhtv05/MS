@@ -55,7 +55,8 @@ const MOCK_POSTS: IFeedPost[] = [
       "Another day, another creative challenge! Here are some shots from today's photoshoot. The lighting and composition came out perfectly! 📸",
     images: [
       'https://images.unsplash.com/photo-1634193295627-1cdddf751ebf?w=800&q=80',
-      'https://images.unsplash.com/photo-1618556450994-a83a8bd57fbe?w=800&q=80',
+      'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800&q=80',
+      'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800&q=80',
       'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800&q=80',
     ],
     timestamp: '21 Aug at 2:30 PM',
@@ -75,7 +76,7 @@ const MOCK_POSTS: IFeedPost[] = [
       'Working on some exciting new projects! Stay tuned for more updates. The creative journey never stops! 💜✨',
     images: [
       'https://images.unsplash.com/photo-1618005198920-f0cb6201c115?w=800&q=80',
-      'https://images.unsplash.com/photo-1634170380000-c6a5c3d8c20c?w=800&q=80',
+      'https://images.unsplash.com/photo-1635322966219-b75ed372eb01?w=800&q=80',
     ],
     timestamp: '20 Aug at 9:45 AM',
     likes: 89,

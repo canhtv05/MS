@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { IProfileDTO } from '@/types/auth';
 import { MultipartFile } from '@/types/common';
-import { IChangeCoverByUrlReq, IUpdateBioProfileReq } from '@/types/profile';
+import { IChangeCoverByUrlReq, IDetailUserProfileDTO, IUpdateBioProfileReq } from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
 
@@ -38,7 +38,7 @@ export const useProfileMutation = () => {
       });
     },
     onSuccess: async data => {
-      setUserProfile(data?.data);
+      setUserProfile(data?.data as IDetailUserProfileDTO);
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
@@ -78,7 +78,7 @@ export const useProfileMutation = () => {
       });
     },
     onSuccess: async data => {
-      setUserProfile(data?.data);
+      setUserProfile(data?.data as IDetailUserProfileDTO);
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
@@ -115,7 +115,7 @@ export const useProfileMutation = () => {
       });
     },
     onSuccess: async data => {
-      setUserProfile(data?.data);
+      setUserProfile(data?.data as IDetailUserProfileDTO);
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
@@ -149,7 +149,7 @@ export const useProfileMutation = () => {
       });
     },
     onSuccess: async data => {
-      setUserProfile(data?.data);
+      setUserProfile(data?.data as IDetailUserProfileDTO);
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }

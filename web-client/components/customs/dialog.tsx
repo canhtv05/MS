@@ -11,10 +11,11 @@ import {
 import { Button } from '../animate-ui/components/buttons/button';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, startTransition, useCallback, useEffect } from 'react';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { XIcon } from '../animate-ui/icons';
 import { IconButton } from '../animate-ui/components/buttons/icon';
+import { toast } from 'sonner';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -80,7 +81,17 @@ const Dialog = <T extends FieldValues = FieldValues>({
     };
   }, [handleClose, isPending]);
 
-  const isAcceptDisabled = isPending || (form ? !form.formState.isValid : disableAccept);
+  const isAcceptDisabled =
+    disableAccept || isPending || (form ? !form.formState.isValid : disableAccept);
+  const handleAccept = () => {
+    if (isAcceptDisabled) {
+      toast.error(t('button.accept_disabled'), { id: 'accept-disabled-toast' });
+      return;
+    }
+    startTransition(() => {
+      onAccept?.();
+    });
+  };
 
   return (
     <DialogRoot open={open} onOpenChange={isOpen => !isOpen && handleClose()}>
@@ -154,9 +165,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
               suppressHydrationWarning
               className="w-auto"
               variant={'destructive'}
-              onClick={() => {
-                onAccept?.();
-              }}
+              onClick={handleAccept}
               type="submit"
               form={id}
               disabled={isAcceptDisabled}

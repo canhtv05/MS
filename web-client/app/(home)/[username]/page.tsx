@@ -9,4 +9,6 @@ const Profile = ({ params }: { params: Promise<IProfileParams> }) => {
   return <ProfilePageContainer params={params} />;
 };
 
-export default withAuth(Profile);
+export default withAuth<{ params: Promise<IProfileParams> }>(Profile, {
+  accessLevel: 'public',
+});

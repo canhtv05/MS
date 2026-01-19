@@ -10,6 +10,7 @@ import { useProfileStore } from '@/stores/profile';
 import { GET_USER_DETAIL_QUERY } from '../graphql/query';
 import { getGraphQLClient } from '@/utils/graphql';
 import { ResourceType } from '@/enums/common';
+import { useAuthStore } from '@/stores/auth';
 
 interface GetUserDetailResponse {
   userDetail: IDetailUserProfileDTO;
@@ -32,7 +33,7 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   });
 
   return {
@@ -83,6 +84,8 @@ export const useMyMediaHistoryInfiniteQuery = (
 };
 
 export const useUserProfileQuery = (username?: string, enabled: boolean = true) => {
+  const { user } = useAuthStore();
+  const { setUserProfile } = useProfileStore();
   let us = username || '';
   if (us.startsWith('@')) {
     us = us.slice(1);
@@ -99,6 +102,9 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
           size: 9,
         },
       );
+      if (us === user?.auth?.username) {
+        setUserProfile(res.userDetail);
+      }
       return res.userDetail;
     },
     enabled: enabled && !!us,

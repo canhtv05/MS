@@ -16,6 +16,7 @@
   },
   "button": {
     "accept": "Đồng ý",
+    "accept_disabled": "Nút đồng ý đã bị vô hiệu hóa",
     "close": "Đóng",
     "cancel": "Hủy",
     "confirm": "Xác nhận",

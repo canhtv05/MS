@@ -4,7 +4,7 @@ import { useMyMediaHistoryInfiniteQuery } from '@/services/queries/profile';
 import { useAuthStore } from '@/stores/auth';
 import Image from 'next/image';
 import { Skeleton } from '@/components/customs/skeleton';
-import { cn } from '@/lib/utils';
+import { cn, formatDateFromISOString } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { GalleryMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import { getDateLabel } from '@/utils/common';
@@ -150,7 +150,7 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
                   )}
                   {image?.createdAt && (
                     <span className="absolute bottom-2 right-2 text-white bg-black/50 p-1 px-2 text-xs rounded-lg">
-                      {image?.createdAt?.toLocaleString()?.split(' ')[1]}
+                      {formatDateFromISOString(image.createdAt).split(' ')[0]}
                     </span>
                   )}
                 </button>

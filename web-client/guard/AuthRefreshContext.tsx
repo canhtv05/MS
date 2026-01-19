@@ -1,31 +1,40 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useEffect, useState, startTransition } from 'react';
+import { useAuthStore } from '@/stores/auth';
+import cookieUtils from '@/utils/cookieUtils';
+import { useAuthQuery } from '@/services/queries/auth';
 
 interface AuthRefreshContextType {
   isRefreshing: boolean;
+  showLoadingGate: boolean;
 }
 
 const AuthRefreshContext = createContext<AuthRefreshContextType>({
   isRefreshing: false,
+  showLoadingGate: false,
 });
-
-let globalSetIsRefreshing: (value: boolean) => void = () => {};
 
 export const useAuthRefresh = () => useContext(AuthRefreshContext);
 
-export const setAuthRefreshing = (value: boolean) => {
-  globalSetIsRefreshing(value);
-};
-
 export const AuthRefreshProvider = ({ children }: { children: ReactNode }) => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const user = useAuthStore(state => state.user);
+  const authQuery = useAuthQuery(true);
+  const isAuthenticated = cookieUtils.getAuthenticated();
 
   useEffect(() => {
-    globalSetIsRefreshing = setIsRefreshing;
+    startTransition(() => {
+      setIsMounted(true);
+    });
   }, []);
 
+  const isRefreshing = isMounted && isAuthenticated && !user && !authQuery.isError;
+  const showLoadingGate = (!isMounted && isAuthenticated) || isRefreshing;
+
   return (
-    <AuthRefreshContext.Provider value={{ isRefreshing }}>{children}</AuthRefreshContext.Provider>
+    <AuthRefreshContext.Provider value={{ isRefreshing, showLoadingGate }}>
+      {children}
+    </AuthRefreshContext.Provider>
   );
 };

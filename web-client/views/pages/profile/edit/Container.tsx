@@ -3,18 +3,22 @@ import Dialog from '@/components/customs/dialog';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { useState } from 'react';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import { useAuthStore } from '@/stores/auth';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { updateProfileSchema } from '@/validations/profile';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Introduce from '../modals/Introduce';
 import { useTranslation } from 'react-i18next';
-import { IUserProfileDTO } from '@/types/profile';
+import { IUpdateBioProfileReq, IUserProfileDTO } from '@/types/profile';
 import { Gender, RelationshipStatus } from '@/enums/common';
 import { Skeleton } from '@/components/customs/skeleton';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
+import { useProfileStore } from '@/stores/profile';
+import { useProfileMutation } from '@/services/mutations/profile';
+import { IResponseObject } from '@/types/common';
+import { IProfileDTO } from '@/types/auth';
+import { useProfileModalStore } from '../use-profile-modal';
 
 type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
@@ -51,41 +55,57 @@ const EditProfileContainer = ({
 
 const Container = () => {
   const { t } = useTranslation('profile');
-  const { user } = useAuthStore();
-  const [open, setOpen] = useState(false);
+  const { userProfile } = useProfileStore();
+  const { updateBioProfileMutation } = useProfileMutation();
   const form = useForm<UpdateProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      bio: '',
-      city: '',
-      hometown: '',
-      jobTitle: '',
-      company: '',
-      school: '',
-      websiteUrl: '',
-      githubUrl: '',
-      linkedinUrl: '',
-      xUrl: '',
-      instagramUrl: '',
-      tiktokUrl: '',
-      facebookUrl: '',
+      bio: userProfile?.bio || '',
+      city: userProfile?.introduce?.city || '',
+      hometown: userProfile?.introduce?.hometown || '',
+      jobTitle: userProfile?.introduce?.jobTitle || '',
+      company: userProfile?.introduce?.company || '',
+      school: userProfile?.introduce?.school || '',
+      websiteUrl: userProfile?.introduce?.websiteUrl || '',
+      githubUrl: userProfile?.introduce?.githubUrl || '',
+      linkedinUrl: userProfile?.introduce?.linkedinUrl || '',
+      xUrl: userProfile?.introduce?.xUrl || '',
+      instagramUrl: userProfile?.introduce?.instagramUrl || '',
+      tiktokUrl: userProfile?.introduce?.tiktokUrl || '',
+      facebookUrl: userProfile?.introduce?.facebookUrl || '',
       dob: new Date(),
-      gender: Gender.GENDER_OTHER,
-      relationshipStatus: RelationshipStatus.RELATIONSHIP_STATUS_SINGLE,
-      phoneNumber: '',
-      interests: [],
+      gender: userProfile?.introduce?.gender || Gender.GENDER_OTHER,
+      relationshipStatus:
+        userProfile?.introduce?.relationshipStatus || RelationshipStatus.RELATIONSHIP_STATUS_SINGLE,
+      phoneNumber: userProfile?.introduce?.phoneNumber || '',
+      interests: userProfile?.introduce?.interests?.map(interest => interest.id) || [],
     },
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
+  const {
+    formState: { isDirty },
+  } = form;
+
   const onSubmit = (data: UpdateProfileFormValues) => {
-    console.log(data);
+    const payload: IUpdateBioProfileReq = {
+      bio: data.bio,
+    };
+    updateBioProfileMutation.mutate(payload, {
+      onSuccess: (data: IResponseObject<IProfileDTO>) => {
+        form.reset({ ...form.getValues(), bio: data.data.bio });
+      },
+    });
   };
 
   return (
     <>
       <div className="flex items-center justify-center gap-2">
-        <Button variant="default" className="gap-2" onClick={() => setOpen(true)}>
+        <Button
+          variant="default"
+          className="gap-2"
+          onClick={() => useProfileModalStore.getState().openEditContainer()}
+        >
           {t?.('edit_profile')}
         </Button>
         <IconButton variant="outline" className="cursor-pointer">
@@ -95,17 +115,17 @@ const Container = () => {
         </IconButton>
       </div>
       <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
+        open={useProfileModalStore.getState().isEditContainerOpen}
+        onClose={() => useProfileModalStore.getState().closeEditContainer()}
         title={t?.('edit_profile') || 'Edit Profile'}
         id="edit-profile"
         size="lg"
         hasBorder
         form={form}
+        disableAccept={!isDirty || form.formState.isSubmitting}
+        onAccept={form.handleSubmit(onSubmit)}
       >
-        <form onSubmit={form.handleSubmit(onSubmit)} id="update-profile-form">
-          <EditProfileContainer form={form} user={user?.profile} />
-        </form>
+        <EditProfileContainer form={form} user={userProfile} />
       </Dialog>
     </>
   );

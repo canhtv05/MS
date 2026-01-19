@@ -1,10 +1,9 @@
 import { create } from 'zustand';
-import { IProfileDTO } from '../types/auth';
-import { IImageHistoryDTO } from '../types/profile';
+import { IDetailUserProfileDTO, IImageHistoryDTO } from '../types/profile';
 
 interface ProfileState {
-  userProfile: IProfileDTO | undefined;
-  setUserProfile: (userProfile: IProfileDTO | undefined) => void;
+  userProfile: IDetailUserProfileDTO | undefined;
+  setUserProfile: (userProfile: IDetailUserProfileDTO | undefined) => void;
   mediaHistory: IImageHistoryDTO[] | undefined;
   setMediaHistory: (mediaHistory: IImageHistoryDTO[] | undefined) => void;
 }

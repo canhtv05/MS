@@ -2,20 +2,41 @@
 
 import ApiInterceptor from '@/services/interceptor';
 import { ThemeProvider } from 'next-themes';
-import { ReactNode } from 'react';
+import { ReactNode, startTransition, useEffect, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
-import RouteGuard from '@/guard/RouteGuard';
-import { AuthRefreshProvider } from '@/guard/AuthRefreshContext';
+import { AuthRefreshProvider, useAuthRefresh } from '@/guard/AuthRefreshContext';
 import { APP_CONFIGS } from '@/configs';
 import i18next from '@/locale/i18n';
+import LoadingPage from '@/views/pages/loading';
 
 import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
+import { useAuthQuery } from '@/services/queries/auth';
 
 interface AppLayoutProps {
   children: ReactNode;
   initialLanguage: 'vi' | 'en';
 }
+
+const AuthLoadingGate = ({ children }: { children: ReactNode }) => {
+  const { showLoadingGate } = useAuthRefresh();
+  const [isMounted, setIsMounted] = useState(true);
+  const { user } = useAuthQuery(true);
+
+  useEffect(() => {
+    if (user) {
+      startTransition(() => {
+        setIsMounted(false);
+      });
+    }
+  }, [user]);
+
+  if (isMounted || showLoadingGate) {
+    return <LoadingPage />;
+  }
+
+  return <>{children}</>;
+};
 
 const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
   if (i18next.language !== initialLanguage) {
@@ -34,9 +55,9 @@ const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
         <ThemeTransitionHandler />
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>
-            <ApiInterceptor>
-              <RouteGuard>{children}</RouteGuard>
-            </ApiInterceptor>
+            <AuthLoadingGate>
+              <ApiInterceptor>{children}</ApiInterceptor>
+            </AuthLoadingGate>
           </AuthRefreshProvider>
         </QueryClientProvider>
         <Toaster richColors position="bottom-right" theme="light" />

@@ -20,6 +20,8 @@ import { UpdateProfileFormValues } from './Introduce';
 import { IUserProfileDTO } from '@/types/profile';
 import { useTheme } from 'next-themes';
 import { useTranslation } from 'react-i18next';
+import { useProfileModalStore } from '../use-profile-modal';
+import ChangeCover from '../modals/ChangeCover';
 
 interface IProfileContainerProps {
   form: UseFormReturn<UpdateProfileFormValues>;
@@ -69,6 +71,7 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
         <div className="flex items-center justify-between">
           <h3 className="md:text-lg font-semibold">{t('avatar_image')}</h3>
           <Button
+            onClick={() => useProfileModalStore.getState().openParentDialog()}
             variant="ghost"
             className="text-primary md:text-lg font-semibold hover:bg-primary/10"
           >
@@ -99,6 +102,8 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
         <div className="flex items-center justify-between">
           <h3 className="md:text-lg font-semibold">{t('cover_image')}</h3>
           <Button
+            // onClick={() => useProfileModalStore.getState().openCoverHistoryDialog()}
+            onClick={() => useProfileModalStore.getState().openChangeCover()}
             variant="ghost"
             className="text-primary md:text-lg font-semibold hover:bg-primary/10"
           >
@@ -240,6 +245,10 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
               )}
             </div>
           )}
+        />
+        <ChangeCover
+          open={useProfileModalStore.getState().isChangeCoverOpen}
+          setOpen={() => useProfileModalStore.getState().closeChangeCover()}
         />
       </div>
     </>

@@ -27,6 +27,8 @@ export const useAuthQuery = (enabled: boolean = true) => {
         return data.me;
       } catch (error) {
         if (error instanceof AxiosError && error?.response?.status === 401) {
+          cookieUtils.clearAuthenticated();
+          setUser(undefined);
           return null as unknown as IUserProfileDTO;
         }
         throw error;
@@ -37,7 +39,7 @@ export const useAuthQuery = (enabled: boolean = true) => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnReconnect: false,
     networkMode: 'offlineFirst',
   });

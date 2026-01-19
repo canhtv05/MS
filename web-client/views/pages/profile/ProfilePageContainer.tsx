@@ -28,6 +28,7 @@ import Dialog from '@/components/customs/dialog';
 import { Skeleton } from '@/components/customs/skeleton';
 import ChooseImage from './modals/ChooseImage';
 import { getImageSrcOrNull } from '@/lib/image-utils';
+import { useProfileModalStore } from './use-profile-modal';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -51,10 +52,11 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
     showConfirmChangeCoverUrl,
     confirmUpload,
     cancelUpload,
-    showDialogMediaHistory,
-    setShowDialogMediaHistory,
-    selectedCoverFromHistory,
-    setSelectedCoverFromHistory,
+    isCoverHistoryDialogOpen,
+    openCoverHistoryDialog,
+    closeCoverHistoryDialog,
+    selectedCoverUrl,
+    setSelectedCoverUrl,
     handleChangeCoverFromHistory,
   } = useProfile({
     username: decodedUsername.startsWith('@') ? decodedUsername.slice(1) : decodedUsername,
@@ -92,6 +94,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
           accept="image/*"
           onChange={handleFileChange}
           className="hidden"
+          name="input-cover-image-ref"
         />
         {(() => {
           if (isLoading) {
@@ -104,7 +107,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
 
           const coverSrc =
             getImageSrcOrNull(coverImagePreview) ||
-            getImageSrcOrNull(selectedCoverFromHistory) ||
+            getImageSrcOrNull(selectedCoverUrl) ||
             getImageSrcOrNull(data?.coverUrl) ||
             getImageSrcOrNull(user?.profile?.coverUrl);
 
@@ -159,11 +162,21 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={-2}>
               <DropdownMenuArrow />
-              <DropdownMenuItem onClick={() => setShowDialogMediaHistory(true)}>
+              <DropdownMenuItem
+                onClick={() => {
+                  useProfileModalStore.getState().setIsClickModalEdit(false);
+                  openCoverHistoryDialog();
+                }}
+              >
                 <Gallery />
                 <span className="md:text-sm text-xs">{t('profile:choose_cover_image')}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={triggerFileInput}>
+              <DropdownMenuItem
+                onClick={() => {
+                  useProfileModalStore.getState().setIsClickModalEdit(false);
+                  triggerFileInput();
+                }}
+              >
                 <GallerySend />
                 <span className="md:text-sm text-xs">{t('profile:upload_new_cover')}</span>
               </DropdownMenuItem>
@@ -179,22 +192,19 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
         <Tabs data={data} isLoading={isLoading} />
       </div>
       <Dialog
-        open={showDialogMediaHistory}
+        open={isCoverHistoryDialogOpen}
         onClose={() => {
-          setShowDialogMediaHistory(false);
-          setSelectedCoverFromHistory(null);
+          closeCoverHistoryDialog();
+          setSelectedCoverUrl(null);
         }}
         onAccept={handleChangeCoverFromHistory}
         title={t('profile:choose_image')}
         id="confirm-cover-upload"
         size="lg"
-        disableAccept={!selectedCoverFromHistory || isUploading}
+        disableAccept={!selectedCoverUrl || isUploading}
         isPending={isUploading}
       >
-        <ChooseImage
-          onSelect={setSelectedCoverFromHistory}
-          selectedUrl={selectedCoverFromHistory}
-        />
+        <ChooseImage onSelect={setSelectedCoverUrl} selectedUrl={selectedCoverUrl} />
       </Dialog>
       {showConfirmChangeCoverUrl && (
         <div className="fixed top-0 right-0 bottom-0 left-0 z-50 bg-background h-[60px] flex items-center justify-between md:px-6 px-4">

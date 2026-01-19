@@ -107,7 +107,15 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
                     : 'aspect-square'
               }`}
             >
-              <Image src={image} alt={`Post image ${index + 1}`} fill className="object-cover" />
+              <Image
+                src={image}
+                alt={`Post image ${index + 1}`}
+                fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                unoptimized
+                loading="eager"
+                className="object-cover"
+              />
               {post.images && post.images.length > 4 && index === 3 && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
                   <span className="text-3xl font-bold text-white">+{post.images.length - 4}</span>

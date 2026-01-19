@@ -79,28 +79,9 @@ export const updateProfileSchema = z.object({
       t('validation:string.url', { field: t('profile:xUrl') }),
     ),
   dob: z.date().optional().default(new Date()),
-  gender: z
-    .enum([
-      Gender.GENDER_MALE,
-      Gender.GENDER_FEMALE,
-      Gender.GENDER_OTHER,
-      Gender.GENDER_UNSPECIFIED,
-    ])
-    .optional()
-    .default(Gender.GENDER_OTHER),
+  gender: z.enum(Gender).optional().default(Gender.GENDER_OTHER),
   relationshipStatus: z
-    .enum([
-      RelationshipStatus.RELATIONSHIP_STATUS_SINGLE,
-      RelationshipStatus.RELATIONSHIP_STATUS_IN_A_RELATIONSHIP,
-      RelationshipStatus.RELATIONSHIP_STATUS_ENGAGED,
-      RelationshipStatus.RELATIONSHIP_STATUS_MARRIED,
-      RelationshipStatus.RELATIONSHIP_STATUS_ITS_COMPLICATED,
-      RelationshipStatus.RELATIONSHIP_STATUS_IN_LOVE,
-      RelationshipStatus.RELATIONSHIP_STATUS_WIDOWED,
-      RelationshipStatus.RELATIONSHIP_STATUS_SEPARATED,
-      RelationshipStatus.RELATIONSHIP_STATUS_DIVORCED,
-      RelationshipStatus.RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP,
-    ])
+    .enum(RelationshipStatus)
     .optional()
     .default(RelationshipStatus.RELATIONSHIP_STATUS_SINGLE),
   phoneNumber: z
