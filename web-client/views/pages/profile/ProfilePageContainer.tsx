@@ -105,11 +105,13 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
             );
           }
 
-          const coverSrc =
-            getImageSrcOrNull(coverImagePreview) ||
-            getImageSrcOrNull(selectedCoverUrl) ||
-            getImageSrcOrNull(data?.coverUrl) ||
-            getImageSrcOrNull(user?.profile?.coverUrl);
+          const isOwnProfile = user?.auth?.username === data?.userId;
+          const coverSrc = isOwnProfile
+            ? getImageSrcOrNull(coverImagePreview) ||
+              getImageSrcOrNull(selectedCoverUrl) ||
+              getImageSrcOrNull(data?.coverUrl) ||
+              getImageSrcOrNull(user?.profile?.coverUrl)
+            : getImageSrcOrNull(data?.coverUrl);
 
           if (coverSrc && coverSrc.trim() !== '') {
             return (

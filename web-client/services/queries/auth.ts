@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ME_QUERY } from '../graphql/query';
 import { AxiosError } from 'axios';
 
-interface MeQueryResponse {
+export interface MeQueryResponse {
   me: IUserProfileDTO;
 }
 
@@ -35,13 +35,7 @@ export const useAuthQuery = (enabled: boolean = true) => {
       }
     },
     enabled: enabled && isAuthenticated && !user,
-    retry: 1,
     staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
-    refetchOnReconnect: false,
-    networkMode: 'offlineFirst',
   });
 
   if (user) {

@@ -21,6 +21,7 @@ public class UserProfilePrivacyDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     String id;
+    String userId;
     PrivacyLevel profileVisibility;
     PrivacyLevel friendsVisibility;
     PrivacyLevel postsVisibility;

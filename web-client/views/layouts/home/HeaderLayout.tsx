@@ -185,7 +185,7 @@ const HeaderLayout = () => {
                         <LockPassword className="text-foreground/70" />
                         <span suppressHydrationWarning>{t('header.change_password')}</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => router.push('/settings')}>
                         <div className="flex items-center justify-center gap-2">
                           <Settings />
                           <span suppressHydrationWarning>{t('header.settings')}</span>

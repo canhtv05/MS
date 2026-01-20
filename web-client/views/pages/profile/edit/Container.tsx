@@ -19,6 +19,7 @@ import { useProfileMutation } from '@/services/mutations/profile';
 import { IResponseObject } from '@/types/common';
 import { IProfileDTO } from '@/types/auth';
 import { useProfileModalStore } from '../use-profile-modal';
+import { useRouter } from 'next/navigation';
 
 type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
@@ -56,6 +57,7 @@ const EditProfileContainer = ({
 const Container = () => {
   const { t } = useTranslation('profile');
   const { userProfile } = useProfileStore();
+  const router = useRouter();
   const { updateBioProfileMutation } = useProfileMutation();
   const form = useForm<UpdateProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
@@ -108,7 +110,11 @@ const Container = () => {
         >
           {t?.('edit_profile')}
         </Button>
-        <IconButton variant="outline" className="cursor-pointer">
+        <IconButton
+          onClick={() => router.push('/settings')}
+          variant="outline"
+          className="cursor-pointer"
+        >
           <div className="flex items-center justify-center w-full h-full">
             <Settings />
           </div>

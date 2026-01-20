@@ -103,6 +103,22 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
     };
   }, [isParentDialogOpen]);
 
+  const getImage = (): string => {
+    const isOwnProfile = user?.auth?.username === data?.userId;
+
+    const avatarSrc = getValidImageSrc(
+      isOwnProfile
+        ? avatarFilePreview ||
+            selectedCoverFromHistory ||
+            userProfile?.avatarUrl ||
+            user?.profile?.avatarUrl ||
+            data?.avatarUrl
+        : data?.avatarUrl,
+      images.avt1.src,
+    );
+    return avatarSrc;
+  };
+
   return (
     <>
       {isLoading && !data ? (
@@ -119,24 +135,16 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
         <div className="flex flex-col flex-1 lg:flex-row items-center lg:items-end lg:gap-4 gap-0 w-full min-w-0">
           <div className="relative -mt-16 shrink-0 z-10">
             {(() => {
-              const avatarSrc = getValidImageSrc(
-                avatarFilePreview ||
-                  selectedCoverFromHistory ||
-                  user?.profile?.avatarUrl ||
-                  userProfile?.avatarUrl ||
-                  data?.avatarUrl,
-                images.avt1.src,
-              );
               return (
                 <div className="relative w-32 h-32 aspect-square">
-                  {avatarSrc && avatarSrc.trim() !== '' && (
+                  {getImage() && getImage().trim() !== '' && (
                     <ControlledZoom
                       isZoomed={isClickViewAvatar}
                       onZoomChange={setIsClickViewAvatar}
                       classDialog="!z-[9999]"
                       zoomMargin={20}
                       zoomImg={{
-                        src: avatarSrc,
+                        src: getImage(),
                         alt: 'Avatar',
                         loading: 'eager',
                       }}
@@ -145,7 +153,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                         <div className="relative w-full h-full">
                           <Image
                             fill
-                            src={avatarSrc}
+                            src={getImage()}
                             alt="Avatar"
                             className="rounded-full object-cover opacity-0"
                             loading="eager"
@@ -168,7 +176,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                             width={128}
                             height={128}
                             className="rounded-full cursor-pointer"
-                            src={avatarSrc}
+                            src={getImage()}
                             alt={user?.profile?.fullname || userProfile?.fullname || data?.fullname}
                           />
                           <AvatarFallback className="text-2xl font-bold">

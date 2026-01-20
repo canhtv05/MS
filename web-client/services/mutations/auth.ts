@@ -22,6 +22,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { MeQueryResponse } from '../queries/auth';
+import { getGraphQLClient } from '@/utils/graphql';
+import { ME_QUERY } from '../graphql/query';
+import { logger } from '@/lib/logger';
 
 export const useAuthMutation = () => {
   const [showResendEmail, setShowResendEmail] = useState(false);
@@ -57,6 +61,28 @@ export const useAuthMutation = () => {
         const { authenticate } = res.data;
         cookieUtils.setAuthenticated(true);
         queryClient.removeQueries({ queryKey: ['auth', 'me'] });
+
+        if (!authenticate) {
+          logger.error('User not authenticated');
+          toast.error(t('sign_in.login_failed'), { id: 'login-toast' });
+          return;
+        }
+
+        try {
+          await queryClient.fetchQuery({
+            queryKey: ['auth', 'me'],
+            queryFn: async () => {
+              const client = getGraphQLClient();
+              const data = await client.request<MeQueryResponse>(ME_QUERY);
+              useAuthStore.getState().setUser(data.me);
+              return data.me;
+            },
+          });
+        } catch (err) {
+          logger.error('Get user profile failed', err);
+          toast.error(t('sign_in.login_failed'), { id: 'login-toast' });
+          return;
+        }
 
         if (returnUrl) {
           router.push(decodeURIComponent(returnUrl));

@@ -13,7 +13,6 @@ export const USER_PROFILE_FRAGMENTS = `
   }
 
   fragment UserProfilePrivacyFragment on UserProfilePrivacyDTO {
-    id
     profileVisibility
     friendsVisibility
     postsVisibility

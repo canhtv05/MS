@@ -72,6 +72,7 @@ public class UserProfileMapper {
         }
         return UserProfilePrivacyDTO.builder()
             .id(ConvertProto.nullToEmpty(userProfilePrivacyDTO.getId()))
+            .userId(ConvertProto.nullToEmpty(userProfilePrivacyDTO.getUserId()))
             .profileVisibility(userProfilePrivacyDTO.getProfileVisibility())
             .friendsVisibility(userProfilePrivacyDTO.getFriendsVisibility())
             .postsVisibility(userProfilePrivacyDTO.getPostsVisibility())

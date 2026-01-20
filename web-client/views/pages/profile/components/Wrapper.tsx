@@ -1,6 +1,5 @@
 'use client';
 
-import { Skeleton } from '@/components/customs/skeleton';
 import Show from '@/components/Show';
 import { ReactNode } from 'react';
 
