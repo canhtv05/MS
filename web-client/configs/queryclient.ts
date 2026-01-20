@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import cookieUtils from '@/utils/cookieUtils';
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -31,18 +32,18 @@ const queryClient = new QueryClient({
   },
   queryCache: new QueryCache({
     onSuccess(data, query) {
-      console.log('✅ QueryCache Success:', {
+      logger.log('✅ QueryCache Success:', {
         queryKey: query.queryKey,
         hasData: !!data,
       });
     },
     onError(error, query) {
-      console.log('🔴 QueryCache Error:', error);
-      console.log('Query Key:', query.queryKey);
+      logger.error('🔴 QueryCache Error:', error);
+      logger.log('Query Key:', query.queryKey);
 
       if (error instanceof AxiosError) {
         if (error.status === 401) {
-          console.log('Handling 401 in QueryCache');
+          logger.log('Handling 401 in QueryCache');
           cookieUtils.clearAuthenticated();
           queryClient.setQueryData(['auth', 'me'], undefined);
           queryClient.setQueryData(['profile', 'me'], undefined);
@@ -52,7 +53,7 @@ const queryClient = new QueryClient({
       }
     },
     onSettled(data, error, query) {
-      console.log('🏁 QueryCache Settled:', {
+      logger.log('🏁 QueryCache Settled:', {
         queryKey: query.queryKey,
         hasData: !!data,
         hasError: !!error,
@@ -62,12 +63,12 @@ const queryClient = new QueryClient({
   }),
   mutationCache: new MutationCache({
     onError(error, _variables, _context, mutation) {
-      console.log('🔴 MutationCache Error:', error);
-      console.log('Mutation Key:', mutation.options.mutationKey);
+      logger.error('🔴 MutationCache Error:', error);
+      logger.log('Mutation Key:', mutation.options.mutationKey);
 
       if (error instanceof AxiosError) {
         if (error?.response?.status === 401) {
-          console.log('Handling 401 in MutationCache');
+          logger.log('Handling 401 in MutationCache');
           cookieUtils.clearAuthenticated();
           queryClient.setQueryData(['auth', 'me'], undefined);
           // queryClient.setQueryData(['profile', 'me'], undefined);

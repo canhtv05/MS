@@ -24,11 +24,9 @@ const AuthLoadingGate = ({ children }: { children: ReactNode }) => {
   const { user } = useAuthQuery(true);
 
   useEffect(() => {
-    if (user) {
-      startTransition(() => {
-        setIsMounted(false);
-      });
-    }
+    startTransition(() => {
+      setIsMounted(false);
+    });
   }, [user]);
 
   if (isMounted || showLoadingGate) {

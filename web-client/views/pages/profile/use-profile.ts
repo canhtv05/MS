@@ -71,7 +71,6 @@ const useProfile = ({ username }: { username: string }) => {
       setCoverImagePreview(null);
       setPendingFile(null);
       setShowConfirmChangeCoverUrl(false);
-      console.log(useProfileModalStore.getState().isClickModalEdit);
       if (!useProfileModalStore.getState().isClickModalEdit) return;
       useProfileModalStore.getState().resetCoverUpload();
       useProfileModalStore.getState().openEditContainer();
@@ -95,8 +94,6 @@ const useProfile = ({ username }: { username: string }) => {
     setCoverImagePreview(null);
     setPendingFile(null);
     setShowConfirmChangeCoverUrl(false);
-    console.log(useProfileModalStore.getState().isClickModalEdit);
-
     if (!useProfileModalStore.getState().isClickModalEdit) return;
     useProfileModalStore.getState().resetCoverUpload();
     useProfileModalStore.getState().openEditContainer();

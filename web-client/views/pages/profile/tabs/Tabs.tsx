@@ -27,6 +27,8 @@ import Wrapper from '../components/Wrapper';
 import ImageSection from '../sections/ImageSection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import FriendSection from '../sections/FriendSection';
+import { Skeleton } from '@/components/customs/skeleton';
+import Show from '@/components/Show';
 
 export interface ITabs {
   id: string;
@@ -109,81 +111,100 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
 
   return (
     <div className="w-full border-t dark:border-foreground/20">
-      <div className="relative px-4 rounded-b-lg w-full custom-bg-1 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+      <div className="relative px-3 rounded-b-lg w-full custom-bg-1 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
         <div className="relative">
           <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
           <div className="relative">
             <div className="flex">
-              {visibleTabs.map((tab, index) => (
-                <button
-                  key={tab.id}
-                  className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer
+              <Show
+                when={!isLoading}
+                fallback={Array.from({ length: mounted ? maxVisible : 3 }).map((_, index) => (
+                  <div key={index} className="flex-1 py-1 px-0 mx-1.5">
+                    <Skeleton className="h-8 w-full rounded-md" />
+                  </div>
+                ))}
+              >
+                {visibleTabs.map((tab, index) => (
+                  <button
+                    key={tab.id}
+                    className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer
                   ${
                     activeTab === index
                       ? 'text-primary'
                       : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
                   }`}
-                  onClick={() => handleTabClick(index)}
-                  onMouseEnter={() => setHoverIndex(index)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                >
-                  <div className="flex gap-2 items-center justify-center">
-                    {tab.icon}
-                    <span className="truncate">{t(tab.labelKey)}</span>
+                    onClick={() => handleTabClick(index)}
+                    onMouseEnter={() => setHoverIndex(index)}
+                    onMouseLeave={() => setHoverIndex(null)}
+                  >
+                    <div className="flex gap-2 items-center justify-center">
+                      {tab.icon}
+                      <span className="truncate">{t(tab.labelKey)}</span>
+                    </div>
+                  </button>
+                ))}
+              </Show>
+              <Show
+                when={!isLoading}
+                fallback={
+                  <div className="flex-1 py-1 px-0 mx-1.5 mr-0">
+                    <Skeleton className="h-full w-full" />
                   </div>
-                </button>
-              ))}
-
-              {showDropdown && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
+                }
+              >
+                {showDropdown && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
                       ${
                         isHiddenActive
                           ? 'text-primary'
                           : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
                       }`}
-                      onMouseEnter={() => setHoverIndex(visibleTabs.length)}
-                      onMouseLeave={() => setHoverIndex(null)}
-                    >
-                      <div className="flex gap-1 items-center justify-center">
-                        <span className="truncate">{t('more') || 'More'}</span>
-                        <AltArrowDown size={14} className="mt-[2px]" />
-                      </div>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="group">
-                    <DropdownMenuArrow />
-                    {hiddenTabs.map(tab => (
-                      <DropdownMenuItem
-                        key={tab.id}
-                        onClick={() => handleHiddenTabSelect(tab.id)}
-                        className={cn(
-                          'cursor-pointer outline-none focus:bg-muted/50 transition-[background-color] duration-200',
-                          'text-muted-foreground focus:text-primary!',
-                          activeTabId === tab.id
-                            ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'
-                            : '',
-                        )}
+                        onMouseEnter={() => setHoverIndex(visibleTabs.length)}
+                        onMouseLeave={() => setHoverIndex(null)}
                       >
-                        <div className="flex gap-2 items-center">
-                          {tab.icon}
-                          {t(tab.labelKey)}
+                        <div className="flex gap-1 items-center justify-center">
+                          <span className="truncate">{t('more') || 'More'}</span>
+                          <AltArrowDown size={14} className="mt-[2px]" />
                         </div>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="group">
+                      <DropdownMenuArrow />
+                      {hiddenTabs.map(tab => (
+                        <DropdownMenuItem
+                          key={tab.id}
+                          onClick={() => handleHiddenTabSelect(tab.id)}
+                          className={cn(
+                            'cursor-pointer outline-none focus:bg-muted/50 transition-[background-color] duration-200',
+                            'text-muted-foreground focus:text-primary!',
+                            activeTabId === tab.id
+                              ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'
+                              : '',
+                          )}
+                        >
+                          <div className="flex gap-2 items-center">
+                            {tab.icon}
+                            {t(tab.labelKey)}
+                          </div>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </Show>
             </div>
-            <div
-              className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,transform] duration-300 ease-out"
-              style={{
-                width: `${100 / renderItemsCount}%`,
-                transform: `translateX(${indicatorIndex * 100}%)`,
-              }}
-            />
+            <Show when={!isLoading}>
+              <div
+                className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,transform] duration-300 ease-out"
+                style={{
+                  width: `calc(${100 / renderItemsCount}%)`,
+                  transform: `translateX(${indicatorIndex * 100}%)`,
+                }}
+              ></div>
+            </Show>
           </div>
         </div>
       </div>
@@ -195,8 +216,15 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             </Wrapper>
             <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
               <Wrapper
+                fallback={
+                  <div className="p-3 flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                    <Skeleton className="h-10 w-full rounded-md" />
+                    <ImageSection data={data} isLoading={isLoading} />
+                  </div>
+                }
                 title={t('pictures')}
                 description={t('pictures_description')}
+                isLoading={isLoading}
                 button={
                   <Button size={'sm'} variant="secondary">
                     <span className="font-bold text-foreground/70">{t('common:button.view')}</span>
@@ -206,6 +234,13 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                 <ImageSection data={data} isLoading={isLoading} />
               </Wrapper>
               <Wrapper
+                fallback={
+                  <div className="p-3 flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                    <Skeleton className="h-10 w-full rounded-md" />
+                    <ImageSection data={data} isLoading={isLoading} />
+                  </div>
+                }
+                isLoading={isLoading}
                 title={t('friends')}
                 description={t('friends_description')}
                 button={

@@ -4,6 +4,7 @@ import { api, handleRedirectLogin } from '@/utils/api';
 import cookieUtils from '../utils/cookieUtils';
 import { getClientContext } from '@/utils/client-context';
 import { ReactNode } from 'react';
+import { logger } from '@/lib/logger';
 
 interface IApiInterceptor {
   children: ReactNode;
@@ -56,7 +57,7 @@ api.interceptors.response.use(
   async error => {
     // gateway xử lý refresh token
     if (error.response?.status === 401) {
-      console.log('[Interceptor] Unauthorized (401), logging out');
+      logger.log('[Interceptor] Unauthorized (401), logging out');
       handleLogout(true);
       return Promise.reject(error);
     }
