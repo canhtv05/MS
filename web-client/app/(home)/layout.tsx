@@ -15,8 +15,10 @@ const RootHomeLayout = ({ children, settings }: IRootHomeLayoutProps) => {
   return (
     <div className={wrapperClassName}>
       <HeaderLayout />
+      {/* Children layer (feed, profile, etc.) */}
       {children}
-      {settings}
+      {/* Settings layer - overlay on top */}
+      {/* {settings} */}
     </div>
   );
 };

@@ -149,12 +149,12 @@
 
 @layer base {
   html {
-    scrollbar-gutter: stable !important;
+    /* scrollbar-gutter: stable; */
   }
 
   :root {
-    --removed-body-scroll-bar-size: 0px !important;
-    --scrollbar-width: 0px !important;
+    --removed-body-scroll-bar-size: 0px;
+    --scrollbar-width: 0px;
   }
 
   body {

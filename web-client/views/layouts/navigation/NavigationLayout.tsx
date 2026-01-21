@@ -21,7 +21,7 @@ const NavigationLayout = () => {
         isCollapsed ? 'lg:w-(--sidebar-width)' : 'lg:w-64',
       )}
     >
-      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-(--sp-layout) w-full">
+      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-4 w-full">
         <div className="md:block hidden w-full">
           <NavigationHeader isCollapsed={effectiveCollapsed} />
         </div>
