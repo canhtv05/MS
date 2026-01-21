@@ -35,7 +35,6 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
 
   return (
     <div className="fixed inset-0 z-60 md:bg-transparent bg-black/50 overflow-hidden">
-      <div className="md:hidden block fixed left-0 top-0 z-60! h-[60px] w-full bg-red-500">ok</div>
       <div className="fixed top-15 left-0 right-0 bottom-0 h-5 z-40 custom-bg-2 w-full"></div>
       <div className="absolute top-15 inset-0 custom-bg-2">
         <div className="fixed md:block hidden top-4 md:top-20 left-4 md:left-6 z-20">

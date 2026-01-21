@@ -26,7 +26,7 @@ type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 const ProfileContainerDynamic = dynamic(() => import('./ProfileContainer'), {
   ssr: false,
   loading: () => (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {new Array(4).fill(0).map((_, idx: number) => (
         <div key={idx} className="flex flex-col gap-2 items-center justify-center">
           <Skeleton className="h-10 w-full" />
@@ -47,7 +47,7 @@ const EditProfileContainer = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <ProfileContainerDynamic form={form} user={user} />
       <Introduce form={form} open={open} setOpen={setOpen} />
     </div>
