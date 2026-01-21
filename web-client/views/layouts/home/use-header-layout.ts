@@ -51,7 +51,7 @@ const useHeaderLayout = () => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') {
         e.preventDefault();
         if (user?.auth?.username) {
-          router.push(`/@${user.auth.username}`);
+          router.push(`/user/@${user.auth.username}`);
         }
       } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();

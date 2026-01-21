@@ -208,13 +208,13 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
           </div>
         </div>
       </div>
-      <div className="mt-3 w-full rounded-lg">
-        <div className="flex lg:flex-row flex-col gap-3 items-start justify-between">
-          <div className="lg:w-[40%] w-full flex flex-col gap-3 h-auto">
+      <div className="mt-4 w-full rounded-lg">
+        <div className="flex lg:flex-row flex-col gap-4 items-start justify-between">
+          <div className="lg:w-[40%] w-full flex flex-col gap-4 h-auto">
             <Wrapper title={t('introduce')}>
               <IntroduceSection data={data} isLoading={isLoading} />
             </Wrapper>
-            <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
+            <div className="flex md:flex-row lg:flex-col flex-col gap-4 w-full h-full justify-between">
               <Wrapper
                 fallback={
                   <div className="p-3 flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">

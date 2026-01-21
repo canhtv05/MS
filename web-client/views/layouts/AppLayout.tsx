@@ -5,13 +5,14 @@ import { ThemeProvider } from 'next-themes';
 import { ReactNode, startTransition, useEffect, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
-import { AuthRefreshProvider, useAuthRefresh } from '@/guard/AuthRefreshContext';
+import { AuthRefreshProvider, useAuthRefresh } from '@/contexts/AuthRefreshContext';
 import { APP_CONFIGS } from '@/configs';
 import i18next from '@/locale/i18n';
 import LoadingPage from '@/views/pages/loading';
 
 import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
 import { useAuthQuery } from '@/services/queries/auth';
+import { NavigationProvider } from '@/contexts/NavigationContext';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -54,7 +55,9 @@ const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>
             <AuthLoadingGate>
-              <ApiInterceptor>{children}</ApiInterceptor>
+              <NavigationProvider>
+                <ApiInterceptor>{children}</ApiInterceptor>
+              </NavigationProvider>
             </AuthLoadingGate>
           </AuthRefreshProvider>
         </QueryClientProvider>

@@ -2,14 +2,14 @@
 
 import { AltArrowLeft, AltArrowRight } from '@solar-icons/react-perf/Outline';
 import NavigationMenu from './NavigationMenu';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import NavigationHeader from './NavigationHeader';
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
+import { useNavigation } from '@/contexts/NavigationContext';
 
 const NavigationLayout = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { isCollapsed, setIsCollapsed } = useNavigation();
   const { width } = useViewport();
   const effectiveCollapsed = isCollapsed && width >= Viewport.LG;
 
@@ -20,7 +20,7 @@ const NavigationLayout = () => {
         effectiveCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
       )}
     >
-      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-3 w-full">
+      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-4 w-full">
         <div className="md:block hidden w-full">
           <NavigationHeader isCollapsed={effectiveCollapsed} />
         </div>
