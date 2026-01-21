@@ -2,20 +2,33 @@
 
 import { ReactNode } from 'react';
 import Show from './Show';
+import { useNavigation } from '@/contexts/NavigationContext';
 import { cn } from '@/lib/utils';
-import { useNavigation } from '@/contexts/navigation-context';
 
 interface ILayoutContainerProps {
   children: ReactNode;
   navigation?: ReactNode;
   sidebar?: ReactNode;
+  className?: string;
+  minHeightClassName?: string;
 }
 
-const LayoutContainer = ({ children, navigation, sidebar }: ILayoutContainerProps) => {
+const LayoutContainer = ({
+  children,
+  navigation,
+  sidebar,
+  className,
+  minHeightClassName = 'min-h-screen',
+}: ILayoutContainerProps) => {
   const { isCollapsed } = useNavigation();
-
   return (
-    <div className="flex relative items-start justify-center bg-[#F9FBFC] pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 dark:bg-gray-900 min-h-screen w-full">
+    <div
+      className={cn(
+        'flex relative items-start justify-center bg-[#F9FBFC] pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 dark:bg-gray-900 w-full box-border',
+        minHeightClassName,
+        className,
+      )}
+    >
       <Show when={!!navigation}>
         <div
           className={cn(
@@ -34,7 +47,11 @@ const LayoutContainer = ({ children, navigation, sidebar }: ILayoutContainerProp
         </div>
       </Show>
       <div className="fixed top-(--header-height) left-0 right-0 bottom-0 h-(--sp-layout) z-40 bg-[#F9FBFC] dark:bg-gray-900 w-full"></div>
-      <main className="relative w-full flex-1 md:mb-0 mb-17 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout)">
+      <main
+        className={cn(
+          'relative w-full flex-1 md:mb-0 mb-17 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout)',
+        )}
+      >
         {children}
       </main>
       <Show when={!!sidebar}>

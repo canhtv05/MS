@@ -128,11 +128,10 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                   <button
                     key={tab.id}
                     className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer
-                  ${
-                    activeTab === index
-                      ? 'text-primary'
-                      : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
-                  }`}
+                  ${activeTab === index
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
+                      }`}
                     onClick={() => handleTabClick(index)}
                     onMouseEnter={() => setHoverIndex(index)}
                     onMouseLeave={() => setHoverIndex(null)}
@@ -157,11 +156,10 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                     <DropdownMenuTrigger asChild>
                       <button
                         className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
-                      ${
-                        isHiddenActive
-                          ? 'text-primary'
-                          : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
-                      }`}
+                      ${isHiddenActive
+                            ? 'text-primary'
+                            : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
+                          }`}
                         onMouseEnter={() => setHoverIndex(visibleTabs.length)}
                         onMouseLeave={() => setHoverIndex(null)}
                       >
@@ -214,7 +212,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             <Wrapper title={t('introduce')}>
               <IntroduceSection data={data} isLoading={isLoading} />
             </Wrapper>
-            <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
+            <div className="flex md:flex-row lg:flex-col flex-col gap-4 w-full h-full justify-between">
               <Wrapper
                 fallback={
                   <div className="p-[var(--sp-card)] flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">

@@ -45,7 +45,7 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
   return (
     <div className="group relative w-full overflow-hidden rounded-md border border-border/50 backdrop-blur-xl hover:border-border transition-[color,background-color,opacity,box-shadow,transform] duration-300">
       <div className="flex items-center justify-between p-4 pb-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <AvatarStatus
               fallback={post.author.name}

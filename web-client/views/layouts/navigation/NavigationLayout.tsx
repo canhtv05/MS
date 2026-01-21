@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import NavigationHeader from './NavigationHeader';
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
-import { useNavigation } from '@/contexts/navigation-context';
+import { useNavigation } from '@/contexts/NavigationContext';
 
 const NavigationLayout = () => {
   const { isCollapsed, setIsCollapsed } = useNavigation();

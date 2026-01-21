@@ -1,6 +1,5 @@
 'use client';
 
-import { IProfileParams } from '@/app/(home)/[username]/page';
 import Image from 'next/image';
 import useProfile from './use-profile';
 import { use } from 'react';
@@ -29,6 +28,7 @@ import { Skeleton } from '@/components/customs/skeleton';
 import ChooseImage from './modals/ChooseImage';
 import { getImageSrcOrNull } from '@/lib/image-utils';
 import { useProfileModalStore } from './use-profile-modal';
+import { IProfileParams } from '@/app/(home)/(feed)/user/[username]/page';
 
 export interface IProfilePageProps {
   isLoading: boolean;
