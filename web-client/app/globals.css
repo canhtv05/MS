@@ -263,6 +263,10 @@
   @apply bg-white dark:bg-gray-800;
 }
 
+@utility custom-bg-2 {
+  @apply bg-[#F9FBFC] dark:bg-gray-900;
+}
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;

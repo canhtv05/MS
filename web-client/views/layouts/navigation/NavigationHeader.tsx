@@ -15,7 +15,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
     <div className="custom-bg-1 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex rounded-lg">
       <div
         title={`${user?.profile?.fullname} - @${user?.auth?.username}`}
-        onClick={() => router.push(`/@${user?.auth?.username}`)}
+        onClick={() => router.push(`/user/@${user?.auth?.username}`)}
         className={cn(
           'group lg:flex flex-col flex lg:items-start items-center justify-center gap-2 rounded-lg cursor-pointer transition-[padding] duration-300 ease-out w-full',
           isCollapsed

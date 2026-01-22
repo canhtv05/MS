@@ -171,7 +171,9 @@ const HeaderLayout = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem onClick={() => router.push(`/@${user?.auth?.username}`)}>
+                      <DropdownMenuItem
+                        onClick={() => router.push(`/user/@${user?.auth?.username}`)}
+                      >
                         <div className="flex items-center justify-center gap-2">
                           <UserCircle />
                           <span suppressHydrationWarning>{t('header.view_profile')}</span>
