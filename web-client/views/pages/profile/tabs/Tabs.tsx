@@ -217,7 +217,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             <div className="flex md:flex-row lg:flex-col flex-col gap-3 w-full h-full justify-between">
               <Wrapper
                 fallback={
-                  <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                  <div className="p-[var(--sp-card)] flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
                     <Skeleton className="h-10 w-full rounded-md" />
                     <ImageSection data={data} isLoading={isLoading} />
                   </div>
@@ -235,7 +235,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
               </Wrapper>
               <Wrapper
                 fallback={
-                  <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                  <div className="p-[var(--sp-card)] flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
                     <Skeleton className="h-10 w-full rounded-md" />
                     <ImageSection data={data} isLoading={isLoading} />
                   </div>
