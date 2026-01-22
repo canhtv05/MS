@@ -46,6 +46,12 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-link: var(--color-link);
+  --sidebar-width: var(--sidebar-width);
+  --sidebar-width-collapsed: var(--sidebar-width-collapsed);
+  --border-b: var(--border-b);
+  --header-height: var(--header-height);
+  --sp-layout: var(--sp-layout);
+  --sp-card: var(--sp-card);
 }
 
 :root {
@@ -133,7 +139,7 @@
 
 @layer base {
   html {
-    /* scrollbar-gutter: stable !important; */
+    /* scrollbar-gutter: stable; */
   }
 
   :root {
