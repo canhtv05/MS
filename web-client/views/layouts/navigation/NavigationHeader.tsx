@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 import { getValidImageSrc } from '@/lib/image-utils';
-import { startTransition, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { user } = useNavigationLayout();
@@ -15,19 +15,14 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
   useEffect(() => {
     if (!isCollapsed) {
-      startTransition(() => {
+      const resetId = window.setTimeout(() => {
         setAlignCenter(false);
-      });
-      return;
+      }, 0);
+      return () => window.clearTimeout(resetId);
     }
 
-    startTransition(() => {
-      setAlignCenter(false);
-    });
     const timeoutId = window.setTimeout(() => {
-      startTransition(() => {
-        setAlignCenter(true);
-      });
+      setAlignCenter(true);
     }, 300);
     return () => window.clearTimeout(timeoutId);
   }, [isCollapsed]);
@@ -36,7 +31,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
     <div
       className={cn(
         'custom-bg-1 p-2 lg:p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex lg:block rounded-lg',
-        isCollapsed && 'md:h-[72px] md:items-center md:justify-center',
+        isCollapsed && 'md:h-(--sidebar-width) md:items-center md:justify-center',
       )}
     >
       <div
@@ -58,7 +53,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
           hideInfo={isCollapsed}
           className={cn(
             isCollapsed ? (alignCenter ? 'justify-center' : 'justify-start') : 'justify-start',
-            'w-full',
+            'w-full transition-all duration-300 ease-out',
           )}
         />
 

@@ -64,7 +64,7 @@ const HeaderLayout = () => {
   if (!ready) return null;
 
   return (
-    <header className="fixed top-0! z-50! left-0! py-2! right-0! border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md">
+    <header className="fixed top-0! z-50! left-0! py-2! right-0! border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md h-(--header-height)">
       <div className="mx-auto w-full flex h-full items-center justify-center md:px-6 pl-6">
         <div className="flex items-center justify-between w-full">
           <div className="pr-5 flex items-center justify-start lg:min-w-[280px]">

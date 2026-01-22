@@ -88,6 +88,16 @@
   --color-link: #5aa7ff;
   --swiper-navigation-color: #007aff;
   --swiper-navigation-size: 30px;
+
+  /* sidebar */
+  --sidebar-width: 72px;
+  --sidebar-width-collapsed: 56px;
+
+  /* header */
+  --border-b: 0.8px;
+  --header-height: calc(52px + var(--border-b));
+  --sp-layout: 10px;
+  --sp-card: 16px;
 }
 
 .dark {
