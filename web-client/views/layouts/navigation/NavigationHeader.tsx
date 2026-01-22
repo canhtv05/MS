@@ -6,13 +6,39 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 import { getValidImageSrc } from '@/lib/image-utils';
+import { startTransition, useEffect, useState } from 'react';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { user } = useNavigationLayout();
   const router = useRouter();
+  const [alignCenter, setAlignCenter] = useState(false);
+
+  useEffect(() => {
+    if (!isCollapsed) {
+      startTransition(() => {
+        setAlignCenter(false);
+      });
+      return;
+    }
+
+    startTransition(() => {
+      setAlignCenter(false);
+    });
+    const timeoutId = window.setTimeout(() => {
+      startTransition(() => {
+        setAlignCenter(true);
+      });
+    }, 300);
+    return () => window.clearTimeout(timeoutId);
+  }, [isCollapsed]);
 
   return (
-    <div className="custom-bg-1 p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] lg:block inline-flex rounded-lg">
+    <div
+      className={cn(
+        'custom-bg-1 p-2 lg:p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex lg:block rounded-lg',
+        isCollapsed && 'md:h-[72px] md:items-center md:justify-center',
+      )}
+    >
       <div
         title={`${user?.profile?.fullname} - @${user?.auth?.username}`}
         onClick={() => router.push(`/user/@${user?.auth?.username}`)}
@@ -30,7 +56,10 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
           hasRing={false}
           responsive
           hideInfo={isCollapsed}
-          className={cn(isCollapsed && 'justify-end')}
+          className={cn(
+            isCollapsed ? (alignCenter ? 'justify-center' : 'justify-start') : 'justify-start',
+            'w-full',
+          )}
         />
 
         <div className={cn(isCollapsed ? 'hidden' : 'md:hidden lg:block', 'w-full')}>

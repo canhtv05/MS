@@ -2,22 +2,23 @@
 
 import { AltArrowLeft, AltArrowRight } from '@solar-icons/react-perf/Outline';
 import NavigationMenu from './NavigationMenu';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import NavigationHeader from './NavigationHeader';
 import useViewport from '@/hooks/use-view-port';
 import { Viewport } from '@/enums/common';
+import { useNavigation } from '@/contexts/navigation-context';
 
 const NavigationLayout = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { isCollapsed, setIsCollapsed } = useNavigation();
   const { width } = useViewport();
-  const effectiveCollapsed = isCollapsed && width >= Viewport.LG;
+  const isMdToLg = width >= Viewport.MD && width < Viewport.LG;
+  const effectiveCollapsed = isMdToLg || (isCollapsed && width >= Viewport.LG);
 
   return (
     <div
       className={cn(
-        'w-auto transition-[width] duration-300 ease-out relative',
-        effectiveCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
+        'w-auto transition-[width] duration-300 ease-out relative md:w-[72px]',
+        isCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
       )}
     >
       <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-3 w-full">
@@ -41,7 +42,7 @@ const NavigationLayout = () => {
               onClick={() => {
                 setIsCollapsed(!isCollapsed);
               }}
-              className="relative z-10 w-8 h-8 rounded-full custom-bg-1 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
+              className="relative z-10 w-8 h-8 rounded-full custom-bg-1 shadow-[0_0_10px_0_rgba(0,0,0,0.09)] flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
             >
               {isCollapsed ? (
                 <AltArrowRight className="size-4" />

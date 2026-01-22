@@ -1,5 +1,9 @@
+'use client';
+
 import { ReactNode } from 'react';
 import Show from './Show';
+import { cn } from '@/lib/utils';
+import { useNavigation } from '@/contexts/navigation-context';
 
 interface ILayoutContainerProps {
   children: ReactNode;
@@ -8,10 +12,25 @@ interface ILayoutContainerProps {
 }
 
 const LayoutContainer = ({ children, navigation, sidebar }: ILayoutContainerProps) => {
+  const { isCollapsed } = useNavigation();
+
   return (
     <div className="flex relative items-start justify-center bg-[#F9FBFC] pt-14 md:px-[9px] px-0 dark:bg-gray-900 min-h-screen w-full">
       <Show when={!!navigation}>
-        <div className="lg:block fixed md:sticky top-18 md:translate-x-0 -translate-x-1/2 md:left-0 left-1/2 md:bottom-auto bottom-0 lg:w-auto w-auto z-40">
+        <div
+          className={cn(
+            'hidden md:block transition-[width] duration-300 ease-out shrink-0 md:w-[72px]',
+            isCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
+          )}
+          aria-hidden="true"
+        />
+        {/* Navigation thực tế */}
+        <div
+          className={cn(
+            'fixed bottom-0 left-1/2 -translate-x-1/2 md:bottom-auto md:top-18 md:left-[9px] md:translate-x-0 md:fixed md:h-[calc(100vh-4.5rem)] md:overflow-x-visible md:overflow-y-visible md:w-[72px] lg:left-[9px] lg:h-[calc(100vh-4.5rem)] lg:overflow-x-visible lg:overflow-y-visible w-auto z-50 transition-[width] duration-300 ease-out',
+            isCollapsed ? 'lg:w-[72px]' : 'lg:w-64',
+          )}
+        >
           {navigation}
         </div>
       </Show>

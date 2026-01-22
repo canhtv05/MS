@@ -125,7 +125,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex lg:p-4 p-3 justify-start rounded-lg lg:w-full cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center w-full`,
+                  `flex box-border lg:p-4 p-3 md:p-0 justify-start rounded-lg lg:w-full md:w-14 md:h-14 h-[56px] w-[56px] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                   isCollapsed && width >= Viewport.LG && 'py-[18px]!',
                 )}
@@ -134,7 +134,9 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                   href={item.href}
                   title={t(item.title)}
                   suppressHydrationWarning
-                  className={cn('grid place-content-start pl-[2px] w-full')}
+                  className={cn(
+                    'grid lg:place-content-start lg:pl-[2px] md:place-content-center w-full',
+                  )}
                 >
                   {linkContent}
                 </Link>

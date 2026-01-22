@@ -133,7 +133,7 @@
 
 @layer base {
   html {
-    scrollbar-gutter: stable !important;
+    /* scrollbar-gutter: stable !important; */
   }
 
   :root {
@@ -229,6 +229,7 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent) transparent;
+    scroll-behavior: smooth;
   }
 }
 
