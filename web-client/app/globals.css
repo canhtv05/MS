@@ -88,16 +88,6 @@
   --color-link: #5aa7ff;
   --swiper-navigation-color: #007aff;
   --swiper-navigation-size: 30px;
-
-  /* sidebar */
-  --sidebar-width: 72px;
-  --sidebar-width-collapsed: 56px;
-
-  /* header */
-  --border-b: 0.8px;
-  --header-height: calc(52px + var(--border-b));
-  --sp-layout: 10px;
-  --sp-card: 16px;
 }
 
 .dark {
@@ -143,12 +133,12 @@
 
 @layer base {
   html {
-    /* scrollbar-gutter: stable !important; */
+    /* scrollbar-gutter: stable; */
   }
 
   :root {
-    --removed-body-scroll-bar-size: 0px !important;
-    --scrollbar-width: 0px !important;
+    --removed-body-scroll-bar-size: 0px;
+    --scrollbar-width: 0px;
   }
 
   body {
@@ -239,7 +229,6 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklch, var(--color-muted-foreground) 50%, transparent) transparent;
-    scroll-behavior: smooth;
   }
 }
 
@@ -272,10 +261,6 @@
 
 @utility custom-bg-1 {
   @apply bg-white dark:bg-gray-800;
-}
-
-@utility custom-bg-2 {
-  @apply bg-[#F9FBFC] dark:bg-gray-900;
 }
 
 @keyframes gradientShift {

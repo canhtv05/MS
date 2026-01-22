@@ -123,7 +123,7 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
       )}
 
       {isLoading ? (
-        <div className="flex flex-wrap items-center gap-3 mt-2">
+        <div className="flex flex-wrap items-center gap-4  mt-2">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-32" />
         </div>

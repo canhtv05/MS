@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import cookieUtils from '@/utils/cookieUtils';
 import LoadingPage from '@/views/pages/loading';
 import { useAuthQuery } from '@/services/queries/auth';
-import { useAuthRefresh } from '@/guard/AuthRefreshContext';
+import { useAuthRefresh } from '@/contexts/AuthRefreshContext';
 
 export type RouteAccessLevel = 'public' | 'authenticated' | 'admin';
 
