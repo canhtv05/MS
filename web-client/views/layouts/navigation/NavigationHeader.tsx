@@ -31,7 +31,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
     <div
       className={cn(
         'custom-bg-1 p-2 lg:p-4 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex lg:block rounded-lg',
-        isCollapsed && 'md:h-(--sidebar-width) md:items-center md:justify-center',
+        isCollapsed && 'md:h-[var(--sidebar-width)] md:items-center md:justify-center',
       )}
     >
       <div
