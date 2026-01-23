@@ -24,9 +24,7 @@ const Wrapper = ({
 }: WrapperProps) => {
   return (
     <Show when={!isLoading} fallback={fallback}>
-      <div
-        className={`p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0 ${className || ''}`}
-      >
+      <div className={`p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md mb-0 ${className || ''}`}>
         {!!title && (
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-start justify-start flex-col">

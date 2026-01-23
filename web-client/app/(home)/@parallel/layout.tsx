@@ -1,9 +1,9 @@
 'use client';
 
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
-import { XIcon } from '@/components/animate-ui/icons';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
+import { ArrowLeft } from '@solar-icons/react-perf/BoldDuotone';
 
 interface IStandaloneLayoutProps {
   children: ReactNode;
@@ -34,12 +34,16 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-100 pointer-events-none">
+    <div className="fixed inset-0 z-120 pointer-events-none">
       <div className="absolute inset-0 top-(--header-height) pointer-events-auto custom-bg-2 z-10 backdrop-blur-md bg-background/80" />
       <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20">
-        <div className="fixed md:block hidden top-24 left-4 md:left-6 z-30 pointer-events-auto">
-          <IconButton onClick={handleClose} variant="outline" className="rounded-full">
-            <XIcon />
+        <div className="fixed md:block hidden top-[76px] left-4 md:left-6 z-120 pointer-events-auto">
+          <IconButton
+            onClick={handleClose}
+            variant="outline"
+            className="rounded-full hover:translate-x-[-2px]"
+          >
+            <ArrowLeft />
           </IconButton>
         </div>
         <div className="h-full [&_main]:pl-0! p-5 md:pl-24 w-full overflow-y-auto overflow-x-hidden overscroll-contain pointer-events-auto">

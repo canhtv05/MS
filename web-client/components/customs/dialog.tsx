@@ -98,7 +98,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
       <DialogContent
         className={cn(
           sizeClasses[size],
-          hasBorder && 'p-0 gap-5',
+          hasBorder && 'p-0 gap-5 z-9999',
           'flex flex-col max-h-[calc(100%-28px)]',
         )}
         showCloseButton={false}
