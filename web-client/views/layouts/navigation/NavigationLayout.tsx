@@ -11,13 +11,14 @@ import { useNavigation } from '@/contexts/NavigationContext';
 const NavigationLayout = () => {
   const { isCollapsed, setIsCollapsed } = useNavigation();
   const { width } = useViewport();
-  const effectiveCollapsed = isCollapsed && width >= Viewport.LG;
+  const effectiveCollapsed = width < Viewport.LG || isCollapsed;
 
   return (
     <div
       className={cn(
-        'w-auto transition-[width] duration-300 ease-out relative md:w-[var(--sidebar-width)]',
+        'w-auto transition-[width] duration-300 ease-out relative',
         isCollapsed ? 'lg:w-[var(--sidebar-width)]' : 'lg:w-64',
+        'md:w-[var(--sidebar-width)]',
       )}
     >
       <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-[var(--sp-layout)] w-full">

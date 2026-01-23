@@ -56,15 +56,17 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
   useEffect(() => {
     const updateTooltipSide = () => {
-      if (isCollapsed && width >= Viewport.LG) {
+      if (width >= Viewport.MD && width < Viewport.LG) {
         setTooltipSide('right');
         return;
       }
 
+      if (width >= Viewport.LG && isCollapsed) {
+        setTooltipSide('right');
+        return;
+      }
       if (width >= Viewport.LG) {
         setTooltipSide(null);
-      } else if (width >= Viewport.MD) {
-        setTooltipSide('right');
       } else {
         setTooltipSide('top');
       }
@@ -77,7 +79,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
       <div
         className={cn(
           'md:w-full w-[220px] custom-bg-1 md:border-none border lg:flex shadow-[0_0_10px_0_rgba(0,0,0,0.07)] flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
-          isCollapsed ? 'w-full' : 'md:p-3 md:w-full w-[220px]',
+          !isCollapsed && 'lg:p-3 lg:w-full',
         )}
       >
         {MENU.map((item, index) => {
@@ -104,7 +106,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             </>
           );
 
-          if (tooltipSide === null && !isCollapsed) {
+          if (tooltipSide === null) {
             return (
               <Link
                 key={index}
@@ -125,8 +127,9 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex box-border lg:p-4 p-3 md:p-0 justify-start rounded-lg lg:w-full md:w-[var(--sidebar-width-collapsed)] md:h-[var(--sidebar-width-collapsed)] h-[var(--sidebar-width-collapsed)] w-[var(--sidebar-width-collapsed)] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
+                  `flex box-border p-3 justify-start rounded-lg w-[var(--sidebar-width-collapsed)] h-[var(--sidebar-width-collapsed)] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                  width >= Viewport.MD && width < Viewport.LG && 'py-[18px]!',
                   isCollapsed && width >= Viewport.LG && 'py-[18px]!',
                 )}
               >
@@ -134,9 +137,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
                   href={item.href}
                   title={t(item.title)}
                   suppressHydrationWarning
-                  className={cn(
-                    'grid lg:place-content-start lg:pl-[2px] md:place-content-center w-full',
-                  )}
+                  className={cn('grid place-content-center w-full')}
                 >
                   {linkContent}
                 </Link>
