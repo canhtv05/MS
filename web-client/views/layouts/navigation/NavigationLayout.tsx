@@ -17,11 +17,11 @@ const NavigationLayout = () => {
     <div
       className={cn(
         'w-auto transition-[width] duration-300 ease-out relative',
-        isCollapsed ? 'lg:w-[var(--sidebar-width)]' : 'lg:w-64',
-        'md:w-[var(--sidebar-width)]',
+        isCollapsed ? 'lg:w-(--sidebar-width)' : 'lg:w-64',
+        'md:w-(--sidebar-width)',
       )}
     >
-      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-[var(--sp-layout)] w-full">
+      <div className="h-full flex md:flex-col flex-row md:justify-start justify-center items-start gap-(--sp-layout) w-full">
         <div className="md:block hidden w-full">
           <NavigationHeader isCollapsed={effectiveCollapsed} />
         </div>

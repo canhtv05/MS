@@ -9,8 +9,8 @@ interface IStandaloneLayoutProps {
 
 const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
   return (
-    <div className="fixed inset-x-0 top-0 bottom-0 z-40 backdrop-blur-sm overflow-auto overscroll-contain no-scrollbar">
-      <LayoutContainer className="h-full box-border">{children}</LayoutContainer>
+    <div className="fixed inset-0 z-60 pt-[calc(var(--header-height)+var(--sp-layout))] overflow-auto overscroll-contain no-scrollbar">
+      <LayoutContainer className="h-full box-border pt-0!">{children}</LayoutContainer>
     </div>
   );
 };

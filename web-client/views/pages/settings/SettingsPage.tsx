@@ -1,13 +1,14 @@
-import { withAuth } from '@/guard/withAuth';
+'use client';
+
+import Wrapper from '@/components/customs/wrapper';
 
 const SettingsPage = () => {
   return (
-    <div className="mx-auto max-w-2xl p-6 custom-bg-1 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Settings</h1>
+    <div className="mx-auto max-w-2xl space-y-4">
+      <h1 className="text-2xl font-black text-gray-900 dark:text-white">Settings</h1>
 
       {/* Account Settings */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Account</h2>
+      <Wrapper title="Account">
         <div className="space-y-4">
           <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
             <h3 className="font-medium text-gray-900 dark:text-white">Email</h3>
@@ -20,11 +21,10 @@ const SettingsPage = () => {
             </button>
           </div>
         </div>
-      </section>
+      </Wrapper>
 
       {/* Privacy Settings */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Privacy</h2>
+      <Wrapper title="Privacy">
         <div className="space-y-4">
           <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
             <h3 className="font-medium text-gray-900 dark:text-white">Profile Visibility</h3>
@@ -39,13 +39,10 @@ const SettingsPage = () => {
             </p>
           </div>
         </div>
-      </section>
+      </Wrapper>
 
       {/* Notification Settings */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-          Notifications
-        </h2>
+      <Wrapper title="Notifications">
         <div className="space-y-4">
           <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
             <h3 className="font-medium text-gray-900 dark:text-white">Email Notifications</h3>
@@ -58,11 +55,13 @@ const SettingsPage = () => {
             </p>
           </div>
         </div>
-      </section>
+      </Wrapper>
 
       {/* Danger Zone */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-red-600 dark:text-red-400">Danger Zone</h2>
+      <Wrapper
+        title="Danger Zone"
+        className="border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20"
+      >
         <div className="p-4 border border-red-200 dark:border-red-900 rounded-lg bg-red-50 dark:bg-red-950">
           <h3 className="font-medium text-red-900 dark:text-red-100">Delete Account</h3>
           <p className="text-sm text-red-700 dark:text-red-300 mt-1 mb-3">
@@ -72,12 +71,9 @@ const SettingsPage = () => {
             Delete Account
           </button>
         </div>
-      </section>
+      </Wrapper>
     </div>
   );
 };
 
-export default withAuth(SettingsPage, {
-  accessLevel: 'authenticated',
-  redirectTo: '/home',
-});
+export default SettingsPage;

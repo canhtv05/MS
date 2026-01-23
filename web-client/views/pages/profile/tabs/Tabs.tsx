@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 import TabsItem from './TabsItem';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
-import Wrapper from '../components/Wrapper';
+import Wrapper from '@/components/customs/wrapper';
 import ImageSection from '../sections/ImageSection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import FriendSection from '../sections/FriendSection';
@@ -208,16 +208,16 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
           </div>
         </div>
       </div>
-      <div className="mt-[var(--sp-layout)] w-full rounded-lg">
-        <div className="flex lg:flex-row flex-col gap-[var(--sp-layout)] items-start justify-between">
-          <div className="lg:w-[40%] w-full flex flex-col gap-[var(--sp-layout)] h-auto">
+      <div className="mt-(--sp-layout) w-full rounded-lg">
+        <div className="flex lg:flex-row flex-col gap-(--sp-layout) items-start justify-between">
+          <div className="lg:w-[40%] w-full flex flex-col gap-(--sp-layout) h-auto">
             <Wrapper title={t('introduce')}>
               <IntroduceSection data={data} isLoading={isLoading} />
             </Wrapper>
             <div className="flex md:flex-row lg:flex-col flex-col gap-4 w-full h-full justify-between">
               <Wrapper
                 fallback={
-                  <div className="p-[var(--sp-card)] flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                  <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
                     <Skeleton className="h-10 w-full rounded-md" />
                     <ImageSection data={data} isLoading={isLoading} />
                   </div>

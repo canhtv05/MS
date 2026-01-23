@@ -3,22 +3,20 @@ import { ReactNode } from 'react';
 
 interface IRootHomeLayoutProps {
   children: ReactNode;
-  settings: ReactNode;
+  parallel: ReactNode;
 }
 
-const RootHomeLayout = ({ children, settings }: IRootHomeLayoutProps) => {
-  const hasSettings = settings !== null && settings !== undefined && settings !== false;
-  const wrapperClassName = hasSettings
+const RootHomeLayout = ({ children, parallel }: IRootHomeLayoutProps) => {
+  const hasParallel = parallel !== null && parallel !== undefined && parallel !== false;
+  const wrapperClassName = hasParallel
     ? 'min-h-screen relative overflow-hidden'
     : 'min-h-screen relative';
 
   return (
     <div className={wrapperClassName}>
       <HeaderLayout />
-      {/* Children layer (feed, profile, etc.) */}
-      {children}
-      {settings}
-      {/* Settings layer - overlay on top */}
+      <div className="relative z-0">{children}</div>
+      {parallel}
     </div>
   );
 };

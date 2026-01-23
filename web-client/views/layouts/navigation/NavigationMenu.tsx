@@ -127,7 +127,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <Tooltip key={index}>
               <TooltipTrigger
                 className={cn(
-                  `flex box-border p-3 justify-start rounded-lg w-[var(--sidebar-width-collapsed)] h-[var(--sidebar-width-collapsed)] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
+                  `flex box-border p-3 justify-start rounded-lg w-(--sidebar-width-collapsed) h-(--sidebar-width-collapsed) cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
                   isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
                   width >= Viewport.MD && width < Viewport.LG && 'py-[18px]!',
                   isCollapsed && width >= Viewport.LG && 'py-[18px]!',
