@@ -3,25 +3,31 @@
 import { APP_KEY } from '@/utils/cookieUtils';
 
 const useLocalStorage = () => {
+  const isBrowser = typeof window !== 'undefined';
+
   const getItem = (): Record<string, unknown> => {
-    const data = localStorage.getItem(APP_KEY);
-    return data ? JSON.parse(data) : {};
+    if (!isBrowser) return {};
+    try {
+      const data = window.localStorage.getItem(APP_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch {
+      return {};
+    }
   };
 
   const setItem = (objectSet: Record<string, unknown>) => {
+    if (!isBrowser) return;
     const data = getItem();
     const newData = { ...data, ...objectSet };
-
-    localStorage.setItem(APP_KEY, JSON.stringify(newData));
+    window.localStorage.setItem(APP_KEY, JSON.stringify(newData));
   };
 
   const deleteItem = (item: string) => {
-    if (!item) return;
-
+    if (!isBrowser || !item) return;
     const data = getItem();
     if (data && typeof data === 'object') {
       delete data[item];
-      localStorage.setItem(APP_KEY, JSON.stringify(data));
+      window.localStorage.setItem(APP_KEY, JSON.stringify(data));
     }
   };
 

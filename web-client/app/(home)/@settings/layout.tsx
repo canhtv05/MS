@@ -34,16 +34,14 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-60 md:bg-transparent bg-black/50 overflow-hidden">
-      <div className="md:hidden block fixed left-0 top-0 z-60! h-[60px] w-full bg-red-500">ok</div>
-      <div className="fixed top-15 left-0 right-0 bottom-0 h-5 z-40 custom-bg-2 w-full"></div>
-      <div className="absolute top-15 inset-0 custom-bg-2">
-        <div className="fixed md:block hidden top-4 md:top-20 left-4 md:left-6 z-20">
+    <div className="fixed inset-x-0 top-(--header-height) bottom-0 z-40 custom-bg-2 overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="fixed md:block hidden top-[calc(var(--header-height)+1rem)] left-4 md:left-6 z-20">
           <IconButton onClick={handleClose} variant="outline" className="rounded-full">
             <XIcon />
           </IconButton>
         </div>
-        <div className="h-full p-5 pl-24 w-full overflow-y-auto overflow-x-hidden overscroll-contain">
+        <div className="h-full [&_main]:pl-0! p-5 md:pl-24 w-full overflow-y-auto overflow-x-hidden overscroll-contain">
           {children}
         </div>
       </div>

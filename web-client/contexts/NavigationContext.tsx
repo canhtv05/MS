@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import useLocalStorage from '@/hooks/use-local-storage';
+import { createContext, useContext, ReactNode, useState } from 'react';
 
 interface NavigationContextType {
   isCollapsed: boolean;
@@ -10,8 +11,16 @@ interface NavigationContextType {
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
 export const NavigationProvider = ({ children }: { children: ReactNode }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { dataStorage, setStorage } = useLocalStorage();
+  const [isCollapsed, setIsCollapsedState] = useState(() => {
+    const storedValue = dataStorage().isCollapsed;
+    return Boolean(storedValue);
+  });
 
+  const setIsCollapsed = (collapsed: boolean) => {
+    setIsCollapsedState(collapsed);
+    setStorage({ isCollapsed: collapsed });
+  };
   return (
     <NavigationContext.Provider value={{ isCollapsed, setIsCollapsed }}>
       {children}
