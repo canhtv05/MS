@@ -34,10 +34,10 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-120 pointer-events-none">
+    <div className="fixed inset-0 z-80 pointer-events-none">
       <div className="absolute inset-0 top-(--header-height) pointer-events-auto custom-bg-2 z-10 backdrop-blur-md bg-background/80" />
       <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20">
-        <div className="fixed md:block hidden top-[76px] left-4 md:left-6 z-120 pointer-events-auto">
+        <div className="fixed md:block hidden top-[76px] left-4 md:left-6 z-80 pointer-events-auto">
           <IconButton
             onClick={handleClose}
             variant="outline"

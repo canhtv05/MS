@@ -1,9 +1,9 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/use-debounce';
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useLocalStorage from '@/hooks/use-local-storage';
 import i18next from '@/locale/i18n';
 import i18n from 'i18next';
@@ -15,36 +15,49 @@ import { useAuthStore } from '@/stores/auth';
 const useHeaderLayout = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const user = useAuthStore(s => s.user);
 
-  const [search, setSearch] = useState(searchParams.get('query') || '');
+  const [search, setSearch] = useState('');
   const [isShowSearch, setIsShowSearch] = useState(false);
   const [openLogout, setOpenLogout] = useState(false);
-  const [isLoading, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
+  const [readySearch, setReadySearch] = useState('');
   const [currentLang, setCurrentLang] = useState(i18n.language as 'vi' | 'en');
+  const latestSearchRef = useRef(search);
 
   const debouncedSearch = useDebounce(search, 500);
   const { setStorage } = useLocalStorage();
   const { logoutMutation, changePasswordMutation } = useAuthMutation();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    const nextValue = e.target.value;
+    latestSearchRef.current = nextValue;
+    setSearch(nextValue);
+    setReadySearch('');
   };
 
   useEffect(() => {
-    const currentQuery = searchParams.get('query') || '';
-    if (debouncedSearch === currentQuery) return;
-
-    if (debouncedSearch.trim() !== '') {
-      startTransition(() => {
-        router.push(`?query=${debouncedSearch}`);
+    const trimmedSearch = debouncedSearch.trim();
+    if (trimmedSearch === '') {
+      Promise.resolve().then(() => {
+        setIsLoading(false);
+        setReadySearch('');
       });
-    } else {
-      router.push(pathname);
+      return;
     }
-  }, [debouncedSearch, router, pathname, searchParams]);
+
+    Promise.resolve().then(() => setIsLoading(true));
+    const timer = setTimeout(() => {
+      if (latestSearchRef.current === debouncedSearch) {
+        setIsLoading(false);
+        setReadySearch(debouncedSearch);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [debouncedSearch]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -97,6 +110,7 @@ const useHeaderLayout = () => {
     isShowSearch,
     setIsShowSearch,
     isLoading,
+    readySearch,
     debouncedSearch,
     handleChangeLang,
     currentLang,

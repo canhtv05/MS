@@ -39,6 +39,7 @@ import { getValidImageSrc } from '@/lib/image-utils';
 
 const HeaderLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const {
     setTheme,
     theme,
@@ -48,6 +49,7 @@ const HeaderLayout = () => {
     isLoading,
     debouncedSearch,
     setIsShowSearch,
+    readySearch,
     handleChangeLang,
     currentLang,
     handleLogout,
@@ -64,14 +66,17 @@ const HeaderLayout = () => {
   if (!ready) return null;
 
   return (
-    <header className="fixed top-0! z-110! left-0! py-2! right-0! border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md h-(--header-height)">
+    <header className="fixed top-0! z-80 left-0! py-2! right-0! border-b border-foreground/10 bg-background dark:bg-gray-800 backdrop-blur-md h-(--header-height)">
       <div className="mx-auto w-full flex h-full items-center justify-center md:px-6 pl-6">
         <div className="flex items-center justify-between w-full">
           <div className="pr-5 flex items-center justify-start lg:min-w-[280px]">
             <Logo />
           </div>
           <div className="flex w-full py-0 gap-2 items-center justify-between">
-            <div className="flex items-center justify-start relative w-full md:max-w-md max-w-full z-50 flex-1">
+            <div
+              ref={containerRef}
+              className="flex items-center justify-start relative w-full md:max-w-md max-w-full z-50 flex-1"
+            >
               <div className="w-full max-w-xs">
                 <Input
                   autoComplete="off"
@@ -119,6 +124,7 @@ const HeaderLayout = () => {
               </div>
               {isShowSearch && debouncedSearch.trim() !== '' && !isLoading && (
                 <HomeHeaderSearchLG
+                  readyValue={readySearch}
                   t={t}
                   ref={ref}
                   value={search}
@@ -126,6 +132,7 @@ const HeaderLayout = () => {
                   isShowSearch={isShowSearch}
                   isLoading={isLoading}
                   debouncedValue={debouncedSearch}
+                  containerRef={containerRef}
                 />
               )}
             </div>
@@ -160,7 +167,7 @@ const HeaderLayout = () => {
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px] [&_span]:text-foreground/70"
+                    className="w-[220px] z-80 [&_span]:text-foreground/70"
                   >
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard

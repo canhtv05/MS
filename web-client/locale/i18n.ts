@@ -11,6 +11,7 @@ const namespaces = [
   'navigation',
   'notification',
   'profile',
+  'settings',
 ] as const;
 
 /* eslint-disable @typescript-eslint/no-require-imports */

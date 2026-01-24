@@ -5,6 +5,7 @@ import { TFunction } from 'i18next';
 import { Loader2Icon } from '@/components/animate-ui/icons';
 import { AnimatePresence } from 'motion/react';
 import { Dispatch, forwardRef, SetStateAction } from 'react';
+import { Portal } from '@/components/animate-ui/components/portal';
 import HomeHeaderSearchCard from './HomeHeaderSearchCard';
 
 interface IHomeHeaderSearch {
@@ -14,26 +15,21 @@ interface IHomeHeaderSearch {
   isShowSearch: boolean;
   isLoading: boolean;
   debouncedValue: string;
+  readyValue: string;
   t: TFunction<'translate', undefined>;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 const HomeHeaderSearchLG = forwardRef(
   (
-    { isShowSearch, isLoading, debouncedValue }: IHomeHeaderSearch,
+    { isShowSearch, isLoading, debouncedValue, readyValue, containerRef }: IHomeHeaderSearch,
     ref: React.ForwardedRef<HTMLDivElement>,
   ) => {
     return (
-      <div
-        ref={ref}
-        className={cn(
-          'z-50 rounded-lg shadow-lg',
-          'fixed top-[64px] inset-x-0 md:px-0 px-5',
-          'lg:absolute lg:w-full lg:max-w-xs lg:top-10 lg:inset-x-auto lg:left-0',
-        )}
-      >
+      <Portal ref={ref} isOpen={isShowSearch} containerRef={containerRef}>
         <div
           className={cn(
-            'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] ',
+            'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] w-xs!',
             isLoading ? 'overflow-hidden' : 'overflow-y-auto',
           )}
         >
@@ -41,7 +37,10 @@ const HomeHeaderSearchLG = forwardRef(
             <div className="flex mt-2 items-center justify-center">
               <Loader2Icon className="animate-spin size-8 text-foreground" />
             </div>
-          ) : isShowSearch && debouncedValue.trim() !== '' && !isLoading ? (
+          ) : isShowSearch &&
+            debouncedValue.trim() !== '' &&
+            !isLoading &&
+            debouncedValue === readyValue ? (
             <AnimatePresence>
               {Array.from({ length: 20 }).map((_, index) => (
                 <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
@@ -49,7 +48,7 @@ const HomeHeaderSearchLG = forwardRef(
             </AnimatePresence>
           ) : null}
         </div>
-      </div>
+      </Portal>
     );
   },
 );
