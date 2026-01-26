@@ -23,7 +23,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
     >
       <div
         title={`${user?.profile?.fullname} - @${user?.auth?.username}`}
-        onClick={() => router.push(`/user/@${user?.auth?.username}`)}
+        onClick={() => router.replace(`/user/@${user?.auth?.username}`)}
         className={cn(
           'group flex flex-col gap-2 rounded-lg cursor-pointer w-full',
           'transition-all duration-300 ease-out',

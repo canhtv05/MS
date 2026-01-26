@@ -3,15 +3,18 @@
 import { withAuth } from '@/guard/withAuth';
 import SettingsPage from '@/views/pages/settings/SettingsPage';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { ArrowLeft } from '@solar-icons/react-perf/BoldDuotone';
 import { startTransition } from 'react';
 
 const SettingsModal = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
+    if (pathname !== '/settings') return;
+
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
 
@@ -26,7 +29,9 @@ const SettingsModal = () => {
       document.body.style.overflow = originalOverflow;
       document.body.style.paddingRight = originalPaddingRight;
     };
-  }, []);
+  }, [pathname]);
+
+  if (pathname !== '/settings') return null;
 
   const handleClose = () => {
     startTransition(() => {
@@ -41,7 +46,7 @@ const SettingsModal = () => {
         onClick={handleClose}
       />
       <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20">
-        <div className="fixed md:block hidden top-[76px] left-4 md:left-6 z-80 pointer-events-auto">
+        <div className="fixed md:block hidden top-[76px] left-4 md:left-7 z-80 pointer-events-auto">
           <IconButton
             onClick={handleClose}
             variant="outline"
