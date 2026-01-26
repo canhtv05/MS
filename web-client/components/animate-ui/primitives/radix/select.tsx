@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Select as SelectPrimitive } from 'radix-ui';
-import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react';
+import { motion, type HTMLMotionProps } from 'motion/react';
 import { getStrictContext } from '@/lib/get-strict-context';
 import { useControlledState } from '@/hooks/use-controlled-state';
 import { useDataState } from '@/hooks/use-data-state';
@@ -70,7 +70,14 @@ function SelectGroup(props: SelectGroupProps) {
 
 type SelectValueProps = React.ComponentProps<typeof SelectPrimitive.Value>;
 
-const SelectValue = SelectPrimitive.Value;
+const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
+  ({ placeholder, ...props }, ref) => {
+    // Radix UI Select.Value automatically displays the selected item's text
+    // We use a wrapper to ensure it renders correctly
+    return <SelectPrimitive.Value ref={ref} placeholder={placeholder} {...props} />;
+  },
+);
+SelectValue.displayName = 'SelectValue';
 
 type SelectTriggerProps = Omit<React.ComponentProps<typeof SelectPrimitive.Trigger>, 'asChild'> &
   HTMLMotionProps<'button'>;
@@ -150,44 +157,49 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
   ) => {
     const { isOpen } = useSelectOpen();
 
+    // Filter out any props that shouldn't be passed to the DOM element
+    const { forceMount, ...motionProps } = props as typeof props & { forceMount?: boolean };
+
     return (
-      <AnimatePresence>
-        {isOpen && (
-          <SelectPortal container={container}>
-            <SelectPrimitive.Content
-              asChild
-              onCloseAutoFocus={onCloseAutoFocus}
-              onEscapeKeyDown={onEscapeKeyDown}
-              onPointerDownOutside={onPointerDownOutside}
-              side={side}
-              sideOffset={sideOffset}
-              align={align}
-              alignOffset={alignOffset}
-              avoidCollisions={avoidCollisions}
-              collisionBoundary={collisionBoundary}
-              collisionPadding={collisionPadding}
-              arrowPadding={arrowPadding}
-              sticky={sticky}
-              hideWhenDetached={hideWhenDetached}
-              position={position}
-            >
-              <motion.div
-                ref={ref}
-                key="select-content"
-                data-slot="select-content"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={transition}
-                style={{ willChange: 'opacity, transform', ...style }}
-                {...props}
-              >
-                {children}
-              </motion.div>
-            </SelectPrimitive.Content>
-          </SelectPortal>
-        )}
-      </AnimatePresence>
+      <SelectPortal container={container}>
+        <SelectPrimitive.Content
+          asChild
+          forceMount
+          onCloseAutoFocus={onCloseAutoFocus}
+          onEscapeKeyDown={onEscapeKeyDown}
+          onPointerDownOutside={onPointerDownOutside}
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          avoidCollisions={avoidCollisions}
+          collisionBoundary={collisionBoundary}
+          collisionPadding={collisionPadding}
+          arrowPadding={arrowPadding}
+          sticky={sticky}
+          hideWhenDetached={hideWhenDetached}
+          position={position}
+        >
+          <motion.div
+            ref={ref}
+            data-slot="select-content"
+            initial={false}
+            animate={
+              isOpen
+                ? { opacity: 1, scale: 1, pointerEvents: 'auto' }
+                : { opacity: 0, scale: 0.95, pointerEvents: 'none' }
+            }
+            transition={transition}
+            style={{
+              willChange: 'opacity, transform',
+              ...style,
+            }}
+            {...motionProps}
+          >
+            {children}
+          </motion.div>
+        </SelectPrimitive.Content>
+      </SelectPortal>
     );
   },
 );

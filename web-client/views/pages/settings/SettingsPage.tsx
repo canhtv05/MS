@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { LockPassword, UserCircle } from '@solar-icons/react-perf/category/style/Linear';
 import { Fragment, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Privacy from './privacy/Privacy';
 
 interface ISettingsMenu {
   title: string;
@@ -37,7 +38,7 @@ const SETTINGS_MENU_CONTENT: ISettingsMenuContent[] = [
   },
   {
     key: 'privacy',
-    content: <div className="bg-blue-500 h-[1000px]!">Quyền riêng tư</div>,
+    content: <Privacy />,
   },
 ];
 
@@ -56,7 +57,7 @@ const SettingsPage = () => {
     <>
       {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-70">hellowirld</div> */}
       <div className="flex pb-(--sp-layout) h-full min-h-0 [&>div]:rounded-md [&>div]:h-full [&>div]:custom-bg-1 gap-(--sp-layout)">
-        <div className="flex-1 min-h-0 overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
           <Wrapper className="px-0">
             <div className="flex flex-col">
               {SETTINGS_MENU.map(item => (
@@ -75,7 +76,7 @@ const SettingsPage = () => {
             </div>
           </Wrapper>
         </div>
-        <div className="flex-2 min-h-0 overflow-y-auto no-scrollbar">
+        <div className="flex-2 min-h-0 overflow-y-auto no-scrollbar shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
           <Wrapper className="flex flex-col py-0">
             {SETTINGS_MENU_CONTENT.map(item => (
               <div

@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { ArrowLeft } from '@solar-icons/react-perf/BoldDuotone';
 import { startTransition } from 'react';
 
-const SettingsModal = () => {
+const Settings = () => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -45,7 +45,7 @@ const SettingsModal = () => {
         className="absolute inset-0 top-(--header-height) pointer-events-auto custom-bg-2 z-10 backdrop-blur-md bg-background/80"
         onClick={handleClose}
       />
-      <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20 custom-bg-2">
+      <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20">
         <div className="fixed md:block hidden top-[76px] left-4 md:left-7 z-80 pointer-events-auto">
           <IconButton
             onClick={handleClose}
@@ -63,7 +63,7 @@ const SettingsModal = () => {
   );
 };
 
-export default withAuth(SettingsModal, {
+export default withAuth(Settings, {
   accessLevel: 'authenticated',
   redirectTo: '/home',
 });

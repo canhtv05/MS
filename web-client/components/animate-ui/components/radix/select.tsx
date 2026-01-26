@@ -50,7 +50,22 @@ function SelectGroup(props: SelectGroupProps) {
 
 type SelectValueProps = SelectValuePrimitiveProps;
 
-const SelectValue = SelectValuePrimitive;
+const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
+  ({ placeholder, className, ...props }, ref) => {
+    // Radix UI Select.Value automatically displays the selected item's text
+    // min-w-0 is required for truncate to work in flex containers
+    // block display ensures the text is properly shown
+    return (
+      <SelectValuePrimitive
+        ref={ref}
+        placeholder={placeholder}
+        className={cn('min-w-0 flex-1 truncate text-left block [&>span]:block', className)}
+        {...props}
+      />
+    );
+  },
+);
+SelectValue.displayName = 'SelectValue';
 
 type SelectTriggerProps = SelectTriggerPrimitiveProps;
 
@@ -65,7 +80,7 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
         )}
         {...props}
       >
-        <span className="flex-1 truncate text-left">{children}</span>
+        {children}
         <SelectIconPrimitive>
           <AltArrowDown className="size-4 opacity-50 shrink-0" />
         </SelectIconPrimitive>

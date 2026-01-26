@@ -111,7 +111,7 @@ const Container = () => {
           {t?.('edit_profile')}
         </Button>
         <IconButton
-          onClick={() => router.replace('/settings')}
+          onClick={() => router.push('/settings')}
           variant="outline"
           className="cursor-pointer"
         >

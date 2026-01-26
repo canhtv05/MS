@@ -3,6 +3,18 @@
     "title": "Quản lý tài khoản"
   },
   "privacy": {
-    "title": "Quyền riêng tư"
+    "title": "Quyền riêng tư",
+    "profile_visibility": {
+      "title": "Hiển thị hồ sơ",
+      "description": "Người có thể xem hồ sơ của bạn"
+    },
+    "friends_visibility": {
+      "title": "Hiển thị bạn bè",
+      "description": "Người có thể xem bạn bè của bạn"
+    },
+    "posts_visibility": {
+      "title": "Hiển thị bài đăng",
+      "description": "Người có thể xem bài đăng của bạn"
+    }
   }
 }

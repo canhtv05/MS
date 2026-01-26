@@ -3,6 +3,18 @@
     "title": "Manage account"
   },
   "privacy": {
-    "title": "Privacy"
+    "title": "Privacy",
+    "profile_visibility": {
+      "title": "Profile visibility",
+      "description": "People can view your profile"
+    },
+    "friends_visibility": {
+      "title": "Friends visibility",
+      "description": "People can view your friends"
+    },
+    "posts_visibility": {
+      "title": "Posts visibility",
+      "description": "People can view your posts"
+    }
   }
 }
