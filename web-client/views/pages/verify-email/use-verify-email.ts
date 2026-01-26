@@ -69,7 +69,7 @@ const useVerifyEmail = () => {
 
   useEffect(() => {
     if (time === 0 && status === 'success') {
-      router.push('/home');
+      router.replace('/home');
     }
   }, [time, status, router]);
 
@@ -78,7 +78,7 @@ const useVerifyEmail = () => {
   };
 
   const handleGoHome = () => {
-    router.push('/home');
+    router.replace('/home');
   };
 
   return {

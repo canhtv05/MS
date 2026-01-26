@@ -34,7 +34,7 @@ const ProtectedRoute = ({
   useEffect(() => {
     if (!isLoading && accessLevel === 'authenticated') {
       if (!isAuthenticated || !user) {
-        router.push(redirectTo || '/sign-in');
+        router.replace(redirectTo || '/sign-in');
       }
     }
   }, [isLoading, isAuthenticated, user, accessLevel, router, redirectTo]);
@@ -42,7 +42,7 @@ const ProtectedRoute = ({
   useEffect(() => {
     if (!isLoading && accessLevel === 'admin') {
       if (!isAuthenticated || !user) {
-        router.push(redirectTo || '/sign-in');
+        router.replace(redirectTo || '/sign-in');
         return;
       }
 
@@ -51,10 +51,10 @@ const ProtectedRoute = ({
       );
 
       if (!hasAdminRole) {
-        router.push(redirectTo || '/home');
+        router.replace(redirectTo || '/home');
       }
     }
-  }, [isLoading, isAuthenticated, user, accessLevel, router, redirectTo]);
+  }, [isLoading, isAuthenticated, user, accessLevel, redirectTo, router]);
 
   if (accessLevel === 'public') {
     return <>{children}</>;

@@ -6,6 +6,7 @@ import { Loader2Icon } from '@/components/animate-ui/icons';
 import { AnimatePresence } from 'motion/react';
 import { Dispatch, forwardRef, SetStateAction } from 'react';
 import { Portal } from '@/components/animate-ui/components/portal';
+import Show from '@/components/Show';
 import HomeHeaderSearchCard from './HomeHeaderSearchCard';
 
 interface IHomeHeaderSearch {
@@ -25,30 +26,37 @@ const HomeHeaderSearchLG = forwardRef(
     { isShowSearch, isLoading, debouncedValue, readyValue, containerRef }: IHomeHeaderSearch,
     ref: React.ForwardedRef<HTMLDivElement>,
   ) => {
+    const shouldShowResults =
+      isShowSearch && debouncedValue.trim() !== '' && !isLoading && debouncedValue === readyValue;
+
     return (
-      <Portal ref={ref} isOpen={isShowSearch} containerRef={containerRef}>
-        <div
-          className={cn(
-            'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] w-xs!',
-            isLoading ? 'overflow-hidden' : 'overflow-y-auto',
-          )}
-        >
-          {isLoading ? (
-            <div className="flex mt-2 items-center justify-center">
-              <Loader2Icon className="animate-spin size-8 text-foreground" />
-            </div>
-          ) : isShowSearch &&
-            debouncedValue.trim() !== '' &&
-            !isLoading &&
-            debouncedValue === readyValue ? (
-            <AnimatePresence>
-              {Array.from({ length: 20 }).map((_, index) => (
-                <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
-              ))}
-            </AnimatePresence>
-          ) : null}
-        </div>
-      </Portal>
+      <Show when={isShowSearch}>
+        <Portal ref={ref} containerRef={containerRef}>
+          <div
+            className={cn(
+              'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] w-xs!',
+              isLoading ? 'overflow-hidden' : 'overflow-y-auto',
+            )}
+          >
+            <Show
+              when={isLoading}
+              fallback={
+                <Show when={shouldShowResults}>
+                  <AnimatePresence>
+                    {Array.from({ length: 20 }).map((_, index) => (
+                      <HomeHeaderSearchCard key={index} value={debouncedValue} index={index} />
+                    ))}
+                  </AnimatePresence>
+                </Show>
+              }
+            >
+              <div className="flex mt-2 items-center justify-center">
+                <Loader2Icon className="animate-spin size-8 text-foreground" />
+              </div>
+            </Show>
+          </div>
+        </Portal>
+      </Show>
     );
   },
 );

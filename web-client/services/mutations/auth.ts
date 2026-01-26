@@ -87,7 +87,7 @@ export const useAuthMutation = () => {
         if (returnUrl) {
           router.push(decodeURIComponent(returnUrl));
         } else if (!returnUrl && authenticate) {
-          router.push('/home');
+          router.replace('/home');
         }
         toast.success(t('sign_in.login_success'), { id: 'login-toast' });
       }

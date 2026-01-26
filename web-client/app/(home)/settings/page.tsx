@@ -1,15 +1,13 @@
 'use client';
 
+import { withAuth } from '@/guard/withAuth';
+import SettingsPage from '@/views/pages/settings/SettingsPage';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { ArrowLeft } from '@solar-icons/react-perf/BoldDuotone';
 
-interface IStandaloneLayoutProps {
-  children: ReactNode;
-}
-
-const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
+const Settings = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -35,7 +33,10 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
 
   return (
     <div className="fixed inset-0 z-80 pointer-events-none">
-      <div className="absolute inset-0 top-(--header-height) pointer-events-auto custom-bg-2 z-10 backdrop-blur-md bg-background/80" />
+      <div
+        className="absolute inset-0 top-(--header-height) pointer-events-auto custom-bg-2 z-10 backdrop-blur-md bg-background/80"
+        onClick={handleClose}
+      />
       <div className="absolute inset-0 top-(--header-height) pointer-events-none z-20">
         <div className="fixed md:block hidden top-[76px] left-4 md:left-6 z-80 pointer-events-auto">
           <IconButton
@@ -47,11 +48,14 @@ const StandaloneLayout = ({ children }: IStandaloneLayoutProps) => {
           </IconButton>
         </div>
         <div className="h-full [&_main]:pl-0! p-5 md:pl-24 w-full overflow-y-auto overflow-x-hidden overscroll-contain pointer-events-auto">
-          {children}
+          <SettingsPage />
         </div>
       </div>
     </div>
   );
 };
 
-export default StandaloneLayout;
+export default withAuth(Settings, {
+  accessLevel: 'authenticated',
+  redirectTo: '/home',
+});

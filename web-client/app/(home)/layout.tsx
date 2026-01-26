@@ -3,20 +3,15 @@ import { ReactNode } from 'react';
 
 interface IRootHomeLayoutProps {
   children: ReactNode;
-  parallel: ReactNode;
+  modal: ReactNode;
 }
 
-const RootHomeLayout = ({ children, parallel }: IRootHomeLayoutProps) => {
-  const hasParallel = parallel !== null && parallel !== undefined && parallel !== false;
-  const wrapperClassName = hasParallel
-    ? 'min-h-screen relative overflow-hidden'
-    : 'min-h-screen relative';
-
+const RootHomeLayout = ({ children, modal }: IRootHomeLayoutProps) => {
   return (
-    <div className={wrapperClassName}>
+    <div className="min-h-screen relative">
       <HeaderLayout />
       <div className="relative z-0">{children}</div>
-      {parallel}
+      {modal}
     </div>
   );
 };
