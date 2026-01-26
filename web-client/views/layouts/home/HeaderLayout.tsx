@@ -19,7 +19,7 @@ import images from '@/public/imgs';
 import useHeaderLayout from './use-header-layout';
 import { Loader2Icon } from '@/components/animate-ui/icons';
 import useClickOutside from '@/hooks/use-click-outside';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/animate-ui/components/buttons/button';
@@ -36,6 +36,7 @@ import { Logout3, Settings, LockPassword } from '@solar-icons/react-perf/BoldDuo
 import { Bell } from '@solar-icons/react-perf/Outline';
 import { UserCircle } from '@solar-icons/react-perf/BoldDuotone';
 import { getValidImageSrc } from '@/lib/image-utils';
+import { useHeaderState } from './use-header-state';
 
 const HeaderLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -59,7 +60,8 @@ const HeaderLayout = () => {
   useClickOutside(ref, () => setIsShowSearch(false));
 
   const { t, ready } = useTranslation(['layout', 'auth']);
-  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const { isChangePasswordDialogOpen, openChangePasswordDialog, closeChangePasswordDialog } =
+    useHeaderState();
   const router = useRouter();
   const user = useAuthStore(s => s.user);
 
@@ -188,7 +190,7 @@ const HeaderLayout = () => {
                         <DropdownMenuShortcut>⌘⇧P</DropdownMenuShortcut>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => setOpenChangePassword(true)}
+                        onClick={() => openChangePasswordDialog()}
                         className="group cursor-pointer flex items-center justify-start gap-2"
                       >
                         <LockPassword className="text-foreground/70" />
@@ -273,13 +275,13 @@ const HeaderLayout = () => {
         }}
       />
       <Dialog
-        onClose={() => setOpenChangePassword(false)}
-        open={openChangePassword}
+        onClose={() => closeChangePasswordDialog()}
+        open={isChangePasswordDialogOpen}
         title={t('auth:change_password.title')}
         description={t('auth:change_password.description')}
         id="change-password-form"
       >
-        <ChangePassword onSuccess={() => setOpenChangePassword(false)} />
+        <ChangePassword onSuccess={() => closeChangePasswordDialog()} />
       </Dialog>
     </header>
   );

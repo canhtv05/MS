@@ -20,6 +20,31 @@
     "close": "Đóng",
     "cancel": "Hủy",
     "confirm": "Xác nhận",
-    "view": "Xem"
+    "view": "Xem",
+    "delete": "Xóa"
+  },
+  "privacy_level": {
+    "PRIVACY_LEVEL_PUBLIC": "Công khai",
+    "PRIVACY_LEVEL_PRIVATE": "Riêng tư",
+    "PRIVACY_LEVEL_FRIENDS_ONLY": "Chỉ bạn bè",
+    "PRIVACY_LEVEL_CUSTOM": "Tùy chỉnh"
+  },
+  "gender": {
+    "GENDER_UNSPECIFIED": "Chưa xác định",
+    "GENDER_MALE": "Nam",
+    "GENDER_FEMALE": "Nữ",
+    "GENDER_OTHER": "Khác khác"
+  },
+  "relationship_status": {
+    "RELATIONSHIP_STATUS_SINGLE": "Độc thân",
+    "RELATIONSHIP_STATUS_IN_A_RELATIONSHIP": "Đang hẹn hò",
+    "RELATIONSHIP_STATUS_ENGAGED": "Đã đính hôn",
+    "RELATIONSHIP_STATUS_MARRIED": "Đã kết hôn",
+    "RELATIONSHIP_STATUS_ITS_COMPLICATED": "Rất phức tạp",
+    "RELATIONSHIP_STATUS_IN_LOVE": "Đang yêu",
+    "RELATIONSHIP_STATUS_WIDOWED": "Góa",
+    "RELATIONSHIP_STATUS_SEPARATED": "Ly thân",
+    "RELATIONSHIP_STATUS_DIVORCED": "Ly hôn",
+    "RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP": "Chung sống như vợ chồng"
   }
 }

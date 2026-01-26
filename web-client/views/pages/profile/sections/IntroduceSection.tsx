@@ -45,7 +45,7 @@ const IntroduceSection = ({ data, isLoading }: IIntroduceSectionProps) => {
           <div className="flex items-center gap-2 text-xs text-foreground/60 group">
             <Heart className="w-3.5 h-3.5 text-foreground/40" />
             <span className="truncate max-w-full font-medium">
-              {t(introduce.relationshipStatus)}
+              {t(`common:relationship_status.${introduce.relationshipStatus}`)}
             </span>
           </div>
         )}
@@ -53,7 +53,9 @@ const IntroduceSection = ({ data, isLoading }: IIntroduceSectionProps) => {
       {introduce.gender && introduce.gender !== Gender.GENDER_UNSPECIFIED && (
         <div className="flex items-center gap-2 text-xs text-foreground/60 group">
           <User className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="truncate max-w-full font-medium">{t(introduce.gender)}</span>
+          <span className="truncate max-w-full font-medium">
+            {t(`common:gender.${introduce.gender}`)}
+          </span>
         </div>
       )}
       {introduce.city && (

@@ -20,6 +20,32 @@
     "close": "Close",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "view": "View"
+    "view": "View",
+    "delete": "Delete"
+  },
+  "privacy_level": {
+    "PRIVACY_LEVEL_PUBLIC": "Public",
+    "PRIVACY_LEVEL_PRIVATE": "Private",
+    "PRIVACY_LEVEL_FRIENDS_ONLY": "Friends only",
+    "PRIVACY_LEVEL_CUSTOM": "Custom"
+  },
+  "gender": {
+    "GENDER_UNSPECIFIED": "Unspecified",
+    "GENDER_MALE": "Male",
+    "GENDER_FEMALE": "Female",
+    "GENDER_OTHER": "Other"
+  },
+  "relationship_status": {
+    "RELATIONSHIP_STATUS_UNSPECIFIED": "Unspecified",
+    "RELATIONSHIP_STATUS_SINGLE": "Single",
+    "RELATIONSHIP_STATUS_IN_A_RELATIONSHIP": "In a relationship",
+    "RELATIONSHIP_STATUS_ENGAGED": "Engaged",
+    "RELATIONSHIP_STATUS_MARRIED": "Married",
+    "RELATIONSHIP_STATUS_ITS_COMPLICATED": "It's complicated",
+    "RELATIONSHIP_STATUS_IN_LOVE": "In love",
+    "RELATIONSHIP_STATUS_WIDOWED": "Widowed",
+    "RELATIONSHIP_STATUS_SEPARATED": "Separated",
+    "RELATIONSHIP_STATUS_DIVORCED": "Divorced",
+    "RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP": "Civil partnership"
   }
 }

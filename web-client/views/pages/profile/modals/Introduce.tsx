@@ -17,7 +17,6 @@ import { Dispatch, SetStateAction } from 'react';
 import { Skeleton } from '@/components/customs/skeleton';
 import dynamic from 'next/dynamic';
 import Dialog from '@/components/customs/dialog';
-import { IIntroduceContentProps } from '../edit/Introduce';
 import { useTranslation } from 'react-i18next';
 
 type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
@@ -28,7 +27,7 @@ interface IIntroduceProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const IntroduceContent = dynamic<IIntroduceContentProps>(() => import('../edit/Introduce'), {
+const IntroduceContent = dynamic(() => import('../edit/Introduce'), {
   ssr: false,
   loading: () => (
     <div className="flex flex-col gap-3">
@@ -99,7 +98,7 @@ const Introduce = ({ form, open, setOpen }: IIntroduceProps) => {
           hasBorder
           disableFooter
         >
-          <IntroduceContent form={form} />
+          <IntroduceContent />
         </Dialog>
       </div>
       <div className="flex flex-col gap-2">

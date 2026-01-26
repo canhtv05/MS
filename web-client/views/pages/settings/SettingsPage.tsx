@@ -2,10 +2,13 @@
 
 import Wrapper from '@/components/customs/wrapper';
 import { cn } from '@/lib/utils';
-import { LockPassword, UserCircle } from '@solar-icons/react-perf/category/style/Linear';
-import { Fragment, useRef, useState } from 'react';
+import { LockPassword, UserCircle, Alarm } from '@solar-icons/react-perf/category/style/Linear';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Privacy from './privacy/Privacy';
+import Privacy from './tabs/Privacy';
+import Account from './tabs/Account';
+import { Portal } from 'radix-ui';
+import Notification from './tabs/Notification';
 
 interface ISettingsMenu {
   title: string;
@@ -21,24 +24,33 @@ interface ISettingsMenuContent {
 const SETTINGS_MENU: ISettingsMenu[] = [
   {
     title: 'account.title',
-    icon: <UserCircle className="size-7 stroke-2" />,
+    icon: <UserCircle className="size-7" />,
     key: 'account',
   },
   {
     title: 'privacy.title',
-    icon: <LockPassword className="size-7 stroke-2" />,
+    icon: <LockPassword className="size-7" />,
     key: 'privacy',
+  },
+  {
+    title: 'notification.title',
+    icon: <Alarm className="size-7" />,
+    key: 'notification',
   },
 ];
 
 const SETTINGS_MENU_CONTENT: ISettingsMenuContent[] = [
   {
     key: 'account',
-    content: <div className="bg-red-500  h-[1000px]!">Quản lý tài khoản</div>,
+    content: <Account />,
   },
   {
     key: 'privacy',
     content: <Privacy />,
+  },
+  {
+    key: 'notification',
+    content: <Notification />,
   },
 ];
 
@@ -55,9 +67,11 @@ const SettingsPage = () => {
 
   return (
     <>
-      {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-70">hellowirld</div> */}
+      <Portal.Root>
+        {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-9999">hellowirld</div> */}
+      </Portal.Root>
       <div className="flex pb-(--sp-layout) h-full min-h-0 [&>div]:rounded-md [&>div]:h-full [&>div]:custom-bg-1 gap-(--sp-layout)">
-        <div className="flex-1 min-h-0 overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+        <div className="flex-1 min-h-0 lg:block hidden overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
           <Wrapper className="px-0">
             <div className="flex flex-col">
               {SETTINGS_MENU.map(item => (
@@ -65,7 +79,7 @@ const SettingsPage = () => {
                   key={item.key}
                   onClick={() => handleClick(item.key)}
                   className={cn(
-                    'cursor-pointer flex p-3 px-5 items-center gap-2',
+                    'cursor-pointer flex p-3 px-5 font-bold items-center gap-2',
                     activeMenu === item.key ? 'text-primary' : '',
                   )}
                 >
@@ -78,9 +92,12 @@ const SettingsPage = () => {
         </div>
         <div className="flex-2 min-h-0 overflow-y-auto no-scrollbar shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
           <Wrapper className="flex flex-col py-0">
-            {SETTINGS_MENU_CONTENT.map(item => (
+            {SETTINGS_MENU_CONTENT.map((item, idx) => (
               <div
-                className="py-(--sp-card)"
+                className={cn(
+                  'py-(--sp-card)',
+                  idx !== SETTINGS_MENU_CONTENT.length - 1 ? 'border-b' : '',
+                )}
                 key={item.key}
                 ref={el => {
                   refs.current[item.key] = el;

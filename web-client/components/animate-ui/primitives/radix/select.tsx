@@ -158,13 +158,13 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
     const { isOpen } = useSelectOpen();
 
     // Filter out any props that shouldn't be passed to the DOM element
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { forceMount, ...motionProps } = props as typeof props & { forceMount?: boolean };
 
     return (
       <SelectPortal container={container}>
         <SelectPrimitive.Content
           asChild
-          forceMount
           onCloseAutoFocus={onCloseAutoFocus}
           onEscapeKeyDown={onEscapeKeyDown}
           onPointerDownOutside={onPointerDownOutside}

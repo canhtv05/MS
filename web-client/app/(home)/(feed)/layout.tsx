@@ -1,4 +1,4 @@
-import LayoutContainer from '@/components/LayoutContainer';
+import LayoutContainer from '@/views/layouts/LayoutContainer';
 import NavigationLayout from '@/views/layouts/navigation/NavigationLayout';
 import { NavigationProvider } from '@/contexts/navigation-context';
 import { ReactNode } from 'react';

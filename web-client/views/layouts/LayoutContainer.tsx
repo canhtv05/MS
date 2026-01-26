@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import Show from './Show';
+import Show from '../../components/Show';
 import { useNavigation } from '@/contexts/NavigationContext';
 import { cn } from '@/lib/utils';
 

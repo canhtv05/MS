@@ -1,6 +1,10 @@
 {
   "account": {
-    "title": "Quản lý tài khoản"
+    "title": "Quản lý tài khoản",
+    "delete_account": "Xóa tài khoản",
+    "info": "Thông tin tài khoản",
+    "account_area": "Khu vực của bạn",
+    "account_area_description": "Hệ thống thiết lập khu vực tài khoản của bạn dựa trên thời gian và địa điểm đăng ký"
   },
   "privacy": {
     "title": "Quyền riêng tư",
@@ -16,5 +20,8 @@
       "title": "Hiển thị bài đăng",
       "description": "Người có thể xem bài đăng của bạn"
     }
+  },
+  "notification": {
+    "title": "Thời gian sử dụng màn hình"
   }
 }

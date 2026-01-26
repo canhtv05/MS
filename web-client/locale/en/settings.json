@@ -1,6 +1,10 @@
 {
   "account": {
-    "title": "Manage account"
+    "title": "Manage account",
+    "delete_account": "Delete account",
+    "info": "Account information",
+    "account_area": "Your account area",
+    "account_area_description": "The system sets your account area based on the time and location you registered"
   },
   "privacy": {
     "title": "Privacy",
@@ -16,5 +20,8 @@
       "title": "Posts visibility",
       "description": "People can view your posts"
     }
+  },
+  "notification": {
+    "title": "Screen time"
   }
 }
