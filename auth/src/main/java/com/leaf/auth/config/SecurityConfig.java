@@ -8,6 +8,7 @@ import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.constant.CommonConstants;
+import com.leaf.framework.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import org.springframework.context.annotation.Bean;
@@ -37,11 +38,13 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final CookieUtil cookieUtil;
     private final CorsFilter corsFilter;
+    private final JwtUtil jwtUtil;
 
-    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, CookieUtil cookieUtil) {
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, CookieUtil cookieUtil, JwtUtil jwtUtil) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.cookieUtil = cookieUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     @Bean
@@ -82,7 +85,7 @@ public class SecurityConfig {
     }
 
     private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider, cookieUtil);
+        return new JWTConfigurer(tokenProvider, cookieUtil, jwtUtil);
     }
 
     @Bean

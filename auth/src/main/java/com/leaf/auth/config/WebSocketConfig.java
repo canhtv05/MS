@@ -1,6 +1,8 @@
 package com.leaf.auth.config;
 
 import com.leaf.auth.security.jwt.TokenProvider;
+import com.leaf.common.enums.TokenStatus;
+import com.leaf.framework.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -25,9 +27,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final TokenProvider tokenProvider;
+    private final JwtUtil jwtUtil;
 
-    public WebSocketConfig(@Lazy TokenProvider tokenProvider) {
+    public WebSocketConfig(@Lazy TokenProvider tokenProvider, @Lazy JwtUtil jwtUtil) {
         this.tokenProvider = tokenProvider;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         String authorizationHeader = accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
                         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                             authorizationHeader = authorizationHeader.substring(7);
-                            if (tokenProvider.validateToken(authorizationHeader)) {
+                            if (TokenStatus.VALID.equals(jwtUtil.validateToken(authorizationHeader))) {
                                 Authentication authentication = tokenProvider.getAuthentication(authorizationHeader);
                                 accessor.setUser(authentication);
                                 SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -1,6 +1,8 @@
 package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.util.CookieUtil;
+import com.leaf.common.enums.TokenStatus;
+import com.leaf.framework.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -17,10 +19,12 @@ public class JWTFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
     private final CookieUtil cookieUtil;
+    private final JwtUtil jwtUtil;
 
-    public JWTFilter(TokenProvider tokenProvider, CookieUtil cookieUtil) {
+    public JWTFilter(TokenProvider tokenProvider, CookieUtil cookieUtil, JwtUtil jwtUtil) {
         this.tokenProvider = tokenProvider;
         this.cookieUtil = cookieUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -45,7 +49,7 @@ public class JWTFilter extends GenericFilterBean {
             }
         }
 
-        if (StringUtils.hasText(jwt) && this.tokenProvider.validateToken(jwt)) {
+        if (StringUtils.hasText(jwt) && TokenStatus.VALID.equals(jwtUtil.validateToken(jwt))) {
             Authentication authentication = this.tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

@@ -17,17 +17,14 @@ import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
+import com.leaf.framework.constant.CommonConstants;
 import com.leaf.framework.security.SecurityUtils;
 import com.leaf.framework.service.RedisService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,11 +52,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TokenProvider {
 
-    private static final String CHANNEL_KEY = "channel";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String ROLES_KEY = "role";
     private static final String USER_GLOBAL_KEY = "isGlobal";
-    private static final String INVALID_JWT_TOKEN = "Invalid JWT token.";
     private final SecretKey key;
     private final JwtParser jwtParser;
     private final SimpMessagingTemplate messagingTemplate;
@@ -280,32 +275,9 @@ public class TokenProvider {
             authorities,
             claims.get(ROLES_KEY, String.class),
             claims.get(USER_GLOBAL_KEY, Boolean.class),
-            claims.get(CHANNEL_KEY, String.class)
+            claims.get(CommonConstants.CHANNEL_KEY, String.class)
         );
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-    }
-
-    public boolean validateToken(String authToken) {
-        try {
-            Claims claims = jwtParser.parseSignedClaims(authToken).getPayload();
-            String username = claims.getSubject();
-            String channel = claims.get(CHANNEL_KEY, String.class);
-
-            Date expiration = claims.getExpiration();
-
-            if (expiration.before(new Date())) {
-                throw new ApiException(ErrorMessage.UNAUTHENTICATED);
-            }
-
-            String keyToken = redisService.getKeyToken(username, channel);
-            String tokenExisting = redisService.get(keyToken, String.class);
-            return Objects.equals(tokenExisting, AESUtils.hexString(authToken));
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException e) {
-            log.trace(INVALID_JWT_TOKEN, e);
-        } catch (IllegalArgumentException e) {
-            log.error("Token validation error {}", e.getMessage());
-        }
-        return false;
     }
 
     public void revokeToken(String token, String channel) {
@@ -318,10 +290,14 @@ public class TokenProvider {
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
             user.setRefreshToken(null);
             userRepository.save(user);
-            String keyToken = redisService.getKeyToken(username, channel);
-            redisService.evict(keyToken);
-            String keyUser = redisService.getKeyUser(username, channel);
-            redisService.evict(keyUser);
+            Thread.startVirtualThread(() -> {
+                try {
+                    redisService.evict(redisService.getKeyToken(username, channel));
+                    redisService.evict(redisService.getKeyUser(username, channel));
+                } catch (Exception e) {
+                    log.error("Async evict redis failed", e);
+                }
+            });
         }
     }
 
@@ -348,7 +324,7 @@ public class TokenProvider {
             .claim(AUTHORITIES_KEY, authorities)
             .claim(ROLES_KEY, String.join(",", userDetails.getRole()))
             .claim(USER_GLOBAL_KEY, userDetails.isGlobal())
-            .claim(CHANNEL_KEY, channel)
+            .claim(CommonConstants.CHANNEL_KEY, channel)
             .issuedAt(new Date(now))
             .expiration(validity)
             .signWith(key, Jwts.SIG.HS512)

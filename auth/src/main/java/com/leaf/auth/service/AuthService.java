@@ -16,11 +16,13 @@ import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.enums.AuthKey;
+import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.security.SecurityUtils;
+import com.leaf.framework.util.JwtUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,6 +54,7 @@ public class AuthService {
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     AuthenticationManagerBuilder authenticationManagerBuilder;
     TokenProvider tokenProvider;
+    JwtUtil jwtUtil;
 
     @Transactional
     public AuthenticateResponse authenticate(
@@ -102,10 +105,10 @@ public class AuthService {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
 
-        boolean valid = this.tokenProvider.validateToken(tokenPair.getAccessToken());
-        if (valid) {
+        TokenStatus valid = jwtUtil.validateToken(tokenPair.getAccessToken());
+        if (TokenStatus.VALID.equals(valid)) {
             return VerifyTokenResponse.builder()
-                .valid(valid)
+                .valid(TokenStatus.VALID.equals(valid))
                 .accessToken(tokenPair.getAccessToken())
                 .refreshToken(tokenPair.getRefreshToken())
                 .build();
@@ -127,10 +130,10 @@ public class AuthService {
         if (Objects.isNull(refreshTokenResponse)) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         } else {
-            valid = true;
+            valid = TokenStatus.VALID;
         }
         return VerifyTokenResponse.builder()
-            .valid(valid)
+            .valid(TokenStatus.VALID.equals(valid))
             .accessToken(refreshTokenResponse.getAccessToken())
             .refreshToken(refreshTokenResponse.getRefreshToken())
             .build();
@@ -138,10 +141,10 @@ public class AuthService {
 
     @Transactional
     public VerifyTokenResponse verifyTokenInternal(String accessToken, String refreshToken, String channel) {
-        boolean valid = this.tokenProvider.validateToken(accessToken);
-        if (valid) {
+        TokenStatus valid = jwtUtil.validateToken(accessToken);
+        if (TokenStatus.VALID.equals(valid)) {
             return VerifyTokenResponse.builder()
-                .valid(valid)
+                .valid(TokenStatus.VALID.equals(valid))
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -154,10 +157,10 @@ public class AuthService {
         if (Objects.isNull(refreshTokenResponse)) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         } else {
-            valid = true;
+            valid = TokenStatus.VALID;
         }
         return VerifyTokenResponse.builder()
-            .valid(valid)
+            .valid(TokenStatus.VALID.equals(valid))
             .accessToken(refreshTokenResponse.getAccessToken())
             .refreshToken(refreshTokenResponse.getRefreshToken())
             .build();

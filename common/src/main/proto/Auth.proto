@@ -7,21 +7,19 @@ import "google/protobuf/timestamp.proto";
 import "Common.proto";
 
 service AuthGrpcService {
-  rpc verifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
+  rpc refreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
   rpc verifyEmailToken (VerifyEmailTokenDTO) returns (VerifyEmailTokenDTO);
   rpc authMe (AuthMeRequest) returns (AuthMeResponse);
 }
 
-message VerifyTokenRequest {
-  string accessToken = 1;
-  string refreshToken = 2;
-  string channel = 3;
+message RefreshTokenRequest {
+  string refreshToken = 1;
+  string channel = 2;
 }
 
-message VerifyTokenResponse {
-  bool valid = 1;
-  string accessToken = 2;
-  string refreshToken = 3;
+message RefreshTokenResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
 }
 
 message VerifyEmailTokenDTO {

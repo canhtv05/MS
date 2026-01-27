@@ -1,8 +1,8 @@
 package com.leaf.gateway.grpc;
 
 import com.leaf.common.grpc.AuthGrpcServiceGrpc;
-import com.leaf.common.grpc.VerifyTokenRequest;
-import com.leaf.common.grpc.VerifyTokenResponse;
+import com.leaf.common.grpc.RefreshTokenRequest;
+import com.leaf.common.grpc.RefreshTokenResponse;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -14,19 +14,18 @@ public class GrpcAuthClient {
     @GrpcClient("auth-service")
     private AuthGrpcServiceGrpc.AuthGrpcServiceStub asyncStub;
 
-    public Mono<VerifyTokenResponse> verifyToken(String accessToken, String refreshToken, String channel) {
-        VerifyTokenRequest request = VerifyTokenRequest.newBuilder()
-            .setAccessToken(accessToken)
+    public Mono<RefreshTokenResponse> refreshToken(String refreshToken, String channel) {
+        RefreshTokenRequest request = RefreshTokenRequest.newBuilder()
             .setRefreshToken(refreshToken)
             .setChannel(channel)
             .build();
 
         return Mono.create(sink ->
-            asyncStub.verifyToken(
+            asyncStub.refreshToken(
                 request,
-                new StreamObserver<>() {
+                new StreamObserver<RefreshTokenResponse>() {
                     @Override
-                    public void onNext(VerifyTokenResponse value) {
+                    public void onNext(RefreshTokenResponse value) {
                         sink.success(value);
                     }
 

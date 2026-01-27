@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 
 public class CommonConstants {
 
+    public static final String CHANNEL_KEY = "channel";
+
     public static final String[] AUTH_PUBLIC_ENDPOINTS = {
         "/me/p/authenticate",
         "/me/c/create",
@@ -35,8 +37,7 @@ public class CommonConstants {
     public static final String[] PREFIX_PUBLIC_ENDPOINTS = Stream.of(
         PREFIX_AUTH_PUBLIC_ENDPOINTS,
         PREFIX_NOTIFICATION_PUBLIC_ENDPOINTS,
-        PREFIX_PROFILE_PUBLIC_ENDPOINTS,
-        PREFIX_GRAPHQL_PUBLIC_ENDPOINTS
+        PREFIX_PROFILE_PUBLIC_ENDPOINTS
     )
         .flatMap(Arrays::stream)
         .toArray(String[]::new);
