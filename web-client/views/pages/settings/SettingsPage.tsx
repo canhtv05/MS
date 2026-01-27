@@ -71,32 +71,47 @@ const SettingsPage = () => {
         {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-9999">hellowirld</div> */}
       </Portal.Root>
       <div className="flex pb-(--sp-layout) h-full min-h-0 [&>div]:rounded-md [&>div]:h-full [&>div]:custom-bg-1 gap-(--sp-layout)">
-        <div className="flex-1 min-h-0 lg:block hidden overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+        <div className="flex-1 min-h-0 lg:block hidden overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_10px_-4px_rgba(0,0,0,0.3)] min-w-[140px]">
           <Wrapper className="px-0">
-            <div className="flex flex-col">
+            <div className="flex flex-col p-2">
               {SETTINGS_MENU.map(item => (
                 <button
                   key={item.key}
                   onClick={() => handleClick(item.key)}
                   className={cn(
-                    'cursor-pointer flex p-3 px-5 font-bold items-center gap-2',
-                    activeMenu === item.key ? 'text-primary' : '',
+                    'cursor-pointer flex p-3 px-4 font-semibold items-center gap-3 rounded-lg text-sm min-w-0',
+                    activeMenu === item.key
+                      ? 'text-primary bg-primary/10 dark:bg-primary/20'
+                      : 'text-foreground/70 hover:bg-accent/50 dark:hover:bg-accent/30',
                   )}
                 >
-                  {item.icon}
-                  {t(item.title)}
+                  <span
+                    className={cn(
+                      'shrink-0',
+                      activeMenu === item.key
+                        ? '[&_svg]:text-primary'
+                        : '[&_svg]:text-foreground/70',
+                    )}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="whitespace-nowrap overflow-hidden text-ellipsis min-w-0">
+                    {t(item.title)}
+                  </span>
                 </button>
               ))}
             </div>
           </Wrapper>
         </div>
-        <div className="flex-2 min-h-0 overflow-y-auto no-scrollbar shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+        <div className="flex-3 min-h-0 overflow-y-auto no-scrollbar shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_10px_-4px_rgba(0,0,0,0.3)]">
           <Wrapper className="flex flex-col py-0">
             {SETTINGS_MENU_CONTENT.map((item, idx) => (
               <div
                 className={cn(
                   'py-(--sp-card)',
-                  idx !== SETTINGS_MENU_CONTENT.length - 1 ? 'border-b' : '',
+                  idx !== SETTINGS_MENU_CONTENT.length - 1
+                    ? 'border-b border-border/50 dark:border-border/30'
+                    : '',
                 )}
                 key={item.key}
                 ref={el => {

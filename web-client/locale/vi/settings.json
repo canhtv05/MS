@@ -2,6 +2,7 @@
   "account": {
     "title": "Quản lý tài khoản",
     "delete_account": "Xóa tài khoản",
+    "delete_account_description": "Xóa tài khoản sẽ xóa tất cả dữ liệu liên quan đến tài khoản của bạn",
     "info": "Thông tin tài khoản",
     "account_area": "Khu vực của bạn",
     "account_area_description": "Hệ thống thiết lập khu vực tài khoản của bạn dựa trên thời gian và địa điểm đăng ký"

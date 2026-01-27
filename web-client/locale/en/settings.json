@@ -2,6 +2,7 @@
   "account": {
     "title": "Manage account",
     "delete_account": "Delete account",
+    "delete_account_description": "Deleting your account will delete all data related to your account",
     "info": "Account information",
     "account_area": "Your account area",
     "account_area_description": "The system sets your account area based on the time and location you registered"
