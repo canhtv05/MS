@@ -75,7 +75,7 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
       <SelectTriggerPrimitive
         ref={ref}
         className={cn(
-          'border-input ring-offset-background placeholder:text-muted-foreground flex h-10 w-full items-center justify-between rounded-md border bg-white/50 px-3 py-2 text-sm backdrop-blur-sm focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900/50',
+          'border-input ring-offset-background placeholder:text-muted-foreground flex h-10 w-full items-center justify-between rounded-md border bg-white/50 px-3 py-2 text-sm backdrop-blur-sm focus:outline-hidden focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900/50',
           className,
         )}
         {...props}

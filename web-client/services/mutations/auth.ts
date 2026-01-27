@@ -27,7 +27,10 @@ import { getGraphQLClient } from '@/utils/graphql';
 import { ME_QUERY } from '../graphql/query';
 import { logger } from '@/lib/logger';
 
-export const useAuthMutation = () => {
+export const useAuthMutation = (isLogoutAllDevices = false) => {
+  const mutationKey = isLogoutAllDevices
+    ? [API_ENDPOINTS.AUTH.LOGOUT_ALL_DEVICES]
+    : [API_ENDPOINTS.AUTH.LOGOUT];
   const [showResendEmail, setShowResendEmail] = useState(false);
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
@@ -95,9 +98,12 @@ export const useAuthMutation = () => {
   });
 
   const logoutMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.AUTH.LOGOUT],
+    mutationKey: mutationKey,
     mutationFn: async (): Promise<IResponseObject<void>> =>
-      await api.post(API_ENDPOINTS.AUTH.LOGOUT, null),
+      await api.post(
+        isLogoutAllDevices ? API_ENDPOINTS.AUTH.LOGOUT_ALL_DEVICES : API_ENDPOINTS.AUTH.LOGOUT,
+        null,
+      ),
     onError: error => handleMutationError(error, 'logout-toast'),
     onMutate: () => {
       toast.loading(t('logout.loading'), { id: 'logout-toast' });

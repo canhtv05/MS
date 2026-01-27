@@ -241,4 +241,12 @@ public class AuthService {
             return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
         }
     }
+
+    @Transactional
+    public void logoutAllDevices(String cookieValue, HttpServletResponse response) {
+        TokenPair tokenPair = getTokenPair(cookieValue, false);
+        tokenProvider.revokeAllTokens(tokenPair.getAccessToken());
+        cookieUtil.deleteCookie(response);
+        SecurityUtils.clear();
+    }
 }

@@ -3,19 +3,26 @@
 import { Radio, RadioGroup } from '@/components/animate-ui/components/base/radio';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import Dialog from '@/components/customs/dialog';
-import useHeaderLayout from '@/views/layouts/home/use-header-layout';
 import { useHeaderState } from '@/views/layouts/home/use-header-state';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/customs/label';
+import { useAuthMutation } from '@/services/mutations/auth';
+import cookieUtils from '@/utils/cookieUtils';
 
 const Account = () => {
   const { t } = useTranslation('settings');
   const { openChangePasswordDialog } = useHeaderState();
-  const { handleLogout } = useHeaderLayout();
+  const { logoutMutation: logoutCurrentDeviceMutation } = useAuthMutation();
+  const { logoutMutation: logoutAllDevicesMutation } = useAuthMutation(true);
   const [openDialogLogout, setOpenDialogLogout] = useState(false);
   const [logoutType, setLogoutType] = useState<'current' | 'all'>('current');
+
+  const performLogout = async (mutation: typeof logoutCurrentDeviceMutation) => {
+    await mutation.mutateAsync();
+    cookieUtils.deleteStorage();
+  };
 
   return (
     <>
@@ -86,8 +93,10 @@ const Account = () => {
         title={t('auth:logout.title')}
         onClose={() => setOpenDialogLogout(false)}
         description={t('auth:logout.description')}
-        onAccept={() => {
-          handleLogout();
+        onAccept={async () => {
+          const mutation =
+            logoutType === 'current' ? logoutCurrentDeviceMutation : logoutAllDevicesMutation;
+          await performLogout(mutation);
           setOpenDialogLogout(false);
         }}
       >
@@ -102,7 +111,7 @@ const Account = () => {
               className={cn(
                 'group relative flex items-start mb-0 gap-3 rounded-lg border p-4 transition-all cursor-pointer',
                 'hover:border-primary/50 hover:bg-accent/50 dark:hover:bg-accent/30',
-                'focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2',
+                'focus-within:ring-2 focus-within:ring-primary/20',
                 logoutType === 'current'
                   ? 'border-primary/50 bg-primary/5 dark:bg-primary/10'
                   : 'border-border bg-background',
@@ -123,7 +132,7 @@ const Account = () => {
               className={cn(
                 'group relative flex items-start gap-3 rounded-lg border p-4 transition-all cursor-pointer',
                 'hover:border-primary/50 hover:bg-accent/50 dark:hover:bg-accent/30',
-                'focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2',
+                'focus-within:ring-2 focus-within:ring-primary/20',
                 logoutType === 'all'
                   ? 'border-primary/50 bg-primary/5 dark:bg-primary/10'
                   : 'border-border bg-background',

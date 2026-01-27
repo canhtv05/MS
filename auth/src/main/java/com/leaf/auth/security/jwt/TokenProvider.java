@@ -301,6 +301,22 @@ public class TokenProvider {
         }
     }
 
+    public void revokeAllTokens(String token) {
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new CustomAuthenticationException("User not authenticated", HttpStatus.UNAUTHORIZED)
+        );
+        User user = userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
+        user.setRefreshToken(null);
+        userRepository.save(user);
+        // to sent notification to all devices
+        Thread.startVirtualThread(() -> {
+            redisService.evict(redisService.getKeyToken(username, "web"));
+            redisService.evict(redisService.getKeyUser(username, "mobile"));
+        });
+    }
+
     private String generateToken(
         Authentication authentication,
         long validityTimeInSeconds,

@@ -118,4 +118,13 @@ public class UserJWTController {
         authService.logout(cookieValue, request.getChannel(), response);
         return ResponseEntity.ok(ResponseObject.success());
     }
+
+    @PostMapping("/p/logout-all-devices")
+    public ResponseEntity<ResponseObject<?>> logoutAllDevices(
+        @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
+        HttpServletResponse response
+    ) {
+        authService.logoutAllDevices(cookieValue, response);
+        return ResponseEntity.ok(ResponseObject.success());
+    }
 }
