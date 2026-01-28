@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { API_FRONTEND_URL } from '@/configs/endpoints';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';
@@ -44,14 +43,5 @@ export const handleRedirectLogin = (clearStorage = true) => {
       cookieUtils.deleteStorage();
     }
     // window.location.href = `/sign-in?returnUrl=${encodeURIComponent(currentPath)}`;
-  }
-};
-
-export const isTokenValid = (token: string): boolean => {
-  try {
-    const decoded = jwtDecode<JwtPayload>(token);
-    return decoded.exp! > Date.now() / 1000;
-  } catch {
-    return false;
   }
 };

@@ -47,6 +47,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Slf4j
@@ -96,7 +97,6 @@ public class TokenProvider {
         String tokenExisting = redisService.get(keyToken, String.class);
         String sessionId = UUID.randomUUID().toString();
 
-        // chưa làm
         if (tokenExisting != null) {
             NotificationPayload<?> payload = NotificationPayload.builder()
                 .type(NotificationType.FORCE_LOGOUT)
@@ -108,8 +108,6 @@ public class TokenProvider {
                 .build();
             messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
 
-            // Revoke old session: delete tokens and clear refresh token
-            // Note: tokenExisting is a hash, not the actual JWT, so we can't parse it
             User user = userRepository
                 .findByUsername(name)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
@@ -205,6 +203,7 @@ public class TokenProvider {
         return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
     }
 
+    @Transactional(readOnly = true)
     public RefreshTokenResponse processRefreshInternal(String refreshToken, String channel) {
         if (CommonUtils.isEmpty(refreshToken)) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
@@ -217,6 +216,7 @@ public class TokenProvider {
             Claims claims = jwtParser.parseSignedClaims(refreshToken).getPayload();
             String username = claims.getSubject();
             String id = claims.getId();
+
             User user = userRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
@@ -254,8 +254,11 @@ public class TokenProvider {
             userRepository.save(user);
             this.cacheUserToken(username, channel, id, newToken);
 
-            log.info("Auth Log:: Refresh Token Processed");
             return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
+        } catch (io.jsonwebtoken.JwtException e) {
+            throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
+        } catch (ApiException e) {
+            throw e;
         } catch (Exception e) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }

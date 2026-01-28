@@ -1,0 +1,36 @@
+fragment AuthMeFields on AuthMeDTO {
+  channel
+  email
+  isGlobal
+  permissions
+  roleLabels
+  roles
+  secretKey
+  username
+}
+
+fragment ProfileFields on ProfileDTO {
+  id
+  userId
+  fullname
+  avatarUrl
+  coverUrl
+  bio
+  followersCount
+  followingCount
+  createdDate
+  lastOnlineAt
+}
+
+query Me {
+  me {
+    auth {
+      ...AuthMeFields
+    }
+    profile {
+      ...ProfileFields
+    }
+  }
+}
+
+

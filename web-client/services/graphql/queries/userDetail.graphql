@@ -1,0 +1,72 @@
+fragment UserProfileIntroduceFields on UserProfileIntroduceDTO {
+  id
+  city
+  hometown
+  jobTitle
+  company
+  school
+  websiteUrl
+  githubUrl
+  linkedinUrl
+  xUrl
+  instagramUrl
+  tiktokUrl
+  facebookUrl
+  dob
+  gender
+  relationshipStatus
+  phoneNumber
+  interests {
+    id
+    title
+    color
+  }
+}
+
+fragment UserProfilePrivacyFields on UserProfilePrivacyDTO {
+  profileVisibility
+  friendsVisibility
+  postsVisibility
+}
+
+fragment UserDetailImagesFields on GetFileImagesResponse {
+  data {
+    contentType
+    imageUrl
+    fileSize
+    originFileName
+    publicId
+    createdAt
+    resourceType
+  }
+}
+
+fragment DetailUserProfileFields on DetailUserProfileDTO {
+  id
+  userId
+  fullname
+  bio
+  coverUrl
+  avatarUrl
+  lastOnlineAt
+  followersCount
+  followingCount
+  createdDate
+  introduce {
+    ...UserProfileIntroduceFields
+  }
+  privacy {
+    ...UserProfilePrivacyFields
+  }
+}
+
+query UserDetail($username: String!, $size: Int!) {
+  userDetail(username: $username) {
+    ...DetailUserProfileFields
+    images(size: $size) {
+      ...UserDetailImagesFields
+    }
+  }
+}
+
+

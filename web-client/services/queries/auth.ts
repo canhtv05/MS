@@ -5,12 +5,8 @@ import { IUserProfileDTO } from '@/types/auth';
 import cookieUtils from '@/utils/cookieUtils';
 import { getGraphQLClient } from '@/utils/graphql';
 import { useQuery } from '@tanstack/react-query';
-import { ME_QUERY } from '../graphql/query';
+import { MeDocument, MeQuery } from '../graphql/graphql';
 import { AxiosError } from 'axios';
-
-export interface MeQueryResponse {
-  me: IUserProfileDTO;
-}
 
 export const useAuthQuery = (enabled: boolean = true) => {
   const setUser = useAuthStore(state => state.setUser);
@@ -22,9 +18,9 @@ export const useAuthQuery = (enabled: boolean = true) => {
     queryFn: async (): Promise<IUserProfileDTO> => {
       try {
         const client = getGraphQLClient();
-        const data = await client.request<MeQueryResponse>(ME_QUERY);
-        setUser(data.me);
-        return data.me;
+        const data = await client.request<MeQuery>(MeDocument);
+        setUser(data.me as IUserProfileDTO);
+        return data.me as IUserProfileDTO;
       } catch (error) {
         if (error instanceof AxiosError && error?.response?.status === 401) {
           cookieUtils.clearAuthenticated();

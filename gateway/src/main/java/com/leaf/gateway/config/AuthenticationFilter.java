@@ -4,7 +4,6 @@ import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.RefreshTokenResponse;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
@@ -77,33 +76,20 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     private boolean isPublicEndpoint(ServerHttpRequest request) {
         String path = request.getURI().getPath();
-        log.info("GATEWAY_DEBUG: Checking if public - path: " + path);
-        log.info("GATEWAY_DEBUG: API_PREFIX: " + API_PREFIX);
 
-        boolean isPublic = Arrays.stream(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).anyMatch(s -> {
+        return Arrays.stream(CommonConstants.PREFIX_PUBLIC_ENDPOINTS).anyMatch(s -> {
             String pattern = API_PREFIX + s;
-            boolean matches = pathMatcher.match(pattern, path);
-            log.info("GATEWAY_DEBUG: Pattern: " + pattern + " matches: " + matches);
-            return matches;
+            return pathMatcher.match(pattern, path);
         });
-
-        log.info("GATEWAY_DEBUG: Final result: " + isPublic);
-        return isPublic;
     }
 
     private boolean isGraphqlEndpoint(ServerHttpRequest request) {
         String path = request.getURI().getPath();
-        log.info("GATEWAY_DEBUG: Checking if GraphQL endpoint - path: " + path);
 
-        boolean isGraphql = Arrays.stream(CommonConstants.PREFIX_GRAPHQL_PUBLIC_ENDPOINTS).anyMatch(s -> {
+        return Arrays.stream(CommonConstants.PREFIX_GRAPHQL_PUBLIC_ENDPOINTS).anyMatch(s -> {
             String pattern = API_PREFIX + s;
-            boolean matches = pathMatcher.match(pattern, path);
-            log.info("GATEWAY_DEBUG: GraphQL Pattern: " + pattern + " matches: " + matches);
-            return matches;
+            return pathMatcher.match(pattern, path);
         });
-
-        log.info("GATEWAY_DEBUG: Is GraphQL endpoint: " + isGraphql);
-        return isGraphql;
     }
 
     private Mono<Void> handleRequiredAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -131,7 +117,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         }
 
         if (StringUtils.isEmpty(accessToken)) {
-            log.info("GATEWAY_DEBUG: No token found for protected endpoint - returning 401");
             return unauthenticated(exchange.getResponse());
         }
 
@@ -150,16 +135,21 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 if (StringUtils.isEmpty(finalRefreshToken)) {
                     return unauthenticated(exchange.getResponse());
                 }
-                RefreshTokenResponse refreshResult = grpcAuthClient
+                return grpcAuthClient
                     .refreshToken(finalRefreshToken, finalChannel)
-                    .block();
-                if (Objects.isNull(refreshResult)) {
-                    return unauthenticated(exchange.getResponse());
-                }
-                var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
-                addAuthCookie(exchange.getResponse(), refreshResult.getAccessToken(), refreshResult.getRefreshToken());
-                log.info("GATEWAY_DEBUG: Refreshed token successfully");
-                return chain.filter(exchange.mutate().request(request).build());
+                    .flatMap(refreshResult -> {
+                        if (Objects.isNull(refreshResult)) {
+                            return unauthenticated(exchange.getResponse());
+                        }
+                        var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
+                        addAuthCookie(
+                            exchange.getResponse(),
+                            refreshResult.getAccessToken(),
+                            refreshResult.getRefreshToken()
+                        );
+                        return chain.filter(exchange.mutate().request(request).build());
+                    })
+                    .onErrorResume(e -> unauthenticated(exchange.getResponse()));
             }
             return unauthenticated(exchange.getResponse());
         } catch (Exception e) {
@@ -191,7 +181,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             accessToken = authHeader.getFirst().replace("Bearer ", "");
         }
         if (StringUtils.isEmpty(accessToken)) {
-            log.info("GATEWAY_DEBUG: No token for GraphQL endpoint - forwarding as anonymous");
             return chain.filter(exchange);
         }
         final String finalAccessToken = accessToken;
@@ -207,28 +196,27 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             }
             if (status == TokenStatus.EXPIRED) {
                 if (StringUtils.isEmpty(finalRefreshToken)) {
-                    log.info(
-                        "GATEWAY_DEBUG: Access token expired and no refresh token for GraphQL - forwarding as anonymous"
-                    );
                     return chain.filter(exchange);
                 }
-                RefreshTokenResponse refreshResult = grpcAuthClient
+                return grpcAuthClient
                     .refreshToken(finalRefreshToken, finalChannel)
-                    .block();
-                if (Objects.isNull(refreshResult)) {
-                    log.info("GATEWAY_DEBUG: Refresh token invalid for GraphQL - forwarding as anonymous");
-                    return chain.filter(exchange);
-                }
-                var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
-                addAuthCookie(exchange.getResponse(), refreshResult.getAccessToken(), refreshResult.getRefreshToken());
-                log.info("GATEWAY_DEBUG: Refreshed token successfully for GraphQL");
-                return chain.filter(exchange.mutate().request(request).build());
+                    .flatMap(refreshResult -> {
+                        if (Objects.isNull(refreshResult)) {
+                            return chain.filter(exchange);
+                        }
+                        var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
+                        addAuthCookie(
+                            exchange.getResponse(),
+                            refreshResult.getAccessToken(),
+                            refreshResult.getRefreshToken()
+                        );
+                        return chain.filter(exchange.mutate().request(request).build());
+                    })
+                    .onErrorResume(e -> chain.filter(exchange));
             }
 
-            log.info("GATEWAY_DEBUG: Invalid token for GraphQL - forwarding as anonymous");
             return chain.filter(exchange);
         } catch (Exception e) {
-            log.error("GATEWAY_DEBUG: Error during GraphQL optional authentication", e);
             return chain.filter(exchange);
         }
     }
@@ -263,9 +251,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 .secure(false)
                 .sameSite("Strict");
             if (StringUtils.isNotEmpty(domain)) cookieBuilder.domain(domain);
-            response.addCookie(cookieBuilder.build());
+            ResponseCookie cookie = cookieBuilder.build();
+            response.addCookie(cookie);
         } catch (Exception e) {
-            log.error("GATEWAY_DEBUG: Failed to add auth cookie", e);
+            log.error("Failed to add auth cookie", e);
         }
     }
 

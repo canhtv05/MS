@@ -7,14 +7,10 @@ import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
-import { GET_USER_DETAIL_QUERY } from '../graphql/query';
+import { UserDetailDocument, UserDetailQuery, UserDetailQueryVariables } from '../graphql/graphql';
 import { getGraphQLClient } from '@/utils/graphql';
 import { ResourceType } from '@/enums/common';
 import { useAuthStore } from '@/stores/auth';
-
-interface GetUserDetailResponse {
-  userDetail: IDetailUserProfileDTO;
-}
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useProfileStore(state => state.userProfile);
@@ -95,17 +91,15 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
     queryKey: ['profile', 'user-profile', us],
     queryFn: async (): Promise<IDetailUserProfileDTO> => {
       const client = getGraphQLClient();
-      const res = await client.request<GetUserDetailResponse, { username: string; size: number }>(
-        GET_USER_DETAIL_QUERY,
-        {
-          username: us,
-          size: 9,
-        },
-      );
-      if (us === user?.auth?.username) {
-        setUserProfile(res.userDetail);
+      const variables: UserDetailQueryVariables = {
+        username: us,
+        size: 9,
+      };
+      const res = await client.request<UserDetailQuery>(UserDetailDocument, variables);
+      if (us === user?.auth?.username && res.userDetail) {
+        setUserProfile(res.userDetail as unknown as IDetailUserProfileDTO);
       }
-      return res.userDetail;
+      return res.userDetail as unknown as IDetailUserProfileDTO;
     },
     enabled: enabled && !!us,
     retry: 1,

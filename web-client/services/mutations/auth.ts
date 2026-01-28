@@ -22,9 +22,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { MeQueryResponse } from '../queries/auth';
 import { getGraphQLClient } from '@/utils/graphql';
-import { ME_QUERY } from '../graphql/query';
+import { MeDocument, MeQuery } from '../graphql/graphql';
+import { IUserProfileDTO } from '@/types/auth';
 import { logger } from '@/lib/logger';
 
 export const useAuthMutation = (isLogoutAllDevices = false) => {
@@ -76,9 +76,9 @@ export const useAuthMutation = (isLogoutAllDevices = false) => {
             queryKey: ['auth', 'me'],
             queryFn: async () => {
               const client = getGraphQLClient();
-              const data = await client.request<MeQueryResponse>(ME_QUERY);
-              useAuthStore.getState().setUser(data.me);
-              return data.me;
+              const data = await client.request<MeQuery>(MeDocument);
+              useAuthStore.getState().setUser(data.me as IUserProfileDTO);
+              return data.me as IUserProfileDTO;
             },
           });
         } catch (err) {

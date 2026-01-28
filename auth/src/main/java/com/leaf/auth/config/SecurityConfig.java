@@ -3,7 +3,9 @@ package com.leaf.auth.config;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomAuthenticationProvider;
 import com.leaf.auth.security.jwt.JWTConfigurer;
+import com.leaf.auth.security.jwt.PermissionAuthorizationFilter;
 import com.leaf.auth.security.jwt.TokenProvider;
+import com.leaf.auth.service.PublicApiService;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.utils.JsonF;
@@ -39,17 +41,30 @@ public class SecurityConfig {
     private final CookieUtil cookieUtil;
     private final CorsFilter corsFilter;
     private final JwtUtil jwtUtil;
+    private final PublicApiService publicApiService;
 
-    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, CookieUtil cookieUtil, JwtUtil jwtUtil) {
+    public SecurityConfig(
+        TokenProvider tokenProvider,
+        CorsFilter corsFilter,
+        CookieUtil cookieUtil,
+        JwtUtil jwtUtil,
+        PublicApiService publicApiService
+    ) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.cookieUtil = cookieUtil;
         this.jwtUtil = jwtUtil;
+        this.publicApiService = publicApiService;
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
+    PermissionAuthorizationFilter permissionAuthorizationFilter() {
+        return new PermissionAuthorizationFilter(publicApiService);
     }
 
     @Bean
@@ -59,7 +74,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, PermissionAuthorizationFilter permissionAuthorizationFilter)
+        throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
@@ -81,6 +97,7 @@ public class SecurityConfig {
                     .authenticated()
             )
             .apply(securityConfigurerAdapter());
+        http.addFilterAfter(permissionAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

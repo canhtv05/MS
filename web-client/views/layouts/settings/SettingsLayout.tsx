@@ -2,7 +2,7 @@
 
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { ArrowLeft } from '@solar-icons/react-perf/BoldDuotone';
 import { startTransition } from 'react';
 
@@ -33,13 +33,23 @@ const SettingsLayout = ({ children }: ISettingsLayoutProps) => {
     };
   }, [pathname]);
 
-  if (pathname !== '/settings') return null;
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     startTransition(() => {
       router.back();
     });
-  };
+  }, [router]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleClose]);
+
+  if (pathname !== '/settings') return null;
 
   return (
     <div className="fixed inset-0 z-80 pointer-events-none">
