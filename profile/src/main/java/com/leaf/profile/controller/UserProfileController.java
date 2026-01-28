@@ -4,7 +4,9 @@ import com.leaf.common.dto.ResponseObject;
 import com.leaf.profile.dto.ChangeCoverByUrlReq;
 import com.leaf.profile.dto.SendFriendRequestDTO;
 import com.leaf.profile.dto.UpdateBioProfileReq;
+import com.leaf.profile.dto.UpdatePrivacyReq;
 import com.leaf.profile.dto.UserProfileResponse;
+import com.leaf.profile.service.UserProfilePrivacyService;
 import com.leaf.profile.service.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
+    private final UserProfilePrivacyService userProfilePrivacyService;
 
     @PostMapping("/friend-request")
     public ResponseEntity<ResponseObject<SendFriendRequestDTO>> sendFriendRequest(
@@ -67,5 +70,11 @@ public class UserProfileController {
         @Valid @RequestBody UpdateBioProfileReq req
     ) {
         return ResponseEntity.ok(ResponseObject.success(userProfileService.updateBioProfile(req)));
+    }
+
+    @PostMapping("/me/update-privacy")
+    public ResponseEntity<ResponseObject<?>> updatePrivacy(@Valid @RequestBody UpdatePrivacyReq req) {
+        userProfilePrivacyService.updateUserProfilePrivacy(req);
+        return ResponseEntity.ok(ResponseObject.success());
     }
 }

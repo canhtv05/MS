@@ -84,6 +84,7 @@ export const useAuthMutation = (isLogoutAllDevices = false) => {
         } catch (err) {
           logger.error('Get user profile failed', err);
           toast.error(t('sign_in.login_failed'), { id: 'login-toast' });
+          handleMutationError(err, 'login-toast');
           return;
         }
 

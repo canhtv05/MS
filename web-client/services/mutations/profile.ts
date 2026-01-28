@@ -9,7 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { IProfileDTO } from '@/types/auth';
 import { MultipartFile } from '@/types/common';
-import { IChangeCoverByUrlReq, IDetailUserProfileDTO, IUpdateBioProfileReq } from '@/types/profile';
+import {
+  IChangeCoverByUrlReq,
+  IDetailUserProfileDTO,
+  IUpdateBioProfileReq,
+  IUpdatePrivacyReq,
+} from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
 
@@ -166,10 +171,42 @@ export const useProfileMutation = () => {
       });
     },
   });
+
+  const updatePrivacyMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.PROFILE.UPDATE_PRIVACY],
+    mutationFn: async (payload: IUpdatePrivacyReq): Promise<IResponseObject<void>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_PRIVACY, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'update-privacy-toast'),
+    onMutate: () => {
+      toast.loading(t('update_privacy_loading'), {
+        id: 'update-privacy-toast',
+      });
+    },
+    onSuccess: () => {
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'me'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'privacy', user?.auth?.username],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['profile', 'user-profile', user?.auth?.username],
+        }),
+      ]);
+      toast.success(t('update_privacy_success'), {
+        id: 'update-privacy-toast',
+      });
+    },
+  });
+
   return {
     changeCoverImageMutation,
     changeCoverImageFromMediaHistoryMutation,
     changeAvatarImageMutation,
     updateBioProfileMutation,
+    updatePrivacyMutation,
   };
 };

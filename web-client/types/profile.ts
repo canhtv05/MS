@@ -22,6 +22,12 @@ export interface IUpdateBioProfileReq {
   bio: string;
 }
 
+export interface IUpdatePrivacyReq {
+  profileVisibility: PrivacyLevel;
+  friendsVisibility: PrivacyLevel;
+  postsVisibility: PrivacyLevel;
+}
+
 export interface IChangeCoverByUrlReq {
   url: string;
 }

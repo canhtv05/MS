@@ -120,5 +120,7 @@
   "choose_from_gallery": "Choose from gallery",
   "only_me": "Only me",
   "pictures_description": "List of your pictures",
-  "friends_description": "List of your friends"
+  "friends_description": "List of your friends",
+  "update_privacy_success": "Update privacy success",
+  "update_privacy_loading": "Update privacy loading"
 }

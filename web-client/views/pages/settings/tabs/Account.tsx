@@ -10,8 +10,6 @@ import { cn } from '@/lib/utils';
 import { Label } from '@/components/customs/label';
 import { useAuthMutation } from '@/services/mutations/auth';
 import cookieUtils from '@/utils/cookieUtils';
-import { useProfileStore } from '@/stores/profile';
-import { logger } from '@/lib/logger';
 
 const Account = () => {
   const { t } = useTranslation('settings');
@@ -21,8 +19,6 @@ const Account = () => {
   const [openDialogLogout, setOpenDialogLogout] = useState(false);
   const [openConfirmLogout, setOpenConfirmLogout] = useState(false);
   const [logoutType, setLogoutType] = useState<'current' | 'all'>('current');
-  const { userProfile } = useProfileStore();
-  logger.log(userProfile);
 
   const performLogout = async (mutation: typeof logoutCurrentDeviceMutation) => {
     await mutation.mutateAsync();

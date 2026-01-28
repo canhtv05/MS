@@ -316,6 +316,18 @@ export type UserDetailQuery = {
     | null;
 };
 
+export type UserProfilePrivacyQueryVariables = Exact<{
+  username: Scalars['String']['input'];
+}>;
+
+export type UserProfilePrivacyQuery = {
+  userDetail?: {
+    privacy?: {
+      ' $fragmentRefs'?: { UserProfilePrivacyFieldsFragment: UserProfilePrivacyFieldsFragment };
+    } | null;
+  } | null;
+};
+
 export const AuthMeFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -848,3 +860,70 @@ export const UserDetailDocument = {
     },
   ],
 } as unknown as DocumentNode<UserDetailQuery, UserDetailQueryVariables>;
+export const UserProfilePrivacyDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'UserProfilePrivacy' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'username' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'userDetail' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'username' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'username' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'privacy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'UserProfilePrivacyFields' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserProfilePrivacyFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'UserProfilePrivacyDTO' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'profileVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'friendsVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'postsVisibility' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserProfilePrivacyQuery, UserProfilePrivacyQueryVariables>;

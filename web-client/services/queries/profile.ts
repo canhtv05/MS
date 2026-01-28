@@ -1,16 +1,29 @@
 'use client';
 
-import { IDetailUserProfileDTO, IImageHistoryGroupDTO, IUserProfileDTO } from '@/types/profile';
+import {
+  IDetailUserProfileDTO,
+  IImageHistoryGroupDTO,
+  IUserProfileDTO,
+  IUserProfilePrivacyDTO,
+} from '@/types/profile';
 import { IResponseObject, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
-import { UserDetailDocument, UserDetailQuery, UserDetailQueryVariables } from '../graphql/graphql';
+import {
+  UserDetailDocument,
+  UserDetailQuery,
+  UserDetailQueryVariables,
+  UserProfilePrivacyDocument,
+  UserProfilePrivacyQuery,
+  UserProfilePrivacyQueryVariables,
+} from '../graphql/graphql';
 import { getGraphQLClient } from '@/utils/graphql';
 import { ResourceType } from '@/enums/common';
 import { useAuthStore } from '@/stores/auth';
+import { handleMutationError } from '@/utils/handler-mutation-error';
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useProfileStore(state => state.userProfile);
@@ -26,10 +39,8 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
     },
     enabled: enabled && isAuthenticated && !userProfile,
     retry: 1,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    staleTime: 5 * 60 * 1000, // 5 phút - profile ít thay đổi
+    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
   });
 
   return {
@@ -72,10 +83,8 @@ export const useMyMediaHistoryInfiniteQuery = (
     },
     enabled: enabled && !!userID,
     retry: 1,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    staleTime: 2 * 60 * 1000, // 2 phút - media history có thể có media mới
+    gcTime: 5 * 60 * 1000, // 5 phút - giữ cache
   });
 };
 
@@ -101,12 +110,53 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
       }
       return res.userDetail as unknown as IDetailUserProfileDTO;
     },
+    throwOnError: error => {
+      handleMutationError(error, 'user-profile-query');
+      return true;
+    },
     enabled: enabled && !!us,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // Cache 5 phút
-    gcTime: 10 * 60 * 1000, // Garbage collection sau 10 phút
-    refetchOnWindowFocus: false, // Không fetch lại khi focus window
-    refetchOnMount: false, // Không fetch lại khi mount nếu đã có cache
+    staleTime: 5 * 60 * 1000, // 5 phút - user profile ít thay đổi
+    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
   });
   return query;
+};
+
+export const usePrivacyQuery = () => {
+  const { user } = useAuthStore();
+  const { userProfile, setUserProfile } = useProfileStore();
+  const username = user?.auth?.username || '';
+
+  return useQuery({
+    queryKey: ['profile', 'privacy', username],
+    queryFn: async (): Promise<IUserProfilePrivacyDTO> => {
+      const client = getGraphQLClient();
+      const variables: UserProfilePrivacyQueryVariables = {
+        username,
+      };
+      if (userProfile?.userId === username && userProfile?.privacy) {
+        return userProfile.privacy;
+      }
+      const res = await client.request<UserProfilePrivacyQuery>(
+        UserProfilePrivacyDocument,
+        variables,
+      );
+      const privacy = res.userDetail?.privacy as unknown as IUserProfilePrivacyDTO;
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          privacy,
+        });
+      }
+      return privacy;
+    },
+    throwOnError: error => {
+      handleMutationError(error, 'profile-privacy-query');
+      return true;
+    },
+    enabled: !!username,
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 phút - privacy settings ít thay đổi
+    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
+  });
 };

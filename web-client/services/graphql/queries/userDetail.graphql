@@ -69,4 +69,10 @@ query UserDetail($username: String!, $size: Int!) {
   }
 }
 
-
+query UserProfilePrivacy($username: String!) {
+  userDetail(username: $username) {
+    privacy {
+      ...UserProfilePrivacyFields
+    }
+  }
+}

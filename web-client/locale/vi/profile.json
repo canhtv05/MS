@@ -107,5 +107,7 @@
   "choose_from_gallery": "Chọn từ thư viện",
   "only_me": "Chỉ mình tôi",
   "pictures_description": "Danh sách ảnh của bạn",
-  "friends_description": "Danh sách bạn bè của bạn"
+  "friends_description": "Danh sách bạn bè của bạn",
+  "update_privacy_success": "Cập nhật quyền riêng tư thành công",
+  "update_privacy_loading": "Đang cập nhật quyền riêng tư"
 }
