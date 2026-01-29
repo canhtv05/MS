@@ -11,6 +11,7 @@ import { useState } from 'react';
 import Dialog from '@/components/customs/dialog';
 import { useAuthStore } from '@/stores/auth';
 import Image from 'next/image';
+import images from '@/public/imgs';
 
 interface IPrivateSectionProps {
   data?: IDetailUserProfileDTO;
@@ -46,20 +47,28 @@ const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
             <div className="flex items-center gap-2 text-xs text-foreground/60 group">
               <ShieldUser className="sm:size-14 size-10 text-primary" />
               <div className="flex flex-col items-start">
-                <span className="max-w-full wrap-break-word font-black text-sm sm:text-sm">
-                  {user?.auth?.username === data?.userId ? 'Bạn' : data?.fullname} đã khóa bảo vệ
-                  trang cá nhân
-                </span>
-                <span className="max-w-full wrap-break-word font-medium text-xs">
-                  Chế độ: {t(`common:privacy_level.${privacy.profileVisibility}`)}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowDetail(true)}
-                  className="text-link text-xs cursor-pointer"
-                >
-                  Xem chi tiết
-                </button>
+                {(() => {
+                  const isOwner = user?.auth?.username === data?.userId;
+                  const displayName = isOwner ? t('private_you') : data?.fullname;
+                  return (
+                    <>
+                      <span className="max-w-full wrap-break-word font-black text-sm sm:text-sm">
+                        {t('private_locked_title', { displayName })}
+                      </span>
+                      <span className="max-w-full wrap-break-word font-medium text-xs">
+                        {t('private_mode_label')}{' '}
+                        {t(`common:privacy_level.${privacy.profileVisibility}`)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setShowDetail(true)}
+                        className="text-link text-xs cursor-pointer"
+                      >
+                        {t('private_view_detail')}
+                      </button>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </Show>
@@ -74,7 +83,13 @@ const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
               <span className="truncate max-w-full font-medium">
                 {t(`common:privacy_level.${privacy.profileVisibility}`)}
               </span>
-              <button className="text-link text-xs cursor-pointer">Xem chi tiết</button>
+              <button
+                type="button"
+                onClick={() => setShowDetail(true)}
+                className="text-link text-xs cursor-pointer"
+              >
+                {t('private_view_detail')}
+              </button>
             </div>
           </Show>
         </div>
@@ -83,36 +98,31 @@ const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
         disableFooter
         open={showDetail}
         onClose={() => setShowDetail(false)}
-        title="Chi tiết chế độ bảo vệ"
+        title={t('private_dialog_title')}
       >
         <div className="flex flex-col gap-3 text-xs text-foreground/80">
           <div className="w-full h-32 rounded-lg bg-muted/60 flex items-center justify-center text-[10px] text-foreground/50 mb-1">
-            Ảnh minh họa khóa bảo vệ trang cá nhân
-            {/* <Image /> */}
+            <Image
+              src={images.privateBg}
+              alt="private-bg"
+              width={100}
+              height={100}
+              unoptimized
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {privacy.profileVisibility === PrivacyLevel.PRIVACY_LEVEL_PRIVATE && (
             <>
               <p className="font-semibold text-foreground text-sm">
-                Trang cá nhân của bạn có khóa bảo vệ
+                {t('private_private_heading')}
               </p>
-              <p>
-                Khi khóa bảo vệ trang cá nhân, bạn có thể giữ ảnh và bài viết của mình riêng tư hơn.
-              </p>
-              <p className="font-medium mt-1">Khóa bảo vệ hoạt động như thế nào</p>
+              <p>{t('private_private_p1')}</p>
+              <p className="font-medium mt-1">{t('private_private_how_title')}</p>
               <ul className="list-disc pl-4 space-y-1">
-                <li>
-                  Chỉ bạn bè mới nhìn thấy các ảnh, bài viết, tin trước đây và sau này trên trang cá
-                  nhân của bạn.
-                </li>
-                <li>
-                  Chỉ bạn bè mới nhìn thấy ảnh đại diện và ảnh bìa của bạn ở độ phân giải đầy đủ.
-                </li>
-                <li>
-                  Mọi người vẫn sẽ xem được thông tin hiển thị ở chế độ Công khai trên trang cá
-                  nhân, bài viết công khai có gắn thẻ bạn, cũng như có thể tìm kiếm và gửi cho bạn
-                  lời mời kết bạn.
-                </li>
+                <li>{t('private_private_li1')}</li>
+                <li>{t('private_private_li2')}</li>
+                <li>{t('private_private_li3')}</li>
               </ul>
             </>
           )}
@@ -120,25 +130,14 @@ const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
           {privacy.profileVisibility === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY && (
             <>
               <p className="font-semibold text-foreground text-sm">
-                Trang cá nhân của bạn đang giới hạn chế độ xem
+                {t('private_friends_heading')}
               </p>
-              <p>
-                Ở chế độ chỉ bạn bè, phần lớn nội dung trên trang cá nhân của bạn chỉ hiển thị với
-                những người đã là bạn bè.
-              </p>
-              <p className="font-medium mt-1">Giới hạn hiển thị hoạt động như thế nào</p>
+              <p>{t('private_friends_p1')}</p>
+              <p className="font-medium mt-1">{t('private_friends_how_title')}</p>
               <ul className="list-disc pl-4 space-y-1">
-                <li>
-                  Chỉ bạn bè mới xem được phần lớn ảnh, bài viết và tin trên trang cá nhân của bạn.
-                </li>
-                <li>
-                  Ảnh đại diện và ảnh bìa có thể được hiển thị ở mức độ phù hợp với cài đặt riêng tư
-                  hiện tại.
-                </li>
-                <li>
-                  Mọi người vẫn có thể xem một số thông tin công khai, bài viết công khai có gắn thẻ
-                  bạn, tìm kiếm và gửi lời mời kết bạn.
-                </li>
+                <li>{t('private_friends_li1')}</li>
+                <li>{t('private_friends_li2')}</li>
+                <li>{t('private_friends_li3')}</li>
               </ul>
             </>
           )}

@@ -49,6 +49,8 @@ public class JwtUtil {
 
             String keyToken = redisService.getKeyToken(username, channel);
             String tokenExisting = redisService.get(keyToken, String.class);
+            log.info("Token existing: {}", tokenExisting);
+            log.info("Auth token hex: {}", AESUtils.hexString(authToken));
             if (Objects.equals(tokenExisting, AESUtils.hexString(authToken))) {
                 return TokenStatus.VALID;
             } else {

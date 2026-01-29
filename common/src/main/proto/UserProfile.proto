@@ -41,7 +41,9 @@ message UserProfilePrivacyDTO {
     PrivacyLevel profileVisibility = 2;
     PrivacyLevel friendsVisibility = 3;
     PrivacyLevel postsVisibility = 4;
-    string id = 5;
+    PrivacyLevel introduceVisibility = 5;
+    PrivacyLevel galleryVisibility = 6;
+    string id = 7;
 }
 
 message UserProfileIntroduceDTO {

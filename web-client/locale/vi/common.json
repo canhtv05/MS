@@ -1,4 +1,5 @@
 {
+  "no_data": "Không có dữ liệu",
   "status": {
     "update_success": "Cập nhật thành công",
     "update_failed": "Cập nhật thất bại",

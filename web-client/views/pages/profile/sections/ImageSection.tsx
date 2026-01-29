@@ -17,6 +17,7 @@ import {
 } from '@/components/animate-ui/primitives/base/dialog';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { XIcon } from '@/components/animate-ui/icons';
+import { useTranslation } from 'react-i18next';
 
 interface IImageSectionProps {
   data?: IDetailUserProfileDTO;
@@ -26,6 +27,7 @@ interface IImageSectionProps {
 const ImageSection = ({ data, isLoading }: IImageSectionProps) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
@@ -39,7 +41,7 @@ const ImageSection = ({ data, isLoading }: IImageSectionProps) => {
 
   const list = data?.images?.data || [];
   if (!list.length) {
-    return null;
+    return <p className="text-center text-sm text-foreground/60 p-4">{t('common:no_data')}</p>;
   }
 
   return (

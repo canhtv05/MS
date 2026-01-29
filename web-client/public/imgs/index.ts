@@ -5,6 +5,7 @@ import platform from './platform.jpg';
 import vn from './vn.webp';
 import uk from './uk.webp';
 import goku from './goku-bg.jpg';
+import privateBg from './private-bg.jpg';
 
 import avt1 from './avatars/avatar1.jpeg';
 import avt2 from './avatars/avatar2.jpg';
@@ -30,6 +31,7 @@ const images = {
   vn,
   uk,
   goku,
+  privateBg,
   avt1,
   avt2,
   avt3,

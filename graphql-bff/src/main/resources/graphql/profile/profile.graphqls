@@ -37,6 +37,8 @@ type UserProfilePrivacyDTO {
   profileVisibility: PrivacyLevel
   friendsVisibility: PrivacyLevel
   postsVisibility: PrivacyLevel
+  introduceVisibility: PrivacyLevel
+  galleryVisibility: PrivacyLevel
 }
 
 type UserProfileIntroduceDTO {

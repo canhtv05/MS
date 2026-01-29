@@ -25,4 +25,6 @@ public class UserProfilePrivacyDTO implements Serializable {
     PrivacyLevel profileVisibility;
     PrivacyLevel friendsVisibility;
     PrivacyLevel postsVisibility;
+    PrivacyLevel introduceVisibility;
+    PrivacyLevel galleryVisibility;
 }

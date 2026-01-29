@@ -60,6 +60,8 @@ public class ApplicationInitConfig {
                         privacy.profile_visibility = row.profile_visibility,
                         privacy.friends_visibility = row.friends_visibility,
                         privacy.posts_visibility = row.posts_visibility,
+                        privacy.introduce_visibility = row.introduce_visibility,
+                        privacy.gallery_visibility = row.gallery_visibility,
                         privacy.created_by = row.created_by,
                         privacy.modified_by = row.modified_by,
                         privacy.created_date = datetime(row.created_date),

@@ -155,9 +155,9 @@ const HeaderLayout = () => {
                     <BookmarkIcon className="text-foreground/70 group-hover:animate-icon" />
                   </IconButton> */}
                 </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <div className="relative">
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <div className="relative cursor-pointer">
                       <HomeHeaderAvatar
                         src={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
                         fallback={user?.auth?.username}
@@ -169,7 +169,7 @@ const HeaderLayout = () => {
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px] z-80 [&_span]:text-foreground/70"
+                    className="w-[220px] z-100 [&_span]:text-foreground/70"
                   >
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
@@ -232,7 +232,7 @@ const HeaderLayout = () => {
                       {t('auth:sign_in.sign_in_button')}
                     </Button>
                   </Link>
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
                       <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
                         <div className="relative transparent!">
@@ -247,7 +247,7 @@ const HeaderLayout = () => {
                       side="bottom"
                       align="end"
                       sideOffset={10}
-                      className="w-[220px]"
+                      className="w-[220px] z-100"
                     >
                       <HomeHeaderDropdown
                         currentLang={currentLang}

@@ -1,4 +1,5 @@
 {
+  "no_data": "No data",
   "status": {
     "update_success": "Update successful",
     "update_failed": "Update failed",

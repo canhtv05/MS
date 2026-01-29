@@ -4,6 +4,7 @@ import { IDetailUserProfileDTO } from '@/types/profile';
 import { Skeleton } from '@/components/customs/skeleton';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface IFriendSectionProps {
   data?: IDetailUserProfileDTO;
@@ -11,6 +12,8 @@ interface IFriendSectionProps {
 }
 
 const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-3 gap-1.5 mt-2">
@@ -23,7 +26,7 @@ const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
 
   const list = data?.images?.data.slice(0, 9) || [];
   if (!list.length) {
-    return null;
+    return <p className="text-center text-sm text-foreground/60 p-4">{t('common:no_data')}</p>;
   }
 
   return (

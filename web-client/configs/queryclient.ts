@@ -44,9 +44,9 @@ const queryClient = new QueryClient({
       if (error instanceof AxiosError) {
         if (error.status === 401) {
           logger.log('Handling 401 in QueryCache');
-          cookieUtils.clearAuthenticated();
-          queryClient.setQueryData(['auth', 'me'], undefined);
-          queryClient.setQueryData(['profile', 'me'], undefined);
+          // cookieUtils.clearAuthenticated();
+          // queryClient.setQueryData(['auth', 'me'], undefined);
+          // queryClient.setQueryData(['profile', 'me'], undefined);
         } else if (error.status === 500) {
           queryClient.clear();
         }
@@ -69,8 +69,8 @@ const queryClient = new QueryClient({
       if (error instanceof AxiosError) {
         if (error?.response?.status === 401) {
           logger.log('Handling 401 in MutationCache');
-          cookieUtils.clearAuthenticated();
-          queryClient.setQueryData(['auth', 'me'], undefined);
+          // cookieUtils.clearAuthenticated();
+          // queryClient.setQueryData(['auth', 'me'], undefined);
           // queryClient.setQueryData(['profile', 'me'], undefined);
         }
       }

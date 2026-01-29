@@ -18,6 +18,7 @@ import { IUserProfilePrivacyDTO } from '@/types/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
 import Show from '@/components/Show';
 import { Skeleton } from '@/components/customs/skeleton';
+import { useState } from 'react';
 
 interface IRenderSelectProps {
   value: string;
@@ -48,7 +49,7 @@ const RenderSelect = ({ value, onValueChange, labelKey, t }: IRenderSelectProps)
 
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="w-full transition-global border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
+      <SelectTrigger className="w-full transition-global cursor-pointer border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
         <SelectValue placeholder={t('privacy.select_placeholder')} />
       </SelectTrigger>
       <SelectContent className="z-100">
@@ -69,20 +70,48 @@ const RenderSelect = ({ value, onValueChange, labelKey, t }: IRenderSelectProps)
 const Privacy = () => {
   const { t } = useTranslation('settings');
   const { data: privacyData, isLoading } = usePrivacyQuery();
-  const { updatePrivacyMutation: updatePrivacyMutation } = useProfileMutation();
+  const { updatePrivacyMutation } = useProfileMutation();
+  const [privacyDataState, setPrivacyDataState] = useState<
+    Omit<IUserProfilePrivacyDTO, 'id'> | null | undefined
+  >(privacyData ?? null);
 
-  const handleSetPrivacy = (key: keyof Omit<IUserProfilePrivacyDTO, 'id'>, value: PrivacyLevel) => {
-    const current: Omit<IUserProfilePrivacyDTO, 'id'> = {
-      profileVisibility: privacyData?.profileVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
-      friendsVisibility: privacyData?.friendsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
-      postsVisibility: privacyData?.postsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
-    };
-    const next = { ...current, [key]: value };
-    updatePrivacyMutation.mutate({
-      profileVisibility: next.profileVisibility,
-      friendsVisibility: next.friendsVisibility,
-      postsVisibility: next.postsVisibility,
-    });
+  const handleSetPrivacy = async (
+    key: keyof Omit<IUserProfilePrivacyDTO, 'id'>,
+    value: PrivacyLevel,
+  ) => {
+    const base: Omit<IUserProfilePrivacyDTO, 'id'> =
+      privacyDataState ??
+      (privacyData
+        ? {
+            profileVisibility: privacyData.profileVisibility,
+            friendsVisibility: privacyData.friendsVisibility,
+            postsVisibility: privacyData.postsVisibility,
+            introduceVisibility: privacyData.introduceVisibility,
+            galleryVisibility: privacyData.galleryVisibility,
+          }
+        : {
+            profileVisibility: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+            friendsVisibility: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+            postsVisibility: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+            introduceVisibility: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+            galleryVisibility: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+          });
+    if (base[key] === value) return;
+    const next = { ...base, [key]: value };
+    updatePrivacyMutation.mutate(
+      {
+        profileVisibility: next.profileVisibility,
+        friendsVisibility: next.friendsVisibility,
+        postsVisibility: next.postsVisibility,
+        introduceVisibility: next.introduceVisibility,
+        galleryVisibility: next.galleryVisibility,
+      },
+      {
+        onSuccess: () => {
+          setPrivacyDataState(next);
+        },
+      },
+    );
   };
 
   const privacySettings = [
@@ -90,22 +119,36 @@ const Privacy = () => {
       id: 'profile',
       titleKey: 'privacy.profile_visibility.title',
       descKey: 'privacy.profile_visibility.description',
-      value: privacyData?.profileVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+      value: privacyDataState?.profileVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
       setter: (value: string) => handleSetPrivacy('profileVisibility', value as PrivacyLevel),
     },
     {
       id: 'friends',
       titleKey: 'privacy.friends_visibility.title',
       descKey: 'privacy.friends_visibility.description',
-      value: privacyData?.friendsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+      value: privacyDataState?.friendsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
       setter: (value: string) => handleSetPrivacy('friendsVisibility', value as PrivacyLevel),
     },
     {
       id: 'posts',
       titleKey: 'privacy.posts_visibility.title',
       descKey: 'privacy.posts_visibility.description',
-      value: privacyData?.postsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+      value: privacyDataState?.postsVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
       setter: (value: string) => handleSetPrivacy('postsVisibility', value as PrivacyLevel),
+    },
+    {
+      id: 'introduce',
+      titleKey: 'privacy.introduce_visibility.title',
+      descKey: 'privacy.introduce_visibility.description',
+      value: privacyDataState?.introduceVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+      setter: (value: string) => handleSetPrivacy('introduceVisibility', value as PrivacyLevel),
+    },
+    {
+      id: 'gallery',
+      titleKey: 'privacy.gallery_visibility.title',
+      descKey: 'privacy.gallery_visibility.description',
+      value: privacyDataState?.galleryVisibility ?? PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
+      setter: (value: string) => handleSetPrivacy('galleryVisibility', value as PrivacyLevel),
     },
   ];
 

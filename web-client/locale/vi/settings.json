@@ -20,6 +20,14 @@
     "posts_visibility": {
       "title": "Hiển thị bài đăng",
       "description": "Người có thể xem bài đăng của bạn"
+    },
+    "introduce_visibility": {
+      "title": "Hiển thị thông tin giới thiệu",
+      "description": "Người có thể xem thông tin giới thiệu của bạn"
+    },
+    "gallery_visibility": {
+      "title": "Hiển thị hình ảnh",
+      "description": "Người có thể xem hình ảnh của bạn"
     }
   },
   "notification": {

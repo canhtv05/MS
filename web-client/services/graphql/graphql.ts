@@ -184,7 +184,9 @@ export type UserProfileIntroduceDto = {
 
 export type UserProfilePrivacyDto = {
   friendsVisibility?: Maybe<PrivacyLevel>;
+  galleryVisibility?: Maybe<PrivacyLevel>;
   id?: Maybe<Scalars['String']['output']>;
+  introduceVisibility?: Maybe<PrivacyLevel>;
   postsVisibility?: Maybe<PrivacyLevel>;
   profileVisibility?: Maybe<PrivacyLevel>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -266,6 +268,8 @@ export type UserProfilePrivacyFieldsFragment = {
   profileVisibility?: PrivacyLevel | null;
   friendsVisibility?: PrivacyLevel | null;
   postsVisibility?: PrivacyLevel | null;
+  introduceVisibility?: PrivacyLevel | null;
+  galleryVisibility?: PrivacyLevel | null;
 } & { ' $fragmentName'?: 'UserProfilePrivacyFieldsFragment' };
 
 export type UserDetailImagesFieldsFragment = {
@@ -467,6 +471,8 @@ export const UserProfilePrivacyFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'profileVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'friendsVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'postsVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'introduceVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'galleryVisibility' } },
         ],
       },
     },
@@ -573,6 +579,8 @@ export const DetailUserProfileFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'profileVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'friendsVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'postsVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'introduceVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'galleryVisibility' } },
         ],
       },
     },
@@ -783,6 +791,8 @@ export const UserDetailDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'profileVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'friendsVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'postsVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'introduceVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'galleryVisibility' } },
         ],
       },
     },
@@ -922,6 +932,8 @@ export const UserProfilePrivacyDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'profileVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'friendsVisibility' } },
           { kind: 'Field', name: { kind: 'Name', value: 'postsVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'introduceVisibility' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'galleryVisibility' } },
         ],
       },
     },

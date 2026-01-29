@@ -29,6 +29,8 @@ import ChooseImage from './modals/ChooseImage';
 import { getImageSrcOrNull } from '@/lib/image-utils';
 import { useProfileModalStore } from './use-profile-modal';
 import { IProfileParams } from '@/app/(home)/(feed)/user/[username]/page';
+import Show from '@/components/Show';
+import { PrivacyLevel } from '@/enums/common';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -151,7 +153,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
           );
         })()}
         {user?.auth?.username === data?.userId && !isLoading && (
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
                 className="absolute bg-background! right-2 px-[8px]! bottom-2 z-10"
@@ -162,7 +164,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
                 <span className="md:text-sm text-xs">{t('layout:header.change_cover')}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={-2}>
+            <DropdownMenuContent align="end" sideOffset={-2} className="z-100">
               <DropdownMenuArrow />
               <DropdownMenuItem
                 onClick={() => {
@@ -189,7 +191,16 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
       <div className="rounded-b-lg">
         <div className="md:px-4 px-4 md:pb-4 pb-4 custom-bg-1 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
           <Hero isLoading={isLoading} t={t} data={data} />
-          <Info isLoading={isLoading} t={t} data={data} />
+          {(() => {
+            const canViewInfo =
+              user?.auth?.username === data?.userId ||
+              data?.privacy?.profileVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+            return (
+              <Show when={canViewInfo || !!isLoading}>
+                <Info isLoading={isLoading} t={t} data={data} />
+              </Show>
+            );
+          })()}
         </div>
         <Tabs data={data} isLoading={isLoading} />
       </div>

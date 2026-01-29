@@ -36,7 +36,8 @@ const IntroduceSection = ({ data, isLoading }: IIntroduceSectionProps) => {
     );
   }
 
-  if (!introduce) return null;
+  if (!introduce)
+    return <p className="text-center text-sm text-foreground/60 p-4">{t('common:no_data')}</p>;
 
   return (
     <div className="flex flex-col gap-2 mt-2">

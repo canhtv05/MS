@@ -42,6 +42,20 @@ public class UserProfilePrivacyGrpcMapper {
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC
                 )
             )
+            .setIntroduceVisibility(
+                CommonUtils.getSafeObject(
+                    response.getIntroduceVisibility(),
+                    PrivacyLevel.class,
+                    PrivacyLevel.PRIVACY_LEVEL_PUBLIC
+                )
+            )
+            .setGalleryVisibility(
+                CommonUtils.getSafeObject(
+                    response.getGalleryVisibility(),
+                    PrivacyLevel.class,
+                    PrivacyLevel.PRIVACY_LEVEL_PUBLIC
+                )
+            )
             .build();
     }
 }

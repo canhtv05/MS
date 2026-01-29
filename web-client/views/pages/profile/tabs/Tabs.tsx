@@ -237,87 +237,116 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             {(() => {
               const canViewIntroduce =
                 user?.auth?.username === data?.userId ||
-                data?.privacy?.profileVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+                data?.privacy?.introduceVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
               return (
-                <Show when={canViewIntroduce || !!isLoading}>
-                  <Wrapper
-                    title={t('introduce')}
-                    isLoading={!!isLoading}
+                <Wrapper
+                  title={t('introduce')}
+                  isLoading={!!isLoading}
+                  fallback={
+                    <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                      <Skeleton className="h-10 w-full rounded-md" />
+                      <IntroduceSection data={data} isLoading={isLoading} />
+                    </div>
+                  }
+                >
+                  <Show
+                    when={canViewIntroduce && !isLoading}
                     fallback={
-                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
-                        <Skeleton className="h-10 w-full rounded-md" />
-                        <IntroduceSection data={data} isLoading={isLoading} />
-                      </div>
+                      <p className="text-center text-sm text-foreground/60 p-4">
+                        {t('common:no_data')}
+                      </p>
                     }
                   >
-                    <Show when={canViewIntroduce && !isLoading}>
-                      <IntroduceSection data={data} isLoading={isLoading} />
-                    </Show>
-                  </Wrapper>
-                </Show>
+                    <IntroduceSection data={data} isLoading={isLoading} />
+                  </Show>
+                </Wrapper>
               );
             })()}
             <div className="flex md:flex-row lg:flex-col flex-col gap-(--sp-layout) w-full h-full justify-between">
               {(() => {
+                const isOwner = user?.auth?.username === data?.userId;
                 const canViewPictures =
-                  user?.auth?.username === data?.userId ||
-                  data?.privacy?.postsVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+                  isOwner || data?.privacy?.galleryVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+                const picturesDescription = isOwner
+                  ? t('pictures_description_you')
+                  : t('pictures_description_other', { fullName: data?.fullname ?? '' });
+
                 return (
-                  <Show when={canViewPictures || !!isLoading}>
-                    <Wrapper
-                      fallback={
-                        <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
-                          <Skeleton className="h-10 w-full rounded-md" />
-                          <ImageSection data={data} isLoading={isLoading} />
-                        </div>
-                      }
-                      title={t('pictures')}
-                      description={t('pictures_description')}
-                      isLoading={!!isLoading}
-                      button={
+                  <Wrapper
+                    fallback={
+                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                        <Skeleton className="h-10 w-full rounded-md" />
+                        <ImageSection data={data} isLoading={isLoading} />
+                      </div>
+                    }
+                    title={t('pictures')}
+                    description={picturesDescription}
+                    isLoading={!!isLoading}
+                    button={
+                      <Show when={canViewPictures && !isLoading}>
                         <Button size={'sm'} variant="secondary">
                           <span className="font-bold text-foreground/70">
                             {t('common:button.view')}
                           </span>
                         </Button>
+                      </Show>
+                    }
+                  >
+                    <Show
+                      when={canViewPictures && !isLoading}
+                      fallback={
+                        <p className="text-center text-sm text-foreground/60 p-4">
+                          {t('common:no_data')}
+                        </p>
                       }
                     >
-                      <Show when={canViewPictures && !isLoading}>
-                        <ImageSection data={data} isLoading={isLoading} />
-                      </Show>
-                    </Wrapper>
-                  </Show>
+                      <ImageSection data={data} isLoading={isLoading} />
+                    </Show>
+                  </Wrapper>
                 );
               })()}
               {(() => {
+                const isOwner = user?.auth?.username === data?.userId;
                 const canViewFriends =
-                  user?.auth?.username === data?.userId ||
-                  data?.privacy?.friendsVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+                  isOwner || data?.privacy?.friendsVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+                const friendsDescription = isOwner
+                  ? t('friends_description_you')
+                  : t('friends_description_other', { fullName: data?.fullname ?? '' });
+
                 return (
-                  <Show when={canViewFriends || !!isLoading}>
-                    <Wrapper
-                      fallback={
-                        <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
-                          <Skeleton className="h-10 w-full rounded-md" />
-                          <ImageSection data={data} isLoading={isLoading} />
-                        </div>
-                      }
-                      isLoading={!!isLoading}
-                      title={t('friends')}
-                      description={t('friends_description')}
-                      button={
+                  <Wrapper
+                    fallback={
+                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                        <Skeleton className="h-10 w-full rounded-md" />
+                        <ImageSection data={data} isLoading={isLoading} />
+                      </div>
+                    }
+                    isLoading={!!isLoading}
+                    title={t('friends')}
+                    description={friendsDescription}
+                    button={
+                      <Show when={canViewFriends && !isLoading}>
                         <Button size={'sm'} variant="secondary">
                           <span className="font-bold text-foreground/70">
                             {t('common:button.view')}
                           </span>
                         </Button>
+                      </Show>
+                    }
+                  >
+                    <Show
+                      when={canViewFriends && !isLoading}
+                      fallback={
+                        <p className="text-center text-sm text-foreground/60 p-4">
+                          {t('common:no_data')}
+                        </p>
                       }
                     >
-                      <Show when={canViewFriends && !isLoading}>
-                        <FriendSection data={data} isLoading={isLoading} />
-                      </Show>
-                    </Wrapper>
-                  </Show>
+                      <FriendSection data={data} isLoading={isLoading} />
+                    </Show>
+                  </Wrapper>
                 );
               })()}
             </div>

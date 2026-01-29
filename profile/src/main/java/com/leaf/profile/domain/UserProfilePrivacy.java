@@ -42,4 +42,12 @@ public class UserProfilePrivacy extends AbstractAuditingNeo4jEntity {
     @Builder.Default
     @Property("posts_visibility")
     PrivacyLevel postsVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+    @Builder.Default
+    @Property("introduce_visibility")
+    PrivacyLevel introduceVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+    @Builder.Default
+    @Property("gallery_visibility")
+    PrivacyLevel galleryVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
 }

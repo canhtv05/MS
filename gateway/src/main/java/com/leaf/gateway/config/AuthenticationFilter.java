@@ -93,63 +93,34 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Void> handleRequiredAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
-        List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
-        String accessToken = null;
-        String refreshToken = null;
+        TokenPair tokens = resolveTokens(exchange, false);
+        String accessToken = tokens.accessToken();
+        String refreshToken = tokens.refreshToken();
 
-        if (CollectionUtils.isEmpty(authHeader)) {
-            HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
-            if (Objects.nonNull(cookie)) {
-                try {
-                    String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                    @SuppressWarnings("unchecked")
-                    Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
-                    if (!CollectionUtils.isEmpty(tokenData)) {
-                        accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-                        refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
-                    }
-                } catch (Exception e) {
-                    log.error("Error decoding auth cookie", e);
-                }
-            }
-        } else {
-            accessToken = authHeader.getFirst().replace("Bearer ", "");
-        }
-
-        if (StringUtils.isEmpty(accessToken)) {
-            return unauthenticated(exchange.getResponse());
-        }
-
-        final String finalAccessToken = accessToken;
-        final String finalRefreshToken = refreshToken;
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
         final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
 
+        if (StringUtils.isEmpty(accessToken)) {
+            if (StringUtils.isEmpty(refreshToken)) {
+                return unauthenticated(exchange.getResponse());
+            }
+
+            return refreshAndContinueRequired(exchange, chain, refreshToken, finalChannel);
+        }
+
+        final String finalAccessToken = accessToken;
+
         try {
             TokenStatus status = jwtUtil.validateToken(finalAccessToken);
-            if (status == TokenStatus.VALID) {
+            if (status.equals(TokenStatus.VALID)) {
                 var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
                 return chain.filter(exchange.mutate().request(request).build());
             }
-            if (status == TokenStatus.EXPIRED) {
-                if (StringUtils.isEmpty(finalRefreshToken)) {
+            if (status.equals(TokenStatus.EXPIRED)) {
+                if (StringUtils.isEmpty(refreshToken)) {
                     return unauthenticated(exchange.getResponse());
                 }
-                return grpcAuthClient
-                    .refreshToken(finalRefreshToken, finalChannel)
-                    .flatMap(refreshResult -> {
-                        if (Objects.isNull(refreshResult)) {
-                            return unauthenticated(exchange.getResponse());
-                        }
-                        var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
-                        addAuthCookie(
-                            exchange.getResponse(),
-                            refreshResult.getAccessToken(),
-                            refreshResult.getRefreshToken()
-                        );
-                        return chain.filter(exchange.mutate().request(request).build());
-                    })
-                    .onErrorResume(e -> unauthenticated(exchange.getResponse()));
+                return refreshAndContinueRequired(exchange, chain, refreshToken, finalChannel);
             }
             return unauthenticated(exchange.getResponse());
         } catch (Exception e) {
@@ -158,61 +129,37 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Void> handleOptionalAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
-        List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
-        String accessToken = null;
-        String refreshToken = null;
+        TokenPair tokens = resolveTokens(exchange, true);
+        String accessToken = tokens.accessToken();
+        String refreshToken = tokens.refreshToken();
 
-        if (CollectionUtils.isEmpty(authHeader)) {
-            HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
-            if (Objects.nonNull(cookie)) {
-                try {
-                    String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                    @SuppressWarnings("unchecked")
-                    Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
-                    if (!CollectionUtils.isEmpty(tokenData)) {
-                        accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
-                        refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
-                    }
-                } catch (Exception e) {
-                    log.error("Error decoding auth cookie for GraphQL", e);
-                }
-            }
-        } else {
-            accessToken = authHeader.getFirst().replace("Bearer ", "");
-        }
-        if (StringUtils.isEmpty(accessToken)) {
-            return chain.filter(exchange);
-        }
-        final String finalAccessToken = accessToken;
-        final String finalRefreshToken = refreshToken;
+        log.info("Access token: {}", accessToken);
+        log.info("Refresh token: {}", refreshToken);
+
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
         final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
 
+        if (StringUtils.isEmpty(accessToken)) {
+            if (StringUtils.isEmpty(refreshToken)) {
+                return chain.filter(exchange);
+            }
+
+            return refreshAndContinueOptional(exchange, chain, refreshToken, finalChannel);
+        }
+
+        final String finalAccessToken = accessToken;
+
         try {
             TokenStatus status = jwtUtil.validateToken(finalAccessToken);
-            if (status == TokenStatus.VALID) {
+            if (status.equals(TokenStatus.VALID)) {
                 var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
                 return chain.filter(exchange.mutate().request(request).build());
             }
-            if (status == TokenStatus.EXPIRED) {
-                if (StringUtils.isEmpty(finalRefreshToken)) {
+            if (status.equals(TokenStatus.EXPIRED)) {
+                if (StringUtils.isEmpty(refreshToken)) {
                     return chain.filter(exchange);
                 }
-                return grpcAuthClient
-                    .refreshToken(finalRefreshToken, finalChannel)
-                    .flatMap(refreshResult -> {
-                        if (Objects.isNull(refreshResult)) {
-                            return chain.filter(exchange);
-                        }
-                        var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
-                        addAuthCookie(
-                            exchange.getResponse(),
-                            refreshResult.getAccessToken(),
-                            refreshResult.getRefreshToken()
-                        );
-                        return chain.filter(exchange.mutate().request(request).build());
-                    })
-                    .onErrorResume(e -> chain.filter(exchange));
+                return refreshAndContinueOptional(exchange, chain, refreshToken, finalChannel);
             }
 
             return chain.filter(exchange);
@@ -261,4 +208,75 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private ServerHttpRequest addAuthHeader(ServerHttpRequest request, String accessToken) {
         return request.mutate().header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken).build();
     }
+
+    private TokenPair resolveTokens(ServerWebExchange exchange, boolean isGraphql) {
+        List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
+        String accessToken = null;
+        String refreshToken = null;
+
+        if (CollectionUtils.isEmpty(authHeader)) {
+            HttpCookie cookie = exchange.getRequest().getCookies().getFirst(CommonConstants.COOKIE_NAME);
+            if (Objects.nonNull(cookie)) {
+                try {
+                    String decoded = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+                    @SuppressWarnings("unchecked")
+                    Map<String, String> tokenData = JsonF.jsonToObject(decoded, Map.class);
+                    if (!CollectionUtils.isEmpty(tokenData)) {
+                        accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
+                        refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
+                    }
+                } catch (Exception e) {
+                    if (isGraphql) {
+                        log.error("Error decoding auth cookie for GraphQL", e);
+                    } else {
+                        log.error("Error decoding auth cookie", e);
+                    }
+                }
+            }
+        } else {
+            accessToken = authHeader.getFirst().replace("Bearer ", "");
+        }
+
+        return new TokenPair(accessToken, refreshToken);
+    }
+
+    private Mono<Void> refreshAndContinueRequired(
+        ServerWebExchange exchange,
+        GatewayFilterChain chain,
+        String refreshToken,
+        String channel
+    ) {
+        return grpcAuthClient
+            .refreshToken(refreshToken, channel)
+            .flatMap(refreshResult -> {
+                if (Objects.isNull(refreshResult)) {
+                    return unauthenticated(exchange.getResponse());
+                }
+                var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
+                addAuthCookie(exchange.getResponse(), refreshResult.getAccessToken(), refreshResult.getRefreshToken());
+                return chain.filter(exchange.mutate().request(request).build());
+            })
+            .onErrorResume(e -> unauthenticated(exchange.getResponse()));
+    }
+
+    private Mono<Void> refreshAndContinueOptional(
+        ServerWebExchange exchange,
+        GatewayFilterChain chain,
+        String refreshToken,
+        String channel
+    ) {
+        return grpcAuthClient
+            .refreshToken(refreshToken, channel)
+            .flatMap(refreshResult -> {
+                if (Objects.isNull(refreshResult)) {
+                    return chain.filter(exchange);
+                }
+                var request = addAuthHeader(exchange.getRequest(), refreshResult.getAccessToken());
+                addAuthCookie(exchange.getResponse(), refreshResult.getAccessToken(), refreshResult.getRefreshToken());
+                return chain.filter(exchange.mutate().request(request).build());
+            })
+            .onErrorResume(e -> chain.filter(exchange));
+    }
+
+    private record TokenPair(String accessToken, String refreshToken) {}
 }

@@ -15,27 +15,23 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfilePrivacyDTO implements Serializable {
+public class PrivacyDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    String id;
-    String userId;
     PrivacyLevel profileVisibility;
     PrivacyLevel friendsVisibility;
     PrivacyLevel postsVisibility;
     PrivacyLevel introduceVisibility;
     PrivacyLevel galleryVisibility;
 
-    public static UserProfilePrivacyDTO toUserProfilePrivacyDTO(UserProfilePrivacy userProfilePrivacy) {
-        UserProfilePrivacyDTO.UserProfilePrivacyDTOBuilder builder = UserProfilePrivacyDTO.builder()
-            .id(userProfilePrivacy.getId())
-            .userId(userProfilePrivacy.getUserId())
+    public static PrivacyDTO toPrivacyDTO(UserProfilePrivacy userProfilePrivacy) {
+        return PrivacyDTO.builder()
             .profileVisibility(userProfilePrivacy.getProfileVisibility())
             .friendsVisibility(userProfilePrivacy.getFriendsVisibility())
             .postsVisibility(userProfilePrivacy.getPostsVisibility())
             .introduceVisibility(userProfilePrivacy.getIntroduceVisibility())
-            .galleryVisibility(userProfilePrivacy.getGalleryVisibility());
-        return builder.build();
+            .galleryVisibility(userProfilePrivacy.getGalleryVisibility())
+            .build();
     }
 }

@@ -13,7 +13,7 @@ import {
   IChangeCoverByUrlReq,
   IDetailUserProfileDTO,
   IUpdateBioProfileReq,
-  IUpdatePrivacyReq,
+  IPrivacyDTO,
 } from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
@@ -174,7 +174,7 @@ export const useProfileMutation = () => {
 
   const updatePrivacyMutation = useMutation({
     mutationKey: [API_ENDPOINTS.PROFILE.UPDATE_PRIVACY],
-    mutationFn: async (payload: IUpdatePrivacyReq): Promise<IResponseObject<void>> => {
+    mutationFn: async (payload: IPrivacyDTO): Promise<IResponseObject<IPrivacyDTO>> => {
       const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_PRIVACY, payload);
       return response.data;
     },

@@ -4,7 +4,7 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.framework.security.SecurityUtils;
 import com.leaf.profile.domain.UserProfilePrivacy;
-import com.leaf.profile.dto.UpdatePrivacyReq;
+import com.leaf.profile.dto.PrivacyDTO;
 import com.leaf.profile.dto.UserProfilePrivacyDTO;
 import com.leaf.profile.repository.UserProfilePrivacyRepository;
 import lombok.AccessLevel;
@@ -28,7 +28,7 @@ public class UserProfilePrivacyService {
         return UserProfilePrivacyDTO.toUserProfilePrivacyDTO(userProfilePrivacy);
     }
 
-    public void updateUserProfilePrivacy(UpdatePrivacyReq req) {
+    public PrivacyDTO updateUserProfilePrivacy(PrivacyDTO req) {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
@@ -38,6 +38,9 @@ public class UserProfilePrivacyService {
         userProfilePrivacy.setProfileVisibility(req.getProfileVisibility());
         userProfilePrivacy.setFriendsVisibility(req.getFriendsVisibility());
         userProfilePrivacy.setPostsVisibility(req.getPostsVisibility());
+        userProfilePrivacy.setIntroduceVisibility(req.getIntroduceVisibility());
+        userProfilePrivacy.setGalleryVisibility(req.getGalleryVisibility());
         userProfilePrivacyRepository.save(userProfilePrivacy);
+        return PrivacyDTO.toPrivacyDTO(userProfilePrivacy);
     }
 }

@@ -20,6 +20,14 @@
     "posts_visibility": {
       "title": "Posts visibility",
       "description": "People can view your posts"
+    },
+    "introduce_visibility": {
+      "title": "Introduce visibility",
+      "description": "People can view your introduce"
+    },
+    "gallery_visibility": {
+      "title": "Gallery visibility",
+      "description": "People can view your gallery"
     }
   },
   "notification": {

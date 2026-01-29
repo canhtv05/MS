@@ -27,6 +27,8 @@ fragment UserProfilePrivacyFields on UserProfilePrivacyDTO {
   profileVisibility
   friendsVisibility
   postsVisibility
+  introduceVisibility
+  galleryVisibility
 }
 
 fragment UserDetailImagesFields on GetFileImagesResponse {

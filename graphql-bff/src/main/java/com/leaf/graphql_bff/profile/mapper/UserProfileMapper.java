@@ -76,6 +76,8 @@ public class UserProfileMapper {
             .profileVisibility(userProfilePrivacyDTO.getProfileVisibility())
             .friendsVisibility(userProfilePrivacyDTO.getFriendsVisibility())
             .postsVisibility(userProfilePrivacyDTO.getPostsVisibility())
+            .introduceVisibility(userProfilePrivacyDTO.getIntroduceVisibility())
+            .galleryVisibility(userProfilePrivacyDTO.getGalleryVisibility())
             .build();
     }
 

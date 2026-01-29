@@ -128,7 +128,8 @@ public class TokenProvider {
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        log.info("Create token: {}", token);
+        log.info("Refresh token: {}", refreshToken);
         return token;
     }
 
