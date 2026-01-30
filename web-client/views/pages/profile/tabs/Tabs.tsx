@@ -32,34 +32,46 @@ import { Skeleton } from '@/components/ui/skeleton';
 import Show from '@/components/Show';
 import PrivateSection from '../sections/PrivateSection';
 import { useAuthStore } from '@/stores/auth';
+
+type TTabsId = 'posts' | 'introduce' | 'friends' | 'gallery';
 export interface ITabs {
-  id: keyof IPrivacyDTO;
+  id: TTabsId;
   labelKey: string;
   icon: ReactNode;
 }
 
 const tabs: ITabs[] = [
   {
-    id: 'postsVisibility',
+    id: 'posts',
     labelKey: 'posts',
     icon: <Bookmark className="text-current size-[16px]" />,
   },
   {
-    id: 'introduceVisibility',
+    id: 'introduce',
     labelKey: 'introduce',
     icon: <ClipboardText className="text-current size-[16px]" />,
   },
   {
-    id: 'friendsVisibility',
+    id: 'friends',
     labelKey: 'friends',
     icon: <UsersGroupTwoRounded className="text-current size-[16px]" />,
   },
   {
-    id: 'galleryVisibility',
+    id: 'gallery',
     labelKey: 'pictures',
     icon: <Library className="text-current size-[16px]" />,
   },
 ];
+
+const getPrivacyKey = (tabId: TTabsId): keyof IPrivacyDTO => {
+  const mapping: Record<TTabsId, keyof IPrivacyDTO> = {
+    posts: 'postsVisibility',
+    introduce: 'introduceVisibility',
+    friends: 'friendsVisibility',
+    gallery: 'galleryVisibility',
+  };
+  return mapping[tabId];
+};
 
 interface TabsProps {
   data?: IDetailUserProfileDTO;
@@ -120,6 +132,12 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
     router.push(newUrl, { scroll: false });
   };
 
+  const isBypass =
+    /^\/user\/@[^/]+\/?$/.test(pathname) &&
+    (!searchParams.get('tab') || searchParams.get('tab') === 'posts');
+
+  const isDisableSection = !isBypass;
+
   return (
     <div className="w-full border-t dark:border-foreground/20">
       <div className="relative px-3 rounded-b-lg w-full custom-bg-1 ">
@@ -152,7 +170,8 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                       {tab.icon}
                       <span className="truncate">{t(tab.labelKey)}</span>
                       {(() => {
-                        const privacy = data?.privacy?.[tab.id as keyof IPrivacyDTO];
+                        const privacyKey = getPrivacyKey(tab.id);
+                        const privacy = data?.privacy?.[privacyKey];
                         const condition =
                           privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
                           privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
@@ -211,7 +230,8 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                             {tab.icon}
                             <span className="truncate">{t(tab.labelKey)}</span>
                             {(() => {
-                              const privacy = data?.privacy?.[tab.id as keyof IPrivacyDTO];
+                              const privacyKey = getPrivacyKey(tab.id);
+                              const privacy = data?.privacy?.[privacyKey];
                               const condition =
                                 privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
                                 privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
@@ -243,154 +263,158 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
       </div>
       <div className="mt-(--sp-layout) w-full rounded-lg">
         <div className="flex lg:flex-row flex-col gap-(--sp-layout) items-start justify-between">
-          <div className="lg:w-[40%] w-full flex flex-col gap-(--sp-layout) h-auto">
-            {(() => {
-              let condition = false;
-              switch (data?.privacy?.profileVisibility) {
-                case PrivacyLevel.PRIVACY_LEVEL_PRIVATE:
-                case PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY:
-                  condition = true;
-                  break;
-                default:
-                  condition = false;
-              }
-              return (
-                <Show when={condition || !!isLoading}>
-                  <Wrapper isLoading={!!isLoading}>
-                    <Show when={condition && !isLoading}>
-                      <PrivateSection data={data} isLoading={isLoading} />
-                    </Show>
-                  </Wrapper>
-                </Show>
-              );
-            })()}
-
-            {(() => {
-              const canViewIntroduce =
-                user?.auth?.username === data?.userId ||
-                data?.privacy?.introduceVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
-
-              const introduceDescription =
-                user?.auth?.username === data?.userId
-                  ? t('introduce_description_you')
-                  : t('introduce_description_other', { fullname: data?.fullname ?? '' });
-
-              return (
-                <Wrapper
-                  title={t('introduce')}
-                  description={introduceDescription}
-                  isLoading={!!isLoading}
-                  fallback={
-                    <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
-                      <Skeleton className="h-10 w-full rounded-md" />
-                      <IntroduceSection data={data} isLoading={isLoading} />
-                    </div>
-                  }
-                >
-                  <Show
-                    when={canViewIntroduce && !isLoading}
-                    fallback={
-                      <p className="text-center text-sm text-foreground/60 p-4">
-                        {t('common:no_data')}
-                      </p>
-                    }
-                  >
-                    <IntroduceSection data={data} isLoading={isLoading} />
+          <Show when={!isDisableSection}>
+            <div className="lg:w-[40%] w-full flex flex-col gap-(--sp-layout) h-auto">
+              {(() => {
+                let condition = false;
+                switch (data?.privacy?.profileVisibility) {
+                  case PrivacyLevel.PRIVACY_LEVEL_PRIVATE:
+                  case PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY:
+                    condition = true;
+                    break;
+                  default:
+                    condition = false;
+                }
+                return (
+                  <Show when={condition || !!isLoading}>
+                    <Wrapper isLoading={!!isLoading}>
+                      <Show when={condition && !isLoading}>
+                        <PrivateSection data={data} isLoading={isLoading} />
+                      </Show>
+                    </Wrapper>
                   </Show>
-                </Wrapper>
-              );
-            })()}
-            <div className="flex md:flex-row lg:flex-col flex-col gap-(--sp-layout) w-full h-full justify-between">
-              {(() => {
-                const isOwner = user?.auth?.username === data?.userId;
-                const canViewPictures =
-                  isOwner || data?.privacy?.galleryVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+                );
+              })()}
 
-                const picturesDescription = isOwner
-                  ? t('pictures_description_you')
-                  : t('pictures_description_other', { fullname: data?.fullname ?? '' });
+              {(() => {
+                const canViewIntroduce =
+                  user?.auth?.username === data?.userId ||
+                  data?.privacy?.introduceVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+                const introduceDescription =
+                  user?.auth?.username === data?.userId
+                    ? t('introduce_description_you')
+                    : t('introduce_description_other', { fullname: data?.fullname ?? '' });
 
                 return (
                   <Wrapper
+                    title={t('introduce')}
+                    description={introduceDescription}
+                    isLoading={!!isLoading}
                     fallback={
                       <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                         <Skeleton className="h-10 w-full rounded-md" />
-                        <ImageSection data={data} isLoading={isLoading} />
+                        <IntroduceSection data={data} isLoading={isLoading} />
                       </div>
-                    }
-                    title={t('pictures')}
-                    description={picturesDescription}
-                    isLoading={!!isLoading}
-                    button={
-                      <Show when={canViewPictures && !isLoading}>
-                        <Button size={'sm'} variant="secondary">
-                          <span className="font-bold text-foreground/70">
-                            {t('common:button.view')}
-                          </span>
-                        </Button>
-                      </Show>
                     }
                   >
                     <Show
-                      when={canViewPictures && !isLoading}
+                      when={canViewIntroduce && !isLoading}
                       fallback={
                         <p className="text-center text-sm text-foreground/60 p-4">
                           {t('common:no_data')}
                         </p>
                       }
                     >
-                      <ImageSection data={data} isLoading={isLoading} />
+                      <IntroduceSection data={data} isLoading={isLoading} />
                     </Show>
                   </Wrapper>
                 );
               })()}
-              {(() => {
-                const isOwner = user?.auth?.username === data?.userId;
-                const canViewFriends =
-                  isOwner || data?.privacy?.friendsVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+              <div className="flex md:flex-row lg:flex-col flex-col gap-(--sp-layout) w-full h-full justify-between">
+                {(() => {
+                  const isOwner = user?.auth?.username === data?.userId;
+                  const canViewPictures =
+                    isOwner ||
+                    data?.privacy?.galleryVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
 
-                const friendsDescription = isOwner
-                  ? t('friends_description_you')
-                  : t('friends_description_other', { fullname: data?.fullname ?? '' });
+                  const picturesDescription = isOwner
+                    ? t('pictures_description_you')
+                    : t('pictures_description_other', { fullname: data?.fullname ?? '' });
 
-                return (
-                  <Wrapper
-                    fallback={
-                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
-                        <Skeleton className="h-10 w-full rounded-md" />
-                        <ImageSection data={data} isLoading={isLoading} />
-                      </div>
-                    }
-                    isLoading={!!isLoading}
-                    title={t('friends')}
-                    description={friendsDescription}
-                    button={
-                      <Show when={canViewFriends && !isLoading}>
-                        <Button size={'sm'} variant="secondary">
-                          <span className="font-bold text-foreground/70">
-                            {t('common:button.view')}
-                          </span>
-                        </Button>
-                      </Show>
-                    }
-                  >
-                    <Show
-                      when={canViewFriends && !isLoading}
+                  return (
+                    <Wrapper
                       fallback={
-                        <p className="text-center text-sm text-foreground/60 p-4">
-                          {t('common:no_data')}
-                        </p>
+                        <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
+                          <Skeleton className="h-10 w-full rounded-md" />
+                          <ImageSection data={data} isLoading={isLoading} />
+                        </div>
+                      }
+                      title={t('pictures')}
+                      description={picturesDescription}
+                      isLoading={!!isLoading}
+                      button={
+                        <Show when={canViewPictures && !isLoading}>
+                          <Button size={'sm'} variant="secondary">
+                            <span className="font-bold text-foreground/70">
+                              {t('common:button.view')}
+                            </span>
+                          </Button>
+                        </Show>
                       }
                     >
-                      <FriendSection data={data} isLoading={isLoading} />
-                    </Show>
-                  </Wrapper>
-                );
-              })()}
+                      <Show
+                        when={canViewPictures && !isLoading}
+                        fallback={
+                          <p className="text-center text-sm text-foreground/60 p-4">
+                            {t('common:no_data')}
+                          </p>
+                        }
+                      >
+                        <ImageSection data={data} isLoading={isLoading} />
+                      </Show>
+                    </Wrapper>
+                  );
+                })()}
+                {(() => {
+                  const isOwner = user?.auth?.username === data?.userId;
+                  const canViewFriends =
+                    isOwner ||
+                    data?.privacy?.friendsVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+                  const friendsDescription = isOwner
+                    ? t('friends_description_you')
+                    : t('friends_description_other', { fullname: data?.fullname ?? '' });
+
+                  return (
+                    <Wrapper
+                      fallback={
+                        <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
+                          <Skeleton className="h-10 w-full rounded-md" />
+                          <ImageSection data={data} isLoading={isLoading} />
+                        </div>
+                      }
+                      isLoading={!!isLoading}
+                      title={t('friends')}
+                      description={friendsDescription}
+                      button={
+                        <Show when={canViewFriends && !isLoading}>
+                          <Button size={'sm'} variant="secondary">
+                            <span className="font-bold text-foreground/70">
+                              {t('common:button.view')}
+                            </span>
+                          </Button>
+                        </Show>
+                      }
+                    >
+                      <Show
+                        when={canViewFriends && !isLoading}
+                        fallback={
+                          <p className="text-center text-sm text-foreground/60 p-4">
+                            {t('common:no_data')}
+                          </p>
+                        }
+                      >
+                        <FriendSection data={data} isLoading={isLoading} />
+                      </Show>
+                    </Wrapper>
+                  );
+                })()}
+              </div>
             </div>
-          </div>
+          </Show>
           <div className="w-full rounded-md">
-            <TabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
+            <TabsItem tabs={tabs} activeTab={activeTab} data={data} />
           </div>
         </div>
       </div>

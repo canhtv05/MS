@@ -6,6 +6,8 @@ import { FeedPostCard, IFeedPost } from '../components/FeedPostCard';
 import Wrapper from '@/components/ui/wrapper';
 import Show from '@/components/Show';
 import { useAuthStore } from '@/stores/auth';
+import { PrivacyLevel } from '@/enums/common';
+import { useTranslation } from 'react-i18next';
 
 interface ITabPost {
   data?: IDetailUserProfileDTO;
@@ -91,6 +93,7 @@ const MOCK_POSTS: IFeedPost[] = [
 
 const TabPost = ({ data }: ITabPost) => {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -99,11 +102,23 @@ const TabPost = ({ data }: ITabPost) => {
           <HeroTabPost data={data} />
         </Show>
         <div className="flex flex-col gap-(--sp-layout)">
-          {MOCK_POSTS.map(post => (
-            <Wrapper key={post.id}>
-              <FeedPostCard post={post} />
-            </Wrapper>
-          ))}
+          <Show
+            when={
+              data?.privacy?.postsVisibility !== PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
+              data?.userId === user?.auth?.username
+            }
+            fallback={
+              <Wrapper>
+                <p className="text-sm text-center">{t('no_data')}</p>
+              </Wrapper>
+            }
+          >
+            {MOCK_POSTS.map(post => (
+              <Wrapper key={post.id}>
+                <FeedPostCard post={post} />
+              </Wrapper>
+            ))}
+          </Show>
         </div>
       </div>
     </div>

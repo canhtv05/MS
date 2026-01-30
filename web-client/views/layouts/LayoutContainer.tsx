@@ -40,7 +40,7 @@ const LayoutContainer = ({ children, navigation, sidebar, className }: ILayoutCo
       </Show>
       <main
         className={cn(
-          'relative w-full h-full flex-1 md:mb-0 mb-17 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout)',
+          'relative w-full h-full min-h-[calc(100vh-var(--header-height)-var(--sp-layout))] flex-1 md:mb-0 mb-17 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout)',
         )}
       >
         {children}
