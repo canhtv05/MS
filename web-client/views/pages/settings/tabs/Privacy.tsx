@@ -52,7 +52,7 @@ const RenderSelect = ({ value, onValueChange, labelKey, t }: IRenderSelectProps)
       <SelectTrigger className="w-full transition-global cursor-pointer border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
         <SelectValue placeholder={t('privacy.select_placeholder')} />
       </SelectTrigger>
-      <SelectContent className="z-100">
+      <SelectContent className="z-120!">
         <SelectArrow />
         <SelectGroup>
           <SelectLabel>{t(labelKey)}</SelectLabel>

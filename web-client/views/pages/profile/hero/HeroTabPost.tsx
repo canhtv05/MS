@@ -115,7 +115,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
                 <span className="text-xs font-semibold">{t('public')}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-100!" align="end" sideOffset={2}>
+            <DropdownMenuContent align="end" sideOffset={2}>
               <DropdownMenuArrow />
               <DropdownMenuItem className="gap-2">
                 <Gallery className="size-4" />

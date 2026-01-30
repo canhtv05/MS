@@ -1,7 +1,7 @@
 'use client';
 
-import { useLayoutEffect, useState, ReactNode, startTransition } from 'react';
-import { createPortal } from 'react-dom';
+import { useLayoutEffect, useState, ReactNode, startTransition, forwardRef } from 'react';
+import * as PortalPrimitive from '@radix-ui/react-portal';
 
 interface PortalProps {
   children: ReactNode;
@@ -9,69 +9,74 @@ interface PortalProps {
   className?: string;
   style?: React.CSSProperties;
   offset?: number;
-  ref?: React.Ref<HTMLDivElement>;
+  container?: HTMLElement;
 }
 
-const Portal = ({ children, containerRef, className, style, offset = 4, ref }: PortalProps) => {
-  const mounted = typeof window !== 'undefined';
-  const [position, setPosition] = useState<{ top: number; left: number; width?: number } | null>(
-    null,
-  );
-  useLayoutEffect(() => {
-    if (!containerRef?.current) {
-      startTransition(() => {
-        setPosition(null);
-      });
-      return;
-    }
-
-    const calculatePosition = () => {
-      if (!containerRef.current) return null;
-      const rect = containerRef.current.getBoundingClientRect();
-      return {
-        top: rect.bottom + window.scrollY + offset,
-        left: rect.left + window.scrollX,
-        width: rect.width,
-      };
-    };
-    const initialPosition = calculatePosition();
-    if (initialPosition) {
-      setPosition(initialPosition);
-    }
-
-    const updatePosition = () => {
-      const newPosition = calculatePosition();
-      if (newPosition) {
-        setPosition(newPosition);
+const Portal = forwardRef<HTMLDivElement, PortalProps>(
+  ({ children, containerRef, className, style, offset = 4, container }, ref) => {
+    const mounted = typeof window !== 'undefined';
+    const [position, setPosition] = useState<{ top: number; left: number; width?: number } | null>(
+      null,
+    );
+    useLayoutEffect(() => {
+      if (!containerRef?.current) {
+        startTransition(() => {
+          setPosition(null);
+        });
+        return;
       }
-    };
 
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
+      const calculatePosition = () => {
+        if (!containerRef.current) return null;
+        const rect = containerRef.current.getBoundingClientRect();
+        return {
+          top: rect.bottom + offset,
+          left: rect.left,
+          width: rect.width,
+        };
+      };
+      const initialPosition = calculatePosition();
+      if (initialPosition) {
+        setPosition(initialPosition);
+      }
 
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [containerRef, offset]);
+      const updatePosition = () => {
+        const newPosition = calculatePosition();
+        if (newPosition) {
+          setPosition(newPosition);
+        }
+      };
 
-  if (!mounted || !position) return null;
-  const dropdownContent = (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-        width: position.width ? `${position.width}px` : undefined,
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  );
+      window.addEventListener('resize', updatePosition);
+      window.addEventListener('scroll', updatePosition, true);
 
-  return createPortal(dropdownContent, document.body);
-};
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+        window.removeEventListener('scroll', updatePosition, true);
+      };
+    }, [containerRef, offset]);
+
+    if (!mounted || !position) return null;
+    const dropdownContent = (
+      <div
+        ref={ref}
+        className={className}
+        style={{
+          position: 'fixed',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          width: position.width ? `${position.width}px` : undefined,
+          ...style,
+        }}
+      >
+        {children}
+      </div>
+    );
+
+    return <PortalPrimitive.Root container={container}>{dropdownContent}</PortalPrimitive.Root>;
+  },
+);
+
+Portal.displayName = 'Portal';
 
 export default Portal;

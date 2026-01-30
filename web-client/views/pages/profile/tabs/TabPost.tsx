@@ -105,12 +105,6 @@ const TabPost = ({ data }: ITabPost) => {
             </Wrapper>
           ))}
         </div>
-        <div className="flex justify-center py-4">
-          <button className="group relative overflow-hidden rounded-xl bg-linear-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 px-8 py-3 text-sm font-semibold text-foreground backdrop-blur-sm transition-all duration-300 hover:from-purple-500/20 hover:to-pink-500/20 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 cursor-pointer">
-            <span className="relative z-10">Tải thêm bài viết</span>
-            <div className="absolute inset-0 z-0 bg-linear-to-r from-purple-500/0 via-purple-500/5 to-pink-500/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-          </button>
-        </div>
       </div>
     </div>
   );

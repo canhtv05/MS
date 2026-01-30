@@ -143,7 +143,7 @@ function SelectContent({
       sideOffset={sideOffset}
       position={position}
       className={cn(
-        'bg-popover cursor-pointer text-popover-foreground relative z-50 max-h-96 min-w-32 overflow-visible rounded-md border shadow-md outline-none',
+        'bg-popover cursor-pointer text-popover-foreground relative z-120 max-h-96 min-w-32 overflow-visible rounded-md border shadow-md outline-none',
         className,
       )}
       {...props}
@@ -220,7 +220,7 @@ type SelectArrowProps = SelectArrowPrimitiveProps;
 
 function SelectArrow({ className, children, ...props }: SelectArrowProps) {
   return (
-    <SelectArrowPrimitive {...props}>
+    <SelectArrowPrimitive {...props} style={{ zIndex: 100, ...props.style }}>
       {children || (
         <svg
           width="20"

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Activity, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import {
@@ -78,7 +78,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
     <div className="lg:flex flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
       <div
         className={cn(
-          'md:w-full w-[220px] custom-bg-1 md:border-none border lg:flex  flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
+          'md:w-full w-[256px] custom-bg-1 md:border-none border lg:flex  flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
           !isCollapsed && 'lg:p-3 lg:w-full',
         )}
       >
@@ -87,22 +87,21 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <>
               <span
                 className={cn(
-                  'flex items-center justify-start',
+                  'flex items-center justify-start shrink-0',
                   isActive(item.href) ? `[&_svg]:text-primary` : '',
                 )}
               >
                 {item.icon}
               </span>
-              <Activity mode={isCollapsed ? 'hidden' : 'visible'}>
-                <span
-                  className={cn(
-                    'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70',
-                    isActive(item.href) ? 'text-primary font-black' : 'font-bold',
-                  )}
-                >
-                  {t(item.title)}
-                </span>
-              </Activity>
+              <span
+                className={cn(
+                  'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70 overflow-hidden transition-all duration-300 ease-out',
+                  isActive(item.href) ? 'text-primary font-black' : 'font-bold',
+                  isCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100',
+                )}
+              >
+                {t(item.title)}
+              </span>
             </>
           );
 
@@ -125,19 +124,20 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
           return (
             <Tooltip key={index}>
-              <TooltipTrigger
-                className={cn(
-                  `flex box-border p-3 justify-start rounded-lg w-(--sidebar-width-collapsed) h-(--sidebar-width-collapsed) cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
-                  isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
-                  width >= Viewport.MD && width < Viewport.LG && 'py-[18px]!',
-                  isCollapsed && width >= Viewport.LG && 'py-[18px]!',
-                )}
-              >
+              <TooltipTrigger asChild>
                 <Link
                   href={item.href}
                   title={t(item.title)}
                   suppressHydrationWarning
-                  className={cn('grid place-content-center w-full')}
+                  className={cn(
+                    `flex box-border aspect-square justify-center rounded-lg w-(--sidebar-width-collapsed) h-(--sidebar-width-collapsed) cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 items-center`,
+                    isActive(item.href) && 'bg-gray-100 dark:bg-gray-700',
+                    width >= Viewport.MD && width < Viewport.LG && 'p-[18px]!',
+                    isCollapsed && width >= Viewport.LG && 'p-[18px]!',
+                    !(width >= Viewport.MD && width < Viewport.LG) &&
+                      !(isCollapsed && width >= Viewport.LG) &&
+                      'p-3',
+                  )}
                 >
                   {linkContent}
                 </Link>

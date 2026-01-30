@@ -14,6 +14,7 @@ import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
 import { useAuthQuery } from '@/services/queries/auth';
 import { NavigationProvider } from '@/contexts/NavigationContext';
 import { ModalProvider } from '@/contexts/ModalContext';
+import TopLoadingBar from '@/components/TopLoadingBar';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -52,6 +53,7 @@ const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
         enableColorScheme
         storageKey="theme"
       >
+        <TopLoadingBar height={2} />
         <ThemeTransitionHandler />
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>

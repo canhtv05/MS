@@ -73,7 +73,7 @@ function DropdownMenuContent({
     <DropdownMenuContentPrimitive
       sideOffset={sideOffset}
       className={cn(
-        'bg-popover text-popover-foreground z-100! max-h-(--radix-dropdown-menu-content-available-height) min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-visible rounded-md border p-1 shadow-md outline-none',
+        'bg-popover text-popover-foreground z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-visible rounded-md border p-1 shadow-md outline-none',
         className,
       )}
       {...props}
@@ -270,7 +270,7 @@ function DropdownMenuSubContent({ className, ...props }: DropdownMenuSubContentP
   return (
     <DropdownMenuSubContentPrimitive
       className={cn(
-        'bg-popover text-popover-foreground z-50 min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-md border p-1 shadow-lg outline-none',
+        'bg-popover text-popover-foreground z-70 min-w-32 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-md border p-1 shadow-lg outline-none',
         className,
       )}
       {...props}
@@ -282,7 +282,11 @@ type DropdownMenuArrowProps = DropdownMenuArrowPrimitiveProps;
 
 function DropdownMenuArrow({ className, children, ...props }: DropdownMenuArrowProps) {
   return (
-    <DropdownMenuArrowPrimitive {...props}>
+    <DropdownMenuArrowPrimitive
+      {...props}
+      style={{ zIndex: 100, ...props.style }}
+      className={cn('z-100!', className)}
+    >
       {children || (
         <svg
           width="20"

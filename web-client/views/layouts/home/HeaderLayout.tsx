@@ -3,6 +3,7 @@
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import {
   DropdownMenu,
+  DropdownMenuArrow,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -164,13 +165,13 @@ const HeaderLayout = () => {
                       />
                     </div>
                   </DropdownMenuTrigger>
-
                   <DropdownMenuContent
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px] z-100 [&_span]:text-foreground/70"
+                    className="w-[220px] z-120! [&_span]:text-foreground/70"
                   >
+                    <DropdownMenuArrow className="z-120!" />
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
                         username={user?.auth?.username || ''}
@@ -247,7 +248,7 @@ const HeaderLayout = () => {
                       side="bottom"
                       align="end"
                       sideOffset={10}
-                      className="w-[220px] z-100"
+                      className="w-[220px] z-60"
                     >
                       <HomeHeaderDropdown
                         currentLang={currentLang}
@@ -264,6 +265,7 @@ const HeaderLayout = () => {
           </div>
         </div>
       </div>
+      <div className="fixed top-(--header-height) left-0 right-0 bottom-0 h-(--sp-layout) z-50 custom-bg-2 w-full"></div>
       <Dialog
         open={openLogout}
         title={t('auth:logout.title')}

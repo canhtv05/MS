@@ -167,7 +167,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
                 <span className="md:text-sm text-xs">{t('layout:header.change_cover')}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={-2} className="z-100">
+            <DropdownMenuContent align="end" sideOffset={-2}>
               <DropdownMenuArrow />
               <DropdownMenuItem
                 onClick={() => {

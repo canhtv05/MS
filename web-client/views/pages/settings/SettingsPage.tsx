@@ -58,6 +58,7 @@ const SettingsPage = () => {
   const { t } = useTranslation('settings');
 
   const [activeMenu, setActiveMenu] = useState<string>('account');
+  const [showOverlay, setShowOverlay] = useState(false);
   const refs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const handleClick = (key: string) => {
@@ -68,9 +69,18 @@ const SettingsPage = () => {
   return (
     <>
       <Portal.Root>
-        {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-9999">hellowirld</div> */}
+        {showOverlay && (
+          <div className="fixed inset-0 h-(--header-height) bg-red-500 z-90">hellowirld</div>
+        )}
       </Portal.Root>
       <div className="flex pb-(--sp-layout) h-full min-h-0 [&>div]:rounded-md [&>div]:h-full [&>div]:custom-bg-1 gap-(--sp-layout)">
+        <button
+          onClick={() => setShowOverlay(!showOverlay)}
+          className="fixed top-20 right-4 z-100 bg-blue-500 text-white px-4 py-2 rounded"
+          style={{ display: 'none' }}
+        >
+          Toggle Overlay
+        </button>
         <div className="flex-1 min-h-0 lg:block hidden overflow-hidden min-w-[140px]">
           <Wrapper className="px-0">
             <div className="flex flex-col p-2">

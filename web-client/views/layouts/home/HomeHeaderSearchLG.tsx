@@ -31,7 +31,7 @@ const HomeHeaderSearchLG = forwardRef(
 
     return (
       <Show when={isShowSearch}>
-        <Portal ref={ref} containerRef={containerRef}>
+        <Portal ref={ref} containerRef={containerRef} className="fixed! z-100!">
           <div
             className={cn(
               'bg-gray-50 dark:bg-gray-700 rounded-lg max-h-[40vh] w-xs!',
