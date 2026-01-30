@@ -1,13 +1,13 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Viewport } from '@/enums/common';
 import useViewport from '@/hooks/use-view-port';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'motion/react';
-import Ring from '@/components/customs/ring';
+import Ring from '@/components/ui/ring';
 import { useEffect, useState } from 'react';
 import images from '@/public/imgs';
 import { StaticImageData } from 'next/image';

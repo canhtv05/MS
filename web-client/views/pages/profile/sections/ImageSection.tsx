@@ -1,7 +1,7 @@
 'use client';
 
 import { IDetailUserProfileDTO } from '@/types/profile';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';

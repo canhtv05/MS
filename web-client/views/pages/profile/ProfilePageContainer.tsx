@@ -23,8 +23,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { Gallery, GallerySend } from '@solar-icons/react-perf/BoldDuotone';
-import Dialog from '@/components/customs/dialog';
-import { Skeleton } from '@/components/customs/skeleton';
+import Dialog from '@/components/ui/dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import ChooseImage from './modals/ChooseImage';
 import { getImageSrcOrNull } from '@/lib/image-utils';
 import { useProfileModalStore } from './use-profile-modal';
@@ -37,6 +37,30 @@ export interface IProfilePageProps {
   t?: TFunction<'translation', undefined>;
   data?: IDetailUserProfileDTO;
 }
+
+const CoverImage = ({ coverSrc, isUploading }: { coverSrc: string; isUploading: boolean }) => {
+  const { t } = useTranslation('layout');
+
+  return (
+    <div className="relative w-full h-[200px]">
+      <Image
+        src={coverSrc}
+        alt="bg"
+        fill
+        className="object-cover rounded-t-md"
+        loading="eager"
+        quality={100}
+        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
+        unoptimized
+      />
+      {isUploading && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
+          <div className="text-white text-sm font-medium">{t('layout:header.uploading')}...</div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) => {
   const { username } = use(params);
@@ -64,22 +88,6 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
     username: decodedUsername.startsWith('@') ? decodedUsername.slice(1) : decodedUsername,
   });
   const { t } = useTranslation(['profile', 'layout', 'common']);
-
-  if (!decodedUsername.startsWith('@')) {
-    return (
-      <div className="p-4">
-        <h1 className="text-red-500 font-bold">{t('profile_not_found')}</h1>
-        <p>
-          {t('you_tried_to_access')} {decodedUsername}
-        </p>
-        <p>{t('expected_username_starting_with')}</p>
-        <pre className="bg-gray-100 dark:bg-gray-700 p-2 rounded mt-2 text-xs">
-          DEBUG INFO: params.username: {decodedUsername}
-          decoded: {decodedUsername}
-        </pre>
-      </div>
-    );
-  }
 
   if (error instanceof AxiosError) {
     if (error!.response!.data.code == ErrorMessage.USER_PROFILE_NOT_FOUND) {
@@ -116,34 +124,29 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
             : getImageSrcOrNull(data?.coverUrl);
 
           if (coverSrc && coverSrc.trim() !== '') {
+            const visibility = data?.privacy?.profileVisibility;
+            const isPrivateCover =
+              !isOwnProfile &&
+              !!visibility &&
+              [
+                PrivacyLevel.PRIVACY_LEVEL_PRIVATE,
+                PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY,
+              ].includes(visibility);
             return (
-              <Zoom
-                zoomMargin={20}
-                zoomImg={{
-                  src: coverSrc,
-                  alt: 'bg',
-                }}
+              <Show
+                when={!isPrivateCover}
+                fallback={<CoverImage coverSrc={coverSrc} isUploading={isUploading} />}
               >
-                <div className="relative w-full h-[200px]">
-                  <Image
-                    src={coverSrc}
-                    alt="bg"
-                    fill
-                    className="object-cover rounded-t-md"
-                    loading="eager"
-                    quality={100}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
-                    unoptimized
-                  />
-                  {isUploading && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-md">
-                      <div className="text-white text-sm font-medium">
-                        {t('layout:header.uploading')}...
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Zoom>
+                <Zoom
+                  zoomMargin={20}
+                  zoomImg={{
+                    src: coverSrc,
+                    alt: 'bg',
+                  }}
+                >
+                  <CoverImage coverSrc={coverSrc} isUploading={isUploading} />
+                </Zoom>
+              </Show>
             );
           }
           return (

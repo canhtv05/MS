@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent } from '@/components/customs/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import images from '@/public/imgs';
 import Image from 'next/image';

@@ -5,8 +5,8 @@ import {
   TooltipTrigger,
 } from '@/components/animate-ui/components/base/tooltip';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import { Skeleton } from '@/components/customs/skeleton';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import images from '@/public/imgs';
 import { IProfilePageProps } from '../ProfilePageContainer';
 import { useAuthStore } from '@/stores/auth';
@@ -16,7 +16,7 @@ import {
   Gallery,
   UserCircle,
 } from '@solar-icons/react-perf/category/style/BoldDuotone';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
 import ChooseImage from '../modals/ChooseImage';
 import { useProfileModalStore } from '../use-profile-modal';

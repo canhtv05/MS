@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import Divider from '@/components/customs/divider';
-import { Input } from '@/components/customs/input';
+import Divider from '@/components/ui/divider';
+import { Input } from '@/components/ui/input';
 import Logo from '@/components/Logo';
 import { GoogleIcon } from '@/components/animate-ui/icons';
 import Link from 'next/link';

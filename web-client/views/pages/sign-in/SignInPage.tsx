@@ -1,16 +1,16 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import CheckBox from '@/components/customs/checkbox';
-import Divider from '@/components/customs/divider';
-import { Input } from '@/components/customs/input';
+import CheckBox from '@/components/ui/checkbox';
+import Divider from '@/components/ui/divider';
+import { Input } from '@/components/ui/input';
 import Logo from '@/components/Logo';
 import { GoogleIcon } from '@/components/animate-ui/icons';
 import Link from 'next/link';
 import useSignIn from './use-signin';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { User, LockPassword } from '@solar-icons/react-perf/Bold';
 
 const SignInPage = () => {

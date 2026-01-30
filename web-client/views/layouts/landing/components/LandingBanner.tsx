@@ -3,7 +3,7 @@
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { SkipNext, ArrowRight } from '@solar-icons/react-perf/Bold';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
-import Ring from '@/components/customs/ring';
+import Ring from '@/components/ui/ring';
 import dynamic from 'next/dynamic';
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient';
 import { motion } from 'framer-motion';

@@ -14,16 +14,14 @@ interface ITabsItem {
 
 const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO) => {
   switch (tab) {
-    case 'posts':
+    case 'postsVisibility':
       return <TabPost data={data} />;
-    case 'liked':
+    case 'introduceVisibility':
       return <TabPost data={data} />;
-    case 'saved':
+    case 'galleryVisibility':
       return [];
-    case 'pictures':
+    case 'friendsVisibility':
       return <TabPost data={data} />;
-    case 'friends':
-      return [];
     default:
       return <TabPost data={data} />;
   }

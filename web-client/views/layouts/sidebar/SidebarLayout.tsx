@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/components/customs/input';
+import { Input } from '@/components/ui/input';
 import { Magnifer, Reorder, PenNewSquare } from '@solar-icons/react-perf/Outline';
 import { useTranslation } from 'react-i18next';
 import {

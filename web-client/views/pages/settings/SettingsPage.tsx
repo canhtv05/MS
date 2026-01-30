@@ -1,6 +1,6 @@
 'use client';
 
-import Wrapper from '@/components/customs/wrapper';
+import Wrapper from '@/components/ui/wrapper';
 import { cn } from '@/lib/utils';
 import { LockPassword, UserCircle, Alarm } from '@solar-icons/react-perf/category/style/Linear';
 import { useRef, useState } from 'react';

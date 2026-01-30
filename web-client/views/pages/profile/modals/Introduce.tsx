@@ -14,9 +14,9 @@ import {
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Dispatch, SetStateAction } from 'react';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import dynamic from 'next/dynamic';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
 
 type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;

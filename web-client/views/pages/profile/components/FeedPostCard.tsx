@@ -12,6 +12,7 @@ import {
   DropdownMenuArrow,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import AvatarStatus from '@/components/AvatarStatus';
+import { Separator } from '@/components/ui/separator';
 
 export interface IFeedPost {
   id: string;
@@ -43,8 +44,8 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
   };
 
   return (
-    <div className="group relative w-full overflow-hidden rounded-md border border-border/50 backdrop-blur-xl hover:border-border transition-[color,background-color,opacity,box-shadow,transform] duration-300">
-      <div className="flex items-center justify-between p-4 pb-3">
+    <div className="group relative">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <AvatarStatus
@@ -64,7 +65,7 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
           </div>
         </div>
 
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <button className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground cursor-pointer">
               <MenuDots className="size-5" />
@@ -126,7 +127,7 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
         </div>
       )}
 
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 text-sm text-muted-foreground">
+      <div className="flex items-center justify-between px-4 py-(--sp-layout) text-sm text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <div className="flex -space-x-1">
             <div className="flex size-5 items-center justify-center rounded-full bg-linear-to-tr from-purple-500 to-pink-500">
@@ -145,28 +146,27 @@ export const FeedPostCard = ({ post }: IFeedPostCard) => {
         </div>
       </div>
 
-      <div className="border-t border-border/50 px-2 py-1.5">
-        <div className="flex items-center justify-around gap-1">
-          <button
-            onClick={handleLike}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-accent cursor-pointer ${
-              isLiked ? 'text-pink-500' : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {isLiked ? <HeartFilled className="size-5" /> : <Heart className="size-5" />}
-            <span>Thích</span>
-          </button>
+      <Separator />
+      <div className="flex items-center justify-around gap-(--sp-layout) mt-(--sp-layout)">
+        <button
+          onClick={handleLike}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200 hover:bg-accent cursor-pointer ${
+            isLiked ? 'text-pink-500' : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          {isLiked ? <HeartFilled className="size-5" /> : <Heart className="size-5" />}
+          <span>Thích</span>
+        </button>
 
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground cursor-pointer">
-            <ChatRound className="size-5" />
-            <span>Bình luận</span>
-          </button>
+        <button className="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground cursor-pointer">
+          <ChatRound className="size-5" />
+          <span>Bình luận</span>
+        </button>
 
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground cursor-pointer">
-            <Share className="size-5" />
-            <span>Chia sẻ</span>
-          </button>
-        </div>
+        <button className="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-muted-foreground transition-all duration-200 hover:bg-accent hover:text-foreground cursor-pointer">
+          <Share className="size-5" />
+          <span>Chia sẻ</span>
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Settings } from '@solar-icons/react-perf/BoldDuotone';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { useState } from 'react';
 import { Button } from '@/components/animate-ui/components/buttons/button';
@@ -11,7 +11,7 @@ import Introduce from '../modals/Introduce';
 import { useTranslation } from 'react-i18next';
 import { IUpdateBioProfileReq, IUserProfileDTO } from '@/types/profile';
 import { Gender, RelationshipStatus } from '@/enums/common';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 import { useProfileStore } from '@/stores/profile';

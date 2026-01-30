@@ -17,7 +17,7 @@ import { usePrivacyQuery } from '@/services/queries/profile';
 import { IUserProfilePrivacyDTO } from '@/types/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
 import Show from '@/components/Show';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 
 interface IRenderSelectProps {

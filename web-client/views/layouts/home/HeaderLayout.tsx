@@ -13,7 +13,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { MinimalisticMagnifer } from '@solar-icons/react-perf/Outline';
 import { MenuDots } from '@solar-icons/react-perf/Bold';
-import { Input } from '@/components/customs/input';
+import { Input } from '@/components/ui/input';
 import Logo from '@/components/Logo';
 import images from '@/public/imgs';
 import useHeaderLayout from './use-header-layout';
@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import Link from 'next/link';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import ChangePassword from '@/partials/change-password/ChangePassword';
 import { itemClassName } from '../auth/AuthLayout';
 import UserProfileCard from '@/components/UserProfileCard';

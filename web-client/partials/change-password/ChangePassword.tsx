@@ -5,7 +5,7 @@ import { changePasswordSchema } from '@/validations/auth';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '@/components/customs/input';
+import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
 import { LockPassword } from '@solar-icons/react-perf/Outline';
 

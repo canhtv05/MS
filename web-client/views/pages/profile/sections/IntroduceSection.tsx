@@ -12,7 +12,7 @@ import {
 import { Heart } from '@solar-icons/react-perf/Bold';
 import { Gender, RelationshipStatus } from '@/enums/common';
 import { formatDateFromISOString } from '@/lib/utils';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface IIntroduceSectionProps {
   data?: IDetailUserProfileDTO;

@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import Dialog from '@/components/customs/dialog';
-import { Slider } from '@/components/customs/slider';
+import Dialog from '@/components/ui/dialog';
+import { Slider } from '@/components/ui/slider';
 import images from '@/public/imgs';
 import getCroppedImg from '@/utils/common';
 import { useCallback, useEffect, useState } from 'react';

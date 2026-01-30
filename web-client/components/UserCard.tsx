@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from './customs/avatar';
-import Ring from './customs/ring';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import Ring from './ui/ring';
 
 interface IUserCard {
   name: string;

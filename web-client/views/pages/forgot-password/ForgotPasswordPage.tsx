@@ -1,13 +1,13 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import { Input } from '@/components/customs/input';
+import { Input } from '@/components/ui/input';
 import Logo from '@/components/Logo';
 import useForgotPassword from './use-forgot-password';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Letter } from '@solar-icons/react-perf/Linear';
-import { InputOTP } from '@/components/customs/input-otp';
+import { InputOTP } from '@/components/ui/input-otp';
 import { AltArrowLeft } from '@solar-icons/react-perf/Outline';
 import { LockPasswordUnlocked, LockPassword } from '@solar-icons/react-perf/Outline';
 

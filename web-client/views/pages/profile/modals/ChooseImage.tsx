@@ -3,7 +3,7 @@
 import { useMyMediaHistoryInfiniteQuery } from '@/services/queries/profile';
 import { useAuthStore } from '@/stores/auth';
 import Image from 'next/image';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatDateFromISOString } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { GalleryMinimalistic } from '@solar-icons/react-perf/BoldDuotone';

@@ -1,7 +1,7 @@
 'use client';
 
 import images from '@/public/imgs';
-import CustomImage from './customs/custom-image';
+import CustomImage from './ui/custom-image';
 import { Button } from './animate-ui/components/buttons/button';
 
 const FriendRequest = () => {

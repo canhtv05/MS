@@ -3,6 +3,9 @@
 import { IDetailUserProfileDTO } from '@/types/profile';
 import HeroTabPost from '../hero/HeroTabPost';
 import { FeedPostCard, IFeedPost } from '../components/FeedPostCard';
+import Wrapper from '@/components/ui/wrapper';
+import Show from '@/components/Show';
+import { useAuthStore } from '@/stores/auth';
 
 interface ITabPost {
   data?: IDetailUserProfileDTO;
@@ -87,13 +90,19 @@ const MOCK_POSTS: IFeedPost[] = [
 ];
 
 const TabPost = ({ data }: ITabPost) => {
+  const { user } = useAuthStore();
+
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-start">
-      <div className="flex flex-col gap-4 flex-1 w-full lg:w-auto min-w-0">
-        <HeroTabPost data={data} />
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-(--sp-layout) flex-1 w-full lg:w-auto min-w-0">
+        <Show when={user?.auth?.username === data?.userId}>
+          <HeroTabPost data={data} />
+        </Show>
+        <div className="flex flex-col gap-(--sp-layout)">
           {MOCK_POSTS.map(post => (
-            <FeedPostCard key={post.id} post={post} />
+            <Wrapper key={post.id}>
+              <FeedPostCard post={post} />
+            </Wrapper>
           ))}
         </div>
         <div className="flex justify-center py-4">

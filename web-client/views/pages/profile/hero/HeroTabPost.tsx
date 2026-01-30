@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/components/customs/input';
+import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/stores/auth';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import { SmileCircle } from '@solar-icons/react-perf/Outline';
@@ -22,6 +22,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import AvatarStatus from '@/components/AvatarStatus';
 import { useTranslation } from 'react-i18next';
+import Wrapper from '@/components/ui/wrapper';
 
 interface IHeroTabPost {
   data?: IDetailUserProfileDTO;
@@ -71,7 +72,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
   if (user?.auth.username !== data?.userId || !data) return;
 
   return (
-    <div className="flex flex-col w-full overflow-hidden rounded-md border group border-border/50 group-hover:border-border backdrop-blur-xl p-4">
+    <Wrapper>
       <div className="border-b group-hover:border-border border-border pb-3 flex gap-3 items-center justify-between">
         <AvatarStatus
           fallback={data.fullname}
@@ -104,7 +105,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
         </div>
 
         <div className="shrink-0">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button
                 size="sm"
@@ -114,7 +115,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
                 <span className="text-xs font-semibold">{t('public')}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={2}>
+            <DropdownMenuContent className="z-100!" align="end" sideOffset={2}>
               <DropdownMenuArrow />
               <DropdownMenuItem className="gap-2">
                 <Gallery className="size-4" />
@@ -127,7 +128,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
           </DropdownMenu>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 

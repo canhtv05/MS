@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/customs/avatar';
-import Ring from '@/components/customs/ring';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Ring from '@/components/ui/ring';
 import { cn } from '@/lib/utils';
 import { StaticImageData } from 'next/image';
 

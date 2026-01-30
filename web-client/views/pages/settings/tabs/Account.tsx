@@ -2,12 +2,12 @@
 
 import { Radio, RadioGroup } from '@/components/animate-ui/components/base/radio';
 import { Button } from '@/components/animate-ui/components/buttons/button';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { useHeaderState } from '@/views/layouts/home/use-header-state';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { Label } from '@/components/customs/label';
+import { Label } from '@/components/ui/label';
 import { useAuthMutation } from '@/services/mutations/auth';
 import cookieUtils from '@/utils/cookieUtils';
 

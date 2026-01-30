@@ -24,11 +24,11 @@ import { cn } from '@/lib/utils';
 import TabsItem from './TabsItem';
 import { IDetailUserProfileDTO, IPrivacyDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
-import Wrapper from '@/components/customs/wrapper';
+import Wrapper from '@/components/ui/wrapper';
 import ImageSection from '../sections/ImageSection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import FriendSection from '../sections/FriendSection';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import Show from '@/components/Show';
 import PrivateSection from '../sections/PrivateSection';
 import { useAuthStore } from '@/stores/auth';
@@ -390,9 +390,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             </div>
           </div>
           <div className="w-full rounded-md">
-            <Wrapper>
-              <TabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
-            </Wrapper>
+            <TabsItem tabs={tabs} activeTab={activeTab} t={t} data={data} />
           </div>
         </div>
       </div>

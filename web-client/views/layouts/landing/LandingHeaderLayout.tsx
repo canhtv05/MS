@@ -21,7 +21,7 @@ import {
   SheetTrigger,
 } from '@/components/animate-ui/components/radix/sheet';
 import { ReposProvider, useHeaderHomeRepo } from './LandingHeaderRepoProvider';
-import CustomImage from '@/components/customs/custom-image';
+import CustomImage from '@/components/ui/custom-image';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/Logo';
 import { AltArrowDown, MenuDotsSquare } from '@solar-icons/react-perf/Bold';

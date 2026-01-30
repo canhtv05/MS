@@ -1,6 +1,6 @@
 import { detectLanguage } from '@/utils/common';
 import { IProfilePageProps } from '../ProfilePageContainer';
-import { Skeleton } from '@/components/customs/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Code, CodeBlock } from '@/components/animate-ui/components/animate/code';
 import { useTranslation } from 'react-i18next';
 import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';

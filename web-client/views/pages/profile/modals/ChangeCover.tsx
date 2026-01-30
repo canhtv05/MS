@@ -2,7 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import Dialog from '@/components/customs/dialog';
+import Dialog from '@/components/ui/dialog';
 import { Gallery, GallerySend } from '@solar-icons/react-perf/category/style/BoldDuotone';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { useProfileModalStore } from '../use-profile-modal';
