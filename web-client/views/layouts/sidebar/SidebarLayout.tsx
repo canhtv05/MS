@@ -22,7 +22,7 @@ const SidebarLayout = () => {
   return (
     <div className="h-full flex flex-col justify-start items-start gap-7 w-full">
       <div className="w-full">
-        <div className="custom-bg-1 shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block lg:w-full w-auto rounded-lg">
+        <div className="custom-bg-1  block lg:w-full w-auto rounded-lg">
           <div className="flex justify-between group items-center px-4 pt-4">
             <h3 className="text-sm font-black">Messages</h3>
             <PenNewSquare size={18} />

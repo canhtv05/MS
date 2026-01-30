@@ -1,6 +1,5 @@
 import LayoutContainer from '@/views/layouts/LayoutContainer';
 import NavigationLayout from '@/views/layouts/navigation/NavigationLayout';
-import { NavigationProvider } from '@/contexts/navigation-context';
 import { ReactNode } from 'react';
 
 interface IFeedLayoutProps {
@@ -8,11 +7,7 @@ interface IFeedLayoutProps {
 }
 
 const FeedLayout = ({ children }: IFeedLayoutProps) => {
-  return (
-    <NavigationProvider>
-      <LayoutContainer navigation={<NavigationLayout />}>{children}</LayoutContainer>
-    </NavigationProvider>
-  );
+  return <LayoutContainer navigation={<NavigationLayout />}>{children}</LayoutContainer>;
 };
 
 export default FeedLayout;

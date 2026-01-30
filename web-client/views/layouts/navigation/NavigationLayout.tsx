@@ -31,7 +31,7 @@ const NavigationLayout = () => {
           <div className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2">
             <div
               className="absolute inset-0 left-0 w-8 h-8"
-              style={{ filter: 'drop-shadow(1px 0 5px rgba(0,0,0,0.09))' }}
+              style={{ filter: 'drop-shadow(0px 0 0px rgba(0,0,0,0.09))' }}
             >
               <div
                 className="w-full h-full custom-bg-1"

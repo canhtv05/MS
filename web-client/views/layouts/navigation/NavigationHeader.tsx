@@ -16,7 +16,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   return (
     <div
       className={cn(
-        'custom-bg-1 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)] block rounded-lg',
+        'custom-bg-1 w-full  block rounded-lg',
         'transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
         isCollapsed ? 'p-2' : 'p-2 lg:p-4',
       )}

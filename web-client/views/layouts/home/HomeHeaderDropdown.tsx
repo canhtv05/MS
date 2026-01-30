@@ -52,8 +52,8 @@ const HomeHeaderDropdown = ({
               'data-[state=checked]:bg-emerald-500 bg-foreground pl-0.5',
             )}
             checked={theme === 'dark'}
-            onTap={() => {
-              setTheme(theme === 'dark' ? 'light' : 'dark');
+            onCheckedChange={checked => {
+              setTheme(checked ? 'dark' : 'light');
             }}
           >
             <SwitchThumb
@@ -73,7 +73,7 @@ const HomeHeaderDropdown = ({
             <span className="text-foreground/70">{t('header.language')}</span>
           </DropdownMenuSubTrigger>
         </DropdownMenuHighlightItem>
-        <DropdownMenuSubContent className="overflow-hidden min-w-36 overflow-y-auto overflow-x-hidden border p-1 z-50">
+        <DropdownMenuSubContent className="overflow-y-auto overflow-x-hidden border z-100!">
           <DropdownMenuHighlightItem>
             <DropdownMenuItem
               onClick={e => {

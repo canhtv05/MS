@@ -4,15 +4,16 @@ import { Button } from '@/components/animate-ui/components/buttons/button';
 import Dialog from '@/components/customs/dialog';
 import { Slider } from '@/components/customs/slider';
 import images from '@/public/imgs';
-import { getCroppedImg } from '@/utils/common';
+import getCroppedImg from '@/utils/common';
 import { useCallback, useEffect, useState } from 'react';
-import Cropper from 'react-easy-crop';
+import Cropper, { Area, Point } from 'react-easy-crop';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/auth';
 import { useProfileMutation } from '@/services/mutations/profile';
 import Image from 'next/image';
 import { useProfileModalStore } from '../use-profile-modal';
 import { getValidImageSrc } from '@/lib/image-utils';
+import { logger } from '@/lib/logger';
 
 interface IModalEditImage {
   open: boolean;
@@ -22,13 +23,13 @@ interface IModalEditImage {
 
 const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
   const { t } = useTranslation('profile');
-  const CROP_SIZE = 200;
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [rotation, setRotation] = useState(0);
-  const [sliderZoom, setSliderZoom] = useState(1);
-  const { user } = useAuthStore();
+  const [zoom, setZoom] = useState(1);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
+  const { user } = useAuthStore();
   const [showConfirm, setShowConfirm] = useState(false);
   const { changeAvatarImageMutation } = useProfileMutation();
   const avatarUrl = user?.profile?.avatarUrl;
@@ -46,47 +47,28 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       setCrop({ x: 0, y: 0 });
       setZoom(1);
       setRotation(0);
-      setSliderZoom(1);
+      setCroppedAreaPixels(null);
       setShowConfirm(false);
     }
   }, [open]);
 
-  const onCropComplete = useCallback(
-    async (
-      croppedArea: unknown,
-      croppedAreaPixels: { x: number; y: number; width: number; height: number },
-    ) => {
-      try {
-        const imageSrc = getValidImageSrc(avatarPreview || avatarUrl, images.goku.src);
-        const croppedImage = await getCroppedImg(
-          imageSrc,
-          croppedAreaPixels,
-          rotation,
-          { horizontal: false, vertical: false },
-          true, // circular crop
-        );
-        setCroppedImage(croppedImage);
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [avatarPreview, avatarUrl, rotation],
-  );
-
-  const handleSliderChange = useCallback((value: number[]) => {
-    const newZoom = value[0];
-    setSliderZoom(newZoom);
-    setZoom(newZoom);
+  const onCropComplete = useCallback((_croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-  const handleCropperZoomChange = useCallback((newZoom: number) => {
-    setZoom(newZoom);
-    setSliderZoom(newZoom);
-  }, []);
-
-  const handleRotationChange = useCallback((newRotation: number[]) => {
-    setRotation(newRotation[0]);
-  }, []);
+  const showCroppedImage = useCallback(async () => {
+    if (!croppedAreaPixels) return;
+    try {
+      const croppedImageResult = await getCroppedImg(
+        getValidImageSrc(avatarPreview || avatarUrl, images.goku.src),
+        croppedAreaPixels,
+        rotation,
+      );
+      setCroppedImage(croppedImageResult);
+    } catch (e) {
+      logger.error(e);
+    }
+  }, [croppedAreaPixels, rotation, avatarPreview, avatarUrl]);
 
   const confirmUpload = useCallback(async () => {
     if (!croppedImage) return;
@@ -118,7 +100,10 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
       <Dialog
         open={open}
         onClose={() => onClose(false)}
-        onAccept={() => setShowConfirm(true)}
+        onAccept={async () => {
+          await showCroppedImage();
+          setShowConfirm(true);
+        }}
         title={t?.('profile:choose_image') || ''}
         id="edit-avatar-upload"
         size="md"
@@ -133,22 +118,13 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
                 crop={crop}
                 zoom={zoom}
                 rotation={rotation}
-                aspect={1}
+                aspect={3 / 3}
                 cropShape="round"
-                cropSize={{ width: CROP_SIZE, height: CROP_SIZE }}
                 showGrid={true}
-                objectFit="contain"
-                restrictPosition={false}
                 onCropChange={setCrop}
                 onRotationChange={setRotation}
                 onCropComplete={onCropComplete}
-                onZoomChange={handleCropperZoomChange}
-                style={{
-                  containerStyle: {
-                    width: '100%',
-                    height: '100%',
-                  },
-                }}
+                onZoomChange={setZoom}
               />
             )}
           </div>
@@ -157,34 +133,32 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
             <div className="flex items-center gap-2 w-full">
               <Button
                 onClick={() => {
-                  if (zoom === 1) return;
-                  setZoom(zoom - 0.1);
-                  setSliderZoom(zoom - 0.1);
+                  if (zoom <= 1) return;
+                  setZoom(Math.max(1, zoom - 0.1));
                 }}
                 size="icon"
                 variant="outline"
                 className="rounded-full"
-                disabled={zoom === 1}
+                disabled={zoom <= 1}
               >
                 <span className="text-xl">-</span>
               </Button>
               <Slider
-                value={[sliderZoom]}
+                value={[zoom]}
                 min={1}
                 max={3}
                 step={0.1}
-                onValueChange={handleSliderChange}
+                onValueChange={values => setZoom(values[0])}
               />
               <Button
                 onClick={() => {
-                  if (zoom === 3) return;
-                  setZoom(zoom + 0.1);
-                  setSliderZoom(zoom + 0.1);
+                  if (zoom >= 3) return;
+                  setZoom(Math.min(3, zoom + 0.1));
                 }}
                 size="icon"
                 variant="outline"
                 className="rounded-full"
-                disabled={zoom === 3}
+                disabled={zoom >= 3}
               >
                 <span className="text-xl">+</span>
               </Button>
@@ -195,13 +169,13 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
             <div className="flex items-center gap-2 w-full">
               <Button
                 onClick={() => {
-                  if (rotation === 0) return;
-                  setRotation(rotation - 1);
+                  if (rotation <= 0) return;
+                  setRotation(Math.max(0, rotation - 1));
                 }}
                 size="icon"
                 variant="outline"
                 className="rounded-full"
-                disabled={rotation === 0}
+                disabled={rotation <= 0}
               >
                 <span className="text-xl">-</span>
               </Button>
@@ -210,17 +184,17 @@ const ModalEditImage = ({ open, onClose, avatarPreview }: IModalEditImage) => {
                 min={0}
                 max={360}
                 step={1}
-                onValueChange={handleRotationChange}
+                onValueChange={values => setRotation(values[0])}
               />
               <Button
                 onClick={() => {
-                  if (rotation === 360) return;
-                  setRotation(rotation + 1);
+                  if (rotation >= 360) return;
+                  setRotation(Math.min(360, rotation + 1));
                 }}
                 size="icon"
                 variant="outline"
                 className="rounded-full"
-                disabled={rotation === 360}
+                disabled={rotation >= 360}
               >
                 <span className="text-xl">+</span>
               </Button>

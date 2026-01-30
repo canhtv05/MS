@@ -16,9 +16,10 @@ import images from '@/public/imgs';
 interface IPrivateSectionProps {
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
+  disableDetail?: boolean;
 }
 
-const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
+const PrivateSection = ({ data, isLoading, disableDetail = false }: IPrivateSectionProps) => {
   const { user } = useAuthStore();
   const { t } = useTranslation('profile');
   const privacy = data?.privacy;
@@ -59,13 +60,15 @@ const PrivateSection = ({ data, isLoading }: IPrivateSectionProps) => {
                         {t('private_mode_label')}{' '}
                         {t(`common:privacy_level.${privacy.profileVisibility}`)}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setShowDetail(true)}
-                        className="text-link text-xs cursor-pointer"
-                      >
-                        {t('private_view_detail')}
-                      </button>
+                      <Show when={!disableDetail}>
+                        <button
+                          type="button"
+                          onClick={() => setShowDetail(true)}
+                          className="text-link text-xs cursor-pointer"
+                        >
+                          {t('private_view_detail')}
+                        </button>
+                      </Show>
                     </>
                   );
                 })()}

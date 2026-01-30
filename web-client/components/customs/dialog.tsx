@@ -11,11 +11,12 @@ import {
 import { Button } from '../animate-ui/components/buttons/button';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { ReactNode, startTransition, useCallback, useEffect } from 'react';
+import { ReactNode, startTransition, useCallback, useEffect, useRef } from 'react';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { XIcon } from '../animate-ui/icons';
 import { IconButton } from '../animate-ui/components/buttons/icon';
 import { toast } from 'sonner';
+import { useModal } from '@/contexts/ModalContext';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -61,25 +62,67 @@ const Dialog = <T extends FieldValues = FieldValues>({
   hasBorder = false,
 }: IDialog<T>) => {
   const { t } = useTranslation();
-
-  const handleClose = useCallback(() => {
-    if (isPending) return;
-    onClose?.();
-  }, [onClose, isPending]);
+  const modalIdRef = useRef<string>(`modal-${crypto.randomUUID()}`);
+  const { openModal, closeTopModal } = useModal();
+  const eventHandlerRef = useRef<((e: Event) => void) | null>(null);
+  const isClosingRef = useRef<boolean>(false);
+  const hasRegisteredRef = useRef<boolean>(false);
+  const openModalRef = useRef(openModal);
+  const closeTopModalRef = useRef(closeTopModal);
+  const onCloseRef = useRef(onClose);
+  const isPendingRef = useRef(isPending);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isPending) {
-        handleClose();
-      }
+    openModalRef.current = openModal;
+    closeTopModalRef.current = closeTopModal;
+    onCloseRef.current = onClose;
+    isPendingRef.current = isPending;
+  }, [openModal, closeTopModal, onClose, isPending]);
+
+  const handleClose = useCallback(() => {
+    if (isPendingRef.current || isClosingRef.current) return;
+    isClosingRef.current = true;
+    onCloseRef.current?.();
+    closeTopModalRef.current();
+    setTimeout(() => {
+      isClosingRef.current = false;
+    }, 0);
+  }, []);
+
+  const handleExternalCloseRef = useRef(() => {
+    if (isPendingRef.current || isClosingRef.current) return;
+    isClosingRef.current = true;
+    onCloseRef.current?.();
+    setTimeout(() => {
+      isClosingRef.current = false;
+    }, 0);
+  });
+
+  useEffect(() => {
+    if (!open) {
+      hasRegisteredRef.current = false;
+      return;
+    }
+
+    if (hasRegisteredRef.current) return;
+    hasRegisteredRef.current = true;
+    const currentModalId = modalIdRef.current;
+    openModalRef.current(currentModalId);
+    const handleModalCloseEvent = () => {
+      handleExternalCloseRef.current();
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    eventHandlerRef.current = handleModalCloseEvent;
+    document.addEventListener(`close-modal:${currentModalId}`, handleModalCloseEvent);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      hasRegisteredRef.current = false;
+      if (eventHandlerRef.current) {
+        document.removeEventListener(`close-modal:${currentModalId}`, eventHandlerRef.current);
+        eventHandlerRef.current = null;
+      }
     };
-  }, [handleClose, isPending]);
+  }, [open]);
 
   const isAcceptDisabled =
     disableAccept || isPending || (form ? !form.formState.isValid : disableAccept);
@@ -105,7 +148,12 @@ const Dialog = <T extends FieldValues = FieldValues>({
         onEscapeKeyDown={e => {
           if (isPending) {
             e.preventDefault();
+            return;
           }
+          // Ngăn event lan lên ModalContext để chỉ đóng dialog hiện tại
+          e.preventDefault();
+          e.stopPropagation();
+          handleClose();
         }}
         onInteractOutside={e => {
           if (isPending) {

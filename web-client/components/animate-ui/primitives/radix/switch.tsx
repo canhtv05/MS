@@ -27,15 +27,17 @@ type SwitchProps = Omit<React.ComponentProps<typeof SwitchPrimitives.Root>, 'asC
 
 function Switch(props: SwitchProps) {
   const [isPressed, setIsPressed] = React.useState(false);
+  const { onCheckedChange, ...restProps } = props;
+
   const [isChecked, setIsChecked] = useControlledState({
     value: props.checked,
     defaultValue: props.defaultChecked,
-    onChange: props.onCheckedChange,
+    onChange: onCheckedChange,
   });
 
   return (
     <SwitchProvider value={{ isChecked, setIsChecked, isPressed, setIsPressed }}>
-      <SwitchPrimitives.Root {...props} onCheckedChange={setIsChecked} asChild>
+      <SwitchPrimitives.Root {...restProps} onCheckedChange={setIsChecked} asChild>
         <motion.button
           data-slot="switch"
           whileTap="tap"
@@ -43,7 +45,7 @@ function Switch(props: SwitchProps) {
           onTapStart={() => setIsPressed(true)}
           onTapCancel={() => setIsPressed(false)}
           onTap={() => setIsPressed(false)}
-          {...props}
+          {...restProps}
         />
       </SwitchPrimitives.Root>
     </SwitchProvider>

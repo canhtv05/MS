@@ -71,7 +71,7 @@ const SettingsPage = () => {
         {/* <div className="fixed inset-0 h-(--header-height) bg-red-500 z-9999">hellowirld</div> */}
       </Portal.Root>
       <div className="flex pb-(--sp-layout) h-full min-h-0 [&>div]:rounded-md [&>div]:h-full [&>div]:custom-bg-1 gap-(--sp-layout)">
-        <div className="flex-1 min-h-0 lg:block hidden overflow-hidden shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_10px_-4px_rgba(0,0,0,0.3)] min-w-[140px]">
+        <div className="flex-1 min-h-0 lg:block hidden overflow-hidden min-w-[140px]">
           <Wrapper className="px-0">
             <div className="flex flex-col p-2">
               {SETTINGS_MENU.map(item => (
@@ -103,7 +103,7 @@ const SettingsPage = () => {
             </div>
           </Wrapper>
         </div>
-        <div className="flex-3 min-h-0 overflow-y-auto no-scrollbar shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_10px_-4px_rgba(0,0,0,0.3)]">
+        <div className="flex-3 min-h-0 overflow-y-auto no-scrollbar">
           <Wrapper className="flex flex-col py-0">
             {SETTINGS_MENU_CONTENT.map((item, idx) => (
               <div

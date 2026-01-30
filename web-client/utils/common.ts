@@ -119,7 +119,6 @@ export const getDateLabel = (dateStr: string, t: (key: string) => string): strin
   }
   return dateStr;
 };
-
 export const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
     const image = new Image();
@@ -129,11 +128,18 @@ export const createImage = (url: string): Promise<HTMLImageElement> =>
     image.src = url;
   });
 
-export function getRadianAngle(degreeValue: number) {
+export function getRadianAngle(degreeValue: number): number {
   return (degreeValue * Math.PI) / 180;
 }
 
-export function rotateSize(width: number, height: number, rotation: number) {
+/**
+ * Returns the new bounding area of a rotated rectangle.
+ */
+export function rotateSize(
+  width: number,
+  height: number,
+  rotation: number,
+): { width: number; height: number } {
   const rotRad = getRadianAngle(rotation);
 
   return {
@@ -142,17 +148,15 @@ export function rotateSize(width: number, height: number, rotation: number) {
   };
 }
 
-export async function getCroppedImg(
-  imageSrc: string | null | undefined,
+/**
+ * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
+ */
+export default async function getCroppedImg(
+  imageSrc: string,
   pixelCrop: { x: number; y: number; width: number; height: number },
   rotation = 0,
   flip = { horizontal: false, vertical: false },
-  circular = false,
 ): Promise<string | null> {
-  if (!imageSrc || !pixelCrop || pixelCrop.width <= 0 || pixelCrop.height <= 0) {
-    return null;
-  }
-
   const image = await createImage(imageSrc);
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -179,69 +183,42 @@ export async function getCroppedImg(
   // draw rotated image
   ctx.drawImage(image, 0, 0);
 
-  const pixelCropX = Math.round(pixelCrop.x ?? 0);
-  const pixelCropY = Math.round(pixelCrop.y ?? 0);
-  const pixelCropWidth = Math.round(pixelCrop.width ?? 0);
-  const pixelCropHeight = Math.round(pixelCrop.height ?? 0);
+  const croppedCanvas = document.createElement('canvas');
 
-  if (
-    Number.isNaN(pixelCropX) ||
-    Number.isNaN(pixelCropY) ||
-    Number.isNaN(pixelCropWidth) ||
-    Number.isNaN(pixelCropHeight) ||
-    pixelCropWidth <= 0 ||
-    pixelCropHeight <= 0
-  ) {
+  const croppedCtx = croppedCanvas.getContext('2d');
+
+  if (!croppedCtx) {
     return null;
   }
 
-  const data = ctx.getImageData(pixelCropX, pixelCropY, pixelCropWidth, pixelCropHeight);
+  // Set the size of the cropped canvas
+  croppedCanvas.width = pixelCrop.width;
+  croppedCanvas.height = pixelCrop.height;
 
-  // Create a temporary canvas to hold the cropped image data
-  const tempCanvas = document.createElement('canvas');
-  tempCanvas.width = pixelCropWidth;
-  tempCanvas.height = pixelCropHeight;
-  const tempCtx = tempCanvas.getContext('2d');
-
-  if (!tempCtx) {
-    return null;
-  }
-
-  // Put the cropped image data into temp canvas
-  tempCtx.putImageData(data, 0, 0);
-
-  // set canvas width to final desired crop size - this will clear existing context
-  canvas.width = pixelCropWidth;
-  canvas.height = pixelCropHeight;
-
-  if (circular) {
-    // For circular crop, create a clipping path
-    const centerX = pixelCropWidth / 2;
-    const centerY = pixelCropHeight / 2;
-    const radius = Math.min(pixelCropWidth, pixelCropHeight) / 2;
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.clip();
-
-    // Draw the cropped image from temp canvas into the circular clip
-    ctx.drawImage(tempCanvas, 0, 0);
-  } else {
-    // For rectangular crop, just paste the image data
-    ctx.putImageData(data, 0, 0);
-  }
+  // Draw the cropped image onto the new canvas
+  croppedCtx.drawImage(
+    canvas,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height,
+  );
 
   // As Base64 string
-  // return canvas.toDataURL('image/jpeg');
+  // return croppedCanvas.toDataURL('image/jpeg');
 
   // As a blob
   return new Promise((resolve, reject) => {
-    canvas.toBlob(file => {
-      if (file) {
-        resolve(URL.createObjectURL(file));
-      } else {
-        reject(new Error('Canvas is empty'));
+    croppedCanvas.toBlob((file: Blob | null) => {
+      if (!file) {
+        reject(new Error('Failed to create blob'));
+        return;
       }
+      resolve(URL.createObjectURL(file));
     }, 'image/jpeg');
   });
 }

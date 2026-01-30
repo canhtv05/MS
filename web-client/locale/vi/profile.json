@@ -110,6 +110,8 @@
   "pictures_description_other": "Danh sách ảnh của {{fullname}}",
   "friends_description_you": "Danh sách bạn bè của bạn",
   "friends_description_other": "Danh sách bạn bè của {{fullname}}",
+  "introduce_description_you": "Giới thiệu của bạn",
+  "introduce_description_other": "Giới thiệu của {{fullname}}",
   "update_privacy_success": "Cập nhật quyền riêng tư thành công",
   "update_privacy_loading": "Đang cập nhật quyền riêng tư",
   "private_you": "Bạn",

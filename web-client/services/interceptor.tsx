@@ -60,7 +60,7 @@ api.interceptors.response.use(
     // gateway xử lý refresh token
     if (error.response?.status === 401) {
       logger.log('[Interceptor] Unauthorized (401), logging out');
-      // handleLogout(true);
+      handleLogout(true);
       return Promise.reject(error);
     }
 

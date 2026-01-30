@@ -13,6 +13,7 @@ import LoadingPage from '@/views/pages/loading';
 import { ThemeTransitionHandler } from '@/components/ThemeTransitionHandler';
 import { useAuthQuery } from '@/services/queries/auth';
 import { NavigationProvider } from '@/contexts/NavigationContext';
+import { ModalProvider } from '@/contexts/ModalContext';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -55,9 +56,11 @@ const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>
             <AuthLoadingGate>
-              <NavigationProvider>
-                <ApiInterceptor>{children}</ApiInterceptor>
-              </NavigationProvider>
+              <ModalProvider>
+                <NavigationProvider>
+                  <ApiInterceptor>{children}</ApiInterceptor>
+                </NavigationProvider>
+              </ModalProvider>
             </AuthLoadingGate>
           </AuthRefreshProvider>
         </QueryClientProvider>

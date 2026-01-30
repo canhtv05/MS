@@ -8,6 +8,7 @@ import {
   Library,
   ClipboardText,
   UsersGroupTwoRounded,
+  LockKeyholeMinimalistic,
 } from '@solar-icons/react-perf/BoldDuotone';
 import useViewport from '@/hooks/use-view-port';
 import { PrivacyLevel, Viewport } from '@/enums/common';
@@ -21,7 +22,7 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { cn } from '@/lib/utils';
 import TabsItem from './TabsItem';
-import { IDetailUserProfileDTO } from '@/types/profile';
+import { IDetailUserProfileDTO, IPrivacyDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
 import Wrapper from '@/components/customs/wrapper';
 import ImageSection from '../sections/ImageSection';
@@ -32,24 +33,32 @@ import Show from '@/components/Show';
 import PrivateSection from '../sections/PrivateSection';
 import { useAuthStore } from '@/stores/auth';
 export interface ITabs {
-  id: string;
+  id: keyof IPrivacyDTO;
   labelKey: string;
   icon: ReactNode;
 }
 
 const tabs: ITabs[] = [
-  { id: 'posts', labelKey: 'posts', icon: <Bookmark className="text-current size-[16px]" /> },
   {
-    id: 'introduce',
+    id: 'postsVisibility',
+    labelKey: 'posts',
+    icon: <Bookmark className="text-current size-[16px]" />,
+  },
+  {
+    id: 'introduceVisibility',
     labelKey: 'introduce',
     icon: <ClipboardText className="text-current size-[16px]" />,
   },
   {
-    id: 'friends',
+    id: 'friendsVisibility',
     labelKey: 'friends',
     icon: <UsersGroupTwoRounded className="text-current size-[16px]" />,
   },
-  { id: 'pictures', labelKey: 'pictures', icon: <Library className="text-current size-[16px]" /> },
+  {
+    id: 'galleryVisibility',
+    labelKey: 'pictures',
+    icon: <Library className="text-current size-[16px]" />,
+  },
 ];
 
 interface TabsProps {
@@ -113,7 +122,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
 
   return (
     <div className="w-full border-t dark:border-foreground/20">
-      <div className="relative px-3 rounded-b-lg w-full custom-bg-1 shadow-[0_8px_10px_-4px_rgba(0,0,0,0.08)]">
+      <div className="relative px-3 rounded-b-lg w-full custom-bg-1 ">
         <div className="relative">
           <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
           <div className="relative">
@@ -139,9 +148,20 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                     onMouseEnter={() => setHoverIndex(index)}
                     onMouseLeave={() => setHoverIndex(null)}
                   >
-                    <div className="flex gap-2 items-center justify-center">
+                    <div className="flex gap-2 items-center justify-center relative">
                       {tab.icon}
                       <span className="truncate">{t(tab.labelKey)}</span>
+                      {(() => {
+                        const privacy = data?.privacy?.[tab.id as keyof IPrivacyDTO];
+                        const condition =
+                          privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
+                          privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
+                        return (
+                          condition && (
+                            <LockKeyholeMinimalistic className="text-current absolute size-[10px] top-[14px] left-[8px]" />
+                          )
+                        );
+                      })()}
                     </div>
                   </button>
                 ))}
@@ -155,7 +175,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                 }
               >
                 {showDropdown && (
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <button
                         className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
@@ -173,7 +193,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                         </div>
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="group">
+                    <DropdownMenuContent className="group z-100">
                       <DropdownMenuArrow />
                       {hiddenTabs.map(tab => (
                         <DropdownMenuItem
@@ -187,9 +207,20 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                               : '',
                           )}
                         >
-                          <div className="flex gap-2 items-center">
+                          <div className="flex gap-2 items-center relative">
                             {tab.icon}
-                            {t(tab.labelKey)}
+                            <span className="truncate">{t(tab.labelKey)}</span>
+                            {(() => {
+                              const privacy = data?.privacy?.[tab.id as keyof IPrivacyDTO];
+                              const condition =
+                                privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
+                                privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
+                              return (
+                                condition && (
+                                  <LockKeyholeMinimalistic className="text-current absolute size-[10px] top-[14px] left-[8px]" />
+                                )
+                              );
+                            })()}
                           </div>
                         </DropdownMenuItem>
                       ))}
@@ -238,12 +269,19 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
               const canViewIntroduce =
                 user?.auth?.username === data?.userId ||
                 data?.privacy?.introduceVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+
+              const introduceDescription =
+                user?.auth?.username === data?.userId
+                  ? t('introduce_description_you')
+                  : t('introduce_description_other', { fullname: data?.fullname ?? '' });
+
               return (
                 <Wrapper
                   title={t('introduce')}
+                  description={introduceDescription}
                   isLoading={!!isLoading}
                   fallback={
-                    <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                    <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                       <Skeleton className="h-10 w-full rounded-md" />
                       <IntroduceSection data={data} isLoading={isLoading} />
                     </div>
@@ -270,12 +308,12 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
 
                 const picturesDescription = isOwner
                   ? t('pictures_description_you')
-                  : t('pictures_description_other', { fullName: data?.fullname ?? '' });
+                  : t('pictures_description_other', { fullname: data?.fullname ?? '' });
 
                 return (
                   <Wrapper
                     fallback={
-                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                         <Skeleton className="h-10 w-full rounded-md" />
                         <ImageSection data={data} isLoading={isLoading} />
                       </div>
@@ -313,12 +351,12 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
 
                 const friendsDescription = isOwner
                   ? t('friends_description_you')
-                  : t('friends_description_other', { fullName: data?.fullname ?? '' });
+                  : t('friends_description_other', { fullname: data?.fullname ?? '' });
 
                 return (
                   <Wrapper
                     fallback={
-                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md shadow-[0_0_10px_0_rgba(0,0,0,0.07)] mb-0">
+                      <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                         <Skeleton className="h-10 w-full rounded-md" />
                         <ImageSection data={data} isLoading={isLoading} />
                       </div>

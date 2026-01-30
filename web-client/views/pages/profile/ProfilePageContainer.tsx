@@ -189,7 +189,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
         )}
       </div>
       <div className="rounded-b-lg">
-        <div className="md:px-4 px-4 md:pb-4 pb-4 custom-bg-1 w-full shadow-[0_0_10px_0_rgba(0,0,0,0.07)]">
+        <div className="md:px-4 px-4 md:pb-4 pb-4 custom-bg-1 w-full ">
           <Hero isLoading={isLoading} t={t} data={data} />
           {(() => {
             const canViewInfo =

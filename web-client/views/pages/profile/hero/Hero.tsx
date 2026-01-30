@@ -34,6 +34,10 @@ import Image from 'next/image';
 import { useProfileStore } from '@/stores/profile';
 import { getValidImageSrc } from '@/lib/image-utils';
 import Container from '../edit/Container';
+import Show from '@/components/Show';
+import { PrivacyLevel } from '@/enums/common';
+import PrivateSection from '../sections/PrivateSection';
+import { cn } from '@/lib/utils';
 
 const HeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -119,6 +123,10 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
     return avatarSrc;
   };
 
+  const canViewAvatar =
+    data?.privacy?.profileVisibility === PrivacyLevel.PRIVACY_LEVEL_PUBLIC ||
+    user?.auth?.username === data?.userId;
+
   return (
     <>
       {isLoading && !data ? (
@@ -169,13 +177,19 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                     <DropdownMenuTrigger asChild>
                       <button
                         type="button"
-                        className="cursor-pointer focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full"
+                        className={cn(
+                          'focus:outline-none p-0 m-0 bg-transparent border-none block rounded-full',
+                          canViewAvatar ? 'cursor-pointer' : 'cursor-default',
+                        )}
                       >
-                        <Avatar className="w-32 h-32 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)]">
+                        <Avatar className="w-32 h-32">
                           <AvatarImage
                             width={128}
                             height={128}
-                            className="rounded-full cursor-pointer"
+                            className={cn(
+                              'rounded-full',
+                              canViewAvatar ? 'cursor-pointer' : 'cursor-default',
+                            )}
                             src={getImage()}
                             alt={user?.profile?.fullname || userProfile?.fullname || data?.fullname}
                           />
@@ -185,12 +199,29 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                         </Avatar>
                       </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" side="bottom" sideOffset={-2}>
+                    <DropdownMenuContent
+                      align={canViewAvatar ? 'center' : 'start'}
+                      side="bottom"
+                      sideOffset={-2}
+                    >
                       <DropdownMenuArrow />
-                      <DropdownMenuItem onClick={() => setIsClickViewAvatar(true)}>
-                        <UserCircle />
-                        <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
-                      </DropdownMenuItem>
+                      <Show
+                        when={canViewAvatar}
+                        fallback={
+                          <DropdownMenuItem>
+                            <PrivateSection
+                              data={data}
+                              isLoading={isLoading}
+                              disableDetail={true}
+                            />
+                          </DropdownMenuItem>
+                        }
+                      >
+                        <DropdownMenuItem onClick={() => setIsClickViewAvatar(true)}>
+                          <UserCircle />
+                          <span className="md:text-sm text-xs">{t?.('profile:view_avatar')}</span>
+                        </DropdownMenuItem>
+                      </Show>
                       {data?.userId === user?.auth?.username && (
                         <DropdownMenuItem onClick={openParentDialog}>
                           <Gallery />

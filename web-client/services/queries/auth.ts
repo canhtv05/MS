@@ -25,8 +25,8 @@ export const useAuthQuery = (enabled: boolean = true) => {
       } catch (error) {
         handleMutationError(error, 'auth-query');
         if (error instanceof AxiosError && error?.response?.status === 401) {
-          // cookieUtils.clearAuthenticated();
-          // setUser(undefined);
+          cookieUtils.clearAuthenticated();
+          setUser(undefined);
           return null as unknown as IUserProfileDTO;
         }
         throw error;

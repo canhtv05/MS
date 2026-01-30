@@ -123,6 +123,8 @@
   "pictures_description_other": "List of {{fullname}}'s pictures",
   "friends_description_you": "List of your friends",
   "friends_description_other": "List of {{fullname}}'s friends",
+  "introduce_description_you": "Your introduce",
+  "introduce_description_other": "{{fullname}}'s introduce",
   "update_privacy_success": "Update privacy success",
   "update_privacy_loading": "Update privacy loading",
   "private_you": "You",

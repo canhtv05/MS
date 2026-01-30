@@ -280,7 +280,7 @@
 }
 
 @utility custom-bg-2 {
-  @apply bg-[#F9FBFC] dark:bg-gray-900;
+  @apply bg-[#F6F6F6] dark:bg-gray-900;
 }
 
 @keyframes gradientShift {
