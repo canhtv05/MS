@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/demo/image.png" alt="LeafHub Banner" width="100%" />
+  <img src="/docs/demo/image2.png" alt="Demo ứng dụng web LeafHub" width="100%" />
 </p>
 
 LeafHub không chỉ là một mạng xã hội, mà còn là một **Tech Playground** nơi chúng mình áp dụng mô hình kiến trúc **Microservices** hiện đại nhất. Dự án được xây dựng với tinh thần **"Vừa làm vừa học"**, liên tục cập nhật và thử nghiệm các công nghệ mới nhất (Bleeding Edge) như Spring Boot 3.5+, Next.js 16+, và TailwindCSS 4.
@@ -273,6 +273,12 @@ chore: maintenance tasks
 - **Java**: Google Java Style (Checkstyle)
 - **TypeScript/React**: ESLint + Prettier
 - Xem chi tiết tại [docs/CODE_STYLE.md](CODE_STYLE.md)
+
+---
+
+<p align="center">
+  <img src="/docs/demo/image.png" alt="Demo ứng dụng web LeafHub" width="100%" />
+</p>
 
 ---
 
