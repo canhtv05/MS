@@ -1,4 +1,10 @@
 {
+  "navigation": {
+    "basic_info": "Thông tin cơ bản",
+    "work_and_education": "Sự nghiệp và giáo dục",
+    "interests": "Sở thích",
+    "contacts_and_social": "Liên hệ và mạng xã hội"
+  },
   "profile_not_found": "Không tìm thấy hồ sơ",
   "you_tried_to_access": "Bạn đã cố truy cập:",
   "expected_username_starting_with": "Chúng tôi mong đợi tên người dùng bắt đầu bằng @",

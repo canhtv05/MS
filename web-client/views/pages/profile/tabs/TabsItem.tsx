@@ -3,7 +3,7 @@
 import { ITabs } from './Tabs';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import TabPost from './TabPost';
-import TabIntroduce from './TabIntroduce';
+import TabIntroduce from './introduce/TabIntroduce';
 
 interface ITabsItem {
   tabs: ITabs[];

@@ -95,7 +95,7 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </span>
               <span
                 className={cn(
-                  'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70 overflow-hidden transition-all duration-300 ease-out',
+                  'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70 overflow-hidden transition-[width,opacity,margin,padding] duration-300 ease-out',
                   isActive(item.href) ? 'text-primary font-black' : 'font-bold',
                   isCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100',
                 )}
