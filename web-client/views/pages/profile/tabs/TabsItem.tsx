@@ -9,14 +9,15 @@ interface ITabsItem {
   tabs: ITabs[];
   activeTab: number;
   data?: IDetailUserProfileDTO;
+  isLoading?: boolean;
 }
 
-const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO) => {
+const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO, isLoading?: boolean) => {
   switch (tab) {
     case 'posts':
       return <TabPost data={data} />;
     case 'introduce':
-      return <TabIntroduce data={data} />;
+      return <TabIntroduce data={data} isLoading={isLoading} />;
     case 'gallery':
       return <TabPost data={data} />;
     case 'friends':
@@ -26,10 +27,10 @@ const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO) => {
   }
 };
 
-const TabsItem = ({ tabs, activeTab, data }: ITabsItem) => {
+const TabsItem = ({ tabs, activeTab, data, isLoading }: ITabsItem) => {
   const currentTab = tabs[activeTab];
 
-  return <div className="w-full">{switchTab(currentTab.id, data)}</div>;
+  return <div className="w-full">{switchTab(currentTab.id, data, isLoading)}</div>;
 };
 
 export default TabsItem;

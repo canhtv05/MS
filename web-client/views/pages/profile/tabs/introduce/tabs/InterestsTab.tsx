@@ -38,7 +38,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-1 p-1">
+    <div className="flex flex-col gap-1">
       {INTERESTS_FIELDS.map(field => {
         const rawValue = getFieldValue(field, introduce);
         const displayValue = formatFieldValue(field, rawValue, t);
@@ -50,15 +50,14 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
 
         if (isEditing) {
           return (
-            <div key={field} className="px-3 py-2">
-              <EditField
-                field={field}
-                value={editValue}
-                labelKey={labelKey}
-                onSave={value => handleSaveEdit(field, value)}
-                onCancel={handleCancelEdit}
-              />
-            </div>
+            <EditField
+              key={field}
+              field={field}
+              value={editValue}
+              labelKey={labelKey}
+              onSave={value => handleSaveEdit(field, value)}
+              onCancel={handleCancelEdit}
+            />
           );
         }
 

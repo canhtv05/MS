@@ -125,7 +125,7 @@ function Input({
           className={cn(
             'flex items-center relative autofill:bg-transparent! rounded-xl border border-input bg-background group',
             'focus-within:transition-colors focus-within:duration-200 focus-within:ease-in-out',
-            'focus-within:border-purple-300 focus-within:ring-1 focus-within:ring-purple-300/20',
+            'focus-within:border-purple-300',
             isInvalid && 'border-red-500 ring-1 ring-red-500/20',
             className,
             classNameIcon,
@@ -148,8 +148,8 @@ function Input({
             type={typeInput}
             data-slot="input"
             className={cn(
-              'rounded-xl autofill:bg-transparent! h-full p-2.5 bg-background border focus:outline-none',
-              'transition-colors duration-200 ease-in-out focus:border-purple-300',
+              'rounded-xl autofill:bg-transparent! h-full p-2.5 bg-background focus:outline-none',
+              'transition-colors duration-200 ease-in-out',
               'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-foreground/70',
               'focus-visible:transform focus-visible:placeholder:translate-x-0.5 not-focus-visible:placeholder:-translate-x-0.5 focus-visible:placeholder:transition-transform transition-transform focus-visible:placeholder:duration-150 not-focus-visible:placeholder:duration-300',

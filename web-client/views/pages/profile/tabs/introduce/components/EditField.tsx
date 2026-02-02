@@ -16,6 +16,7 @@ import { Gender, RelationshipStatus } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CheckRead, CloseCircle } from '@solar-icons/react-perf/Outline';
+import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 
 interface IEditFieldProps {
   field: TIntroduceField;
@@ -71,7 +72,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
           );
 
     return (
-      <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+      <div className="flex flex-col gap-3">
         <label className="text-sm font-medium text-foreground/80 flex items-center gap-2">
           {renderIcon(IconComponent, 'size-4 text-foreground/60 shrink-0')}
           <span>{t(labelKey)}</span>
@@ -81,7 +82,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
             <Select value={editValue} onValueChange={setEditValue}>
               <SelectTrigger
                 className={cn(
-                  'w-full transition-all duration-200',
+                  'w-full transition-colors duration-200',
                   'border-gray-200 dark:border-gray-800',
                   'bg-background hover:bg-muted/50',
                   'cursor-pointer',
@@ -90,14 +91,11 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                   'shadow-sm',
                 )}
               >
-                <div className="flex items-center gap-2.5 w-full">
-                  {renderIcon(IconComponent, 'size-4 text-foreground/60 shrink-0')}
-                  <SelectValue className="flex-1 text-left">
-                    <span className="text-foreground text-sm">
-                      {formatFieldValue(field, editValue, t)}
-                    </span>
-                  </SelectValue>
-                </div>
+                <SelectValue className="flex-1 text-left">
+                  <span className="text-foreground text-sm">
+                    {formatFieldValue(field, editValue, t)}
+                  </span>
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectArrow />
@@ -111,42 +109,36 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
               </SelectContent>
             </Select>
           </div>
-          <button
+          <IconButton
             onClick={handleSave}
             className={cn(
-              'p-2.5 rounded-lg transition-all duration-200',
-              'bg-primary hover:bg-primary/90 text-primary-foreground',
+              'transition-colors duration-200',
+              'bg-primary hover:bg-primary/90 text-white',
               'shadow-sm hover:shadow-md active:scale-95',
-              'cursor-pointer shrink-0',
-              'flex items-center justify-center',
-              'min-w-[44px] min-h-[44px]',
             )}
-            title="Save (Enter)"
+            title={t('common:button.save')}
           >
             <CheckRead className="size-4" />
-          </button>
-          <button
+          </IconButton>
+          <IconButton
             onClick={onCancel}
             className={cn(
-              'p-2.5 rounded-lg transition-all duration-200',
-              'bg-muted hover:bg-muted/80 text-foreground/70',
-              'hover:text-foreground',
-              'cursor-pointer shrink-0',
-              'flex items-center justify-center',
-              'active:scale-95',
-              'min-w-[44px] min-h-[44px]',
+              'transition-colors duration-200',
+              'bg-muted hover:bg-muted/80 text-foreground/80',
+              'hover:text-foreground active:scale-95',
             )}
-            title="Cancel (Esc)"
+            title={t('common:button.cancel')}
+            variant="outline"
           >
             <CloseCircle className="size-4" />
-          </button>
+          </IconButton>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+    <div className="flex flex-col gap-3">
       <label className="text-sm font-medium text-foreground/80 flex items-center gap-2">
         {renderIcon(IconComponent, 'size-4 text-foreground/60 shrink-0')}
         <span>{t(labelKey)}</span>
@@ -158,47 +150,36 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            icon={
-              IconComponent
-                ? renderIcon(IconComponent, 'size-5 text-foreground/60 stroke-2')
-                : undefined
-            }
             className={cn(
-              'bg-background hover:bg-muted/50 transition-all duration-200 w-full',
+              'bg-background hover:bg-muted/50 transition-colors duration-200 w-full',
               'focus:ring-2 focus:ring-primary/20 focus:border-primary',
               'shadow-sm',
             )}
           />
         </div>
-        <button
+        <IconButton
           onClick={handleSave}
           className={cn(
-            'p-2.5 rounded-lg transition-all duration-200',
-            'bg-primary hover:bg-primary/90 text-primary-foreground',
+            'transition-colors duration-200',
+            'bg-primary hover:bg-primary/90 text-white',
             'shadow-sm hover:shadow-md active:scale-95',
-            'cursor-pointer shrink-0',
-            'flex items-center justify-center',
-            'min-w-[44px] min-h-[44px]',
           )}
-          title="Save (Enter)"
+          title={t('common:button.save')}
         >
           <CheckRead className="size-4" />
-        </button>
-        <button
+        </IconButton>
+        <IconButton
           onClick={onCancel}
+          variant="outline"
           className={cn(
-            'p-2.5 rounded-lg transition-all duration-200',
-            'bg-muted hover:bg-muted/80 text-foreground/70',
-            'hover:text-foreground',
-            'cursor-pointer shrink-0',
-            'flex items-center justify-center',
-            'active:scale-95',
-            'min-w-[44px] min-h-[44px]',
+            'transition-colors duration-200',
+            'bg-muted hover:bg-muted/80 text-foreground/80',
+            'hover:text-foreground active:scale-95',
           )}
-          title="Cancel (Esc)"
+          title={t('common:button.cancel')}
         >
           <CloseCircle className="size-4" />
-        </button>
+        </IconButton>
       </div>
     </div>
   );

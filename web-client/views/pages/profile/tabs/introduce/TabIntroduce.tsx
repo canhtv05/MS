@@ -10,9 +10,12 @@ import NavIntroduce from './NavIntroduce';
 import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import MainIntroduce from './MainIntroduce';
+import { Skeleton } from '@/components/ui/skeleton';
+import IntroduceSkeleton from './IntroduceSkeleton';
 
 interface ITabIntroduce {
   data?: IDetailUserProfileDTO;
+  isLoading?: boolean;
 }
 
 export const NAV_INTRODUCE_MENU = {
@@ -34,7 +37,7 @@ export const NAV_INTRODUCE_MENU = {
 export type TNavIntroduceItem = keyof typeof NAV_INTRODUCE_MENU;
 export type TIntroduceField = (typeof NAV_INTRODUCE_MENU)[TNavIntroduceItem][number];
 
-const TabIntroduce = ({ data }: ITabIntroduce) => {
+const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
   const { user } = useAuthStore();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TNavIntroduceItem>('basic_info');
@@ -44,6 +47,7 @@ const TabIntroduce = ({ data }: ITabIntroduce) => {
       <div className="flex flex-col gap-(--sp-layout) flex-1 w-full lg:w-auto min-w-0">
         <Show
           when={
+            isLoading ||
             data?.privacy?.introduceVisibility !== PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
             data?.userId === user?.auth?.username
           }
@@ -55,22 +59,42 @@ const TabIntroduce = ({ data }: ITabIntroduce) => {
         >
           <Wrapper title={t('profile:introduce')}>
             <div className="flex gap-(--sp-layout) items-stretch">
-              <div className="min-w-[250px] shrink-0">
-                <NavIntroduce
-                  menu={NAV_INTRODUCE_MENU}
-                  activeTab={activeTab}
-                  setActiveTab={setActiveTab}
-                />
-              </div>
-              <Separator orientation="vertical" className="w-px self-stretch" />
-              <div className="flex-1 w-full">
-                <MainIntroduce
-                  menu={NAV_INTRODUCE_MENU}
-                  activeTab={activeTab}
-                  data={data}
-                  isOwner={data?.userId === user?.auth?.username}
-                />
-              </div>
+              {isLoading ? (
+                <>
+                  <div className="min-w-[250px] shrink-0">
+                    <div className="flex flex-col gap-2 items-start justify-start">
+                      {Object.keys(NAV_INTRODUCE_MENU).map(key => (
+                        <div key={key} className="w-full p-2">
+                          <Skeleton className="h-8 w-full rounded-lg" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <Separator orientation="vertical" className="w-px self-stretch" />
+                  <div className="flex-1 w-full">
+                    <IntroduceSkeleton activeTab={activeTab} />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="min-w-[250px] shrink-0">
+                    <NavIntroduce
+                      menu={NAV_INTRODUCE_MENU}
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                    />
+                  </div>
+                  <Separator orientation="vertical" className="w-px self-stretch" />
+                  <div className="flex-1 w-full">
+                    <MainIntroduce
+                      menu={NAV_INTRODUCE_MENU}
+                      activeTab={activeTab}
+                      data={data}
+                      isOwner={data?.userId === user?.auth?.username}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </Wrapper>
         </Show>

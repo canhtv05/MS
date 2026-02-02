@@ -1,11 +1,22 @@
 'use client';
 
+import React, { Suspense } from 'react';
 import { TNavIntroduceItem } from './TabIntroduce';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import { BasicInfoTab } from './tabs/BasicInfoTab';
-import { WorkEducationTab } from './tabs/WorkEducationTab';
-import { InterestsTab } from './tabs/InterestsTab';
-import { ContactsSocialTab } from './tabs/ContactsSocialTab';
+import IntroduceSkeleton from './IntroduceSkeleton';
+
+const BasicInfoTab = React.lazy(() =>
+  import('./tabs/BasicInfoTab').then(module => ({ default: module.BasicInfoTab })),
+);
+const WorkEducationTab = React.lazy(() =>
+  import('./tabs/WorkEducationTab').then(module => ({ default: module.WorkEducationTab })),
+);
+const InterestsTab = React.lazy(() =>
+  import('./tabs/InterestsTab').then(module => ({ default: module.InterestsTab })),
+);
+const ContactsSocialTab = React.lazy(() =>
+  import('./tabs/ContactsSocialTab').then(module => ({ default: module.ContactsSocialTab })),
+);
 
 interface IMainIntroduceProps {
   activeTab: TNavIntroduceItem;
@@ -30,7 +41,11 @@ const MainIntroduce = ({ activeTab, data, isOwner = false }: IMainIntroduceProps
     }
   };
 
-  return <div className="w-full">{renderTab()}</div>;
+  return (
+    <div className="w-full">
+      <Suspense fallback={<IntroduceSkeleton activeTab={activeTab} />}>{renderTab()}</Suspense>
+    </div>
+  );
 };
 
 export default MainIntroduce;

@@ -414,7 +414,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
             </div>
           </Show>
           <div className="w-full rounded-md">
-            <TabsItem tabs={tabs} activeTab={activeTab} data={data} />
+            <TabsItem tabs={tabs} activeTab={activeTab} data={data} isLoading={isLoading} />
           </div>
         </div>
       </div>

@@ -22,7 +22,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "view": "View",
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save"
   },
   "privacy_level": {
     "PRIVACY_LEVEL_PUBLIC": "Public",

@@ -22,7 +22,9 @@
     "cancel": "Hủy",
     "confirm": "Xác nhận",
     "view": "Xem",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "save": "Lưu"
   },
   "privacy_level": {
     "PRIVACY_LEVEL_PUBLIC": "Công khai",
