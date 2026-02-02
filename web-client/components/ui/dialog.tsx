@@ -141,7 +141,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
       <DialogContent
         className={cn(
           sizeClasses[size],
-          hasBorder && 'p-0 gap-5 z-100',
+          hasBorder && 'p-0 gap-5 z-9999',
           'flex flex-col max-h-[calc(100%-28px)]',
         )}
         showCloseButton={false}
@@ -150,7 +150,6 @@ const Dialog = <T extends FieldValues = FieldValues>({
             e.preventDefault();
             return;
           }
-          // Ngăn event lan lên ModalContext để chỉ đóng dialog hiện tại
           e.preventDefault();
           e.stopPropagation();
           handleClose();

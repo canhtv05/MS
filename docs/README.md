@@ -1,112 +1,125 @@
-# 🌿 LeafHub - Microservices Social Platform
+# 🌿 LeafHub - Microservices Social Platform & Tech Playground
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Spring%20Boot-3.5-brightgreen?style=for-the-badge&logo=spring-boot" />
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" />
-  <img src="https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk" />
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.5%2B-brightgreen?style=for-the-badge&logo=spring-boot" />
+  <img src="https://img.shields.io/badge/Next.js-16%2B-black?style=for-the-badge&logo=next.js" />
+  <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" />
   <img src="https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript" />
   <img src="https://img.shields.io/badge/GraphQL-BFF-E10098?style=for-the-badge&logo=graphql" />
 </p>
 
-LeafHub là một nền tảng mạng xã hội được xây dựng theo kiến trúc **Microservices**, sử dụng các công nghệ hiện đại như Spring Boot, Next.js, GraphQL, gRPC, và Kafka.
+<p align="center">
+  <img src="docs/demo/image.png" alt="LeafHub Banner" width="100%" />
+</p>
+
+LeafHub không chỉ là một mạng xã hội, mà còn là một **Tech Playground** nơi chúng mình áp dụng mô hình kiến trúc **Microservices** hiện đại nhất. Dự án được xây dựng với tinh thần **"Vừa làm vừa học"**, liên tục cập nhật và thử nghiệm các công nghệ mới nhất (Bleeding Edge) như Spring Boot 3.5+, Next.js 16+, và TailwindCSS 4.
 
 ## 📑 Mục Lục
 
-- [Tính Năng](#-tính-năng)
-- [Kiến Trúc Hệ Thống](#-kiến-trúc-hệ-thống)
-- [Tech Stack](#-tech-stack)
-- [Cấu Trúc Dự Án](#-cấu-trúc-dự-án)
-- [Yêu Cầu Hệ Thống](#-yêu-cầu-hệ-thống)
-- [Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy)
-- [API Documentation](#-api-documentation)
-- [Đóng Góp](#-đóng-góp)
+- [🎯 Triết Lý Dự Án](#-triết-lý-dự-án)
+- [🏗 Kiến Trúc & Workflow](#-kiến-trúc--workflow)
+- [🛠 Tech Stack](#-tech-stack)
+- [💻 Yêu Cầu Hệ Thống](#-yêu-cầu-hệ-thống)
+- [🚀 Cài Đặt & Khởi Chạy](#-cài-đặt--khởi-chạy)
 
 ---
 
-## ✨ Tính Năng
+## 🎯 Triết Lý Dự Án
 
-### 🔐 Authentication & Authorization
+Dự án này tập trung vào việc khám phá và làm chủ các công nghệ mới:
 
-- Đăng nhập / Đăng ký với email verification
-- JWT Token với refresh token mechanism
-- OAuth2 integration
-- Role-based access control (RBAC)
-- Two-factor authentication (OTP)
-
-### 👤 Profile Management
-
-- Quản lý thông tin cá nhân
-- Upload và crop avatar/cover image
-- Media history tracking
-- Privacy settings (Public, Friends Only, Private)
-
-### 💬 Social Features
-
-- Bài viết (Posts)
-- Theo dõi (Follow/Unfollow)
-- Danh sách bạn bè
-- Thông báo real-time
-
-### 🌐 Internationalization
-
-- Hỗ trợ đa ngôn ngữ (Vietnamese, English)
-- i18next integration
+- **Microservices Architecture**: Chia nhỏ hệ thống để dễ dàng mở rộng và thử nghiệm các tech stack khác nhau cho từng service.
+- **Bleeding Edge Tech**: Luôn ưu tiên các version mới nhất (Alpha/Beta) để nắm bắt xu hướng tương lai.
+- **Inter-service Communication**: Kết hợp linh hoạt giữa gRPC (Internal) và GraphQL (External).
 
 ---
 
-## 🏗 Kiến Trúc Hệ Thống
+## 🏗 Kiến Trúc & Workflow
+
+### 1. Luồng Xử Lý Yêu Cầu (Hybrid Request Flow)
+
+Hệ thống hỗ trợ cả hai cơ chế gọi API linh hoạt:
+
+- **GraphQL Path**: Dùng cho tổng hợp dữ liệu từ nhiều service (Aggregation).
+- **Direct REST Path**: Dùng cho Auth (Login), File Upload hoặc các tính năng CRUD đơn giản.
+
+```mermaid
+sequenceDiagram
+    participant Web as 🌍 Next.js 16
+    participant GW as 🛡️ Spring Cloud Gateway
+    participant BFF as 🧠 GraphQL BFF (DGS)
+    participant Auth as 🔑 Auth Service
+    participant Service as ⚙️ Microservices
+
+    Note over Web, Service: Path 1: GraphQL (Complex Data)
+    Web->>GW: POST /api/v1/graphql
+    GW->>BFF: Forward
+    BFF->>Service: gRPC call (Internal)
+    Service-->>BFF: Proto Res
+    BFF-->>Web: JSON GQL Res
+
+    Note over Web, Service: Path 2: Direct REST (Simple Tasks)
+    Web->>GW: POST /api/v1/auth/login
+    GW->>Auth: Forward to Auth Service
+    Auth-->>Web: JSON Res (JWT)
+```
+
+### 2. Sơ Đồ Hệ Thống (System Architecture)
 
 ```mermaid
 graph TB
-    subgraph Client
-        WEB[Web Client<br/>Next.js 16]
+    subgraph Client_Layer [Client Layer]
+        WEB[Web Client<br/>Next.js 16 + React 19]
     end
 
-    subgraph API Layer
+    subgraph API_Management [API Management]
         GW[API Gateway<br/>Spring Cloud Gateway]
         GQL[GraphQL BFF<br/>DGS Framework]
     end
 
-    subgraph Services
-        AUTH[Auth Service<br/>JWT + OAuth2]
-        PROFILE[Profile Service<br/>Neo4j]
-        FILE[File Service<br/>MinIO/S3]
-        NOTI[Notification Service<br/>FCM + Kafka]
+    subgraph Business_Services [Core Services]
+        AUTH[Auth Service]
+        PROFILE[Profile Service]
+        FILE[File Service]
+        NOTI[Notification Service]
     end
 
     subgraph Infrastructure
-        EUREKA[Discovery Server<br/>Eureka]
-        KAFKA[Message Broker<br/>Kafka]
+        EUREKA[Discovery Server]
+        KAFKA[Message Broker]
+        REDIS[(Redis Cache)]
     end
 
-    subgraph Databases
-        PG[(PostgreSQL)]
-        REDIS[(Redis)]
-        MONGO[(MongoDB)]
-        NEO4J[(Neo4j)]
-    end
+    WEB -->|HTTP Request| GW
 
-    WEB --> GW
-    GW --> GQL
-    GW --> AUTH
-    GQL --> AUTH
-    GQL --> PROFILE
+    %% Path 1: GraphQL
+    GW -->|/graphql/**| GQL
+    GQL -.->|gRPC| AUTH & PROFILE & FILE
 
-    AUTH --> PG
-    AUTH --> REDIS
-    PROFILE --> NEO4J
-    FILE --> MONGO
-    NOTI --> MONGO
+    %% Path 2: Direct REST
+    GW -->|/auth/**| AUTH
+    GW -->|/files/**| FILE
+    GW -->|/user-profile/**| PROFILE
 
-    AUTH --> EUREKA
-    PROFILE --> EUREKA
-    FILE --> EUREKA
-    NOTI --> EUREKA
-    GW --> EUREKA
+    %% Storage
+    AUTH --- PG[(PostgreSQL)]
+    PROFILE --- NEO4J[(Neo4j Graph)]
+    FILE & NOTI --- MONGO[(MongoDB)]
 
-    NOTI --> KAFKA
-    AUTH --> KAFKA
+    AUTH & PROFILE & FILE & NOTI & GQL & GW --- EUREKA
+    NOTI & AUTH -.->|Events| KAFKA
 ```
+
+### 3. Quy Trình Phát Triển Tính Năng (Feature Development Workflow)
+
+Vì đây là dự án vừa làm vừa học, chúng mình áp dụng linh hoạt:
+
+1.  **Nghiên cứu & Chọn Path**:
+    - Cần aggregate dữ liệu: Chọn **GraphQL**.
+    - Xử lý đơn (auth, upload): Chọn **REST**.
+2.  **Triển khai Microservice**: Xây dựng logic tại service tương ứng.
+3.  **Expose Interface**: Build **Controller** (REST) hoặc **gRPC Service** (để BFF gọi).
+4.  **Hoàn thiện UI/UX**: Sử dụng TanStack Query để quản lý đồng bộ.
 
 ---
 
@@ -149,79 +162,6 @@ graph TB
 | **Inter-service Communication** | gRPC, REST                        |
 | **API Gateway**                 | Spring Cloud Gateway              |
 | **Containerization**            | Docker Compose                    |
-
----
-
-## 📁 Cấu Trúc Dự Án
-
-```
-MS/
-├── 📂 auth/                    # Authentication Service
-│   └── src/main/java/com/leaf/auth/
-│       ├── config/             # Security, JWT, OAuth2 configs
-│       ├── controller/         # REST endpoints
-│       ├── domain/             # Entities
-│       ├── dto/                # Data Transfer Objects
-│       ├── grpc/               # gRPC server/client
-│       ├── repository/         # Data access layer
-│       ├── security/           # Security filters, providers
-│       └── service/            # Business logic
-│
-├── 📂 profile/                 # Profile Service (Neo4j)
-│   └── src/main/java/com/leaf/profile/
-│       ├── domain/             # Neo4j Node entities
-│       ├── grpc/               # gRPC communication
-│       └── service/            # Profile, MediaHistory services
-│
-├── 📂 file/                    # File Management Service
-│   └── src/main/java/com/leaf/file/
-│       ├── service/            # File upload, storage
-│       └── grpc/               # gRPC file transfer
-│
-├── 📂 notification/            # Notification Service
-│   └── src/main/java/com/leaf/noti/
-│       ├── config/             # Kafka, Firebase configs
-│       └── service/            # Email, Push notification
-│
-├── 📂 graphql-bff/             # GraphQL Backend-for-Frontend
-│   └── src/main/java/com/leaf/graphql_bff/
-│       ├── auth/               # GraphQL resolvers, types
-│       └── security/           # GraphQL security
-│
-├── 📂 gateway/                 # API Gateway
-│   └── src/main/java/com/leaf/gateway/
-│       └── config/             # Routes, filters, security
-│
-├── 📂 discovery-server/        # Eureka Server
-│
-├── 📂 common/                  # Shared utilities
-│   └── src/main/java/com/leaf/common/
-│       ├── dto/                # Shared DTOs
-│       ├── exception/          # Common exceptions
-│       └── util/               # Utilities
-│
-├── 📂 framework/               # Framework module
-│   └── Security, Redis, Exception handling
-│
-├── 📂 web-client/              # Next.js Frontend
-│   ├── app/                    # App Router pages
-│   │   ├── (auth)/             # Auth pages (login, register)
-│   │   └── (home)/             # Protected pages
-│   ├── components/             # React components
-│   │   ├── animate-ui/         # Animated UI primitives
-│   │   └── customs/            # Custom components
-│   ├── services/               # API services
-│   │   ├── mutations/          # TanStack mutations
-│   │   └── queries/            # TanStack queries
-│   ├── stores/                 # Zustand stores
-│   ├── types/                  # TypeScript types
-│   ├── locale/                 # i18n translations
-│   └── views/                  # Page components
-│
-├── 📂 .devcontainer/           # Docker Compose configs
-├── 📂 docs/                    # Documentation
-└── 📄 package.json             # Root package (linting, formatting)
-```
 
 ---
 
@@ -313,38 +253,6 @@ npm run dev
 Truy cập: http://localhost:3000
 
 ---
-
-## 📖 API Documentation
-
-### Postman Collection
-
-Import các file sau vào Postman:
-
-- `docs/postman/MS.postman_collection.json`
-- `docs/postman/MS.postman_environment.json`
-
-### GraphQL Playground
-
-Truy cập: http://localhost:8080/graphiql
-
-### API Endpoints
-
-| Method | Endpoint                  | Description                 |
-| ------ | ------------------------- | --------------------------- |
-| POST   | `/api/auth/login`         | Đăng nhập                   |
-| POST   | `/api/auth/register`      | Đăng ký                     |
-| POST   | `/api/auth/refresh-token` | Làm mới token               |
-| GET    | `/api/profile/me`         | Lấy thông tin user hiện tại |
-| PUT    | `/api/profile/update`     | Cập nhật profile            |
-| POST   | `/api/profile/avatar`     | Upload avatar               |
-| POST   | `/api/profile/cover`      | Upload cover image          |
-| GET    | `/api/profile/{username}` | Lấy profile theo username   |
-
----
-
-## 🤝 Đóng Góp
-
-Vui lòng đọc [CONTRIBUTING.md](../CONTRIBUTING.md) để biết chi tiết về quy trình đóng góp.
 
 ### Quy tắc Commit
 
