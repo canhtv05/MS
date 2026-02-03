@@ -1,7 +1,10 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "automatic",
-  "java.project.sourcePaths": ["src/main/java", "target/generated-sources/protobuf/java"],
+  "java.project.sourcePaths": [
+    "src/main/java",
+    "target/generated-sources/protobuf/java"
+  ],
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-21",
@@ -22,6 +25,7 @@
     "projectlombok",
     "projectreactor",
     "springframework",
+    "subtab",
     "webflux"
   ],
   "problems.showCurrentInStatus": false,

@@ -6,8 +6,8 @@ import Show from '@/components/Show';
 import { useAuthStore } from '@/stores/auth';
 import { PrivacyLevel } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'next/navigation';
 import NavIntroduce from './NavIntroduce';
-import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import MainIntroduce from './MainIntroduce';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -40,7 +40,14 @@ export type TIntroduceField = (typeof NAV_INTRODUCE_MENU)[TNavIntroduceItem][num
 const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
   const { user } = useAuthStore();
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<TNavIntroduceItem>('basic_info');
+  const searchParams = useSearchParams();
+  const subtabParam = searchParams.get('subtab');
+
+  // Get activeTab from URL params, default to 'basic_info' if not found or invalid
+  const activeTab: TNavIntroduceItem =
+    subtabParam && subtabParam in NAV_INTRODUCE_MENU
+      ? (subtabParam as TNavIntroduceItem)
+      : 'basic_info';
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -78,17 +85,12 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
               ) : (
                 <>
                   <div className="min-w-[250px] shrink-0">
-                    <NavIntroduce
-                      menu={NAV_INTRODUCE_MENU}
-                      activeTab={activeTab}
-                      setActiveTab={setActiveTab}
-                    />
+                    <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
                   <Separator orientation="vertical" className="w-px self-stretch" />
                   <div className="flex-1 w-full">
                     <MainIntroduce
                       menu={NAV_INTRODUCE_MENU}
-                      activeTab={activeTab}
                       data={data}
                       isOwner={data?.userId === user?.auth?.username}
                     />

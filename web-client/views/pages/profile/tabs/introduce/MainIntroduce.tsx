@@ -1,7 +1,8 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { TNavIntroduceItem } from './TabIntroduce';
+import { useSearchParams } from 'next/navigation';
+import { TNavIntroduceItem, NAV_INTRODUCE_MENU } from './TabIntroduce';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import IntroduceSkeleton from './IntroduceSkeleton';
 
@@ -19,13 +20,20 @@ const ContactsSocialTab = React.lazy(() =>
 );
 
 interface IMainIntroduceProps {
-  activeTab: TNavIntroduceItem;
   menu: Record<TNavIntroduceItem, readonly string[]>;
   data?: IDetailUserProfileDTO;
   isOwner?: boolean;
 }
 
-const MainIntroduce = ({ activeTab, data, isOwner = false }: IMainIntroduceProps) => {
+const MainIntroduce = ({ data, isOwner = false }: IMainIntroduceProps) => {
+  const searchParams = useSearchParams();
+  const subtabParam = searchParams.get('subtab');
+
+  const activeTab: TNavIntroduceItem =
+    subtabParam && subtabParam in NAV_INTRODUCE_MENU
+      ? (subtabParam as TNavIntroduceItem)
+      : 'basic_info';
+
   const renderTab = () => {
     switch (activeTab) {
       case 'basic_info':

@@ -234,22 +234,24 @@ const HeaderLayout = () => {
                     </Button>
                   </Link>
                   <DropdownMenu modal={false}>
-                    <DropdownMenuTrigger asChild className="cursor-pointer bg-transparent!">
-                      <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
-                        <div className="relative transparent!">
+                    <DropdownMenuTrigger asChild>
+                      <div className="relative">
+                        <IconButton className="flex cursor-pointer shadow-none" variant={'accent'}>
                           <MenuDots
                             className="size-6 p-0.5 rotate-90"
                             style={{ transition: 'none' }}
                           />
-                        </div>
-                      </IconButton>
+                        </IconButton>
+                      </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       side="bottom"
                       align="end"
+                      alignOffset={0}
                       sideOffset={10}
-                      className="w-[220px] z-60"
+                      className="w-[220px] z-120!"
                     >
+                      <DropdownMenuArrow className="z-120!" />
                       <HomeHeaderDropdown
                         currentLang={currentLang}
                         handleChangeLang={handleChangeLang}
