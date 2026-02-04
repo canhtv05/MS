@@ -76,9 +76,10 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
         ref={ref}
         className={cn(
           'border-input cursor-pointer ring-offset-background placeholder:text-muted-foreground flex h-11 w-full items-center justify-between rounded-xl border bg-background px-3 text-sm',
-          'focus:outline-none! focus:border-purple-300!',
-          'focus-visible:outline-none! focus-visible:border-purple-300!',
-          'disabled:cursor-not-allowed disabled:opacity-50',
+          'transition-all duration-200 ease-in-out',
+          'focus:outline-none! focus:border-purple-300! focus:ring-1! focus:ring-purple-300/30!',
+          'focus-visible:outline-none! focus-visible:border-purple-300! focus-visible:ring-1! focus-visible:ring-purple-300/30!',
+          'disabled:cursor-not-allowed disabled:opacity-50 shadow-none!',
           className,
         )}
         {...props}
@@ -146,7 +147,8 @@ function SelectContent({
       sideOffset={sideOffset}
       position={position}
       className={cn(
-        'bg-popover cursor-pointer text-popover-foreground relative z-120 max-h-96 min-w-32 overflow-visible rounded-md border shadow-md outline-none',
+        'bg-popover cursor-pointer text-popover-foreground relative z-120 max-h-96 min-w-32 rounded-md border shadow-md outline-none will-change-[opacity,transform]',
+        position === 'popper' && 'min-w-(--radix-select-trigger-width)',
         className,
       )}
       {...props}
@@ -154,9 +156,8 @@ function SelectContent({
       <SelectScrollUpButton />
       <SelectViewportPrimitive
         className={cn(
-          'p-1',
-          position === 'popper' &&
-            'h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)',
+          'p-1 overflow-x-hidden overflow-y-auto max-h-[inherit]',
+          position === 'popper' && 'w-full',
         )}
       >
         <SelectHighlightPrimitive className="absolute inset-0 z-0 rounded-sm bg-accent">
@@ -190,7 +191,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
           ref={ref}
           disabled={disabled}
           className={cn(
-            "focus:text-accent-foreground hover:cursor-pointer [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 pr-10 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+            "focus:text-accent-foreground hover:cursor-pointer [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 pr-10 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 overflow-hidden",
             className,
           )}
           {...props}

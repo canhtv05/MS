@@ -65,7 +65,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
           }
         >
           <Wrapper title={t('profile:introduce')}>
-            <div className="flex gap-(--sp-layout) items-stretch">
+            <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch">
               {isLoading ? (
                 <>
                   <div className="min-w-[250px] shrink-0">
@@ -87,7 +87,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                   <div className="min-w-[250px] shrink-0">
                     <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
-                  <Separator orientation="vertical" className="w-px self-stretch" />
+                  <div className="w-full lg:w-px h-px bg-border"></div>
                   <div className="flex-1 w-full">
                     <MainIntroduce
                       menu={NAV_INTRODUCE_MENU}

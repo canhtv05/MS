@@ -219,7 +219,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                           key={tab.id}
                           onClick={() => handleHiddenTabSelect(tab.id)}
                           className={cn(
-                            'cursor-pointer outline-none focus:bg-muted/50 transition-[background-color] duration-200',
+                            'cursor-pointer outline-none transition-[background-color,color] duration-200',
                             'text-muted-foreground focus:text-primary!',
                             activeTabId === tab.id
                               ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'

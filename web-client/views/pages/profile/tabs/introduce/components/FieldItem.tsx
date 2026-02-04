@@ -33,7 +33,7 @@ export const FieldItem = ({ field, value, labelKey, onEdit }: IFieldItemProps) =
       className={cn(
         'flex items-start gap-3 py-2.5 px-3',
         'group hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg',
-        '-mx-3 border border-transparent hover:border-muted/50',
+        'border border-transparent hover:border-muted/50',
         'transition-colors duration-200',
       )}
     >

@@ -186,8 +186,8 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
             initial={false}
             animate={
               isOpen
-                ? { opacity: 1, scale: 1, pointerEvents: 'auto' }
-                : { opacity: 0, scale: 0.95, pointerEvents: 'none' }
+                ? { opacity: 1, y: 0, pointerEvents: 'auto' }
+                : { opacity: 0, y: -4, pointerEvents: 'none' }
             }
             transition={transition}
             style={{

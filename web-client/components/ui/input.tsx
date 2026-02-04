@@ -124,8 +124,8 @@ function Input({
         <div
           className={cn(
             'flex items-center relative autofill:bg-transparent! rounded-xl border border-input bg-background group',
-            'focus-within:transition-colors focus-within:duration-200 focus-within:ease-in-out',
-            'focus-within:border-purple-300',
+            'focus-within:transition-all focus-within:duration-200 focus-within:ease-in-out',
+            'focus-within:border-purple-300 focus-within:ring-1 focus-within:ring-purple-300/30',
             isInvalid && 'border-red-500 ring-1 ring-red-500/20',
             className,
             classNameIcon,
