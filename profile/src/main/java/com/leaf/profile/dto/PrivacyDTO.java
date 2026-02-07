@@ -1,5 +1,6 @@
 package com.leaf.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leaf.common.grpc.PrivacyLevel;
 import com.leaf.profile.domain.UserProfilePrivacy;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PrivacyDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

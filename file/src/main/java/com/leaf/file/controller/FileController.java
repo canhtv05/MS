@@ -8,18 +8,15 @@ import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.MediaHistoryGroupDTO;
 import com.leaf.file.service.FileService;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FileController {
 
-    FileService fileService;
+    private final FileService fileService;
 
     @GetMapping("/me")
     public ResponseEntity<ResponseObject<List<FileResponse>>> getMyResources(

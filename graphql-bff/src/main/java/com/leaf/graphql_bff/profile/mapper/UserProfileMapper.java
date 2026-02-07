@@ -9,13 +9,12 @@ import java.util.List;
 
 public class UserProfileMapper {
 
-    private static UserProfileMapper instance;
+    private static final UserProfileMapper INSTANCE = new UserProfileMapper();
+
+    private UserProfileMapper() {}
 
     public static UserProfileMapper getInstance() {
-        if (instance == null) {
-            instance = new UserProfileMapper();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     private InterestDTO tInterestDTO(com.leaf.common.grpc.InterestDTO interestDTO) {

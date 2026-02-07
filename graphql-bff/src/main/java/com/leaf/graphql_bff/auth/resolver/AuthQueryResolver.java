@@ -12,21 +12,18 @@ import com.leaf.graphql_bff.util.SecurityUtils;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
 import java.util.concurrent.TimeUnit;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @DgsComponent
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthQueryResolver {
 
-    AuthGrpcAuthClient grpcAuthClient;
-    AuthGrpcProfileClient grpcProfileClient;
-    RedisService redisService;
+    private final AuthGrpcAuthClient grpcAuthClient;
+    private final AuthGrpcProfileClient grpcProfileClient;
+    private final RedisService redisService;
 
     @DgsQuery(field = "me")
     @PreAuthorize("isAuthenticated()")

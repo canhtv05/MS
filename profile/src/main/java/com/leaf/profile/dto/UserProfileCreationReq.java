@@ -1,19 +1,21 @@
 package com.leaf.profile.dto;
 
-import lombok.AccessLevel;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfileCreationReq {
+public class UserProfileCreationReq implements Serializable {
 
-    String userId;
-    String fullname;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private String userId;
+    private String fullname;
 }

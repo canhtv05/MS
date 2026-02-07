@@ -68,7 +68,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         // Lấy channel từ AuthenticationContext (ThreadLocal)
         String channel = getChannelFromContext();
 
-        UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user);
+        UserProfileDTO userProfileDTO = UserProfileDTO.toDTO(user);
         authService.mappingUserPermissions(userProfileDTO, user);
         List<GrantedAuthority> grantedAuthorities = userProfileDTO
             .getPermissions()

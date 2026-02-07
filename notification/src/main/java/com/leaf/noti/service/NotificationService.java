@@ -6,7 +6,7 @@ import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.framework.service.RedisService;
 import com.leaf.noti.domain.EmailVerificationLogs;
-import com.leaf.noti.dto.VerifyEmailTokenResponse;
+import com.leaf.noti.dto.VerifyEmailTokenRes;
 import com.leaf.noti.enums.VerificationStatus;
 import com.leaf.noti.grpc.GrpcAuthClient;
 import com.leaf.noti.repository.EmailVerificationLogsRepository;
@@ -17,30 +17,30 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.time.Instant;
 import java.util.Objects;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class NotificationService {
 
-    GrpcAuthClient grpcAuthClient;
-    RedisService redisService;
-    TokenUtil tokenUtil;
-    EmailVerificationLogsRepository emailVerificationLogsRepository;
-    EmailService emailService;
+    private final GrpcAuthClient grpcAuthClient;
+    private final RedisService redisService;
+    private final TokenUtil tokenUtil;
+    private final EmailVerificationLogsRepository emailVerificationLogsRepository;
+    private final EmailService emailService;
 
-    public VerifyEmailTokenResponse verifyEmailToken(String token) {
+    public VerifyEmailTokenRes verifyEmailToken(String token) {
         try {
             EmailVerificationLogs logs = emailVerificationLogsRepository
                 .findByToken(token)
                 .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_TOKEN_INVALID));
             if (logs.getVerificationStatus() == VerificationStatus.VERIFIED) {
-                return VerifyEmailTokenResponse.builder()
+                return VerifyEmailTokenRes.builder()
                     .valid(true)
                     .verificationStatus(VerificationStatus.VERIFIED)
                     .build();
@@ -52,14 +52,14 @@ public class NotificationService {
                 if (logs.getExpiredAt().isBefore(Instant.now())) {
                     logs.setVerificationStatus(VerificationStatus.EXPIRED);
                     emailVerificationLogsRepository.save(logs);
-                    return VerifyEmailTokenResponse.builder()
+                    return VerifyEmailTokenRes.builder()
                         .valid(false)
                         .verificationStatus(VerificationStatus.EXPIRED)
                         .build();
                 }
                 logs.setVerificationStatus(VerificationStatus.INVALID);
                 emailVerificationLogsRepository.save(logs);
-                return VerifyEmailTokenResponse.builder()
+                return VerifyEmailTokenRes.builder()
                     .valid(false)
                     .verificationStatus(VerificationStatus.INVALID)
                     .build();
@@ -71,7 +71,7 @@ public class NotificationService {
             } catch (ExpiredJwtException e) {
                 logs.setVerificationStatus(VerificationStatus.EXPIRED);
                 emailVerificationLogsRepository.save(logs);
-                return VerifyEmailTokenResponse.builder()
+                return VerifyEmailTokenRes.builder()
                     .valid(false)
                     .verificationStatus(VerificationStatus.EXPIRED)
                     .build();
@@ -83,7 +83,7 @@ public class NotificationService {
             ) {
                 logs.setVerificationStatus(VerificationStatus.INVALID);
                 emailVerificationLogsRepository.save(logs);
-                return VerifyEmailTokenResponse.builder()
+                return VerifyEmailTokenRes.builder()
                     .valid(false)
                     .verificationStatus(VerificationStatus.INVALID)
                     .build();
@@ -97,7 +97,7 @@ public class NotificationService {
             ) {
                 logs.setVerificationStatus(VerificationStatus.INVALID);
                 emailVerificationLogsRepository.save(logs);
-                return VerifyEmailTokenResponse.builder()
+                return VerifyEmailTokenRes.builder()
                     .valid(false)
                     .verificationStatus(VerificationStatus.INVALID)
                     .build();
@@ -113,15 +113,12 @@ public class NotificationService {
             logs.setVerifiedAt(Instant.now());
             emailVerificationLogsRepository.save(logs);
             redisService.evict(keyVerification);
-            return VerifyEmailTokenResponse.builder()
+            return VerifyEmailTokenRes.builder()
                 .valid(Objects.nonNull(response) && StringUtils.hasText(response.getUsername()))
                 .verificationStatus(VerificationStatus.VERIFIED)
                 .build();
         } catch (Exception e) {
-            return VerifyEmailTokenResponse.builder()
-                .valid(false)
-                .verificationStatus(VerificationStatus.INVALID)
-                .build();
+            return VerifyEmailTokenRes.builder().valid(false).verificationStatus(VerificationStatus.INVALID).build();
         }
     }
 

@@ -1,22 +1,24 @@
 package com.leaf.noti.dto;
 
 import com.leaf.noti.enums.VerificationStatus;
-import lombok.AccessLevel;
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class VerifyEmailTokenResponse {
+public class VerifyEmailTokenRes implements Serializable {
 
-    boolean valid;
-    VerificationStatus verificationStatus;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private boolean valid;
+    private VerificationStatus verificationStatus;
 }

@@ -31,7 +31,11 @@ public class UserProfileDTO implements Serializable {
     private String secretKey;
     private String channel;
 
-    public static UserProfileDTO fromEntity(User user) {
+    // Static factory method for entity conversion using BeanUtils
+    public static UserProfileDTO toDTO(User user) {
+        if (user == null) {
+            return null;
+        }
         return UserProfileDTO.builder()
             .username(user.getUsername())
             .isGlobal(user.getIsGlobal())

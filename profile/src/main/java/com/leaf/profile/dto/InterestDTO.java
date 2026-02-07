@@ -1,5 +1,6 @@
 package com.leaf.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leaf.profile.domain.Interest;
 import java.io.Serializable;
 import lombok.AccessLevel;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InterestDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

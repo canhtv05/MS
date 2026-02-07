@@ -1,8 +1,10 @@
 package com.leaf.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.domain.UserProfile;
+import java.io.Serializable;
 import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +18,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserProfileResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UserProfileResponse implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     String id;
     String userId;

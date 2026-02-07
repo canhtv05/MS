@@ -19,19 +19,16 @@ import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.InputArgument;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @DgsComponent
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ProfileQueryResolver {
 
-    ProfileGrpcProfileClient grpcProfileClient;
-    ProfileGrpcFileClient grpcFileClient;
+    private final ProfileGrpcProfileClient grpcProfileClient;
+    private final ProfileGrpcFileClient grpcFileClient;
 
     @DgsQuery(field = "userDetail")
     public Mono<DetailUserProfileDTO> userDetail(String username) {

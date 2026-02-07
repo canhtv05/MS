@@ -3,6 +3,7 @@
 import {
   IDetailUserProfileDTO,
   IImageHistoryGroupDTO,
+  IInterestDTO,
   IUserProfileDTO,
   IUserProfilePrivacyDTO,
 } from '@/types/profile';
@@ -85,6 +86,36 @@ export const useMyMediaHistoryInfiniteQuery = (
     retry: 1,
     staleTime: 2 * 60 * 1000, // 2 phút - media history có thể có media mới
     gcTime: 5 * 60 * 1000, // 5 phút - giữ cache
+  });
+};
+
+export const useInterestInfiniteQuery = (searchText?: string, enabled: boolean = true) => {
+  return useInfiniteQuery({
+    queryKey: ['profile', 'interests'],
+    queryFn: async ({
+      pageParam = 1,
+    }): Promise<IResponseObject<ISearchResponse<IInterestDTO[]>>> => {
+      const res = await api.get(API_ENDPOINTS.PROFILE.INTERESTS, {
+        params: {
+          page: pageParam,
+          size: 20,
+          searchText: searchText,
+        },
+      });
+      return res.data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: lastPage => {
+      const pagination = lastPage?.data?.pagination;
+      if (pagination && pagination.currentPage < pagination.totalPages) {
+        return pagination.currentPage + 1;
+      }
+      return undefined;
+    },
+    enabled: enabled,
+    retry: 1,
+    staleTime: 2 * 60 * 1000, // 2 phút - interests có thể có interests mới
+    gcTime: 5 * 60 * 1000, // 5 phút - giữ cache lâu hơn
   });
 };
 

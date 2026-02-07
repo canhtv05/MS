@@ -3,7 +3,7 @@ package com.leaf.auth.security.jwt;
 import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.dto.NotificationPayload;
-import com.leaf.auth.dto.res.RefreshTokenResponse;
+import com.leaf.auth.dto.res.RefreshTokenRes;
 import com.leaf.auth.enums.NotificationType;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserRepository;
@@ -133,7 +133,7 @@ public class TokenProvider {
         return token;
     }
 
-    public RefreshTokenResponse refreshToken(
+    public RefreshTokenRes refreshToken(
         String cookieValue,
         HttpServletRequest request,
         HttpServletResponse response,
@@ -201,11 +201,11 @@ public class TokenProvider {
         Cookie cookie = cookieUtil.setTokenCookie(newToken, newRefreshToken);
         response.addCookie(cookie);
 
-        return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
+        return RefreshTokenRes.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
     }
 
     @Transactional(readOnly = true)
-    public RefreshTokenResponse processRefreshInternal(String refreshToken, String channel) {
+    public RefreshTokenRes processRefreshInternal(String refreshToken, String channel) {
         if (CommonUtils.isEmpty(refreshToken)) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
@@ -255,7 +255,7 @@ public class TokenProvider {
             userRepository.save(user);
             this.cacheUserToken(username, channel, id, newToken);
 
-            return RefreshTokenResponse.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
+            return RefreshTokenRes.builder().accessToken(newToken).refreshToken(newRefreshToken).build();
         } catch (io.jsonwebtoken.JwtException e) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         } catch (ApiException e) {

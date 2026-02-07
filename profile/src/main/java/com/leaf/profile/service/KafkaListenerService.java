@@ -3,9 +3,7 @@ package com.leaf.profile.service;
 import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.UserCreatedEvent;
 import com.leaf.profile.dto.UserProfileCreationReq;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -13,10 +11,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaListenerService {
 
-    UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
     @KafkaListener(
         topics = EventConstants.USER_CREATED_TOPIC,

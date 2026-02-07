@@ -1,13 +1,12 @@
 package com.leaf.file.dto;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leaf.common.grpc.ResourceType;
 import com.leaf.file.domain.File;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.springframework.beans.BeanUtils;
 
@@ -16,17 +15,19 @@ import org.springframework.beans.BeanUtils;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class FileResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class FileResponse implements Serializable {
 
-    String id;
-    String ownerId;
-    Long totalSize;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    List<VideoResponse> videos;
-    List<ImageResponse> images;
-    ResourceType resourceType;
+    private String id;
+    private String ownerId;
+    private Long totalSize;
+
+    private List<VideoResponse> videos;
+    private List<ImageResponse> images;
+    private ResourceType resourceType;
 
     public static FileResponse toFileResponse(File file) {
         FileResponse fileResponse = new FileResponse();

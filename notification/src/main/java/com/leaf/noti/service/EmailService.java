@@ -16,27 +16,27 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class EmailService {
 
-    JavaMailSender javaMailSender;
-    SpringTemplateEngine templateEngine;
-    RedisService redisService;
-    EmailProperties emailProperties;
-    TokenUtil tokenUtil;
-    EmailVerificationLogsRepository emailVerificationLogsRepository;
+    private final JavaMailSender javaMailSender;
+    private final SpringTemplateEngine templateEngine;
+    private final RedisService redisService;
+    private final EmailProperties emailProperties;
+    private final TokenUtil tokenUtil;
+    private final EmailVerificationLogsRepository emailVerificationLogsRepository;
 
     public void sendVerificationEmail(@NonNull VerificationEmailEvent event) {
         try {

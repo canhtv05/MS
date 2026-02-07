@@ -6,10 +6,10 @@ import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
 import com.leaf.auth.dto.TokenPair;
 import com.leaf.auth.dto.UserProfileDTO;
-import com.leaf.auth.dto.req.LoginRequest;
-import com.leaf.auth.dto.res.AuthenticateResponse;
-import com.leaf.auth.dto.res.RefreshTokenResponse;
-import com.leaf.auth.dto.res.VerifyTokenResponse;
+import com.leaf.auth.dto.req.LoginReq;
+import com.leaf.auth.dto.res.AuthenticateRes;
+import com.leaf.auth.dto.res.RefreshTokenRes;
+import com.leaf.auth.dto.res.VerifyTokenRes;
 import com.leaf.auth.enums.PermissionAction;
 import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
@@ -28,15 +28,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -45,29 +44,29 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class AuthService {
 
-    CookieUtil cookieUtil;
-    UserRepository userRepository;
-    UserPermissionRepository userPermissionRepository;
+    private final CookieUtil cookieUtil;
+    private final UserRepository userRepository;
+    private final UserPermissionRepository userPermissionRepository;
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
-    AuthenticationManagerBuilder authenticationManagerBuilder;
-    TokenProvider tokenProvider;
-    JwtUtil jwtUtil;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final TokenProvider tokenProvider;
+    private final JwtUtil jwtUtil;
 
     @Transactional
-    public AuthenticateResponse authenticate(
-        LoginRequest loginRequest,
+    public AuthenticateRes authenticate(
+        LoginReq loginReq,
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
     ) {
         try {
-            AuthenticationContext.setChannel(loginRequest.getChannel());
+            AuthenticationContext.setChannel(loginReq.getChannel());
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
+                loginReq.getUsername(),
+                loginReq.getPassword()
             );
 
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -77,19 +76,19 @@ public class AuthService {
                 authentication,
                 httpServletRequest,
                 httpServletResponse,
-                loginRequest.getChannel()
+                loginReq.getChannel()
             );
             if (StringUtils.isBlank(token)) {
                 throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
             }
-            return new AuthenticateResponse(true);
+            return new AuthenticateRes(true);
         } finally {
             AuthenticationContext.clear();
         }
     }
 
     @Transactional
-    public RefreshTokenResponse refreshToken(
+    public RefreshTokenRes refreshToken(
         String cookieValue,
         String channel,
         HttpServletRequest httpServletRequest,
@@ -98,8 +97,8 @@ public class AuthService {
         return tokenProvider.refreshToken(cookieValue, httpServletRequest, httpServletResponse, channel);
     }
 
-    @Transactional
-    public VerifyTokenResponse verifyToken(String cookieValueOrTokenString, boolean isInternal) {
+    @Transactional(readOnly = true)
+    public VerifyTokenRes verifyToken(String cookieValueOrTokenString, boolean isInternal) {
         TokenPair tokenPair = getTokenPair(cookieValueOrTokenString, isInternal);
         if (StringUtils.isBlank(tokenPair.getAccessToken())) {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
@@ -107,7 +106,7 @@ public class AuthService {
 
         TokenStatus valid = jwtUtil.validateToken(tokenPair.getAccessToken());
         if (TokenStatus.VALID.equals(valid)) {
-            return VerifyTokenResponse.builder()
+            return VerifyTokenRes.builder()
                 .valid(TokenStatus.VALID.equals(valid))
                 .accessToken(tokenPair.getAccessToken())
                 .refreshToken(tokenPair.getRefreshToken())
@@ -121,29 +120,29 @@ public class AuthService {
         if (StringUtils.isBlank(cookieTokenPair.getAccessToken())) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         }
-        RefreshTokenResponse refreshTokenResponse = refreshToken(
+        RefreshTokenRes refreshTokenRes = refreshToken(
             cookieTokenPair.getRefreshToken(),
             cookieTokenPair.getAccessToken(),
             httpServletRequest,
             httpServletResponse
         );
-        if (Objects.isNull(refreshTokenResponse)) {
+        if (Objects.isNull(refreshTokenRes)) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         } else {
             valid = TokenStatus.VALID;
         }
-        return VerifyTokenResponse.builder()
+        return VerifyTokenRes.builder()
             .valid(TokenStatus.VALID.equals(valid))
-            .accessToken(refreshTokenResponse.getAccessToken())
-            .refreshToken(refreshTokenResponse.getRefreshToken())
+            .accessToken(refreshTokenRes.getAccessToken())
+            .refreshToken(refreshTokenRes.getRefreshToken())
             .build();
     }
 
-    @Transactional
-    public VerifyTokenResponse verifyTokenInternal(String accessToken, String refreshToken, String channel) {
+    @Transactional(readOnly = true)
+    public VerifyTokenRes verifyTokenInternal(String accessToken, String refreshToken, String channel) {
         TokenStatus valid = jwtUtil.validateToken(accessToken);
         if (TokenStatus.VALID.equals(valid)) {
-            return VerifyTokenResponse.builder()
+            return VerifyTokenRes.builder()
                 .valid(TokenStatus.VALID.equals(valid))
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -153,16 +152,16 @@ public class AuthService {
         if (StringUtils.isBlank(refreshToken)) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
-        RefreshTokenResponse refreshTokenResponse = tokenProvider.processRefreshInternal(refreshToken, channel);
-        if (Objects.isNull(refreshTokenResponse)) {
+        RefreshTokenRes refreshTokenRes = tokenProvider.processRefreshInternal(refreshToken, channel);
+        if (Objects.isNull(refreshTokenRes)) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         } else {
             valid = TokenStatus.VALID;
         }
-        return VerifyTokenResponse.builder()
+        return VerifyTokenRes.builder()
             .valid(TokenStatus.VALID.equals(valid))
-            .accessToken(refreshTokenResponse.getAccessToken())
-            .refreshToken(refreshTokenResponse.getRefreshToken())
+            .accessToken(refreshTokenRes.getAccessToken())
+            .refreshToken(refreshTokenRes.getRefreshToken())
             .build();
     }
 
@@ -185,7 +184,7 @@ public class AuthService {
         if (user.isEmpty()) {
             throw new ApiException(ErrorMessage.USER_NOT_FOUND);
         }
-        UserProfileDTO userProfileDTO = UserProfileDTO.fromEntity(user.get());
+        UserProfileDTO userProfileDTO = UserProfileDTO.toDTO(user.get());
         this.mappingUserPermissions(userProfileDTO, user.get());
         return userProfileDTO;
     }
@@ -221,7 +220,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    protected TokenPair getTokenPair(String cookieValueOrTokenString, boolean isInternal) {
+    private TokenPair getTokenPair(String cookieValueOrTokenString, boolean isInternal) {
         if (StringUtils.isBlank(cookieValueOrTokenString) || isInternal) {
             return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
         }

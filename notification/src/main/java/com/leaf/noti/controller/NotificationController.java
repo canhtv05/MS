@@ -2,11 +2,9 @@ package com.leaf.noti.controller;
 
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.dto.event.VerificationEmailEvent;
-import com.leaf.noti.dto.VerifyEmailTokenResponse;
+import com.leaf.noti.dto.VerifyEmailTokenRes;
 import com.leaf.noti.service.NotificationService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,13 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationController {
 
-    NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @GetMapping("/verify-email")
-    public ResponseEntity<ResponseObject<VerifyEmailTokenResponse>> verifyEmail(@RequestParam String token) {
+    public ResponseEntity<ResponseObject<VerifyEmailTokenRes>> verifyEmail(@RequestParam String token) {
         return ResponseEntity.ok(ResponseObject.success(notificationService.verifyEmailToken(token)));
     }
 

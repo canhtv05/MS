@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
     CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY: '/user-profile/me/change-cover-image-from-media-history',
     UPDATE_BIO: '/user-profile/me/update-bio',
     UPDATE_PRIVACY: '/user-profile/me/update-privacy',
+    INTERESTS: '/user-profile/interests',
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: '/notifications/verify-email',

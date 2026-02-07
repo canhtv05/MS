@@ -15,36 +15,32 @@ import com.leaf.profile.dto.UserProfileCreationReq;
 import com.leaf.profile.dto.UserProfileResponse;
 import com.leaf.profile.grpc.GrpcFileClient;
 import com.leaf.profile.repository.UserProfileRepository;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class UserProfileService {
 
-    UserProfileRepository userProfileRepository;
-    GrpcFileClient grpcFileClient;
-    RedisService redisService;
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    private final UserProfileRepository userProfileRepository;
+    private final GrpcFileClient grpcFileClient;
+    private final RedisService redisService;
 
+    @Transactional
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {
         UserProfile userProfile = UserProfile.builder().userId(req.getUserId()).fullname(req.getFullname()).build();
 
-        var UserProfile = userProfileRepository.save(userProfile);
-        return UserProfileResponse.toUserProfileResponse(UserProfile);
+        var saved = userProfileRepository.save(userProfile);
+        return UserProfileResponse.toUserProfileResponse(saved);
     }
 
+    @Transactional
     public SendFriendRequestDTO sendFriendRequestDTO(SendFriendRequestDTO request) {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
@@ -61,6 +57,7 @@ public class UserProfileService {
         return userProfileRepository.sendFriendRequest(currentUserId, request.getReceiverId());
     }
 
+    @Transactional(readOnly = true)
     public UserProfileResponse getUserProfile() {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
@@ -73,6 +70,7 @@ public class UserProfileService {
         return UserProfileResponse.toUserProfileResponse(userProfile);
     }
 
+    @Transactional(readOnly = true)
     public UserProfileResponse getUserProfile(String username) {
         UserProfile userProfile = userProfileRepository
             .findByUserId(username)
@@ -81,6 +79,7 @@ public class UserProfileService {
         return UserProfileResponse.toUserProfileResponse(userProfile);
     }
 
+    @Transactional
     public UserProfileResponse changeAvatarOrCoverImage(MultipartFile file, boolean isAvatar) {
         try {
             String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
@@ -110,29 +109,22 @@ public class UserProfileService {
         }
     }
 
+    @Transactional
     public UserProfileResponse changeCoverImageFromMediaHistory(ChangeCoverByUrlReq req) throws InterruptedException {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
-        List<Callable<Object>> tasks = List.of(() ->
-            userProfileRepository
-                .findByUserId(username)
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND))
-        );
-
-        List<Future<Object>> futures = executorService.invokeAll(tasks);
-        try {
-            UserProfile userProfile = (UserProfile) futures.get(0).get();
-            userProfile.setCoverUrl(req.getUrl());
-            userProfileRepository.save(userProfile);
-            String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
-            redisService.evict(cacheKey);
-            return UserProfileResponse.toUserProfileResponse(userProfile);
-        } catch (Exception e) {
-            throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
-        }
+        var userProfile = userProfileRepository
+            .findByUserId(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+        userProfile.setCoverUrl(req.getUrl());
+        var saved = userProfileRepository.save(userProfile);
+        String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
+        redisService.evict(cacheKey);
+        return UserProfileResponse.toUserProfileResponse(saved);
     }
 
+    @Transactional
     public UserProfileResponse updateBioProfile(UpdateBioProfileReq req) {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)

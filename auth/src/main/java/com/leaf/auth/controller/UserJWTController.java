@@ -4,13 +4,13 @@ import com.leaf.auth.dto.UserDTO;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.ChangePasswordReq;
 import com.leaf.auth.dto.req.ForgotPasswordReq;
-import com.leaf.auth.dto.req.LoginRequest;
-import com.leaf.auth.dto.req.LogoutRequest;
+import com.leaf.auth.dto.req.LoginReq;
+import com.leaf.auth.dto.req.LogoutReq;
 import com.leaf.auth.dto.req.ResetPasswordReq;
 import com.leaf.auth.dto.req.VerifyOTPReq;
-import com.leaf.auth.dto.res.AuthenticateResponse;
-import com.leaf.auth.dto.res.RefreshTokenResponse;
-import com.leaf.auth.dto.res.VerifyTokenResponse;
+import com.leaf.auth.dto.res.AuthenticateRes;
+import com.leaf.auth.dto.res.RefreshTokenRes;
+import com.leaf.auth.dto.res.VerifyTokenRes;
 import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
 import com.leaf.common.dto.ResponseObject;
@@ -35,35 +35,31 @@ public class UserJWTController {
     private final UserService userService;
 
     @PostMapping("/p/authenticate")
-    public ResponseEntity<ResponseObject<AuthenticateResponse>> authorize(
-        @Valid @RequestBody LoginRequest loginRequest,
+    public ResponseEntity<ResponseObject<AuthenticateRes>> authorize(
+        @Valid @RequestBody LoginReq loginReq,
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse
     ) {
-        AuthenticateResponse authenticateResponse = authService.authenticate(
-            loginRequest,
-            httpServletRequest,
-            httpServletResponse
-        );
-        return ResponseEntity.ok(ResponseObject.success(authenticateResponse));
+        AuthenticateRes authenticateRes = authService.authenticate(loginReq, httpServletRequest, httpServletResponse);
+        return ResponseEntity.ok(ResponseObject.success(authenticateRes));
     }
 
     @PostMapping("/p/refresh-token")
-    public ResponseEntity<ResponseObject<RefreshTokenResponse>> refreshToken(
+    public ResponseEntity<ResponseObject<RefreshTokenRes>> refreshToken(
         @CookieValue(name = CommonConstants.COOKIE_NAME, required = false) String cookieValue,
-        @Valid @RequestBody LogoutRequest request,
+        @Valid @RequestBody LogoutReq req,
         HttpServletRequest httpServletRequest,
         HttpServletResponse response
     ) {
         return ResponseEntity.ok(
             ResponseObject.success(
-                authService.refreshToken(cookieValue, request.getChannel(), httpServletRequest, response)
+                authService.refreshToken(cookieValue, req.getChannel(), httpServletRequest, response)
             )
         );
     }
 
     @PostMapping("/internal/verify")
-    public ResponseEntity<ResponseObject<VerifyTokenResponse>> verifyToken(
+    public ResponseEntity<ResponseObject<VerifyTokenRes>> verifyToken(
         @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue
     ) {
         return ResponseEntity.ok(ResponseObject.success(authService.verifyToken(cookieValue, false)));
@@ -112,10 +108,10 @@ public class UserJWTController {
     @PostMapping("/p/logout")
     public ResponseEntity<ResponseObject<?>> logout(
         @CookieValue(name = CommonConstants.COOKIE_NAME) String cookieValue,
-        @RequestBody LogoutRequest request,
+        @RequestBody LogoutReq req,
         HttpServletResponse response
     ) {
-        authService.logout(cookieValue, request.getChannel(), response);
+        authService.logout(cookieValue, req.getChannel(), response);
         return ResponseEntity.ok(ResponseObject.success());
     }
 

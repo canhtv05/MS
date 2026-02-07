@@ -53,16 +53,11 @@ public class UserDTO implements Serializable {
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant modifiedDate;
 
-    public UserDTO(User entity) {
-        this.id = entity.getId();
-        this.username = entity.getUsername();
-        this.activated = entity.isActivated();
-        this.isGlobal = entity.getIsGlobal();
-        this.password = entity.getPassword();
-        this.email = entity.getEmail();
-    }
-
-    public static UserDTO fromEntity(User entity) {
+    // Static factory method for entity conversion using BeanUtils
+    public static UserDTO toDTO(User entity) {
+        if (entity == null) {
+            return null;
+        }
         UserDTO dto = new UserDTO();
         BeanUtils.copyProperties(entity, dto);
         dto.setRoles(entity.getRoles().stream().map(Role::getCode).collect(Collectors.toList()));

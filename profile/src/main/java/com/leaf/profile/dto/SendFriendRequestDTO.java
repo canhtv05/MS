@@ -1,5 +1,6 @@
 package com.leaf.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.profile.enums.FriendRequestStatus;
@@ -17,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SendFriendRequestDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -58,13 +58,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class UserService {
 
     private final ValidatorFactory validator = Validation.buildDefaultValidatorFactory();
@@ -76,13 +77,15 @@ public class UserService {
     private final KafkaProducerService kafkaProducerService;
     private final RedisService redisService;
 
+    @Transactional(readOnly = true)
     public UserDTO findById(Long id) {
         return userRepository
             .findById(id)
-            .map(UserDTO::fromEntity)
+            .map(UserDTO::toDTO)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
     }
 
+    @Transactional
     public UserDTO createUser(UserDTO request, boolean isAdmin) {
         if (userRepository.existsUserByUsername(request.getUsername())) {
             throw new ApiException(ErrorMessage.USERNAME_ALREADY_EXITS);
@@ -132,9 +135,10 @@ public class UserService {
         } catch (Exception e) {
             throw new ApiException(ErrorMessage.UNHANDLED_ERROR);
         }
-        return UserDTO.fromEntity(res);
+        return UserDTO.toDTO(res);
     }
 
+    @Transactional
     public UserDTO updateUser(UserDTO request) {
         Optional<User> optionalUser = userRepository.findByUsername(request.getUsername());
         if (optionalUser.isEmpty()) {
@@ -150,15 +154,17 @@ public class UserService {
             user.setRoles(new HashSet<>(roleRepository.findAllByCodeIn(request.getRoles())));
         }
         userRepository.save(user);
-        return UserDTO.fromEntity(user);
+        return UserDTO.toDTO(user);
     }
 
+    @Transactional
     public void changeLockUser(Long id, boolean isLocked) {
         User user = userRepository.findById(id).orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
         user.setLocked(isLocked);
         userRepository.save(user);
     }
 
+    @Transactional
     public VerifyEmailTokenDTO activeUserByUserName(VerifyEmailTokenDTO request) {
         if (request.getEmail().contains("+")) {
             throw new ApiException(ErrorMessage.EMAIL_INVALID);
@@ -179,6 +185,7 @@ public class UserService {
         return VerifyEmailTokenDTO.newBuilder().setUsername(user.getUsername()).setEmail(request.getEmail()).build();
     }
 
+    @Transactional
     public void forgotPasswordRequest(ForgotPasswordReq request) {
         if (request.getEmail().contains("+")) {
             throw new ApiException(ErrorMessage.EMAIL_INVALID);
@@ -199,6 +206,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void resetPassword(ResetPasswordReq request) {
         if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
@@ -226,6 +234,7 @@ public class UserService {
         redisService.evict(keyForgotPassword);
     }
 
+    @Transactional(readOnly = true)
     public void verifyForgotPasswordOTP(VerifyOTPReq request) {
         if (CommonUtils.isEmpty(request.getEmail(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
@@ -250,6 +259,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
         if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
@@ -273,6 +283,7 @@ public class UserService {
         authService.logout(cookieValue, req.getChannel(), response);
     }
 
+    @Transactional
     public void updateUserProfile(UserProfileDTO request) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
@@ -289,7 +300,7 @@ public class UserService {
         Specification<User> spec = createSpecification(request);
         Page<User> tenants = userRepository.findAll(spec, request.toPageable());
         return new SearchResponse<>(
-            tenants.getContent().stream().map(UserDTO::fromEntity).collect(Collectors.toList()),
+            tenants.getContent().stream().map(UserDTO::toDTO).collect(Collectors.toList()),
             tenants.getTotalElements()
         );
     }
@@ -338,6 +349,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public byte[] downloadTemplate() {
         List<String> roleCodes = roleRepository
             .findAll()
@@ -357,6 +369,7 @@ public class UserService {
         return ExcelBuilder.buildFileTemplate(config);
     }
 
+    @Transactional
     public ImportExcelResult<ImportUserDTO> importUser(MultipartFile file) {
         ImportExcelResult<ImportUserDTO> result = new ImportExcelResult<>();
         List<RowHeader> rowHeaders = List.of(
@@ -406,6 +419,7 @@ public class UserService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public Map<String, PermissionAction> getUserPermissions(Long userId) {
         List<UserPermission> data = userPermissionRepository.findAllByUserId(userId);
         return data.stream().collect(Collectors.toMap(UserPermission::getPermissionCode, UserPermission::getAction));

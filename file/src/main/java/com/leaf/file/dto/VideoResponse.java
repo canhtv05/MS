@@ -1,33 +1,42 @@
 package com.leaf.file.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.utils.json.InstantToStringSerializer;
 import com.leaf.file.domain.Video;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.BeanUtils;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VideoResponse implements Serializable {
 
-    Double playtimeSeconds;
-    String playtimeString;
-    String contentType;
-    String videoUrl;
-    String thumbnailUrl;
-    String previewVttUrl;
-    Long fileSize;
-    String originFileName;
-    String publicId;
-    Instant createdAt;
-    ResourceType resourceType;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    public static VideoResponse tVideoResponse(Video file) {
+    private Double playtimeSeconds;
+    private String playtimeString;
+    private String contentType;
+    private String videoUrl;
+    private String thumbnailUrl;
+    private String previewVttUrl;
+    private Long fileSize;
+    private String originFileName;
+    private String publicId;
+
+    @JsonSerialize(using = InstantToStringSerializer.class)
+    private Instant createdAt;
+
+    private ResourceType resourceType;
+
+    public static VideoResponse toVideoResponse(Video file) {
         VideoResponse videoResponse = new VideoResponse();
         BeanUtils.copyProperties(file, videoResponse);
         if (file.getCreatedAt() != null) {

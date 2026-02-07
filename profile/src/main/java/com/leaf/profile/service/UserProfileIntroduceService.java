@@ -5,20 +5,21 @@ import com.leaf.common.exception.ErrorMessage;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import com.leaf.profile.dto.UserProfileIntroduceDTO;
 import com.leaf.profile.repository.UserProfileIntroduceRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class UserProfileIntroduceService {
 
-    UserProfileIntroduceRepository userProfileIntroduceRepository;
+    private final UserProfileIntroduceRepository userProfileIntroduceRepository;
 
+    @Transactional(readOnly = true)
     public UserProfileIntroduceDTO getUserProfileIntroduce(String userId) {
         UserProfileIntroduce userProfileIntroduce = userProfileIntroduceRepository
             .findByUserId(userId)

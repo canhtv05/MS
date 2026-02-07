@@ -6,13 +6,12 @@ import com.leaf.common.utils.CommonUtils;
 
 public class AuthGrpcMapper {
 
-    private static AuthGrpcMapper authGrpcMapper;
+    private static final AuthGrpcMapper INSTANCE = new AuthGrpcMapper();
+
+    private AuthGrpcMapper() {}
 
     public static AuthGrpcMapper getInstance() {
-        if (authGrpcMapper == null) {
-            authGrpcMapper = new AuthGrpcMapper();
-        }
-        return authGrpcMapper;
+        return INSTANCE;
     }
 
     public AuthMeResponse toAuthMeResponse(UserProfileDTO userProfile) {

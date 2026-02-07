@@ -30,9 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.data.domain.Page;
@@ -43,20 +41,21 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class FileService {
 
-    Cloudinary cloudinary;
-    FileRepository fileRepository;
-    MongoTemplate mongoTemplate;
+    private final Cloudinary cloudinary;
+    private final FileRepository fileRepository;
+    private final MongoTemplate mongoTemplate;
 
+    @Transactional
     public FileResponse upload(MultipartFile[] files, ResourceType resourceType) throws IOException {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
@@ -86,6 +85,7 @@ public class FileService {
         return saveFileMetadata(userId, totalSize, imageResponses, videoResponses, resourceType);
     }
 
+    @Transactional
     public ImageResponse processImageUpload(
         MultipartFile file,
         ResourceType resourceType,
@@ -143,6 +143,7 @@ public class FileService {
             .build();
     }
 
+    @Transactional
     public VideoResponse processVideoUpload(
         MultipartFile file,
         ResourceType resourceType,
@@ -289,6 +290,7 @@ public class FileService {
             .build();
     }
 
+    @Transactional(readOnly = true)
     public ResponseObject<List<FileResponse>> getMyResources(Integer page, Integer size) {
         String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
@@ -313,10 +315,12 @@ public class FileService {
             .build();
     }
 
+    @Transactional(readOnly = true)
     public FileResponse getFileById(String id) {
         return fileRepository.getFileById(id).orElseThrow(() -> new ApiException(ErrorMessage.FILE_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public List<FileResponse> getFilesByIds(List<String> ids) {
         return fileRepository.findAllByIdIn(ids).stream().map(FileResponse::toFileResponse).toList();
     }
@@ -326,6 +330,7 @@ public class FileService {
         return String.format("%d:%02d", seconds / 60, seconds % 60);
     }
 
+    @Transactional
     public Void deleteById(String fileId) {
         com.leaf.file.domain.File file = fileRepository
             .findById(fileId)
@@ -370,6 +375,7 @@ public class FileService {
         return null;
     }
 
+    @Transactional
     public void deleteFile(String publicId, String mimeType) {
         try {
             String resourceType = mimeType.startsWith("video") ? "video" : "image";
@@ -394,6 +400,7 @@ public class FileService {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public SearchResponse<ImageResponse> getFileImageByUserIdAndResourceType(
         String userId,
         List<ResourceType> resourceTypes,
@@ -462,6 +469,7 @@ public class FileService {
         );
     }
 
+    @Transactional(readOnly = true)
     public ResponseObject<SearchResponse<MediaHistoryGroupDTO>> getUserMediaHistory(
         com.leaf.common.dto.search.SearchRequest criteria,
         List<ResourceType> resourceType
