@@ -17,7 +17,7 @@ const LayoutContainer = ({ children, navigation, sidebar, className }: ILayoutCo
   return (
     <div
       className={cn(
-        'flex relative items-start justify-center bg-[#F9FBFC] pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 dark:bg-gray-900 w-full box-border',
+        'flex relative items-start justify-center custom-bg-2 pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 w-full box-border',
         className,
       )}
     >

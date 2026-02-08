@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { AltArrowDown, AltArrowLeft, AltArrowRight } from '@solar-icons/react-perf/Outline';
 import { DayPicker, getDefaultClassNames, type DayButton } from 'react-day-picker';
+import { enUS, vi, type Locale } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 import { cn } from '@/lib/utils';
 import {
@@ -24,10 +26,29 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: VariantProps<typeof buttonVariants>['variant'];
 }) {
+  const { i18n } = useTranslation();
   const defaultClassNames = getDefaultClassNames();
+
+  // Map i18n language to date-fns locale
+  const localeMap: Record<string, Locale> = {
+    vi: vi,
+    en: enUS,
+  };
+
+  const currentLocale = localeMap[i18n.language] || localeMap['vi'];
+
+  // Format month using i18n
+  const formatMonthDropdown = React.useCallback(
+    (date: Date) => {
+      const locale = i18n.language === 'vi' ? 'vi-VN' : 'en-US';
+      return date.toLocaleString(locale, { month: 'short' });
+    },
+    [i18n.language],
+  );
 
   return (
     <DayPicker
+      locale={currentLocale}
       showOutsideDays={showOutsideDays}
       className={cn(
         'bg-background group/calendar p-3 [--cell-size:--spacing(8)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent',
@@ -37,7 +58,7 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: date => date.toLocaleString('default', { month: 'short' }),
+        formatMonthDropdown,
         ...formatters,
       }}
       classNames={{
@@ -155,6 +176,7 @@ type CalendarDayButtonProps = Omit<
 >;
 
 function CalendarDayButton({ className, day, modifiers, ...props }: CalendarDayButtonProps) {
+  const { i18n } = useTranslation();
   const defaultClassNames = getDefaultClassNames();
 
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -162,12 +184,15 @@ function CalendarDayButton({ className, day, modifiers, ...props }: CalendarDayB
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 
+  const locale = i18n.language === 'vi' ? 'vi-VN' : 'en-US';
+  const dateString = day.date.toLocaleDateString(locale);
+
   return (
     <Button
       ref={ref}
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString()}
+      data-day={dateString}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&

@@ -15,7 +15,7 @@ import {
 import { Gender, RelationshipStatus } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { AltArrowDown, CheckRead, CloseCircle } from '@solar-icons/react-perf/Outline';
+import { AltArrowDown, CheckRead } from '@solar-icons/react-perf/Outline';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
@@ -26,6 +26,7 @@ import {
   PopoverPositioner,
   PopoverPopup,
 } from '@/components/animate-ui/primitives/base/popover';
+import { XIcon } from '@/components/animate-ui/icons';
 
 interface IEditFieldProps {
   field: TIntroduceField;
@@ -51,7 +52,6 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
   const IconComponent = getFieldIcon(field);
 
   useEffect(() => {
-    // Auto focus input when component mounts
     if (inputRef.current && !isEnumField(field)) {
       inputRef.current.focus();
     }
@@ -98,12 +98,23 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                 </span>
               </PopoverTrigger>
               <PopoverPortal>
-                <PopoverPositioner>
+                <PopoverPositioner align="end" sideOffset={4}>
                   <PopoverPopup
+                    initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -2, scale: 0.98 }}
                     transition={{
                       type: 'tween',
+                      duration: 0.15,
+                      ease: 'easeOut',
                     }}
-                    className="mt-1 rounded-md border border-input bg-popover p-1 shadow-lg"
+                    className="
+    mt-2
+    rounded-md
+    border border-input
+    bg-popover
+    p-1
+  "
                   >
                     <Calendar
                       mode="single"
@@ -125,26 +136,18 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
           </div>
           <IconButton
             onClick={handleSave}
-            className={cn(
-              'transition-colors duration-200',
-              'bg-primary hover:bg-primary/90 text-white',
-              'shadow-sm hover:shadow-md active:scale-95',
-            )}
+            className={cn('bg-primary hover:bg-primary/90 text-white', 'shadow-sm hover:shadow-md')}
             title={t('common:button.save')}
           >
             <CheckRead className="size-4" />
           </IconButton>
           <IconButton
             onClick={onCancel}
-            className={cn(
-              'transition-colors duration-200',
-              'bg-muted hover:bg-muted/80 text-foreground/80',
-              'hover:text-foreground active:scale-95',
-            )}
+            className={cn('bg-muted hover:bg-muted/80 text-foreground/80', 'hover:text-foreground')}
             title={t('common:button.cancel')}
             variant="outline"
           >
-            <CloseCircle className="size-4" />
+            <XIcon className="size-4" />
           </IconButton>
         </div>
       </div>
@@ -191,26 +194,18 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
           </div>
           <IconButton
             onClick={handleSave}
-            className={cn(
-              'transition-colors duration-200',
-              'bg-primary hover:bg-primary/90 text-white',
-              'shadow-sm hover:shadow-md active:scale-95',
-            )}
+            className={cn('bg-primary hover:bg-primary/90 text-white', 'shadow-sm hover:shadow-md')}
             title={t('common:button.save')}
           >
             <CheckRead className="size-4" />
           </IconButton>
           <IconButton
             onClick={onCancel}
-            className={cn(
-              'transition-colors duration-200',
-              'bg-muted hover:bg-muted/80 text-foreground/80',
-              'hover:text-foreground active:scale-95',
-            )}
+            className={cn('bg-muted hover:bg-muted/80 text-foreground/80', 'hover:text-foreground')}
             title={t('common:button.cancel')}
             variant="outline"
           >
-            <CloseCircle className="size-4" />
+            <XIcon className="size-4" />
           </IconButton>
         </div>
       </div>
@@ -237,18 +232,14 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
         </div>
         <IconButton
           onClick={handleSave}
-          className={cn(
-            'transition-colors duration-200',
-            'bg-primary hover:bg-primary/90 text-white',
-            'shadow-sm hover:shadow-md active:scale-95',
-          )}
+          className={cn('bg-primary hover:bg-primary/90 text-white', 'shadow-sm hover:shadow-md')}
           title={t('common:button.save')}
         >
           <CheckRead className="size-4" />
         </IconButton>
         <IconButton onClick={onCancel} variant="outline" title={t('common:button.cancel')}>
           <div>
-            <CloseCircle className="size-4" />
+            <XIcon className="size-4" />
           </div>
         </IconButton>
       </div>

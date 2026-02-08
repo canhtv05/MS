@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { IDetailUserProfileDTO } from '@/types/profile';
-import { FieldItem } from '../components/FieldItem';
-import { EditField } from '../components/EditField';
-import { getFieldValue, formatFieldValue, getLabelKey, TIntroduceField } from '../utils/fieldUtils';
+import { TIntroduceField } from '../utils/fieldUtils';
 import { useTranslation } from 'react-i18next';
+import EditIntroduce from '../components/EditIntroduce';
 
 interface IBasicInfoTabProps {
   data?: IDetailUserProfileDTO;
@@ -46,38 +45,17 @@ export const BasicInfoTab = ({ data, isOwner = false }: IBasicInfoTabProps) => {
 
   return (
     <div className="flex flex-col gap-1">
-      {BASIC_INFO_FIELDS.map(field => {
-        const rawValue = getFieldValue(field, introduce);
-        const displayValue = formatFieldValue(field, rawValue, t);
-        const labelKey = getLabelKey(field);
-        const isEditing = editingField === field;
-        const editValue = editValues[field] ?? rawValue;
-
-        if (!rawValue) return null;
-
-        if (isEditing) {
-          return (
-            <EditField
-              key={field}
-              field={field}
-              value={editValue}
-              labelKey={labelKey}
-              onSave={value => handleSaveEdit(field, value)}
-              onCancel={handleCancelEdit}
-            />
-          );
-        }
-
-        return (
-          <FieldItem
-            key={field}
-            field={field}
-            value={displayValue}
-            labelKey={labelKey}
-            onEdit={isOwner ? () => handleStartEdit(field, rawValue) : undefined}
-          />
-        );
-      })}
+      <EditIntroduce
+        fields={BASIC_INFO_FIELDS}
+        introduce={introduce}
+        t={t}
+        editingField={editingField}
+        editValues={editValues}
+        handleSaveEdit={handleSaveEdit}
+        handleCancelEdit={handleCancelEdit}
+        handleStartEdit={handleStartEdit}
+        isOwner={isOwner}
+      />
     </div>
   );
 };

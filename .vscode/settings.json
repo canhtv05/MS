@@ -29,5 +29,6 @@
     "webflux"
   ],
   "problems.showCurrentInStatus": false,
-  "boot-java.validation.java.version-validation": "OFF"
+  "boot-java.validation.java.version-validation": "OFF",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -149,5 +149,6 @@
   "private_friends_how_title": "How this visibility limit works",
   "private_friends_li1": "Only friends can see most of your photos, posts and stories on your profile.",
   "private_friends_li2": "Your profile and cover photos are shown according to your current privacy settings.",
-  "private_friends_li3": "People can still see some public information, public posts you're tagged in, search for you and send friend requests."
+  "private_friends_li3": "People can still see some public information, public posts you're tagged in, search for you and send friend requests.",
+  "not_updated": "Not updated"
 }

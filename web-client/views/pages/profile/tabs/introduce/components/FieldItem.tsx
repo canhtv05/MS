@@ -26,7 +26,7 @@ export const FieldItem = ({ field, value, labelKey, onEdit }: IFieldItemProps) =
   const { t } = useTranslation('profile');
   const IconComponent = getFieldIcon(field);
 
-  if (!value) return null;
+  if (!value && !onEdit) return null;
 
   return (
     <div
@@ -40,17 +40,21 @@ export const FieldItem = ({ field, value, labelKey, onEdit }: IFieldItemProps) =
       {renderIcon(IconComponent, 'size-5 text-foreground/60 shrink-0 mt-0.5')}
       <div className="flex-1 min-w-0 flex flex-col gap-1">
         <span className="text-xs font-medium text-foreground/60 leading-tight">{t(labelKey)}</span>
-        <span className="text-sm text-foreground/90 leading-relaxed wrap-break-word">{value}</span>
+        {value ? (
+          <span className="text-sm text-foreground/90 leading-relaxed wrap-break-word">
+            {value}
+          </span>
+        ) : (
+          <span className="text-sm text-foreground/40 italic leading-relaxed">
+            {t('not_updated')}
+          </span>
+        )}
       </div>
       {onEdit && (
         <IconButton
           variant="ghost"
           onClick={onEdit}
-          className={cn(
-            'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
-            'hover:text-primary cursor-pointer',
-            'shrink-0 mt-0.5',
-          )}
+          className={cn('hover:text-primary cursor-pointer', 'shrink-0 mt-0.5')}
           title={t('common:button.edit')}
         >
           <PenNewSquare className="size-4" />

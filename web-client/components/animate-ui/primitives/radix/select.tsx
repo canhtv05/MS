@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Select as SelectPrimitive } from 'radix-ui';
-import { motion, type HTMLMotionProps } from 'motion/react';
+import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react';
 import { getStrictContext } from '@/lib/get-strict-context';
 import { useControlledState } from '@/hooks/use-controlled-state';
 import { useDataState } from '@/hooks/use-data-state';
@@ -162,44 +162,46 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
     const { forceMount, ...motionProps } = props as typeof props & { forceMount?: boolean };
 
     return (
-      <SelectPortal container={container}>
-        <SelectPrimitive.Content
-          asChild
-          onCloseAutoFocus={onCloseAutoFocus}
-          onEscapeKeyDown={onEscapeKeyDown}
-          onPointerDownOutside={onPointerDownOutside}
-          side={side}
-          sideOffset={sideOffset}
-          align={align}
-          alignOffset={alignOffset}
-          avoidCollisions={avoidCollisions}
-          collisionBoundary={collisionBoundary}
-          collisionPadding={collisionPadding}
-          arrowPadding={arrowPadding}
-          sticky={sticky}
-          hideWhenDetached={hideWhenDetached}
-          position={position}
-        >
-          <motion.div
-            ref={ref}
-            data-slot="select-content"
-            initial={false}
-            animate={
-              isOpen
-                ? { opacity: 1, y: 0, pointerEvents: 'auto' }
-                : { opacity: 0, y: -4, pointerEvents: 'none' }
-            }
-            transition={transition}
-            style={{
-              willChange: 'opacity, transform',
-              ...style,
-            }}
-            {...motionProps}
-          >
-            {children}
-          </motion.div>
-        </SelectPrimitive.Content>
-      </SelectPortal>
+      <AnimatePresence>
+        {isOpen && (
+          <SelectPortal container={container}>
+            <SelectPrimitive.Content
+              asChild
+              onCloseAutoFocus={onCloseAutoFocus}
+              onEscapeKeyDown={onEscapeKeyDown}
+              onPointerDownOutside={onPointerDownOutside}
+              side={side}
+              sideOffset={sideOffset}
+              align={align}
+              alignOffset={alignOffset}
+              avoidCollisions={avoidCollisions}
+              collisionBoundary={collisionBoundary}
+              collisionPadding={collisionPadding}
+              arrowPadding={arrowPadding}
+              sticky={sticky}
+              hideWhenDetached={hideWhenDetached}
+              position={position}
+            >
+              <motion.div
+                ref={ref}
+                key="select-content"
+                data-slot="select-content"
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={transition}
+                style={{
+                  willChange: 'opacity, transform',
+                  ...style,
+                }}
+                {...motionProps}
+              >
+                {children}
+              </motion.div>
+            </SelectPrimitive.Content>
+          </SelectPortal>
+        )}
+      </AnimatePresence>
     );
   },
 );

@@ -31,6 +31,7 @@ import { useProfileModalStore } from './use-profile-modal';
 import { IProfileParams } from '@/app/(home)/(feed)/user/[username]/page';
 import Show from '@/components/Show';
 import { PrivacyLevel } from '@/enums/common';
+import { Portal } from 'radix-ui';
 
 export interface IProfilePageProps {
   isLoading: boolean;
@@ -223,17 +224,19 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
         <ChooseImage onSelect={setSelectedCoverUrl} selectedUrl={selectedCoverUrl} />
       </Dialog>
       {showConfirmChangeCoverUrl && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 z-50 bg-background h-[60px] flex items-center justify-between md:px-6 px-4">
-          <h5 className="text-sm font-semibold">{t('profile:confirm_cover_upload')}</h5>
-          <div className="flex justify-end items-center gap-2 h-full">
-            <Button variant="outline" onClick={cancelUpload} disabled={isUploading}>
-              {t('common:button.cancel')}
-            </Button>
-            <Button variant="default" onClick={confirmUpload} disabled={isUploading}>
-              {t('common:button.confirm')}
-            </Button>
+        <Portal.Root>
+          <div className="fixed top-0 right-0 bottom-0 left-0 z-120 bg-background h-(--header-height) flex items-center justify-between md:px-6 px-4">
+            <h5 className="text-sm font-semibold">{t('profile:confirm_cover_upload')}</h5>
+            <div className="flex justify-end items-center gap-2 h-full">
+              <Button variant="outline" onClick={cancelUpload} disabled={isUploading}>
+                {t('common:button.cancel')}
+              </Button>
+              <Button variant="default" onClick={confirmUpload} disabled={isUploading}>
+                {t('common:button.confirm')}
+              </Button>
+            </div>
           </div>
-        </div>
+        </Portal.Root>
       )}
     </div>
   );
