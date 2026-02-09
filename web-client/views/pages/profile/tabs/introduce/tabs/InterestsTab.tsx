@@ -9,7 +9,7 @@ import { PenNewSquare } from '@solar-icons/react-perf/Outline';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { HeartAngle } from '@solar-icons/react-perf/Linear';
+import { Stars } from '@solar-icons/react-perf/BoldDuotone';
 
 interface IInterestsTabProps {
   data?: IDetailUserProfileDTO;
@@ -83,7 +83,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium text-foreground/60 flex items-center gap-2">
-            <HeartAngle className="size-4" />
+            <Stars className="size-4" />
             {t('navigation.interests', 'Interests')}
           </p>
           <p className="text-xs text-muted-foreground">

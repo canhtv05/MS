@@ -7,7 +7,7 @@ import {
   IUserProfileDTO,
   IUserProfilePrivacyDTO,
 } from '@/types/profile';
-import { IResponseObject, ISearchResponse } from '@/types/common';
+import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common';
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
@@ -89,17 +89,20 @@ export const useMyMediaHistoryInfiniteQuery = (
   });
 };
 
-export const useInterestInfiniteQuery = (searchText?: string, enabled: boolean = true) => {
+export const useInterestInfiniteQuery = (
+  searchRequest: ISearchRequest,
+  enabled: boolean = true,
+) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'interests', searchText],
+    queryKey: ['profile', 'interests', ...Object.values(searchRequest)],
     queryFn: async ({
       pageParam = 1,
     }): Promise<IResponseObject<ISearchResponse<IInterestDTO[]>>> => {
       const res = await api.get(API_ENDPOINTS.PROFILE.INTERESTS, {
         params: {
           page: pageParam,
-          size: 20,
-          searchText: searchText,
+          size: searchRequest.size || 50,
+          searchText: searchRequest.searchText || '',
         },
       });
       return res.data;

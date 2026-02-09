@@ -32,8 +32,22 @@ function Popover(props: PopoverProps) {
 
 type PopoverTriggerProps = React.ComponentProps<typeof PopoverPrimitive.Trigger>;
 
-function PopoverTrigger(props: PopoverTriggerProps) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
+  const triggerProps = {
+    'data-slot': 'popover-trigger',
+    ...props,
+  };
+
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <PopoverPrimitive.Trigger
+        {...triggerProps}
+        render={children as React.ReactElement<Record<string, unknown>>}
+      />
+    );
+  }
+
+  return <PopoverPrimitive.Trigger {...triggerProps}>{children}</PopoverPrimitive.Trigger>;
 }
 
 type PopoverPortalProps = Omit<React.ComponentProps<typeof PopoverPrimitive.Portal>, 'keepMounted'>;

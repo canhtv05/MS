@@ -19,8 +19,9 @@ import { useInterestInfiniteQuery } from '@/services/queries/profile';
 import useDebounce from '@/hooks/use-debounce';
 import { Loader2Icon } from '@/components/animate-ui/icons';
 import { CreateInterestDialog } from './CreateInterestDialog';
-import { AddCircle } from '@solar-icons/react-perf/category/style/Bold';
+import { AddCircle } from '@solar-icons/react-perf/category/style/Outline';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { useProfileMutation } from '@/services/mutations/profile';
 
 interface IEditInterestsPopoverProps {
   selectedInterests: IInterestDTO[];
@@ -41,20 +42,22 @@ export const EditInterestsPopover = ({
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(selectedInterests.map(i => i.id)),
   );
-  const [customInterests, setCustomInterests] = useState<IInterestDTO[]>([]);
+  const [customInterests, setCustomInterests] = useState<
+    Omit<IInterestDTO, 'createdBy' | 'createdDate' | 'modifiedBy' | 'modifiedDate'>[]
+  >([]);
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const loadMoreRef = useRef<HTMLButtonElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
   const previousSearchTextRef = useRef<string>('');
-
+  const { createInterestMutation } = useProfileMutation();
   const {
     data: interestsData,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
     isFetching,
-  } = useInterestInfiniteQuery(debouncedSearchText || undefined, isOpen);
+  } = useInterestInfiniteQuery({ searchText: debouncedSearchText, size: 50 }, isOpen);
 
   // Track if we're fetching due to search text change
   const isSearching = useMemo(() => {
@@ -126,16 +129,20 @@ export const EditInterestsPopover = ({
   };
 
   const handleCreateCustomInterest = (title: string, color: string) => {
-    // Generate a temporary ID for custom interest
     const tempId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const newInterest: IInterestDTO = {
+    const newInterest: Omit<
+      IInterestDTO,
+      'createdBy' | 'createdDate' | 'modifiedBy' | 'modifiedDate'
+    > = {
       id: tempId,
       title,
       color,
+      code: '',
     };
 
     setCustomInterests(prev => [...prev, newInterest]);
     setSelectedIds(prev => new Set([...prev, tempId]));
+    createInterestMutation.mutate({ title, color });
   };
 
   const handleSave = () => {
@@ -156,9 +163,8 @@ export const EditInterestsPopover = ({
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger className="cursor-pointer inline-flex items-center justify-center border-0 bg-transparent p-0">
-        {trigger}
-      </PopoverTrigger>
+      {/* @ts-expect-error PopoverTrigger is not a valid component */}
+      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverPortal>
         <PopoverPositioner sideOffset={8} align="start">
           <PopoverPopup
@@ -196,7 +202,7 @@ export const EditInterestsPopover = ({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsCreateDialogOpen(true)}
-                className="w-full justify-center gap-2"
+                className="w-full justify-center gap-2 shadow-none"
               >
                 <AddCircle className="size-4" />
                 <span>{t('profile:create_custom_interest', 'Create Custom Interest')}</span>
@@ -205,7 +211,7 @@ export const EditInterestsPopover = ({
 
             <div
               ref={parentRef}
-              className="min-h-[200px] max-h-[400px] overflow-y-auto p-4"
+              className="max-h-[250px] overflow-y-auto p-4"
               style={{ scrollbarGutter: 'stable' }}
             >
               {allInterests.length === 0 ? (
@@ -225,7 +231,7 @@ export const EditInterestsPopover = ({
                     const isLastItem = index === allInterests.length - 1;
                     return (
                       <button
-                        key={interest.id}
+                        key={interest.code}
                         ref={el => {
                           if (isLastItem && el) {
                             loadMoreRef.current = el;

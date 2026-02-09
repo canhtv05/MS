@@ -63,7 +63,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
             </Wrapper>
           }
         >
-          <Wrapper title={t('profile:introduce')}>
+          <Wrapper title={t('profile:introduce')} isLoading={isLoading}>
             <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch w-full min-w-0 overflow-x-hidden">
               {isLoading ? (
                 <>

@@ -1,259 +1,369 @@
-id,title,color
-interest-javascript,JavaScript,#f7df1e
-interest-typescript,TypeScript,#3178c6
-interest-python,Python,#3776ab
-interest-java,Java,#ed8b00
-interest-cpp,C++,#00599c
-interest-csharp,C#,#239120
-interest-php,PHP,#777bb4
-interest-ruby,Ruby,#cc342d
-interest-go,Go,#00add8
-interest-rust,Rust,#000000
-interest-swift,Swift,#fa7343
-interest-kotlin,Kotlin,#7f52ff
-interest-react,React,#61dafb
-interest-vuejs,Vue.js,#4fc08d
-interest-angular,Angular,#dd0031
-interest-nodejs,Node.js,#339933
-interest-spring,Spring Boot,#6db33f
-interest-docker,Docker,#2496ed
-interest-kubernetes,Kubernetes,#326ce5
-interest-aws,AWS,#ff9900
-interest-azure,Azure,#0078d4
-interest-gcp,Google Cloud,#4285f4
-interest-mongodb,MongoDB,#47a248
-interest-postgresql,PostgreSQL,#336791
-interest-mysql,MySQL,#4479a1
-interest-redis,Redis,#dc382d
-interest-elasticsearch,Elasticsearch,#005571
-interest-kafka,Apache Kafka,#231f20
-interest-git,Git,#f05032
-interest-linux,Linux,#fcc624
-interest-nginx,Nginx,#009639
-interest-jenkins,Jenkins,#d24939
-interest-football,Bóng đá,#1e3a8a
-interest-basketball,Bóng rổ,#ff6b35
-interest-swimming,Bơi lội,#00b4d8
-interest-running,Chạy bộ,#ff6b6b
-interest-gym,Gym,#2d3436
-interest-yoga,Yoga,#6c5ce7
-interest-tennis,Tennis,#00b894
-interest-cycling,Đạp xe,#0984e3
-interest-badminton,Cầu lông,#fdcb6e
-interest-volleyball,Bóng chuyền,#e17055
-interest-table-tennis,Bóng bàn,#ff6b6b
-interest-golf,Golf,#00b894
-interest-baseball,Bóng chày,#d63031
-interest-american-football,Bóng bầu dục Mỹ,#d63031
-interest-rugby,Bóng bầu dục,#d63031
-interest-cricket,Cricket,#00b894
-interest-hockey,Khúc côn cầu,#2d3436
-interest-martial-arts,Võ thuật,#2d3436
-interest-boxing,Quyền anh,#d63031
-interest-mma,MMA,#000000
-interest-skiing,Trượt tuyết,#00b4d8
-interest-snowboarding,Trượt ván tuyết,#2d3436
-interest-surfing,Lướt sóng,#00b4d8
-interest-sailing,Đi thuyền,#00b4d8
-interest-fishing,Câu cá,#00b4d8
-interest-guitar,Guitar,#d63031
-interest-piano,Piano,#2d3436
-interest-violin,Violin,#a29bfe
-interest-drums,Trống,#2d3436
-interest-bass-guitar,Bass Guitar,#0984e3
-interest-singing,Hát,#fd79a8
-interest-dj,DJ,#6c5ce7
-interest-music-classical,Nhạc cổ điển,#a29bfe
-interest-music-pop,Pop Music,#fd79a8
-interest-music-rock,Rock Music,#e84393
-interest-music-jazz,Jazz,#00b894
-interest-music-hiphop,Hip Hop,#2d3436
-interest-music-electronic,EDM,#6c5ce7
-interest-music-country,Country,#fdcb6e
-interest-music-rb,R&B,#6c5ce7
-interest-music-metal,Metal,#2d3436
-interest-movies-action,Phim hành động,#d63031
-interest-movies-romance,Phim tình cảm,#fd79a8
-interest-movies-scifi,Phim khoa học viễn tưởng,#0984e3
-interest-movies-horror,Phim kinh dị,#2d3436
-interest-movies-comedy,Phim hài,#fdcb6e
-interest-movies-drama,Phim chính kịch,#6c5ce7
-interest-movies-thriller,Phim giật gân,#2d3436
-interest-anime,Anime,#ff6b9d
-interest-manga,Manga,#ff6b6b
-interest-travel,Du lịch,#00b894
-interest-photography,Nhiếp ảnh,#0984e3
-interest-camping,Camping,#6c5ce7
-interest-hiking,Hiking,#00b894
-interest-mountain-climbing,Leo núi,#2d3436
-interest-scuba-diving,Lặn biển,#00b4d8
-interest-backpacking,Du lịch ba lô,#00b894
-interest-beach,Bãi biển,#00b4d8
-interest-cooking,Nấu ăn,#e17055
-interest-coffee,Cà phê,#6f4e37
-interest-tea,Trà,#00b894
-interest-wine,Rượu vang,#8b0000
-interest-beer,Bia,#fdcb6e
-interest-baking,Bánh ngọt,#fdcb6e
-interest-barbecue,BBQ,#d63031
-interest-reading,Đọc sách,#a29bfe
-interest-novels,Tiểu thuyết,#fd79a8
-interest-science-books,Sách khoa học,#0984e3
-interest-history-books,Sách lịch sử,#6c5ce7
-interest-fiction,Tiểu thuyết giả tưởng,#6c5ce7
-interest-non-fiction,Sách phi hư cấu,#0984e3
-interest-video-games,Video Games,#6c5ce7
-interest-board-games,Board Games,#e17055
-interest-card-games,Bài,#d63031
-interest-esports,Esports,#ff6b6b
-interest-mobile-games,Game mobile,#6c5ce7
-interest-drawing,Vẽ,#fd79a8
-interest-design,Thiết kế,#0984e3
-interest-painting,Sơn màu,#e17055
-interest-calligraphy,Thư pháp,#2d3436
-interest-digital-art,Nghệ thuật số,#6c5ce7
-interest-sculpture,Điêu khắc,#8b4513
-interest-pets,Thú cưng,#fdcb6e
-interest-dogs,Chó,#d63031
-interest-cats,Mèo,#6c5ce7
-interest-birds,Chim,#fdcb6e
-interest-fish,Cá,#00b4d8
-interest-nature,Thiên nhiên,#00b894
-interest-gardening,Làm vườn,#00b894
-interest-environment,Môi trường,#00b894
-interest-astronomy,Thiên văn học,#2d3436
-interest-physics,Vật lý,#0984e3
-interest-mathematics,Toán học,#6c5ce7
-interest-chemistry,Hóa học,#0984e3
-interest-biology,Sinh học,#00b894
-interest-psychology,Tâm lý học,#6c5ce7
-interest-philosophy,Triết học,#2d3436
-interest-history,Lịch sử,#6c5ce7
-interest-geography,Địa lý,#00b894
-interest-chess,Cờ vua,#2d3436
-interest-sudoku,Sudoku,#a29bfe
-interest-puzzles,Giải đố,#fd79a8
-interest-crosswords,Ô chữ,#0984e3
-interest-meditation,Thiền,#6c5ce7
-interest-mindfulness,Chánh niệm,#00b894
-interest-language-learning,Học ngôn ngữ,#0984e3
-interest-writing,Viết lách,#e17055
-interest-blogging,Blogging,#fd79a8
-interest-podcasting,Podcasting,#6c5ce7
-interest-streaming,Streaming,#e10098
-interest-youtube,YouTube,#ff0000
-interest-fitness,Thể dục,#ff6b6b
-interest-nutrition,Dinh dưỡng,#00b894
-interest-health,Sức khỏe,#00b894
-interest-fashion,Thời trang,#fd79a8
-interest-shopping,Mua sắm,#e17055
-interest-collecting,Sưu tầm,#fdcb6e
-interest-cars,Xe hơi,#2d3436
-interest-motorcycles,Xe máy,#d63031
-interest-aviation,Hàng không,#0984e3
-interest-space,Không gian,#2d3436
-interest-robotics,Robot,#6c5ce7
-interest-ai,Trí tuệ nhân tạo,#00b894
-interest-machine-learning,Học máy,#0984e3
-interest-deep-learning,Học sâu,#0984e3
-interest-blockchain,Blockchain,#f7931a
-interest-cryptocurrency,Cryptocurrency,#f7931a
-interest-stocks,Chứng khoán,#00b894
-interest-investing,Đầu tư,#0984e3
-interest-entrepreneurship,Khởi nghiệp,#ff6b6b
-interest-business,Kinh doanh,#2d3436
-interest-marketing,Marketing,#e10098
-interest-sales,Bán hàng,#fd79a8
-interest-education,Giáo dục,#0984e3
-interest-teaching,Giảng dạy,#fdcb6e
-interest-research,Nghiên cứu,#6c5ce7
-interest-volunteering,Tình nguyện,#00b894
-interest-charity,Từ thiện,#ff6b6b
-interest-dancing,Khiêu vũ,#fd79a8
-interest-ballet,Ba lê,#fd79a8
-interest-hiphop-dance,Nhảy Hip Hop,#2d3436
-interest-latin-dance,Nhảy Latin,#d63031
-interest-salsa,Salsa,#d63031
-interest-musical-instruments,Nhạc cụ,#6c5ce7
-interest-ukulele,Ukulele,#fdcb6e
-interest-flute,Sáo,#00b4d8
-interest-saxophone,Saxophone,#d63031
-interest-trumpet,Kèn trumpet,#fdcb6e
-interest-karaoke,Karaoke,#e10098
-interest-comedy,Hài kịch,#fdcb6e
-interest-stand-up-comedy,Stand-up Comedy,#fdcb6e
-interest-magic,Ảo thuật,#2d3436
-interest-escape-rooms,Phòng thoát hiểm,#2d3436
-interest-geocaching,Geocaching,#00b894
-interest-diy,DIY,#e17055
-interest-home-improvement,Cải thiện nhà,#e17055
-interest-woodworking,Mộc,#8b4513
-interest-crafts,Thủ công,#e17055
-interest-sewing,May vá,#fd79a8
-interest-knitting,Đan len,#fdcb6e
-interest-origami,Origami,#0984e3
-interest-lego,LEGO,#ff6b6b
-interest-model-building,Lắp mô hình,#6c5ce7
-interest-comic-books,Truyện tranh,#ff6b6b
-interest-superheroes,Siêu anh hùng,#d63031
-interest-fantasy,Huyền bí,#6c5ce7
-interest-science-fiction,Khoa học viễn tưởng,#0984e3
-interest-mythology,Thần thoại,#a29bfe
-interest-interior-design,Thiết kế nội thất,#e17055
-interest-feng-shui,Phong thủy,#6c5ce7
-interest-home-decorating,Trang trí nhà,#fdcb6e
-interest-landscaping,Landscaping,#00b894
-interest-bonsai,Bonsai,#00b894
-interest-flower-arranging,Cắm hoa,#fd79a8
-interest-sustainable-living,Sống bền vững,#00b894
-interest-minimalism,Tối giản,#2d3436
-interest-organization,Tổ chức,#0984e3
-interest-productivity,Năng suất,#00b894
-interest-time-management,Quản lý thời gian,#0984e3
-interest-project-management,Quản lý dự án,#0984e3
-interest-leadership,Lãnh đạo,#2d3436
-interest-coaching,Coaching,#00b894
-interest-personal-development,Phát triển cá nhân,#6c5ce7
-interest-self-improvement,Tự cải thiện,#6c5ce7
-interest-motivation,Động lực,#ff6b6b
-interest-goal-setting,Đặt mục tiêu,#00b894
-interest-online-courses,Khóa học trực tuyến,#0984e3
-interest-certifications,Chứng chỉ,#0984e3
-interest-lifelong-learning,Học tập suốt đời,#0984e3
-interest-networking,Mạng lưới,#0984e3
-interest-community-building,Xây dựng cộng đồng,#fd79a8
-interest-social-activism,Hoạt động xã hội,#ff6b6b
-interest-human-rights,Quyền con người,#ff6b6b
-interest-climate-change,Biến đổi khí hậu,#00b894
-interest-renewable-energy,Năng lượng tái tạo,#00b894
-interest-solar-power,Năng lượng mặt trời,#fdcb6e
-interest-conservation,Bảo tồn,#00b894
-interest-wildlife-conservation,Bảo tồn động vật hoang dã,#00b894
-interest-biodiversity,Đa dạng sinh học,#00b894
-interest-ecology,Sinh thái học,#00b894
-interest-stargazing,Ngắm sao,#2d3436
-interest-astrophotography,Chụp ảnh thiên văn,#2d3436
-interest-night-photography,Chụp ảnh đêm,#2d3436
-interest-macro-photography,Chụp ảnh macro,#0984e3
-interest-portrait-photography,Chụp ảnh chân dung,#fd79a8
-interest-landscape-photography,Chụp ảnh phong cảnh,#00b894
-interest-spirituality,Tâm linh,#6c5ce7
-interest-religion,Tôn giáo,#6c5ce7
-interest-buddhism,Phật giáo,#fdcb6e
-interest-christianity,Thiên Chúa giáo,#0984e3
-interest-meditation-practice,Thực hành thiền,#6c5ce7
-interest-yoga-practice,Thực hành yoga,#6c5ce7
-interest-creativity,Sáng tạo,#fd79a8
-interest-innovation,Đổi mới,#0984e3
-interest-problem-solving,Giải quyết vấn đề,#0984e3
-interest-critical-thinking,Tư duy phản biện,#0984e3
-interest-analytical-thinking,Tư duy phân tích,#0984e3
-interest-logical-thinking,Tư duy logic,#0984e3
-interest-strategic-thinking,Tư duy chiến lược,#2d3436
-interest-integrity,Chính trực,#00b894
-interest-honesty,Trung thực,#00b894
-interest-responsibility,Trách nhiệm,#2d3436
-interest-persistence,Kiên trì,#ff6b6b
-interest-resilience,Phục hồi,#00b894
-interest-adaptability,Thích ứng,#0984e3
-interest-flexibility,Linh hoạt,#6c5ce7
+id,code,title,color,created_by,created_date,modified_by,modified_date
+8f2a9b3c-1d4e-4f5a-9e6b-7c8d9e0f1234,genz-to6,To6,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a1b2c3d4-e5f6-7890-abcd-ef1234567890,genz-67,6-7,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b7c8d9e0-f1a2-3b4c-5d6e-7f8a9b0c1d2e,genz-diu-kha,Dịu kha,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c9d0e1f2-a3b4-c5d6-e7f8-a9b0c1d2e3f4,genz-8386,8386,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d0e1f2a3-b4c5-d6e7-f8a9-b0c1d2e3f4a5,genz-sit-rit,Sít rịt,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e1f2a3b4-c5d6-e7f8-a9b0-c1d2e3f4a5b6,genz-plus1-may,+1 máy,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f2a3b4c5-d6e7-f8a9-b0c1-d2e3f4a5b6c7,genz-the-he-cot-nha,Thế hệ cợt nhả,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a3b4c5d6-e7f8-a9b0-c1d2-e3f4a5b6c7d8,genz-moi-doan-len-nui,Mời đoàn mình lên núi,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b4c5d6e7-f8a9-b0c1-d2e3-f4a5b6c7d8e9,genz-flip-qua-ghi-ten,Flop quá thì ghi tên anh vào,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c5d6e7f8-a9b0-c1d2-e3f4-a5b6c7d8e9f0,genz-chua-du-wow,Chưa đủ wow,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d6e7f8a9-b0c1-d2e3-f4a5-b6c7d8e9f0a1,genz-thang-doi-1-0,Thắng đời 1-0,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e7f8a9b0-c1d2-e3f4-a5b6-c7d8e9f0a1b2,genz-tuyet-doi-dien-anh,Tuyệt đối điện ảnh,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f8a9b0c1-d2e3-f4a5-b6c7-d8e9f0a1b2c3,genz-khum,Khum,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a9b0c1d2-e3f4-a5b6-c7d8-e9f0a1b2c3d4,genz-sin-lui,Sin lũi,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b0c1d2e3-f4a5-b6c7-d8e9-f0a1b2c3d4e5,genz-cham-zn,Chằm zn,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c1d2e3f4-a5b6-c7d8-e9f0-a1b2c3d4e5f6,genz-xu-ca-na,Xu cà na,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d2e3f4a5-b6c7-d8e9-f0a1-b2c3d4e5f6a7,genz-u-la-troi,U là trời,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e3f4a5b6-c7d8-e9f0-a1b2-c3d4e5f6a7b8,genz-mlem-mlem,Mlem mlem,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f4a5b6c7-d8e9-f0a1-b2c3-d4e5f6a7b8c9,genz-jztr,J z tr,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a5b6c7d8-e9f0-a1b2-c3d4-e5f6a7b8c9d0,genz-trmua-hme,Trmúa hmề,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b6c7d8e9-f0a1-b2c3-d4e5-f6a7b8c9d0e1,genz-bigc,Bigc,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c7d8e9f0-a1b2-c3d4-e5f6-a7b8c9d0e1f2,genz-diu-keo,Dịu keo,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d8e9f0a1-b2c3-d4e5-f6a7-b8c9d0e1f2a3,genz-ten-ten,Tẻn tẻn,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e9f0a1b2-c3d4-e5f6-a7b8-c9d0e1f2a3b4,genz-cong-tuoi,Cộng tươi,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f0a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c5,genz-duong-the,Dưỡng thê,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6,genz-kiwi-kiwi,Kiwi kiwi,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b2c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6e7,genz-delulu,Delulu,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c3d4e5f6-a7b8-c9d0-e1f2-a3b4c5d6e7f8,genz-no-cap,No cap,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d4e5f6a7-b8c9-d0e1-f2a3-b4c5d6e7f8a9,genz-let-him-cook,Let him cook,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e5f6a7b8-c9d0-e1f2-a3b4-c5d6e7f8a9b0,genz-solulu,Solulu,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f6a7b8c9-d0e1-f2a3-b4c5-d6e7f8a9b0c1,genz-hong-hai-nhi,Hồng hài nhi,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a7b8c9d0-e1f2-a3b4-c5d6-e7f8a9b0c1d2,genz-manifest,Manifest,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b8c9d0e1-f2a3-b4c5-d6e7-f8a9b0c1d2e3,genz-cot,Cốt,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+834a7ad9-ab4c-49e4-9ae0-09c208f8898c,genz-toi-la-nan-nhan,Tôi là nạn nhân của...,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9b3dc561-4ed2-445e-9b98-e584b3613476,genz-anh-em-ta-cu-the-thoi,Anh em ta cứ thế thôi hẹ hẹ hẹ,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b4c22836-acaa-47df-b264-dbb7dcc0b318,genz-kho-nhat-the-gioi,Khổ nhất thế giới,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f1866da4-2617-41a2-8796-73c0adf335d5,genz-doan-voi,Đoán vội...,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ee0e2b9c-892e-4f4d-8ac3-c8c32e573442,genz-im-lang-di-gopi,Im lặng đi gopi,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d1e2e6b7-fe4a-4b8b-b617-6c54bf89bce5,genz-tri-thong-minh-gian-zi,Trí thông minh giản zị,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+92aa097a-3f82-4a13-974b-fbf5feb9d597,genz-than-chua-ma-gion,Thân chưa mà giỡn,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f5e6844a-8890-41c8-8e58-0714a9770312,genz-boc-trung-sit-rit,Bốc trúng sít rịt,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+21063de8-4052-47a7-bbf2-91b1dc097ccc,genz-huong-noi-het-phan-doi,Hướng nội hết phần đời còn lại,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a2dd1ed6-0d54-44e6-9e21-1456fc871e4d,genz-thua-gia-cat-luong,Thua Gia Cát Lượng,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+643ff23a-0ce3-4008-8121-639965e86602,genz-coi-nuoc-gi-chua-nguoi-dep,Cơm nước gì chưa người đẹp?,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+64cecbe6-22be-42ba-bb5f-f92242bfb885,genz-joke-of-the-day,Joke of the day,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5f7425fd-9297-411c-8bf2-6a5288c5f763,genz-bts,BTS (bựa thật sự),#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+cbb4d294-d0dc-4a9e-a524-522f08ea4ce3,genz-khu-tu-tri,Khu tự trị,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+05dd6b19-9cb3-4731-bac9-9d369738a96b,genz-yolo,YOLO,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4378f352-b59f-4243-8781-ce3fe6446906,genz-oi-thoi,Oi thôi,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8f74fa0d-61d2-4c4c-918d-83f847a67ea2,genz-cooked,Cooked (toang/xong đời),#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+99736c89-cfb4-4080-bb66-6207ac52da87,genz-rent-free,Rent-free (ám ảnh),#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+68408bd0-de0d-432f-ba29-d3c76ecb385a,genz-side-eye,Side-eye (liếc mắt),#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+918f1ab1-9aa0-45d9-815f-ba76d6774126,genz-ate,Ate (làm cực đỉnh),#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4ed3ac92-485b-49ca-9fae-190a75d7a25d,genz-gatekeep,Gatekeep (giấu nghề),#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+17290659-e367-463a-94ea-443748b449e9,genz-demure,Demure (e thẹn duyên dáng),#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e97f02c5-1c29-4b41-a896-542df7fa51fa,genz-incentivize,Incentivize (khuyến khích),#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+527e90a8-ed9f-476f-9bc3-4935e8639d65,genz-khoi-nghi-he,Khối nghỉ hè,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+37e17f40-201a-424c-b2fd-0592e4ef8544,genz-please-nerf,Please nerf this character,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8f13865c-c047-48ca-9b0b-d53e91e3c2f2,genz-ba-gia-khum-sos-keo,Bà già khum sos keo,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+de65bbde-0e6b-47ca-8640-edee81386872,genz-li-lemon-si-lui,Lì lemon si lũi,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5d5c30b3-6393-4e8a-a814-43b2066ab7d9,genz-ngo-ha-mai-man,Mãi mận mãi keo,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+10555508-5491-4bbe-aeef-a5fd546f54a3,genz-ba-noi-thiet-ha-ba-tho,Bà nói thiệt hả bà Thơ?,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+844668c9-932a-435f-9e6e-7f1f76e9bb4b,genz-chua-du-wow-2,Chưa đủ wow v2,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+32e1c6df-0c49-49b2-aebe-fbb55610b968,genz-het-nang-luong-thap,Hết năng lượng thấp,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f2e06cef-0925-4b79-8423-ec101f1dd982,genz-dinh-menh,Dinh mệnh,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9156a6b2-d9bd-4d6d-856c-4f6a10775743,genz-o-de,Ô dề,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a4326e22-ee1e-427f-9b3b-5818a1b2b897,genz-mai-det-ti-ni,Mai đẹt ti ni,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+38b45b7f-9a08-4ffd-9059-79cc9a037534,genz-da-de,Da dẻ,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+138ae155-ca94-4a96-8cf0-f32b328fbe00,genz-khu-tu-tri-2,Khu tự trị v2,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6869fd42-8908-47db-90ba-52fc5567fb48,genz-thang-doi-2-0,Thắng đời 2-0,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3737ce7f-61ac-441b-9bee-d6c2a3667b30,genz-flip-flop,Flip flop quá,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+38cdcff8-75e9-45ed-9c9d-e4e18e5f69e7,genz-chua-wow,Chưa wow,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+dd564886-1eb0-482a-93fd-828c73ce14e7,genz-to6-max,To6 max level,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eb86a799-4295-45a0-87b0-d4d72273c035,genz-6-7-max,6-7 max,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+36b7bc77-3a4f-424f-a035-ec7052d075ad,genz-delulu-max,Delulu max,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1321c290-f9ba-4e7f-913b-e6b794f05abc,genz-cooked-max,Cooked max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3ee1c6ae-a49d-4f4a-80b3-f68669ce4cde,genz-manifest-max,Manifest max,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+89f19fb8-5fa8-4deb-87ef-6241f64f47b1,genz-gatekeep-max,Gatekeep max,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c4b1920b-82e0-4125-bcf3-231a9d903e15,genz-ate-max,Ate max (left no crumbs),#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eb4209d9-f216-4d2b-9689-6e7a8bf5c325,genz-side-eye-max,Side-eye max,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4cbc0369-a549-4765-86f5-9f13682a5c2e,genz-rent-free-max,Rent-free max,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+49638252-1a3d-450e-86ee-31ae4b50acc2,genz-plus1-max,+1 máy max,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+19555860-996c-40e1-894f-e5392dffe834,genz-moi-doan-max,Mời đoàn max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c33d9c21-bc9e-47ac-9503-71602eb9ed06,genz-cot-nha-max,Cợt nhả max,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+78cbaeca-7217-432a-ba5b-933306f707d9,genz-hong-hai-max,Hồng hài nhi max,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9abe0ca4-d155-473e-93bd-85bd872ea5ab,genz-sit-rit-max,Sít rịt max,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+be4ddb8d-e52c-41c6-86e3-e53365bdd5d8,genz-8386-max,8386 max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f03ca8b6-3a06-4370-a0c7-066b6f0c7bfd,genz-diu-kha-max,Dịu kha max,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+992ece26-5b24-4625-a583-cfbe681b9575,genz-khum-max,Khum max,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+36569e91-389f-4125-a7bb-c9a63c90a81f,genz-mlem-max,Mlem mlem max,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d2282b5e-3d8e-4464-9523-2d87cd4c413d,genz-u-la-max,U là trời max,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d4fa8a43-3a69-40ec-a302-9c9779393f83,genz-xu-ca-max,Xu cà na max,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8c02fd47-29e5-49c2-9253-16bd9df2b0ad,genz-cham-zn-max,Chằm zn max,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+48d9f5be-0866-42c7-ae8a-77d21c73894f,genz-sin-lui-max,Sin lũi max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5fe04f3b-5121-4b64-ad71-bf0f146759d7,genz-bigc-max,Bigc max,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0cda0d8d-8268-4c84-b981-e3cbba65fd6b,genz-tan-ten-max,Tẻn tẻn max,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+60a1dd00-2ec9-45a2-a9e7-b91c9c8c133e,genz-cong-tuoi-max,Cộng tươi max,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8d973c94-cfec-47e8-bdb8-4e3a6d28ae41,genz-duong-the-max,Dưỡng thê max,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ed91deae-d050-4762-ac1e-f77be7c2c641,genz-kiwi-max,Kiwi kiwi max,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e2c84870-c1bf-4fa5-beca-c8898d10c9a7,genz-no-cap-max,No cap max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9b587cac-9f59-44e3-a776-345a8f802978,genz-let-cook-max,Let him cook max,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e965fa23-12ae-4bf3-9ee1-317c59a8f2c4,genz-sol-max,Solulu max,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+af552ac9-b98c-4974-bbf6-0a75ac7825d8,genz-jztr-max,J z tr max,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9b29c021-e70a-4c85-a271-6fa610fe2724,genz-trmua-max,Trmúa hmề max,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9f00c8b6-7b1b-4427-b947-2bc3ce65464c,genz-diu-keo-max,Dịu keo max,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+40791f79-a74c-4eb3-9980-34fd7f75a342,genz-ba-gia-max,Bà già max,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+dd59da05-1d8d-4fd7-a394-fcf24dcd7699,genz-li-lemon-max,Lì lemon si lũi max,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+63c8cbd4-991a-413c-bbdb-158e1b352f3f,genz-ngo-ha-max,Ngộ ha mãi mận,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7d652628-0dee-4f8a-9b7c-fe512db8c611,genz-coi-nuoc-max,Cơm nước max,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7897e20b-44ab-4af8-8b3d-2fa3690fdb3a,genz-joke-day-max,Joke of the day max,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+960015d9-7cd0-4b0c-b9cc-8f134e90573d,interest-javascript,JavaScript,#f7df1e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+758e4ec8-4740-45c8-874f-c49d6fcd92d0,interest-typescript,TypeScript,#3178c6,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+25c114e4-cf55-45ec-aa36-dbf6893f6799,interest-python,Python,#3776ab,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e101c2ed-7c2e-4b27-9e43-4704e88cf40c,interest-java,Java,#ed8b00,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0a801e59-e8e2-455b-9a54-4c8cfdf65e31,interest-cpp,C++,#00599c,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+436546a3-8e27-4144-836f-0132685d1376,interest-csharp,C#,#239120,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9117c9a5-7763-4010-ac1c-e0fc0095de09,interest-php,PHP,#777bb4,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d7ebb504-32de-4554-b80b-4fd2113021b1,interest-ruby,Ruby,#cc342d,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+fb9db26d-0405-41f8-a491-3581cae60ff1,interest-go,Go,#00add8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a471fb1d-2c71-48f1-b238-5afb185cb2f0,interest-rust,Rust,#000000,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f1c49f9b-5dec-4f68-aa5c-2b566e166f24,interest-swift,Swift,#fa7343,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6cf29967-2c02-49d5-9185-37231dc5a8f2,interest-kotlin,Kotlin,#7f52ff,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1beb9c9c-dd25-459f-8cc1-18694e4754a4,interest-react,React,#61dafb,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b4f9ee18-5a51-4e70-a37b-a00b1e67b97d,interest-vuejs,Vue.js,#4fc08d,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eb271a8c-57be-4562-bedd-ae1122b59285,interest-angular,Angular,#dd0031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e4b493ef-979b-4790-a847-8754ee460e9b,interest-nodejs,Node.js,#339933,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eaed13ec-d1fd-4ed8-a87e-43d171928130,interest-spring,Spring Boot,#6db33f,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+787c8b91-7ec8-4e76-945c-32205132f465,interest-docker,Docker,#2496ed,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+30316949-2500-4134-8fef-1e2a972457fe,interest-kubernetes,Kubernetes,#326ce5,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+bcfd0bdd-3416-4c05-b98b-24fc6207b3eb,interest-aws,AWS,#ff9900,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+292ec0d7-9bfb-4997-9e1d-42548fe529bd,interest-azure,Azure,#0078d4,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4e36ae05-9568-4cd5-a020-225ff8b14bb7,interest-gcp,Google Cloud,#4285f4,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+868823a9-803a-4616-9d6e-7081bd9dfbd7,interest-mongodb,MongoDB,#47a248,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3ca23425-ea7c-4232-bdde-ea9493da8655,interest-postgresql,PostgreSQL,#336791,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c7cfa6de-1ece-47de-be27-7b515a39d5fe,interest-mysql,MySQL,#4479a1,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+915a98c2-6685-4202-87d9-250276194f79,interest-redis,Redis,#dc382d,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a10dd0da-4187-4cc0-b797-a53153fd0b93,interest-elasticsearch,Elasticsearch,#005571,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d6b1b681-d2b5-4812-95e5-532eb05e6f10,interest-kafka,Apache Kafka,#231f20,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3cf4c92b-f827-4cf0-a0e6-824f77f80387,interest-git,Git,#f05032,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3474ad1e-198f-4d83-80d3-0c5c1266a2a8,interest-linux,Linux,#fcc624,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+83407256-5a18-4b0d-bbc0-fb4621668eff,interest-nginx,Nginx,#009639,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ef379d4c-86d3-47a5-a19c-68724d6a359e,interest-jenkins,Jenkins,#d24939,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ef4344b2-a97d-4582-b541-7e060d4f3f54,interest-football,Bóng đá,#1e3a8a,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+72dec2d0-63a6-40d5-afa1-f6210439454c,interest-basketball,Bóng rổ,#ff6b35,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a2c9d510-c59b-44c2-a792-7ab90844fb02,interest-swimming,Bơi lội,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f1799503-2092-4f2f-8089-ec38b08b2032,interest-running,Chạy bộ,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ef0a4858-2421-4ada-aaf6-e534c62e1c5f,interest-gym,Gym,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+04d0eaca-d2a3-4e5f-be2f-ce3e90d17a52,interest-yoga,Yoga,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+96dc2b98-16ba-4a8d-a62a-ab7ff431fc83,interest-tennis,Tennis,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+422a6e29-e5ab-4890-84fe-7ff4321c5376,interest-cycling,Đạp xe,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0f8136c9-b04e-468a-ac66-78c82bd5fce4,interest-badminton,Cầu lông,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5257543a-e2ef-4bf7-bc4b-e18ef45647e0,interest-volleyball,Bóng chuyền,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ca61d7c5-8232-44f4-80ee-85de7663b2b4,interest-table-tennis,Bóng bàn,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eb5d37da-13e3-440b-9598-24d5509b5d62,interest-golf,Golf,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+28b7f811-bf4b-4ef2-b5e2-dbc64ebdb3e1,interest-baseball,Bóng chày,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d46ebd91-9f64-4a48-827b-617f2e8e4fdf,interest-american-football,Bóng bầu dục Mỹ,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+48d9e927-68a2-4909-8bd9-662fa95ab2c1,interest-rugby,Bóng bầu dục,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6cb84734-a670-4518-b784-36d5f87712e7,interest-cricket,Cricket,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2fb6a723-f5e7-4605-b300-aa2fc41a9168,interest-hockey,Khúc côn cầu,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e670dd66-9c51-45a4-b1c4-8ed9991809eb,interest-martial-arts,Võ thuật,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f8f03a1e-41a6-4bbd-9916-80f5be483542,interest-boxing,Quyền anh,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7b4f5231-b8dd-47f4-b41e-1b6fc4e82de6,interest-mma,MMA,#000000,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c6298da2-d06b-41f0-98b2-102cf6c4ca39,interest-skiing,Trượt tuyết,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8988ee1a-55df-4dc3-8659-f52f78807538,interest-snowboarding,Trượt ván tuyết,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d53cb2cd-6b8e-4e89-b15b-41a3b5dd74fa,interest-surfing,Lướt sóng,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0dd9633d-f7d9-4305-ae89-c33cb10f8787,interest-sailing,Đi thuyền,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7ef5a83e-9fc3-40dd-8519-906fedad3afb,interest-fishing,Câu cá,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+834fb7f0-5a94-454d-b319-0c84c72b48e1,interest-guitar,Guitar,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0947a606-1601-4ad1-836e-6e68e25d3916,interest-piano,Piano,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+49678dc1-5d9a-495a-bded-e63a06a893d9,interest-violin,Violin,#a29bfe,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c7905c7d-d4b9-45d1-b660-9d14bd4ddf40,interest-drums,Trống,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+59392832-b6cc-4acd-97cc-1bed5c0b7401,interest-bass-guitar,Bass Guitar,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+844fc3b3-c774-4c07-b72b-440567478908,interest-singing,Hát,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+687a3a0a-8b97-4b94-b5ee-55c198dab96c,interest-dj,DJ,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b4b28011-5bbc-4cba-bdab-5e1e1af3429f,interest-music-classical,Nhạc cổ điển,#a29bfe,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+06f90380-d72c-4c00-8352-9a4726abf57c,interest-music-pop,Pop Music,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3975a1af-fa45-4ddb-b1e7-e663e90a6e50,interest-music-rock,Rock Music,#e84393,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+aaba9c9c-d085-4ac3-8a38-00f646302595,interest-music-jazz,Jazz,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c74ed244-3424-42d6-a4ef-1de74e4b7151,interest-music-hiphop,Hip Hop,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+604639f2-5356-456c-b779-c61d9f6f9bf7,interest-music-electronic,EDM,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a639622e-204a-4a25-b368-262d825a12f9,interest-music-country,Country,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+29904385-ab9e-45cd-8cb4-b3fd62d40c83,interest-music-rb,R&B,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4e203564-7ca7-4934-8b1c-0b12f08e2305,interest-music-metal,Metal,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a7ff3731-4401-4350-89fe-098073c62419,interest-movies-action,Phim hành động,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2d16ca02-dee2-47c4-a1ab-6af47578a71d,interest-movies-romance,Phim tình cảm,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7669bad8-4e36-4cdf-9b29-e4007b143b8c,interest-movies-scifi,Phim khoa học viễn tưởng,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5caca24f-5881-486d-8cd4-48f2f08cd492,interest-movies-horror,Phim kinh dị,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+74283cc1-56a0-4de8-bb13-e6a0d2ab9fa4,interest-movies-comedy,Phim hài,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7b1cbdf9-46c2-4486-8847-5d5f7b72f701,interest-movies-drama,Phim chính kịch,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a3561165-4789-44de-9424-f37ab97dacb0,interest-movies-thriller,Phim giật gân,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4a55b237-d808-4e12-91be-6d1c328a3150,interest-anime,Anime,#ff6b9d,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+51a849bf-fe55-42c6-a5c8-1ade99335806,interest-manga,Manga,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+dd86dc27-1925-45a0-934f-a49630575455,interest-travel,Du lịch,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+42e5cb64-f502-40f9-88b1-52322ced7b36,interest-photography,Nhiếp ảnh,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c339665b-ce1b-4aa1-a75c-db8e303f1209,interest-camping,Camping,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8a0cf4f3-fbd7-41bb-93e3-64ae945b474e,interest-hiking,Hiking,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+80a22a35-f54f-4059-8257-d3bbbe9dc20c,interest-mountain-climbing,Leo núi,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+195e50e5-8e22-4c12-bd6d-8aacdbcd1e37,interest-scuba-diving,Lặn biển,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4d9c67aa-65ee-475f-a5a8-e054bbc53c45,interest-backpacking,Du lịch ba lô,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5c0a6fe6-82a7-4984-8ffb-047b99be5d2f,interest-beach,Bãi biển,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2e72b2ab-654f-41a1-8d1f-e0929d18689c,interest-cooking,Nấu ăn,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8eab41fe-6f45-434d-bbbd-6fe14c9c2060,interest-coffee,Cà phê,#6f4e37,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a15e1bdd-aa95-4206-b8d2-e74b1f0b13c6,interest-tea,Trà,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ad32c875-baa4-4192-a8db-0c767d0fd802,interest-wine,Rượu vang,#8b0000,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eef282c0-51dd-4fd1-b2cf-ca1422b9f30a,interest-beer,Bia,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a717e58e-9642-4452-be54-82567db1c15b,interest-baking,Bánh ngọt,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+19f0f075-2d5c-4aae-be34-f848f1153a5d,interest-barbecue,BBQ,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7770e917-950b-43e6-aa85-f58cfa9fb316,interest-reading,Đọc sách,#a29bfe,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7090050c-7bf2-4430-b452-a1315291a680,interest-novels,Tiểu thuyết,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+50e84ce1-2ea2-44d6-82e7-464ac326eb46,interest-science-books,Sách khoa học,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ecd1bb7e-a341-4359-93ca-57a30aa3e124,interest-history-books,Sách lịch sử,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c67f40a9-d144-4b09-b5e6-789fa09c8e91,interest-fiction,Tiểu thuyết giả tưởng,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3d61d596-a511-4418-8277-e35bc8baa023,interest-non-fiction,Sách phi hư cấu,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+44c93d51-ce6e-4132-903f-223aba51b935,interest-video-games,Video Games,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+af67dbc4-23ef-43b0-ba93-e80f79210e3c,interest-board-games,Board Games,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+33f7ce1e-b40b-4998-8dab-5c1621058de7,interest-card-games,Bài,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+02adfefd-b3ed-4364-ae20-ead0ebd39d67,interest-esports,Esports,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5c4466ed-9137-45cd-b689-987ea80a0d99,interest-mobile-games,Game mobile,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+349e0f24-600d-4fbb-b159-b3729bbfbbc4,interest-drawing,Vẽ,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d9b5abae-972d-427f-a41a-a1fc083f8107,interest-design,Thiết kế,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f1d2982f-b761-4c3c-8ebc-8a9557bff7da,interest-painting,Sơn màu,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e2049a74-f465-4d03-bb5c-3836d8dd7587,interest-calligraphy,Thư pháp,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f014ff28-0aa4-4744-bc9f-b2ef8e80e027,interest-digital-art,Nghệ thuật số,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+efeaf83b-a29b-4291-86ad-7ecf4bd13841,interest-sculpture,Điêu khắc,#8b4513,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2fc95d09-f58d-4b9e-9552-533fa3d3fefc,interest-pets,Thú cưng,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+70bfce13-2974-4775-8279-751d0b796b18,interest-dogs,Chó,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+cc5d099e-aa39-45d3-859f-e9c4a0eb619b,interest-cats,Mèo,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d1364b6d-4600-4a4b-805c-acd54fda71a2,interest-birds,Chim,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ca1d708a-97d2-401d-b926-b850d51ab45a,interest-fish,Cá,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+84d18c48-f12e-489d-8a53-39a00c956def,interest-nature,Thiên nhiên,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4a85be1a-d257-4a38-9cb1-f5c9c46ac2cb,interest-gardening,Làm vườn,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+51f51cdb-857f-4773-8c3b-8507256fc6b1,interest-environment,Môi trường,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9deb546e-05e9-4996-b497-b7f632d0ae6f,interest-astronomy,Thiên văn học,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b7f22449-779c-4527-a964-3badbd22ace3,interest-physics,Vật lý,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5299a734-903f-42dd-9d95-3781b963c9b0,interest-mathematics,Toán học,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4538bfc9-ca9c-4722-8035-e3791ce1af16,interest-chemistry,Hóa học,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+209792d4-aabc-4cb0-bc70-05abe5fa04ae,interest-biology,Sinh học,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4706fbda-f8d5-4320-904a-189665543434,interest-psychology,Tâm lý học,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+04274d83-983f-46e7-bc98-c346d3035d19,interest-philosophy,Triết học,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e3883a9f-6dae-4f20-9d37-8f0d35fb9910,interest-history,Lịch sử,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f0df8629-fddd-4663-a153-3fdeb6917be8,interest-geography,Địa lý,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e5528c38-7b48-4137-82b1-e26a7863db85,interest-chess,Cờ vua,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9abc47ce-b51b-406b-8719-01ccf5d91422,interest-sudoku,Sudoku,#a29bfe,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+fec86197-e866-4364-b9a9-7eb61251a68b,interest-puzzles,Giải đố,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3113f1ba-964a-4f9f-8566-8a7b7b110caa,interest-crosswords,Ô chữ,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+256a3500-de44-4d9e-a23b-ffe1af4831e8,interest-meditation,Thiền,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b57d56e1-3935-47a2-8f22-9bd0791a59f6,interest-mindfulness,Chánh niệm,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4ada6457-57b0-4f94-87e3-ebbde3433087,interest-language-learning,Học ngôn ngữ,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2368698a-b6f5-4ec3-b3a1-f5fe8e6b83c1,interest-writing,Viết lách,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a87a5a4e-a675-4b69-a16b-727946819587,interest-blogging,Blogging,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9c08c3ce-51ae-4893-801f-887d0e239374,interest-podcasting,Podcasting,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b542f5a3-da5e-41ff-b1d7-8a12538052d5,interest-streaming,Streaming,#e10098,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ca8b8b42-04e1-4e95-82c3-d125a4a6743f,interest-youtube,YouTube,#ff0000,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+357035d5-ed4a-4f8c-866d-fb53f3e5584e,interest-fitness,Thể dục,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+997bb55b-684b-4435-a25f-474382235d2d,interest-nutrition,Dinh dưỡng,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+93c5ce38-259d-486d-b742-99aea95c59dd,interest-health,Sức khỏe,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+19e29636-689e-43c6-9c1e-23f30d1ea7ec,interest-fashion,Thời trang,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+228fadbd-0043-453c-b747-012ee28bde90,interest-shopping,Mua sắm,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+51a01a06-6e50-48fd-9fc3-bd760191d6f2,interest-collecting,Sưu tầm,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+876cf5d4-1864-4b31-9520-b004bb36133e,interest-cars,Xe hơi,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2cbf7536-3814-4e4f-a3cc-e8c4d39932d5,interest-motorcycles,Xe máy,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d67a5317-3c50-4676-8933-c6eac19496ae,interest-aviation,Hàng không,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+51554146-fb5e-4ce0-9ed6-d50656b1c865,interest-space,Không gian,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2db060aa-541b-488c-bec5-8ca3c23cba41,interest-robotics,Robot,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+aa23ec1b-6437-4e74-b9cf-911e1a71f89a,interest-ai,Trí tuệ nhân tạo,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+fbd8c5ef-d4b1-491b-b54c-1d282403bfbf,interest-machine-learning,Học máy,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+180f68a2-97a4-46c4-830f-2f46b7013498,interest-deep-learning,Học sâu,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5000472d-cfba-4fbb-bd32-4c18efccb5c6,interest-blockchain,Blockchain,#f7931a,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+23eb1e52-fa9f-433d-b3d7-e1e1ab6a2b15,interest-cryptocurrency,Cryptocurrency,#f7931a,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e29b7d68-da40-4d3d-836a-f2a925705715,interest-stocks,Chứng khoán,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0d4485f3-0569-4c4b-ae57-2e5f2bf4c513,interest-investing,Đầu tư,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+53932b3a-408c-437e-bfef-4d54bd077784,interest-entrepreneurship,Khởi nghiệp,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f5088951-9875-468d-8bcb-87d4d6bde064,interest-business,Kinh doanh,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5d6293bb-a67e-4b7b-b940-4a92776f7d14,interest-marketing,Marketing,#e10098,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8405fa54-1716-4ddb-9b0e-6b2909b3acb1,interest-sales,Bán hàng,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f3622f52-c3d6-4ef6-9d93-5e1dd982fafe,interest-education,Giáo dục,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+745cd43e-debb-4682-981c-5268c7a291d8,interest-teaching,Giảng dạy,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3e754b6f-93ae-4707-8f74-39fbeb68eabc,interest-research,Nghiên cứu,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e6a7285a-f40e-463f-b2dc-54221cd14440,interest-volunteering,Tình nguyện,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+aef5f52b-157a-4ad8-bf2c-42ab89103ab2,interest-charity,Từ thiện,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4b171992-6062-4f2f-aed7-9e7005f8439f,interest-dancing,Khiêu vũ,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1ec36097-fac5-49e5-be51-0faae29b1c3c,interest-ballet,Ba lê,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+dd272561-733e-4f0d-8bd7-18f5ded34866,interest-hiphop-dance,Nhảy Hip Hop,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2c8fedd5-855b-42d6-9624-f34ec42f2fd7,interest-latin-dance,Nhảy Latin,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0c3c75e8-ddd1-4d51-95f3-6fb59f6f034b,interest-salsa,Salsa,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b3cff077-ca9d-49ae-b78a-fcc799c54edb,interest-musical-instruments,Nhạc cụ,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+312df861-ba55-4af1-bb50-992264eb4bd3,interest-ukulele,Ukulele,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c8226727-04c8-4767-9347-c8c62712a8c8,interest-flute,Sáo,#00b4d8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6606e647-dceb-4e46-8c2b-df3ae54c8292,interest-saxophone,Saxophone,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+bea89a25-8661-481e-a0fd-726bcc8dac45,interest-trumpet,Kèn trumpet,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8db8ef7e-d3e3-41ff-8dff-12cc59f6908b,interest-karaoke,Karaoke,#e10098,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f861e062-1e6a-4277-bb0b-34e2adc75840,interest-comedy,Hài kịch,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4519f94b-f8c3-4f84-8191-4ae949f3357e,interest-stand-up-comedy,Stand-up Comedy,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+37ef4354-eec1-4038-8600-99c47ca8607f,interest-magic,Ảo thuật,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1b77c7b6-d077-411f-a389-14202d0da36f,interest-escape-rooms,Phòng thoát hiểm,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f285d8de-2a92-4163-b83b-0df2c3670e22,interest-geocaching,Geocaching,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2cde34ea-56d1-4c71-96f8-8af4ffbbdfbf,interest-diy,DIY,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c95e9ab3-29a2-4f74-affd-ac72ec1aa80b,interest-home-improvement,Cải thiện nhà,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+705d76cc-3719-4eb3-b39c-8ef1064fedc3,interest-woodworking,Mộc,#8b4513,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a1a475ef-f0c1-4f82-97d7-a6cc7b03acb4,interest-crafts,Thủ công,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c939d78b-f70f-4b8f-bcc2-88b78d8d16eb,interest-sewing,May vá,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+815f9dec-661c-4e6f-b74d-9ce3288f4617,interest-knitting,Đan len,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+39d097f9-b75b-4984-ba66-3104d93e441d,interest-origami,Origami,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+176f56a0-6ff8-44e1-9bfe-b76548f0dca7,interest-lego,LEGO,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+2406cded-1be3-4e62-a78d-d2f4ef6d059b,interest-model-building,Lắp mô hình,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+40c877d2-a841-49c4-ac6e-9cc718c51b5d,interest-comic-books,Truyện tranh,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ac481b93-b524-4728-8114-fc8a4cb576ad,interest-superheroes,Siêu anh hùng,#d63031,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+20860b35-27de-4c59-ad24-ff1e8d889ca8,interest-fantasy,Huyền bí,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+befad8c7-a0fb-4c76-84b7-fc96315fa69a,interest-science-fiction,Khoa học viễn tưởng,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+59051c66-07fb-4076-aadf-50d32484de8c,interest-mythology,Thần thoại,#a29bfe,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9584aec2-8fc8-42b7-996a-8f970be45c5e,interest-interior-design,Thiết kế nội thất,#e17055,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+bff74a45-9ec3-4bce-894a-aa30076c91d6,interest-feng-shui,Phong thủy,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+22420172-c80c-49c3-9b76-5dd80d43772f,interest-home-decorating,Trang trí nhà,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+579da325-adc2-418b-af19-3d12e84c2730,interest-landscaping,Landscaping,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4ab180d3-4795-4c10-942e-3677fd8899d9,interest-bonsai,Bonsai,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8f5b39b1-a33a-4ca6-a4f8-2b62fe03838e,interest-flower-arranging,Cắm hoa,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+79fbee5b-524c-4186-8c73-be1152cf4c28,interest-sustainable-living,Sống bền vững,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4def5cb3-6ab6-4179-992d-be7e62ce32af,interest-minimalism,Tối giản,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+80c1842b-a8ba-4174-8b85-380fab5f8bf7,interest-organization,Tổ chức,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+42e785b5-37fa-44c3-9234-a8e0b4726cc2,interest-productivity,Năng suất,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b32bbe81-e0fd-4b9e-b651-010660e8d26d,interest-time-management,Quản lý thời gian,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+77010869-c8b6-4797-828b-067c66d8a516,interest-project-management,Quản lý dự án,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d83e551b-9730-44f0-b410-a08b1d3b4ecf,interest-leadership,Lãnh đạo,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d7b3641e-afa9-4ec6-942c-34ee1efef6dc,interest-coaching,Coaching,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8d9b9b58-0178-474c-b762-89a0a4831b54,interest-personal-development,Phát triển cá nhân,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+038abcbd-e17d-4572-bc8c-fb34a0e77aae,interest-self-improvement,Tự cải thiện,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7176b37f-a64c-45e4-88be-aa5c53a33884,interest-motivation,Động lực,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1fe2c2d8-1c9b-4d4c-8465-872cf0262d5a,interest-goal-setting,Đặt mục tiêu,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+bd0171f5-242f-48e9-8ecb-f300c4b0c66c,interest-online-courses,Khóa học trực tuyến,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ca67e1a4-60c6-42e2-adea-5b9d914dc413,interest-certifications,Chứng chỉ,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+26f7a491-5b6f-40fc-9e7d-50f224687b74,interest-lifelong-learning,Học tập suốt đời,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+49501ada-1de7-4fa8-ae19-571d3d79c62d,interest-networking,Mạng lưới,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5bb40bb6-d022-4c9e-b1b4-0fc74e8d20d2,interest-community-building,Xây dựng cộng đồng,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+332dccd5-55f1-4d16-8d30-9d33d46b24a4,interest-social-activism,Hoạt động xã hội,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+58a0e0d5-9d9b-4aa9-96d5-c3fb999fe2db,interest-human-rights,Quyền con người,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+42cf3a76-62b2-4d04-a57b-a696b4a50151,interest-climate-change,Biến đổi khí hậu,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6ce627a4-8fa9-49cd-ace0-5db2dc1ed5de,interest-renewable-energy,Năng lượng tái tạo,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+1c123717-8d11-48a2-a28b-dd54dd49e7b8,interest-solar-power,Năng lượng mặt trời,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+eba9fec4-e7d7-470f-912c-cebbb3d3f4ab,interest-conservation,Bảo tồn,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+266aed4d-4c9d-44d2-9166-21b0f3a47c22,interest-wildlife-conservation,Bảo tồn động vật hoang dã,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+9ef4d900-7084-46ac-a2b6-6ad80b00a6fd,interest-biodiversity,Đa dạng sinh học,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7d13fd42-1818-403e-a528-f0d23e0b5887,interest-ecology,Sinh thái học,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+a7091ab1-a37b-454b-b2e2-622f60f2e7f3,interest-stargazing,Ngắm sao,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ccef759d-900a-4434-a392-49461a52a50f,interest-astrophotography,Chụp ảnh thiên văn,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+16a5471f-5636-41c2-8437-953e4fb433fc,interest-night-photography,Chụp ảnh đêm,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+6ebda318-d674-4907-ab1f-137ffd7a814f,interest-macro-photography,Chụp ảnh macro,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+13a09ed9-b79e-4e46-8517-122f64c76ff4,interest-portrait-photography,Chụp ảnh chân dung,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0965977c-7fb7-40aa-a2b3-f9e91089f682,interest-landscape-photography,Chụp ảnh phong cảnh,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f5b4d10b-1374-4739-b361-97aec3b9b634,interest-spirituality,Tâm linh,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+c74db68b-bda7-4f95-99bc-d509682e83d2,interest-religion,Tôn giáo,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0f4fecdd-3295-4cd4-8264-1fd451605a1b,interest-buddhism,Phật giáo,#fdcb6e,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+623cf6e0-a689-43be-9149-dfd1028ac1f6,interest-christianity,Thiên Chúa giáo,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+4c30f3d0-1a12-4531-a64c-728814e2882e,interest-meditation-practice,Thực hành thiền,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+46180cac-ecac-48a3-9fa1-05d75b011347,interest-yoga-practice,Thực hành yoga,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ce3c55bd-dc51-4f1a-9132-4fe3bee84f94,interest-creativity,Sáng tạo,#fd79a8,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+8f247c21-06e1-4668-b822-7207561ad6c3,interest-innovation,Đổi mới,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+d4721bd9-a44f-4326-bce8-34c2e2b52132,interest-problem-solving,Giải quyết vấn đề,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+f016f9c9-2d7f-4078-9b0d-acff9f61b22f,interest-critical-thinking,Tư duy phản biện,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+ea1e416b-b209-490d-8ad8-c0f2baad8f99,interest-analytical-thinking,Tư duy phân tích,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+5886027e-66da-48d2-b603-e5f1f5c214d6,interest-logical-thinking,Tư duy logic,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+b542afba-a646-43c4-b852-401309b14582,interest-strategic-thinking,Tư duy chiến lược,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7514cfd5-dd0c-4c51-8e92-bc30f21d71d1,interest-integrity,Chính trực,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+30c19c33-189a-4498-9358-d74e81e690cf,interest-honesty,Trung thực,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+7c633a5b-aa0f-48ec-b935-14ee520171e6,interest-responsibility,Trách nhiệm,#2d3436,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+16789529-324c-485d-9194-53510e813add,interest-persistence,Kiên trì,#ff6b6b,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+e5207d6d-fc3c-4664-9334-9e0d265e0db3,interest-resilience,Phục hồi,#00b894,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+0b969efc-92b8-4d24-bd0d-03407b385086,interest-adaptability,Thích ứng,#0984e3,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z
+3ba9565f-b1c8-4d04-8258-de5ebe56eb3a,interest-flexibility,Linh hoạt,#6c5ce7,system,2026-02-09T22:54:22.062784Z,system,2026-02-09T22:54:22.062784Z

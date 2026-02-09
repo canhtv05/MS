@@ -14,6 +14,8 @@ import {
   IDetailUserProfileDTO,
   IUpdateBioProfileReq,
   IPrivacyDTO,
+  IInterestDTO,
+  ICreateInterestReq,
 } from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
@@ -202,11 +204,35 @@ export const useProfileMutation = () => {
     },
   });
 
+  const createInterestMutation = useMutation({
+    mutationKey: [API_ENDPOINTS.PROFILE.INTERESTS],
+    mutationFn: async (payload: ICreateInterestReq): Promise<IResponseObject<IInterestDTO>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.INTERESTS, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'create-interest-toast'),
+    onMutate: () => {
+      toast.loading(t('profile:create_interest_loading'), {
+        id: 'create-interest-toast',
+      });
+    },
+    onSuccess: async data => {
+      queryClient.invalidateQueries({
+        queryKey: ['profile', 'interests'],
+      });
+      toast.success(t('profile:create_interest_success'), {
+        id: 'create-interest-toast',
+      });
+      return data?.data as IInterestDTO;
+    },
+  });
+
   return {
     changeCoverImageMutation,
     changeCoverImageFromMediaHistoryMutation,
     changeAvatarImageMutation,
     updateBioProfileMutation,
     updatePrivacyMutation,
+    createInterestMutation,
   };
 };

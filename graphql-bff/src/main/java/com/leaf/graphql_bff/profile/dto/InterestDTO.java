@@ -1,6 +1,7 @@
 package com.leaf.graphql_bff.profile.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,9 @@ public class InterestDTO implements Serializable {
     private String id;
     private String title;
     private String color;
+    private String code;
+    private String createdBy;
+    private Instant createdDate;
+    private String modifiedBy;
+    private Instant modifiedDate;
 }

@@ -25,6 +25,11 @@ public class UserProfileMapper {
             .id(ConvertProto.nullToEmpty(interestDTO.getId()))
             .title(ConvertProto.nullToEmpty(interestDTO.getTitle()))
             .color(ConvertProto.nullToEmpty(interestDTO.getColor()))
+            .code(ConvertProto.nullToEmpty(interestDTO.getCode()))
+            .createdBy(ConvertProto.nullToEmpty(interestDTO.getCreatedBy()))
+            .createdDate(ConvertProto.convertTimestampToInstant(interestDTO.getCreatedDate()))
+            .modifiedBy(ConvertProto.nullToEmpty(interestDTO.getModifiedBy()))
+            .modifiedDate(ConvertProto.convertTimestampToInstant(interestDTO.getModifiedDate()))
             .build();
     }
 

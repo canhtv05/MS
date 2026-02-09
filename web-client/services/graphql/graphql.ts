@@ -86,8 +86,13 @@ export type ImageDto = {
 };
 
 export type InterestDto = {
+  code?: Maybe<Scalars['String']['output']>;
   color?: Maybe<Scalars['String']['output']>;
+  createdBy?: Maybe<Scalars['String']['output']>;
+  createdDate?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['String']['output']>;
+  modifiedBy?: Maybe<Scalars['String']['output']>;
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -259,6 +264,7 @@ export type UserProfileIntroduceFieldsFragment = {
   phoneNumber?: string | null;
   interests?: Array<{
     id?: string | null;
+    code?: string | null;
     title?: string | null;
     color?: string | null;
   } | null> | null;
@@ -448,6 +454,7 @@ export const UserProfileIntroduceFieldsFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'color' } },
               ],
@@ -561,6 +568,7 @@ export const DetailUserProfileFieldsFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'color' } },
               ],
@@ -773,6 +781,7 @@ export const UserDetailDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'color' } },
               ],

@@ -36,8 +36,13 @@ export interface IChangeCoverByUrlReq {
 
 export interface IInterestDTO {
   id: string;
+  code: string;
   title: string;
   color: string;
+  createdBy: string;
+  createdDate: string;
+  modifiedBy: string;
+  modifiedDate: string;
 }
 
 export interface IUserProfileIntroduceDTO {
@@ -84,4 +89,9 @@ export interface IDetailUserProfileDTO {
   followersCount: number;
   followingCount: number;
   createdDate: string;
+}
+
+export interface ICreateInterestReq {
+  title: string;
+  color: string;
 }

@@ -18,6 +18,7 @@ fragment UserProfileIntroduceFields on UserProfileIntroduceDTO {
   phoneNumber
   interests {
     id
+    code
     title
     color
   }

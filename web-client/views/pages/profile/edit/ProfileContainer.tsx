@@ -74,7 +74,7 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 60vw"
                 priority
                 alt="Avatar"
-                className="object-cover rounded-full ring-4 ring-purple-300 shadow-xl"
+                className="object-cover rounded-full"
               />
             ) : null;
           })()}

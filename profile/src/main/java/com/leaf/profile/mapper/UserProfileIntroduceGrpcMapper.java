@@ -64,6 +64,11 @@ public class UserProfileIntroduceGrpcMapper {
             .setId(CommonUtils.getSafeObject(interest.getId(), String.class, ""))
             .setTitle(CommonUtils.getSafeObject(interest.getTitle(), String.class, ""))
             .setColor(CommonUtils.getSafeObject(interest.getColor(), String.class, ""))
+            .setCode(CommonUtils.getSafeObject(interest.getCode(), String.class, ""))
+            .setCreatedBy(CommonUtils.getSafeObject(interest.getCreatedBy(), String.class, ""))
+            .setCreatedDate(ConvertProto.convertInstantToTimestamp(interest.getCreatedDate()))
+            .setModifiedBy(CommonUtils.getSafeObject(interest.getModifiedBy(), String.class, ""))
+            .setModifiedDate(ConvertProto.convertInstantToTimestamp(interest.getModifiedDate()))
             .build();
     }
 }

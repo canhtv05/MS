@@ -174,5 +174,7 @@
   "custom_color": "Custom Color",
   "choose_custom_color": "Choose custom color",
   "hex_color_placeholder": "#FFFFFF",
-  "hex_color_help_text": "Enter color in HEX format (e.g. #FFAA00 or #FFAA00FF)"
+  "hex_color_help_text": "Enter color in HEX format (e.g. #FFAA00 or #FFAA00FF)",
+  "create_interest_loading": "Creating interest",
+  "create_interest_success": "Interest created successfully"
 }

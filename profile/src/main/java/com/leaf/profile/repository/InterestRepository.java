@@ -16,6 +16,7 @@ public interface InterestRepository extends Neo4jRepository<Interest, String> {
         WHERE $searchText IS NULL
            OR $searchText = ''
            OR toLower(i.title) CONTAINS toLower($searchText)
+           OR toLower(i.code) CONTAINS toLower($searchText)
         RETURN i
         SKIP $skip
         LIMIT $limit
@@ -25,10 +26,30 @@ public interface InterestRepository extends Neo4jRepository<Interest, String> {
         WHERE $searchText IS NULL
            OR $searchText = ''
            OR toLower(i.title) CONTAINS toLower($searchText)
+           OR toLower(i.code) CONTAINS toLower($searchText)
         RETURN count(i)
         """
     )
     Page<Interest> findAll(@Param("searchText") String searchText, Pageable pageable);
 
-    boolean existsByTitle(String title);
+    @Query(
+        """
+        MERGE (i:interest {code: toLower($code)})
+        ON CREATE SET i.id = randomUUID()
+        SET i.title = $title,
+            i.color = $color,
+            i.created_by = $createdBy,
+            i.created_date = datetime(),
+            i.modified_by = $modifiedBy,
+            i.modified_date = datetime()
+        RETURN i
+        """
+    )
+    Interest createIfNotExists(
+        @Param("code") String code,
+        @Param("title") String title,
+        @Param("color") String color,
+        @Param("createdBy") String createdBy,
+        @Param("modifiedBy") String modifiedBy
+    );
 }

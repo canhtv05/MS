@@ -161,5 +161,7 @@
   "custom_color": "Màu tùy chỉnh",
   "choose_custom_color": "Chọn màu tùy chỉnh",
   "hex_color_placeholder": "#FFFFFF",
-  "hex_color_help_text": "Nhập màu theo định dạng HEX (ví dụ: #FFAA00 hoặc #FFAA00FF)"
+  "hex_color_help_text": "Nhập màu theo định dạng HEX (ví dụ: #FFAA00 hoặc #FFAA00FF)",
+  "create_interest_loading": "Đang tạo sở thích",
+  "create_interest_success": "Tạo sở thích thành công"
 }

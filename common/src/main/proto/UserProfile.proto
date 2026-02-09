@@ -72,4 +72,9 @@ message InterestDTO {
     string id = 1;
     string title = 2;
     string color = 3;
+    string code = 4;
+    string createdBy = 5;
+    google.protobuf.Timestamp createdDate = 6;
+    string modifiedBy = 7;
+    google.protobuf.Timestamp modifiedDate = 8;
 }

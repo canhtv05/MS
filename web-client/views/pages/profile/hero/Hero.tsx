@@ -163,7 +163,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                             fill
                             src={getImage()}
                             alt="Avatar"
-                            className="rounded-full object-cover opacity-0"
+                            className="rounded-full object-cover opacity-0 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_rgb(31,41,55)]"
                             loading="eager"
                             quality={100}
                             unoptimized

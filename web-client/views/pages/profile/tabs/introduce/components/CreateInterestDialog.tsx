@@ -6,6 +6,7 @@ import Dialog from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { ColorPicker } from './ColorPicker';
+import { Stars } from '@solar-icons/react-perf/BoldDuotone';
 
 // Social media platform color palette - default color
 const DEFAULT_COLOR = '#4ECDC4';
@@ -70,7 +71,7 @@ export const CreateInterestDialog = ({ isOpen, onClose, onCreate }: ICreateInter
         'profile:create_custom_interest_description',
         'Add a personalized interest with your own title and color',
       )}
-      size="sm"
+      size="md"
       disableFooter
     >
       <div className="space-y-4 py-4 px-1">
@@ -88,6 +89,7 @@ export const CreateInterestDialog = ({ isOpen, onClose, onCreate }: ICreateInter
             maxLength={50}
             autoFocus
             id="interest_title"
+            icon={<Stars className="size-4 pl-1" />}
           />
           <p className="text-xs text-muted-foreground mt-1">
             {title.length}/50 {t('profile:characters', 'characters')}
