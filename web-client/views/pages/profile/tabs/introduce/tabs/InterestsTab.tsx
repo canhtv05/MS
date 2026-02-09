@@ -3,7 +3,6 @@
 import { useMemo } from 'react';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import { useTranslation } from 'react-i18next';
-import { useInterestInfiniteQuery } from '@/services/queries/profile';
 import { hexToRgba } from '@/utils/common';
 import { EditInterestsPopover } from '../components/EditInterestsPopover';
 import { PenNewSquare } from '@solar-icons/react-perf/Outline';
@@ -20,12 +19,6 @@ interface IInterestsTabProps {
 export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
   const { t } = useTranslation('profile');
   const introduce = data?.introduce;
-  const { data: interestsData } = useInterestInfiniteQuery();
-
-  const allInterests = useMemo(() => {
-    if (!interestsData?.pages) return [];
-    return interestsData.pages.flatMap(page => page.data.data);
-  }, [interestsData]);
 
   const selectedInterests = useMemo(() => {
     return introduce?.interests || [];
@@ -37,10 +30,10 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
       // Example: await api.post(API_ENDPOINTS.PROFILE.UPDATE_INTERESTS, { interestIds });
       console.log('Saving interests:', interestIds);
 
-      toast.success(t('introduce.interests_saved', 'Interests saved successfully'));
+      toast.success(t('profile:interests_saved', 'Interests saved successfully'));
     } catch (error) {
       console.error('Failed to save interests:', error);
-      toast.error(t('introduce.interests_save_error', 'Failed to save interests'));
+      toast.error(t('profile:interests_save_error', 'Failed to save interests'));
     }
   };
 
@@ -55,16 +48,15 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
             <p className="text-xs text-muted-foreground">
               {isOwner
                 ? t(
-                    'introduce.add_interests_hint',
+                    'profile:add_interests_hint',
                     'Add your interests to let others know what you like',
                   )
-                : t('introduce.no_interests_yet', 'No interests added yet')}
+                : t('profile:no_interests_yet', 'No interests added yet')}
             </p>
           </div>
-          {isOwner && allInterests.length > 0 && (
+          {isOwner && (
             <EditInterestsPopover
               selectedInterests={[]}
-              allInterests={allInterests}
               onSave={handleSaveInterests}
               trigger={
                 <IconButton
@@ -74,7 +66,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
                     'hover:bg-primary hover:text-primary-foreground',
                     'cursor-pointer',
                   )}
-                  title={t('introduce.add_interests', 'Add Interests')}
+                  title={t('profile:add_interests', 'Add Interests')}
                 >
                   <PenNewSquare className="size-4" />
                 </IconButton>
@@ -98,20 +90,15 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
             {selectedInterests.length} {t('navigation.interests', 'Interests')}
           </p>
         </div>
-        {isOwner && allInterests.length > 0 && (
+        {isOwner && (
           <EditInterestsPopover
             selectedInterests={selectedInterests}
-            allInterests={allInterests}
             onSave={handleSaveInterests}
             trigger={
               <IconButton
-                variant="ghost"
-                className={cn(
-                  'transition-colors duration-200',
-                  'hover:bg-primary hover:text-primary-foreground',
-                  'cursor-pointer',
-                )}
-                title={t('introduce.edit_interests', 'Edit Interests')}
+                variant="default"
+                className={cn('transition-colors duration-200', 'cursor-pointer')}
+                title={t('profile:edit_interests', 'Edit Interests')}
               >
                 <PenNewSquare className="size-4" />
               </IconButton>

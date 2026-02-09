@@ -91,7 +91,7 @@ export const useMyMediaHistoryInfiniteQuery = (
 
 export const useInterestInfiniteQuery = (searchText?: string, enabled: boolean = true) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'interests'],
+    queryKey: ['profile', 'interests', searchText],
     queryFn: async ({
       pageParam = 1,
     }): Promise<IResponseObject<ISearchResponse<IInterestDTO[]>>> => {

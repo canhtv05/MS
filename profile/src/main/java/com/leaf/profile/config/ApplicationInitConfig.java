@@ -17,6 +17,12 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner() {
         return args -> {
             try (Session session = driver.session()) {
+                // Create unique constraint for interest.title
+                String createUniqueConstraintCypher = """
+                    CREATE CONSTRAINT interest_title_unique IF NOT EXISTS
+                    FOR (i:interest) REQUIRE i.title IS UNIQUE
+                    """;
+
                 String loadProfilesCypher = """
                     LOAD CSV WITH HEADERS FROM 'file:///user_profile.csv' AS row
 
@@ -89,6 +95,8 @@ public class ApplicationInitConfig {
                     """;
 
                 session.executeWrite(ex -> {
+                    // Create unique constraint first
+                    ex.run(createUniqueConstraintCypher);
                     ex.run(loadProfilesCypher);
                     ex.run(loadInterestsCypher);
                     ex.run(loadUserInterestsCypher);

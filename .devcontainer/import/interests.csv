@@ -1,21 +1,259 @@
 id,title,color
-interest-java,Java,#f89820
+interest-javascript,JavaScript,#f7df1e
+interest-typescript,TypeScript,#3178c6
+interest-python,Python,#3776ab
+interest-java,Java,#ed8b00
+interest-cpp,C++,#00599c
+interest-csharp,C#,#239120
+interest-php,PHP,#777bb4
+interest-ruby,Ruby,#cc342d
+interest-go,Go,#00add8
+interest-rust,Rust,#000000
+interest-swift,Swift,#fa7343
+interest-kotlin,Kotlin,#7f52ff
 interest-react,React,#61dafb
-interest-springboot,Spring Boot,#6db33f
+interest-vuejs,Vue.js,#4fc08d
+interest-angular,Angular,#dd0031
+interest-nodejs,Node.js,#339933
+interest-spring,Spring Boot,#6db33f
 interest-docker,Docker,#2496ed
 interest-kubernetes,Kubernetes,#326ce5
-interest-nodejs,Node.js,#339933
-interest-python,Python,#3776ab
-interest-typescript,TypeScript,#3178c6
-interest-postgresql,PostgreSQL,#336791
-interest-mongodb,MongoDB,#47a248
-interest-redis,Redis,#dc382d
 interest-aws,AWS,#ff9900
+interest-azure,Azure,#0078d4
+interest-gcp,Google Cloud,#4285f4
+interest-mongodb,MongoDB,#47a248
+interest-postgresql,PostgreSQL,#336791
+interest-mysql,MySQL,#4479a1
+interest-redis,Redis,#dc382d
+interest-elasticsearch,Elasticsearch,#005571
+interest-kafka,Apache Kafka,#231f20
 interest-git,Git,#f05032
-interest-nextjs,Next.js,#000000
-interest-tailwind,Tailwind CSS,#06b6d4
-interest-graphql,GraphQL,#e10098
-interest-microservices,Microservices,#00d8ff
-interest-ci-cd,CI/CD,#2088ff
-interest-agile,Agile,#ff6b6b
-interest-design-patterns,Design Patterns,#9b59b6
+interest-linux,Linux,#fcc624
+interest-nginx,Nginx,#009639
+interest-jenkins,Jenkins,#d24939
+interest-football,Bóng đá,#1e3a8a
+interest-basketball,Bóng rổ,#ff6b35
+interest-swimming,Bơi lội,#00b4d8
+interest-running,Chạy bộ,#ff6b6b
+interest-gym,Gym,#2d3436
+interest-yoga,Yoga,#6c5ce7
+interest-tennis,Tennis,#00b894
+interest-cycling,Đạp xe,#0984e3
+interest-badminton,Cầu lông,#fdcb6e
+interest-volleyball,Bóng chuyền,#e17055
+interest-table-tennis,Bóng bàn,#ff6b6b
+interest-golf,Golf,#00b894
+interest-baseball,Bóng chày,#d63031
+interest-american-football,Bóng bầu dục Mỹ,#d63031
+interest-rugby,Bóng bầu dục,#d63031
+interest-cricket,Cricket,#00b894
+interest-hockey,Khúc côn cầu,#2d3436
+interest-martial-arts,Võ thuật,#2d3436
+interest-boxing,Quyền anh,#d63031
+interest-mma,MMA,#000000
+interest-skiing,Trượt tuyết,#00b4d8
+interest-snowboarding,Trượt ván tuyết,#2d3436
+interest-surfing,Lướt sóng,#00b4d8
+interest-sailing,Đi thuyền,#00b4d8
+interest-fishing,Câu cá,#00b4d8
+interest-guitar,Guitar,#d63031
+interest-piano,Piano,#2d3436
+interest-violin,Violin,#a29bfe
+interest-drums,Trống,#2d3436
+interest-bass-guitar,Bass Guitar,#0984e3
+interest-singing,Hát,#fd79a8
+interest-dj,DJ,#6c5ce7
+interest-music-classical,Nhạc cổ điển,#a29bfe
+interest-music-pop,Pop Music,#fd79a8
+interest-music-rock,Rock Music,#e84393
+interest-music-jazz,Jazz,#00b894
+interest-music-hiphop,Hip Hop,#2d3436
+interest-music-electronic,EDM,#6c5ce7
+interest-music-country,Country,#fdcb6e
+interest-music-rb,R&B,#6c5ce7
+interest-music-metal,Metal,#2d3436
+interest-movies-action,Phim hành động,#d63031
+interest-movies-romance,Phim tình cảm,#fd79a8
+interest-movies-scifi,Phim khoa học viễn tưởng,#0984e3
+interest-movies-horror,Phim kinh dị,#2d3436
+interest-movies-comedy,Phim hài,#fdcb6e
+interest-movies-drama,Phim chính kịch,#6c5ce7
+interest-movies-thriller,Phim giật gân,#2d3436
+interest-anime,Anime,#ff6b9d
+interest-manga,Manga,#ff6b6b
+interest-travel,Du lịch,#00b894
+interest-photography,Nhiếp ảnh,#0984e3
+interest-camping,Camping,#6c5ce7
+interest-hiking,Hiking,#00b894
+interest-mountain-climbing,Leo núi,#2d3436
+interest-scuba-diving,Lặn biển,#00b4d8
+interest-backpacking,Du lịch ba lô,#00b894
+interest-beach,Bãi biển,#00b4d8
+interest-cooking,Nấu ăn,#e17055
+interest-coffee,Cà phê,#6f4e37
+interest-tea,Trà,#00b894
+interest-wine,Rượu vang,#8b0000
+interest-beer,Bia,#fdcb6e
+interest-baking,Bánh ngọt,#fdcb6e
+interest-barbecue,BBQ,#d63031
+interest-reading,Đọc sách,#a29bfe
+interest-novels,Tiểu thuyết,#fd79a8
+interest-science-books,Sách khoa học,#0984e3
+interest-history-books,Sách lịch sử,#6c5ce7
+interest-fiction,Tiểu thuyết giả tưởng,#6c5ce7
+interest-non-fiction,Sách phi hư cấu,#0984e3
+interest-video-games,Video Games,#6c5ce7
+interest-board-games,Board Games,#e17055
+interest-card-games,Bài,#d63031
+interest-esports,Esports,#ff6b6b
+interest-mobile-games,Game mobile,#6c5ce7
+interest-drawing,Vẽ,#fd79a8
+interest-design,Thiết kế,#0984e3
+interest-painting,Sơn màu,#e17055
+interest-calligraphy,Thư pháp,#2d3436
+interest-digital-art,Nghệ thuật số,#6c5ce7
+interest-sculpture,Điêu khắc,#8b4513
+interest-pets,Thú cưng,#fdcb6e
+interest-dogs,Chó,#d63031
+interest-cats,Mèo,#6c5ce7
+interest-birds,Chim,#fdcb6e
+interest-fish,Cá,#00b4d8
+interest-nature,Thiên nhiên,#00b894
+interest-gardening,Làm vườn,#00b894
+interest-environment,Môi trường,#00b894
+interest-astronomy,Thiên văn học,#2d3436
+interest-physics,Vật lý,#0984e3
+interest-mathematics,Toán học,#6c5ce7
+interest-chemistry,Hóa học,#0984e3
+interest-biology,Sinh học,#00b894
+interest-psychology,Tâm lý học,#6c5ce7
+interest-philosophy,Triết học,#2d3436
+interest-history,Lịch sử,#6c5ce7
+interest-geography,Địa lý,#00b894
+interest-chess,Cờ vua,#2d3436
+interest-sudoku,Sudoku,#a29bfe
+interest-puzzles,Giải đố,#fd79a8
+interest-crosswords,Ô chữ,#0984e3
+interest-meditation,Thiền,#6c5ce7
+interest-mindfulness,Chánh niệm,#00b894
+interest-language-learning,Học ngôn ngữ,#0984e3
+interest-writing,Viết lách,#e17055
+interest-blogging,Blogging,#fd79a8
+interest-podcasting,Podcasting,#6c5ce7
+interest-streaming,Streaming,#e10098
+interest-youtube,YouTube,#ff0000
+interest-fitness,Thể dục,#ff6b6b
+interest-nutrition,Dinh dưỡng,#00b894
+interest-health,Sức khỏe,#00b894
+interest-fashion,Thời trang,#fd79a8
+interest-shopping,Mua sắm,#e17055
+interest-collecting,Sưu tầm,#fdcb6e
+interest-cars,Xe hơi,#2d3436
+interest-motorcycles,Xe máy,#d63031
+interest-aviation,Hàng không,#0984e3
+interest-space,Không gian,#2d3436
+interest-robotics,Robot,#6c5ce7
+interest-ai,Trí tuệ nhân tạo,#00b894
+interest-machine-learning,Học máy,#0984e3
+interest-deep-learning,Học sâu,#0984e3
+interest-blockchain,Blockchain,#f7931a
+interest-cryptocurrency,Cryptocurrency,#f7931a
+interest-stocks,Chứng khoán,#00b894
+interest-investing,Đầu tư,#0984e3
+interest-entrepreneurship,Khởi nghiệp,#ff6b6b
+interest-business,Kinh doanh,#2d3436
+interest-marketing,Marketing,#e10098
+interest-sales,Bán hàng,#fd79a8
+interest-education,Giáo dục,#0984e3
+interest-teaching,Giảng dạy,#fdcb6e
+interest-research,Nghiên cứu,#6c5ce7
+interest-volunteering,Tình nguyện,#00b894
+interest-charity,Từ thiện,#ff6b6b
+interest-dancing,Khiêu vũ,#fd79a8
+interest-ballet,Ba lê,#fd79a8
+interest-hiphop-dance,Nhảy Hip Hop,#2d3436
+interest-latin-dance,Nhảy Latin,#d63031
+interest-salsa,Salsa,#d63031
+interest-musical-instruments,Nhạc cụ,#6c5ce7
+interest-ukulele,Ukulele,#fdcb6e
+interest-flute,Sáo,#00b4d8
+interest-saxophone,Saxophone,#d63031
+interest-trumpet,Kèn trumpet,#fdcb6e
+interest-karaoke,Karaoke,#e10098
+interest-comedy,Hài kịch,#fdcb6e
+interest-stand-up-comedy,Stand-up Comedy,#fdcb6e
+interest-magic,Ảo thuật,#2d3436
+interest-escape-rooms,Phòng thoát hiểm,#2d3436
+interest-geocaching,Geocaching,#00b894
+interest-diy,DIY,#e17055
+interest-home-improvement,Cải thiện nhà,#e17055
+interest-woodworking,Mộc,#8b4513
+interest-crafts,Thủ công,#e17055
+interest-sewing,May vá,#fd79a8
+interest-knitting,Đan len,#fdcb6e
+interest-origami,Origami,#0984e3
+interest-lego,LEGO,#ff6b6b
+interest-model-building,Lắp mô hình,#6c5ce7
+interest-comic-books,Truyện tranh,#ff6b6b
+interest-superheroes,Siêu anh hùng,#d63031
+interest-fantasy,Huyền bí,#6c5ce7
+interest-science-fiction,Khoa học viễn tưởng,#0984e3
+interest-mythology,Thần thoại,#a29bfe
+interest-interior-design,Thiết kế nội thất,#e17055
+interest-feng-shui,Phong thủy,#6c5ce7
+interest-home-decorating,Trang trí nhà,#fdcb6e
+interest-landscaping,Landscaping,#00b894
+interest-bonsai,Bonsai,#00b894
+interest-flower-arranging,Cắm hoa,#fd79a8
+interest-sustainable-living,Sống bền vững,#00b894
+interest-minimalism,Tối giản,#2d3436
+interest-organization,Tổ chức,#0984e3
+interest-productivity,Năng suất,#00b894
+interest-time-management,Quản lý thời gian,#0984e3
+interest-project-management,Quản lý dự án,#0984e3
+interest-leadership,Lãnh đạo,#2d3436
+interest-coaching,Coaching,#00b894
+interest-personal-development,Phát triển cá nhân,#6c5ce7
+interest-self-improvement,Tự cải thiện,#6c5ce7
+interest-motivation,Động lực,#ff6b6b
+interest-goal-setting,Đặt mục tiêu,#00b894
+interest-online-courses,Khóa học trực tuyến,#0984e3
+interest-certifications,Chứng chỉ,#0984e3
+interest-lifelong-learning,Học tập suốt đời,#0984e3
+interest-networking,Mạng lưới,#0984e3
+interest-community-building,Xây dựng cộng đồng,#fd79a8
+interest-social-activism,Hoạt động xã hội,#ff6b6b
+interest-human-rights,Quyền con người,#ff6b6b
+interest-climate-change,Biến đổi khí hậu,#00b894
+interest-renewable-energy,Năng lượng tái tạo,#00b894
+interest-solar-power,Năng lượng mặt trời,#fdcb6e
+interest-conservation,Bảo tồn,#00b894
+interest-wildlife-conservation,Bảo tồn động vật hoang dã,#00b894
+interest-biodiversity,Đa dạng sinh học,#00b894
+interest-ecology,Sinh thái học,#00b894
+interest-stargazing,Ngắm sao,#2d3436
+interest-astrophotography,Chụp ảnh thiên văn,#2d3436
+interest-night-photography,Chụp ảnh đêm,#2d3436
+interest-macro-photography,Chụp ảnh macro,#0984e3
+interest-portrait-photography,Chụp ảnh chân dung,#fd79a8
+interest-landscape-photography,Chụp ảnh phong cảnh,#00b894
+interest-spirituality,Tâm linh,#6c5ce7
+interest-religion,Tôn giáo,#6c5ce7
+interest-buddhism,Phật giáo,#fdcb6e
+interest-christianity,Thiên Chúa giáo,#0984e3
+interest-meditation-practice,Thực hành thiền,#6c5ce7
+interest-yoga-practice,Thực hành yoga,#6c5ce7
+interest-creativity,Sáng tạo,#fd79a8
+interest-innovation,Đổi mới,#0984e3
+interest-problem-solving,Giải quyết vấn đề,#0984e3
+interest-critical-thinking,Tư duy phản biện,#0984e3
+interest-analytical-thinking,Tư duy phân tích,#0984e3
+interest-logical-thinking,Tư duy logic,#0984e3
+interest-strategic-thinking,Tư duy chiến lược,#2d3436
+interest-integrity,Chính trực,#00b894
+interest-honesty,Trung thực,#00b894
+interest-responsibility,Trách nhiệm,#2d3436
+interest-persistence,Kiên trì,#ff6b6b
+interest-resilience,Phục hồi,#00b894
+interest-adaptability,Thích ứng,#0984e3
+interest-flexibility,Linh hoạt,#6c5ce7

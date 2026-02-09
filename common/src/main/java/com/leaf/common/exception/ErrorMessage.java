@@ -40,6 +40,7 @@ public enum ErrorMessage {
     USER_PROFILE_NOT_FOUND("USER_PROFILE_NOT_FOUND", "Không tìm thấy thông tin người dùng"),
     FRIEND_REQUEST_ALREADY_SENT("FRIEND_REQUEST_ALREADY_SENT", "Yêu cầu kết bạn đã được gửi"),
     MEDIA_HISTORY_NOT_FOUND("MEDIA_HISTORY_NOT_FOUND", "Không tìm thấy lịch sử media"),
+    INTEREST_TITLE_ALREADY_EXISTS("INTEREST_TITLE_ALREADY_EXISTS", "Tên sở thích đã tồn tại"),
 
     // notification
     SEND_EMAIL_ERROR("SEND_EMAIL_ERROR", "Gửi email thất bại"),

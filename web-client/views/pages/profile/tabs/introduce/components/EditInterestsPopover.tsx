@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { IInterestDTO } from '@/types/profile';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CheckRead } from '@solar-icons/react-perf/Outline';
-import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import {
   Popover,
   PopoverTrigger,
@@ -16,11 +15,15 @@ import {
 import { hexToRgba } from '@/utils/common';
 import { Input } from '@/components/ui/input';
 import { Magnifer } from '@solar-icons/react-perf/Outline';
-import { XIcon } from '@/components/animate-ui/icons';
+import { useInterestInfiniteQuery } from '@/services/queries/profile';
+import useDebounce from '@/hooks/use-debounce';
+import { Loader2Icon } from '@/components/animate-ui/icons';
+import { CreateInterestDialog } from './CreateInterestDialog';
+import { AddCircle } from '@solar-icons/react-perf/category/style/Bold';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
 interface IEditInterestsPopoverProps {
   selectedInterests: IInterestDTO[];
-  allInterests: IInterestDTO[];
   onSave: (interestIds: string[]) => void;
   onCancel?: () => void;
   trigger: React.ReactNode;
@@ -28,17 +31,48 @@ interface IEditInterestsPopoverProps {
 
 export const EditInterestsPopover = ({
   selectedInterests,
-  allInterests,
   onSave,
   onCancel,
   trigger,
 }: IEditInterestsPopoverProps) => {
   const { t } = useTranslation('profile');
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
     () => new Set(selectedInterests.map(i => i.id)),
   );
+  const [customInterests, setCustomInterests] = useState<IInterestDTO[]>([]);
   const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const loadMoreRef = useRef<HTMLButtonElement>(null);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const previousSearchTextRef = useRef<string>('');
+
+  const {
+    data: interestsData,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isFetching,
+  } = useInterestInfiniteQuery(debouncedSearchText || undefined, isOpen);
+
+  // Track if we're fetching due to search text change
+  const isSearching = useMemo(() => {
+    const isSearchTextChanged = previousSearchTextRef.current !== debouncedSearchText;
+    if (isSearchTextChanged) {
+      previousSearchTextRef.current = debouncedSearchText;
+    }
+    return isFetching && isSearchTextChanged && debouncedSearchText !== '';
+  }, [isFetching, debouncedSearchText]);
+
+  const allInterests = useMemo(() => {
+    if (!interestsData?.pages) return customInterests;
+    const serverInterests = interestsData.pages.flatMap(page => page.data.data);
+    // Merge server interests with custom interests, avoiding duplicates
+    const serverInterestIds = new Set(serverInterests.map(i => i.id));
+    const uniqueCustomInterests = customInterests.filter(ci => !serverInterestIds.has(ci.id));
+    return [...serverInterests, ...uniqueCustomInterests];
+  }, [interestsData, customInterests]);
 
   // Reset selected when popover opens
   useEffect(() => {
@@ -46,16 +80,38 @@ export const EditInterestsPopover = ({
       const newSelectedIds = new Set(selectedInterests.map(i => i.id));
       setSelectedIds(newSelectedIds);
       setSearchText('');
+      previousSearchTextRef.current = '';
+      setCustomInterests([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  // Filter interests based on search
-  const filteredInterests = useMemo(() => {
-    if (!searchText.trim()) return allInterests;
-    const lowerSearch = searchText.toLowerCase();
-    return allInterests.filter(interest => interest.title.toLowerCase().includes(lowerSearch));
-  }, [allInterests, searchText]);
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage],
+  );
+
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element || !isOpen) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0,
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.unobserve(element);
+    };
+  }, [handleObserver, isOpen]);
 
   const toggleInterest = (interestId: string) => {
     setSelectedIds(prev => {
@@ -69,8 +125,23 @@ export const EditInterestsPopover = ({
     });
   };
 
+  const handleCreateCustomInterest = (title: string, color: string) => {
+    // Generate a temporary ID for custom interest
+    const tempId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const newInterest: IInterestDTO = {
+      id: tempId,
+      title,
+      color,
+    };
+
+    setCustomInterests(prev => [...prev, newInterest]);
+    setSelectedIds(prev => new Set([...prev, tempId]));
+  };
+
   const handleSave = () => {
-    onSave(Array.from(selectedIds));
+    // Get all selected interest IDs (both server and custom)
+    const allSelectedIds = Array.from(selectedIds);
+    onSave(allSelectedIds);
     setIsOpen(false);
   };
 
@@ -89,68 +160,77 @@ export const EditInterestsPopover = ({
         {trigger}
       </PopoverTrigger>
       <PopoverPortal>
-        <PopoverPositioner>
+        <PopoverPositioner sideOffset={8} align="start">
           <PopoverPopup
+            initial={{ opacity: 0, y: -4, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -2, scale: 0.98 }}
             transition={{
               type: 'tween',
+              duration: 0.15,
+              ease: 'easeOut',
             }}
-            className={cn(
-              'w-[85vw] max-w-[450px] rounded-xl border border-border/50',
-              'bg-popover shadow-xl',
-              'p-0 overflow-hidden',
-              'mt-1',
-            )}
+            style={{
+              transformOrigin: 'top center',
+              willChange: 'transform, opacity',
+            }}
+            className="overflow-hidden rounded-md border border-input bg-popover w-[85vw] max-w-md"
           >
-            {/* Header - Social Media Style */}
-            <div className="relative flex items-center justify-center px-4 py-3 border-b border-border/50">
-              <h3 className="text-base font-semibold text-foreground">
-                {t('introduce.edit_interests', 'Edit Interests')}
-              </h3>
-              <IconButton
-                variant="ghost"
-                onClick={handleCancel}
-                className="absolute right-2 size-8 hover:bg-muted/80 rounded-full transition-colors duration-200 cursor-pointer"
-                title={t('common:button.close')}
-              >
-                <XIcon className="size-5 text-foreground/70" />
-              </IconButton>
-            </div>
-
-            {/* Search - Integrated in Header Area */}
-            <div className="px-4 pt-3 pb-2">
+            <div className="px-4 pt-3 pb-2 space-y-2">
               <div className="relative">
                 <Input
                   icon={<Magnifer className="size-4 text-foreground/50" />}
                   value={searchText}
+                  autoFocus={false}
                   onChange={e => setSearchText(e.target.value)}
-                  placeholder={t('introduce.search_interests', 'Search interests...')}
-                  className={cn(
-                    'h-9 rounded-lg border-border/50',
-                    'bg-muted/50 focus:bg-background',
-                    'transition-colors duration-200',
-                    'placeholder:text-foreground/40',
-                  )}
+                  placeholder={t('profile:search_interests', 'Search interests...')}
+                  className={cn('h-9 rounded-lg')}
+                  id="search_interests"
+                  endIcon={
+                    isSearching ? <Loader2Icon className="animate-spin size-4 p-0.5" /> : undefined
+                  }
                 />
               </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCreateDialogOpen(true)}
+                className="w-full justify-center gap-2"
+              >
+                <AddCircle className="size-4" />
+                <span>{t('profile:create_custom_interest', 'Create Custom Interest')}</span>
+              </Button>
             </div>
 
-            {/* Interests Grid */}
-            <div className="min-h-[200px] max-h-[400px] overflow-y-auto p-4">
-              {filteredInterests.length === 0 ? (
+            <div
+              ref={parentRef}
+              className="min-h-[200px] max-h-[400px] overflow-y-auto p-4"
+              style={{ scrollbarGutter: 'stable' }}
+            >
+              {allInterests.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <p className="text-sm">
                     {searchText
-                      ? t('introduce.no_interests_found', 'No interests found')
-                      : t('introduce.no_interests_available', 'No interests available')}
+                      ? t('profile:no_interests_found', 'No interests found')
+                      : t('profile:no_interests_available', 'No interests available')}
                   </p>
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-1.5">
-                  {filteredInterests.map(interest => {
+                  {allInterests.map((interest, index) => {
+                    if (!interest) return null;
+
                     const isSelected = selectedIds.has(interest.id);
+                    const isLastItem = index === allInterests.length - 1;
                     return (
                       <button
                         key={interest.id}
+                        ref={el => {
+                          if (isLastItem && el) {
+                            loadMoreRef.current = el;
+                          }
+                        }}
                         onClick={() => toggleInterest(interest.id)}
                         className={cn(
                           'group relative flex items-center gap-1.5 rounded-full px-2.5 py-1',
@@ -191,7 +271,7 @@ export const EditInterestsPopover = ({
                         />
                         <span
                           className={cn(
-                            'text-xs font-medium leading-tight transition-colors duration-200',
+                            'text-xs font-medium leading-none transition-colors duration-200',
                             isSelected
                               ? 'text-foreground'
                               : 'text-foreground/70 group-hover:text-foreground',
@@ -217,23 +297,27 @@ export const EditInterestsPopover = ({
                       </button>
                     );
                   })}
+                  {isFetchingNextPage && (
+                    <div className="w-full flex justify-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
-            {/* Footer - Social Media Style */}
             <div className="flex items-center justify-between px-4 py-3 border-t border-border/50 bg-muted/20">
               <div className="text-sm text-muted-foreground">
                 {selectedCount > 0 ? (
                   <span className="font-medium">
                     {selectedCount}{' '}
                     {selectedCount === 1
-                      ? t('introduce.interest_selected', 'interest selected')
-                      : t('introduce.interests_selected', 'interests selected')}
+                      ? t('profile:interest_selected', 'interest selected')
+                      : t('profile:interests_selected', 'interests selected')}
                   </span>
                 ) : (
                   <span className="text-foreground/60">
-                    {t('introduce.select_interests', 'Select your interests')}
+                    {t('profile:select_interests', 'Select your interests')}
                   </span>
                 )}
               </div>
@@ -269,6 +353,12 @@ export const EditInterestsPopover = ({
           </PopoverPopup>
         </PopoverPositioner>
       </PopoverPortal>
+
+      <CreateInterestDialog
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onCreate={handleCreateCustomInterest}
+      />
     </Popover>
   );
 };

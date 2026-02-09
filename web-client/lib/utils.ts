@@ -53,7 +53,13 @@ export function detectLocale(): string {
 }
 
 export function formatDateFromISOString(dateString: string): string {
+  if (!dateString) {
+    return '';
+  }
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return '';
+  }
 
   const res = new Intl.DateTimeFormat(detectLocale(), {
     day: '2-digit',

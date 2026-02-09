@@ -6,18 +6,41 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import UserProfileCard from '@/components/UserProfileCard';
 import { getValidImageSrc } from '@/lib/image-utils';
+import { useState, useEffect, useRef } from 'react';
 
 const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { user } = useNavigationLayout();
   const router = useRouter();
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const prevIsCollapsedRef = useRef<boolean | null>(null);
+  const hasInitializedRef = useRef(false);
 
   const avatarSize = 40;
+
+  useEffect(() => {
+    if (!hasInitializedRef.current) {
+      prevIsCollapsedRef.current = isCollapsed;
+      hasInitializedRef.current = true;
+      return;
+    }
+
+    if (prevIsCollapsedRef.current !== isCollapsed) {
+      prevIsCollapsedRef.current = isCollapsed;
+      setTimeout(() => {
+        setShouldAnimate(true);
+      }, 0);
+    }
+  }, [isCollapsed]);
+
+  const transitionClass = shouldAnimate
+    ? 'transition-[width,height,padding,margin,border-radius] duration-300 ease-out'
+    : '';
 
   return (
     <div
       className={cn(
         'custom-bg-1 w-full  block rounded-lg',
-        'transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
+        transitionClass,
         isCollapsed ? 'p-2' : 'p-2 lg:p-4',
       )}
     >
@@ -26,7 +49,7 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
         onClick={() => router.replace(`/user/@${user?.auth?.username}`)}
         className={cn(
           'group flex flex-col gap-2 rounded-lg cursor-pointer w-full',
-          'transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
+          transitionClass,
           isCollapsed
             ? 'p-1 bg-transparent my-1 dark:bg-transparent pl-2'
             : 'p-4 dark:bg-gray-700 bg-gray-100 justify-start items-start',
@@ -40,24 +63,17 @@ const NavigationHeader = ({ isCollapsed }: { isCollapsed: boolean }) => {
           responsive
           hideInfo={isCollapsed}
           size={avatarSize}
-          className={cn(
-            'transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
-            'justify-start w-full',
-          )}
+          className={cn(transitionClass, 'justify-start w-full')}
         />
 
         <div
           className={cn(
-            'w-full overflow-hidden transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
+            'w-full overflow-hidden',
+            transitionClass,
             isCollapsed ? 'max-h-0 opacity-0 hidden!' : 'max-h-[80px] block! opacity-100',
           )}
         >
-          <div
-            className={cn(
-              'w-full transition-[width,height,padding,margin,border-radius] duration-300 ease-out',
-              isCollapsed ? 'pt-0' : 'pt-3',
-            )}
-          >
+          <div className={cn('w-full', transitionClass, isCollapsed ? 'pt-0' : 'pt-3')}>
             <div className="text-sm w-full flex gap-2 items-center justify-between">
               <div className="flex flex-col">
                 <strong className="font-bold">2.3k</strong>

@@ -11,13 +11,13 @@ const IntroduceSkeleton = ({ activeTab }: IIntroduceSkeletonProps) => {
   const fields = NAV_INTRODUCE_MENU[activeTab] ?? [];
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full min-w-0 overflow-x-hidden">
       {fields.map(field => (
         <div
           key={field}
-          className="flex items-start gap-3 py-2.5 px-3 -mx-3 rounded-lg border border-transparent"
+          className="flex items-start gap-3 py-2.5 px-3 -mx-3 rounded-lg border border-transparent min-w-0"
         >
-          <Skeleton className="size-5 rounded-full mt-0.5" />
+          <Skeleton className="size-5 rounded-full mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0 flex flex-col gap-1">
             <Skeleton className="h-3 w-24" />
             <Skeleton className="h-4 w-40" />

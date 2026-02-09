@@ -3,7 +3,10 @@ package com.leaf.profile.service;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchRequest;
 import com.leaf.common.dto.search.SearchResponse;
+import com.leaf.common.exception.ApiException;
+import com.leaf.common.exception.ErrorMessage;
 import com.leaf.profile.domain.Interest;
+import com.leaf.profile.dto.CreateInterestReq;
 import com.leaf.profile.dto.InterestDTO;
 import com.leaf.profile.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +39,15 @@ public class InterestService {
             .count(content.size())
             .build();
         return new SearchResponse<>(content, pageResponse);
+    }
+
+    @Transactional
+    public InterestDTO createInterest(CreateInterestReq req) {
+        if (interestRepository.existsByTitle(req.getTitle())) {
+            throw new ApiException(ErrorMessage.INTEREST_TITLE_ALREADY_EXISTS);
+        }
+        Interest interest = Interest.builder().title(req.getTitle()).color(req.getColor()).build();
+        var saved = interestRepository.save(interest);
+        return InterestDTO.toInterestDTO(saved);
     }
 }

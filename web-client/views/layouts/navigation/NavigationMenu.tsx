@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import {
@@ -50,9 +50,27 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const { t } = useTranslation('navigation');
   const pathname = usePathname();
   const [tooltipSide, setTooltipSide] = useState<'top' | 'right' | null>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const prevIsCollapsedRef = useRef<boolean | null>(null);
+  const hasInitializedRef = useRef(false);
   const { width } = useViewport();
 
   const isActive = (href: string) => pathname === href;
+
+  useEffect(() => {
+    if (!hasInitializedRef.current) {
+      prevIsCollapsedRef.current = isCollapsed;
+      hasInitializedRef.current = true;
+      return;
+    }
+
+    if (prevIsCollapsedRef.current !== isCollapsed) {
+      prevIsCollapsedRef.current = isCollapsed;
+      setTimeout(() => {
+        setShouldAnimate(true);
+      }, 0);
+    }
+  }, [isCollapsed]);
 
   useEffect(() => {
     const updateTooltipSide = () => {
@@ -74,11 +92,16 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
     updateTooltipSide();
   }, [width, isCollapsed]);
 
+  const transitionClass = shouldAnimate
+    ? 'transition-[padding,width,opacity,margin] duration-300 ease-out'
+    : '';
+
   return (
     <div className="lg:flex flex md:flex-col flex-row gap-1 items-start justify-center group w-full rounded-lg md:mt-0 mt-0 md:mb-0 mb-2">
       <div
         className={cn(
-          'md:w-full w-[256px] custom-bg-1 md:border-none border lg:flex  flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg transition-[padding] duration-300 ease-out',
+          'md:w-full w-[256px] custom-bg-1 md:border-none border lg:flex  flex md:flex-col flex-row p-2 gap-1 items-start justify-center rounded-lg',
+          transitionClass,
           !isCollapsed && 'lg:p-3 lg:w-full',
         )}
       >
@@ -95,7 +118,8 @@ const NavigationMenu = ({ isCollapsed }: { isCollapsed: boolean }) => {
               </span>
               <span
                 className={cn(
-                  'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70 overflow-hidden transition-[width,opacity,margin,padding] duration-300 ease-out',
+                  'whitespace-nowrap ml-3 text-sm lg:block hidden text-foreground/70 overflow-hidden',
+                  transitionClass,
                   isActive(item.href) ? 'text-primary font-black' : 'font-bold',
                   isCollapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[200px] opacity-100',
                 )}

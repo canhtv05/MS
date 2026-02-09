@@ -8,7 +8,6 @@ import { PrivacyLevel } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'next/navigation';
 import NavIntroduce from './NavIntroduce';
-import { Separator } from '@/components/ui/separator';
 import MainIntroduce from './MainIntroduce';
 import { Skeleton } from '@/components/ui/skeleton';
 import IntroduceSkeleton from './IntroduceSkeleton';
@@ -50,7 +49,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
       : 'basic_info';
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 items-start">
+    <div className="flex flex-col lg:flex-row gap-6 items-start w-full min-w-0 overflow-x-hidden">
       <div className="flex flex-col gap-(--sp-layout) flex-1 w-full lg:w-auto min-w-0">
         <Show
           when={
@@ -65,7 +64,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
           }
         >
           <Wrapper title={t('profile:introduce')}>
-            <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch">
+            <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch w-full min-w-0 overflow-x-hidden">
               {isLoading ? (
                 <>
                   <div className="min-w-[250px] shrink-0">
@@ -77,7 +76,6 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                       ))}
                     </div>
                   </div>
-                  <Separator orientation="vertical" className="w-px self-stretch" />
                   <div className="flex-1 w-full">
                     <IntroduceSkeleton activeTab={activeTab} />
                   </div>
@@ -87,8 +85,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                   <div className="min-w-[250px] shrink-0">
                     <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
-                  <div className="w-full lg:w-px h-px bg-border"></div>
-                  <div className="flex-1 w-full">
+                  <div className="flex-1 w-full min-w-0 overflow-x-hidden">
                     <MainIntroduce
                       menu={NAV_INTRODUCE_MENU}
                       data={data}

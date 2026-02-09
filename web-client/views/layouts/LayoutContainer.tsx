@@ -17,7 +17,7 @@ const LayoutContainer = ({ children, navigation, sidebar, className }: ILayoutCo
   return (
     <div
       className={cn(
-        'flex relative items-start justify-center custom-bg-2 pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 w-full box-border',
+        'flex relative items-start justify-center custom-bg-2 pt-[calc(var(--header-height)+var(--sp-layout))] md:px-(--sp-layout) px-0 w-full box-border min-w-0 overflow-x-hidden max-w-full',
         className,
       )}
     >
@@ -40,7 +40,7 @@ const LayoutContainer = ({ children, navigation, sidebar, className }: ILayoutCo
       </Show>
       <main
         className={cn(
-          'relative w-full h-full min-h-[calc(100vh-var(--header-height)-var(--sp-layout))] flex-1 md:mb-(--sp-layout) mb-17 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout)',
+          'relative w-full h-full min-h-[calc(100vh-var(--header-height)-var(--sp-layout))] flex-1 lg:px-(--sp-layout) pl-(--sp-layout) md:pr-0! pr-(--sp-layout) md:pb-(--sp-layout) pb-17 min-w-0 overflow-x-hidden max-w-full',
         )}
       >
         {children}
