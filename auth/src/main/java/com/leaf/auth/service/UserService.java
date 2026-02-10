@@ -182,7 +182,11 @@ public class UserService {
             UserCreatedEvent.builder().userId(user.getUsername()).fullName(request.getFullname()).build()
         );
 
-        return VerifyEmailTokenDTO.newBuilder().setUsername(user.getUsername()).setEmail(request.getEmail()).build();
+        return VerifyEmailTokenDTO.newBuilder()
+            .setUsername(user.getUsername())
+            .setEmail(request.getEmail())
+            .setFullname(request.getFullname())
+            .build();
     }
 
     @Transactional

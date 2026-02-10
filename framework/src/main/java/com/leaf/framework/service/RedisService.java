@@ -35,9 +35,9 @@ public class RedisService {
         return String.format("%s:user:%s:%s", envRunning, username, channel);
     }
 
-    public String getKeyVerification(String token) {
+    public String getKeyVerification(String userId) {
         String envRunning = environment.getActiveProfiles()[0];
-        return String.format("%s:verify:email:%s", envRunning, token);
+        return String.format("%s:verify:email:%s", envRunning, userId);
     }
 
     public String getKeyForgotPassword(String token) {

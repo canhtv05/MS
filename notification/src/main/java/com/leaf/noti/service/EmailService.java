@@ -13,6 +13,8 @@ import com.leaf.noti.util.TokenUtil;
 import io.jsonwebtoken.Jwts;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -50,41 +52,47 @@ public class EmailService {
             Date expiredAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10min
 
             String token = tokenUtil.generateToken(event, expiredAt);
-            redisService.set(redisService.getKeyVerification(token), event.getUsername(), 10, TimeUnit.MINUTES);
-            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
+            String encryptedToken = tokenUtil.encryptToken(token);
+            String urlEncodedToken = URLEncoder.encode(encryptedToken, StandardCharsets.UTF_8);
+            redisService.set(
+                redisService.getKeyVerification(event.getUsername()),
+                encryptedToken,
+                10,
+                TimeUnit.MINUTES
+            );
 
-            String jti = Jwts.parserBuilder()
+            var claims = Jwts.parserBuilder()
                 .setSigningKey(tokenUtil.getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getId();
+                .getBody();
+            String jti = claims.getId();
+            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
 
-            if (Objects.isNull(logs)) {
-                emailVerificationLogsRepository.save(
-                    EmailVerificationLogs.builder()
-                        .userId(event.getUsername())
-                        .token(token)
-                        .verifiedAt(null)
-                        .jti(jti)
-                        .expiredAt(expiredAt.toInstant())
-                        .email(event.getTo())
-                        .verificationStatus(VerificationStatus.PENDING)
-                        .build()
-                );
+            if (logs == null) {
+                logs = EmailVerificationLogs.builder()
+                    .userId(event.getUsername())
+                    .fullname(event.getFullName())
+                    .email(event.getTo())
+                    .token(encryptedToken)
+                    .jti(jti)
+                    .expiredAt(expiredAt.toInstant())
+                    .verificationStatus(VerificationStatus.PENDING)
+                    .build();
+                emailVerificationLogsRepository.save(logs);
             } else {
-                logs.setToken(token);
+                logs.setToken(encryptedToken);
+                logs.setJti(jti);
                 logs.setExpiredAt(expiredAt.toInstant());
                 logs.setVerificationStatus(VerificationStatus.PENDING);
                 logs.setVerifiedAt(null);
-                logs.setJti(jti);
                 emailVerificationLogsRepository.save(logs);
             }
 
             Context context = new Context();
             context.setVariable("username", event.getUsername());
-            context.setVariable("token", token);
-            context.setVariable("verificationUrl", emailProperties.getVerifyUrl() + "?token=" + token);
+            context.setVariable("token", encryptedToken);
+            context.setVariable("verificationUrl", emailProperties.getVerifyUrl() + "?token=" + urlEncodedToken);
 
             String body = templateEngine.process("email-verification", context);
 

@@ -18,6 +18,7 @@
     "loading": "Đang gửi lại email xác thực...",
     "resend_verify_email_success": "Email xác thực đã được gửi lại thành công!",
     "resend_verify_email_failed": "Gửi lại email xác thực thất bại. Vui lòng thử lại.",
-    "resend_verify_email_error": "Đã có lỗi xảy ra trong quá trình gửi lại email xác thực. Vui lòng thử lại sau."
+    "resend_verify_email_error": "Đã có lỗi xảy ra trong quá trình gửi lại email xác thực. Vui lòng thử lại sau.",
+    "resend_verify_email_already_sent": "Email xác thực đã được gửi lại thành công!"
   }
 }

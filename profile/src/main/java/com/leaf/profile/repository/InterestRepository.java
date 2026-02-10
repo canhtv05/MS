@@ -1,6 +1,7 @@
 package com.leaf.profile.repository;
 
 import com.leaf.profile.domain.Interest;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -18,6 +19,7 @@ public interface InterestRepository extends Neo4jRepository<Interest, String> {
            OR toLower(i.title) CONTAINS toLower($searchText)
            OR toLower(i.code) CONTAINS toLower($searchText)
         RETURN i
+        ORDER BY i.created_date DESC
         SKIP $skip
         LIMIT $limit
         """,
@@ -52,4 +54,12 @@ public interface InterestRepository extends Neo4jRepository<Interest, String> {
         @Param("createdBy") String createdBy,
         @Param("modifiedBy") String modifiedBy
     );
+
+    @Query(
+        """
+        MATCH (u:user_profile_introduce {user_id: $userId})-[:INTERESTED_IN]->(i:interest)
+        RETURN i
+        """
+    )
+    List<Interest> findInterestsByUserId(@Param("userId") String userId);
 }

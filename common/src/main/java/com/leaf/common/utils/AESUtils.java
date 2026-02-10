@@ -73,6 +73,13 @@ public class AESUtils {
     }
 
     public static Key generateKey(String key) {
-        return new SecretKeySpec(key.getBytes(), AES);
+        try {
+            byte[] hash = digest.digest(key.getBytes(StandardCharsets.UTF_8));
+            byte[] aesKey = new byte[AES_KEY_SIZE / 8];
+            System.arraycopy(hash, 0, aesKey, 0, aesKey.length);
+            return new SecretKeySpec(aesKey, AES);
+        } catch (Exception e) {
+            return new SecretKeySpec(key.getBytes(), AES);
+        }
     }
 }

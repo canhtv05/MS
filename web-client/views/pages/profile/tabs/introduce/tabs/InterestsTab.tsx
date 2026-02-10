@@ -40,7 +40,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
   if (!selectedInterests || selectedInterests.length === 0) {
     return (
       <div className="w-full">
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <p className="text-sm font-medium text-foreground/90">
               {t('navigation.interests', 'Interests')}
@@ -60,12 +60,8 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
               onSave={handleSaveInterests}
               trigger={
                 <IconButton
-                  variant="outline"
-                  className={cn(
-                    'transition-colors duration-200',
-                    'hover:bg-primary hover:text-primary-foreground',
-                    'cursor-pointer',
-                  )}
+                  variant="default"
+                  className={cn('transition-colors duration-200', 'cursor-pointer')}
                   title={t('profile:add_interests', 'Add Interests')}
                 >
                   <PenNewSquare className="size-4" />

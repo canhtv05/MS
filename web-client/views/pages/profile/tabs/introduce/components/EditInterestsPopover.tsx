@@ -19,6 +19,8 @@ import { useInterestInfiniteQuery } from '@/services/queries/profile';
 import useDebounce from '@/hooks/use-debounce';
 import { Loader2Icon } from '@/components/animate-ui/icons';
 import { CreateInterestDialog } from './CreateInterestDialog';
+import Loading from '@/components/Loading';
+import Show from '@/components/Show';
 import { AddCircle } from '@solar-icons/react-perf/category/style/Outline';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { useProfileMutation } from '@/services/mutations/profile';
@@ -71,10 +73,16 @@ export const EditInterestsPopover = ({
   const allInterests = useMemo(() => {
     if (!interestsData?.pages) return customInterests;
     const serverInterests = interestsData.pages.flatMap(page => page.data.data);
-    // Merge server interests with custom interests, avoiding duplicates
-    const serverInterestIds = new Set(serverInterests.map(i => i.id));
-    const uniqueCustomInterests = customInterests.filter(ci => !serverInterestIds.has(ci.id));
-    return [...serverInterests, ...uniqueCustomInterests];
+    const seenIds = new Set<string>();
+    const uniqueServerInterests = serverInterests.filter(i => {
+      if (seenIds.has(i.id)) {
+        return false;
+      }
+      seenIds.add(i.id);
+      return true;
+    });
+    const uniqueCustomInterests = customInterests.filter(ci => !seenIds.has(ci.id));
+    return [...uniqueServerInterests, ...uniqueCustomInterests];
   }, [interestsData, customInterests]);
 
   // Reset selected when popover opens
@@ -214,102 +222,123 @@ export const EditInterestsPopover = ({
               className="max-h-[250px] overflow-y-auto p-4"
               style={{ scrollbarGutter: 'stable' }}
             >
-              {allInterests.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p className="text-sm">
-                    {searchText
-                      ? t('profile:no_interests_found', 'No interests found')
-                      : t('profile:no_interests_available', 'No interests available')}
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-1.5">
-                  {allInterests.map((interest, index) => {
-                    if (!interest) return null;
+              <Show
+                when={isFetching && allInterests.length === 0 && !debouncedSearchText}
+                fallback={
+                  <Show
+                    when={allInterests.length > 0}
+                    fallback={
+                      <div className="text-center py-8 text-muted-foreground">
+                        <p className="text-sm">
+                          {searchText
+                            ? t('profile:no_interests_found', 'No interests found')
+                            : t('profile:no_interests_available', 'No interests available')}
+                        </p>
+                      </div>
+                    }
+                  >
+                    <div className="flex flex-wrap gap-1.5">
+                      {allInterests.map((interest, index) => {
+                        if (!interest) return null;
 
-                    const isSelected = selectedIds.has(interest.id);
-                    const isLastItem = index === allInterests.length - 1;
-                    return (
-                      <button
-                        key={interest.code}
-                        ref={el => {
-                          if (isLastItem && el) {
-                            loadMoreRef.current = el;
-                          }
-                        }}
-                        onClick={() => toggleInterest(interest.id)}
-                        className={cn(
-                          'group relative flex items-center gap-1.5 rounded-full px-2.5 py-1',
-                          'border transition-colors duration-200 cursor-pointer',
-                          'hover:opacity-90',
-                          isSelected ? 'shadow-sm' : 'border-border/50 bg-background',
-                        )}
-                        style={
-                          isSelected
-                            ? {
-                                borderColor: hexToRgba(interest.color, 0.4),
-                                backgroundColor: hexToRgba(interest.color, 0.1),
+                        const isSelected = selectedIds.has(interest.id);
+                        const isLastItem = index === allInterests.length - 1;
+                        return (
+                          <button
+                            key={interest.code}
+                            ref={el => {
+                              if (isLastItem && el) {
+                                loadMoreRef.current = el;
                               }
-                            : undefined
-                        }
-                        onMouseEnter={e => {
-                          if (!isSelected) {
-                            e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.3);
-                            e.currentTarget.style.backgroundColor = hexToRgba(interest.color, 0.05);
-                          } else {
-                            e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.5);
-                            e.currentTarget.style.backgroundColor = hexToRgba(interest.color, 0.15);
-                          }
-                        }}
-                        onMouseLeave={e => {
-                          if (!isSelected) {
-                            e.currentTarget.style.borderColor = '';
-                            e.currentTarget.style.backgroundColor = '';
-                          } else {
-                            e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.4);
-                            e.currentTarget.style.backgroundColor = hexToRgba(interest.color, 0.1);
-                          }
-                        }}
-                      >
-                        <div
-                          className="size-2 rounded-full shrink-0 transition-colors duration-200"
-                          style={{ backgroundColor: interest.color }}
-                        />
-                        <span
-                          className={cn(
-                            'text-xs font-medium leading-none transition-colors duration-200',
-                            isSelected
-                              ? 'text-foreground'
-                              : 'text-foreground/70 group-hover:text-foreground',
-                          )}
-                          style={isSelected ? { color: interest.color } : undefined}
-                        >
-                          {interest.title}
-                        </span>
-                        {isSelected && (
-                          <div
+                            }}
+                            onClick={() => toggleInterest(interest.id)}
                             className={cn(
-                              'ml-0.5 flex items-center justify-center shrink-0',
-                              'size-3 rounded-full transition-all duration-200',
-                              'bg-primary text-white',
+                              'group relative flex items-center gap-1.5 rounded-full px-2.5 py-1',
+                              'border transition-colors duration-200 cursor-pointer',
+                              'hover:opacity-90',
+                              isSelected ? 'shadow-sm' : 'border-border/50 bg-background',
                             )}
-                            style={{
-                              backgroundColor: interest.color,
+                            style={
+                              isSelected
+                                ? {
+                                    borderColor: hexToRgba(interest.color, 0.4),
+                                    backgroundColor: hexToRgba(interest.color, 0.1),
+                                  }
+                                : undefined
+                            }
+                            onMouseEnter={e => {
+                              if (!isSelected) {
+                                e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.3);
+                                e.currentTarget.style.backgroundColor = hexToRgba(
+                                  interest.color,
+                                  0.05,
+                                );
+                              } else {
+                                e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.5);
+                                e.currentTarget.style.backgroundColor = hexToRgba(
+                                  interest.color,
+                                  0.15,
+                                );
+                              }
+                            }}
+                            onMouseLeave={e => {
+                              if (!isSelected) {
+                                e.currentTarget.style.borderColor = '';
+                                e.currentTarget.style.backgroundColor = '';
+                              } else {
+                                e.currentTarget.style.borderColor = hexToRgba(interest.color, 0.4);
+                                e.currentTarget.style.backgroundColor = hexToRgba(
+                                  interest.color,
+                                  0.1,
+                                );
+                              }
                             }}
                           >
-                            <CheckRead className="size-2" />
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
-                  {isFetchingNextPage && (
-                    <div className="w-full flex justify-center py-4">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+                            <div
+                              className="size-2 rounded-full shrink-0 transition-colors duration-200"
+                              style={{ backgroundColor: interest.color }}
+                            />
+                            <span
+                              className={cn(
+                                'text-xs font-medium leading-none transition-colors duration-200',
+                                isSelected
+                                  ? 'text-foreground'
+                                  : 'text-foreground/70 group-hover:text-foreground',
+                              )}
+                              style={isSelected ? { color: interest.color } : undefined}
+                            >
+                              {interest.title}
+                            </span>
+                            {isSelected && (
+                              <div
+                                className={cn(
+                                  'ml-0.5 flex items-center justify-center shrink-0',
+                                  'size-3 rounded-full transition-all duration-200',
+                                  'bg-primary text-white',
+                                )}
+                                style={{
+                                  backgroundColor: interest.color,
+                                }}
+                              >
+                                <CheckRead className="size-2" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                      <Show when={isFetchingNextPage}>
+                        <div className="w-full flex justify-center py-4">
+                          <Loading size="sm" />
+                        </div>
+                      </Show>
                     </div>
-                  )}
+                  </Show>
+                }
+              >
+                <div className="flex items-center justify-center py-12">
+                  <Loading size="md" />
                 </div>
-              )}
+              </Show>
             </div>
 
             <div className="flex items-center justify-between px-4 py-3 border-t border-border/50 bg-muted/20">

@@ -84,7 +84,9 @@ function Input({
   };
 
   const isInvalid = (validate || required) && touched && isEmpty;
-  const shouldShowClear = Boolean(showClear && hasContent && !isInvalid);
+  const hasError = Boolean(errorText);
+  const shouldShowError = isInvalid || hasError;
+  const shouldShowClear = Boolean(showClear && hasContent && !shouldShowError);
 
   React.useEffect(() => {
     if (value === undefined) return;
@@ -126,7 +128,7 @@ function Input({
             'flex items-center relative autofill:bg-transparent! rounded-xl border border-input bg-background group',
             'focus-within:transition-all focus-within:duration-200 focus-within:ease-in-out',
             'focus-within:border-purple-300 focus-within:ring-1 focus-within:ring-purple-300/30',
-            isInvalid && 'border-red-500 ring-1 ring-red-500/20',
+            shouldShowError && 'border-red-500 ring-1 ring-red-500/20',
             className,
             classNameIcon,
           )}
@@ -163,7 +165,7 @@ function Input({
               endIcon && 'pr-1!',
               icon && !endIcon && 'pr-3!',
               !icon && endIcon && 'pl-3!',
-              isInvalid && 'border-red-500',
+              shouldShowError && 'border-red-500',
               inputSize === 'lg' && 'p-3',
               inputSize === 'sm' && 'px-3 py-1',
             )}
@@ -202,7 +204,7 @@ function Input({
             </div>
           )}
 
-          {isEmpty && !!validate && (
+          {shouldShowError && (
             <DangerCircle
               className={cn(
                 'absolute top-1/2 -translate-y-1/2 size-3.5 text-red-500',
@@ -227,7 +229,7 @@ function Input({
           )}
         </div>
       </div>
-      {isInvalid && (
+      {shouldShowError && (
         <span className="text-[12px] text-red-500 font-light text-left">
           {errorText || 'Thông tin bắt buộc'}
         </span>

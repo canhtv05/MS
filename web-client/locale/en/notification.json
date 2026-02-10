@@ -18,6 +18,7 @@
     "loading": "Resending verification email...",
     "resend_verify_email_success": "Verification email has been sent successfully!",
     "resend_verify_email_failed": "Failed to resend verification email. Please try again.",
-    "resend_verify_email_error": "An error occurred during the process of resending verification email. Please try again later."
+    "resend_verify_email_error": "An error occurred during the process of resending verification email. Please try again later.",
+    "resend_verify_email_already_sent": "Verification email has been sent successfully!"
   }
 }

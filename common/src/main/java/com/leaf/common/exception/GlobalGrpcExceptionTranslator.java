@@ -14,7 +14,13 @@ public class GlobalGrpcExceptionTranslator {
 
     @GrpcExceptionHandler(ApiException.class)
     public StatusRuntimeException handleApiException(ApiException ex) {
-        return Status.INTERNAL.withDescription(ex.getMessage()).asRuntimeException();
+        ErrorMessage error = ex.getErrorMessage();
+        String description = error != null ? error.name() : ex.getMessage();
+        if (description == null || description.isBlank()) {
+            description = ErrorMessage.UNHANDLED_ERROR.name();
+        }
+
+        return Status.INTERNAL.withDescription(description).asRuntimeException();
     }
 
     @GrpcExceptionHandler(ConstraintViolationException.class)
@@ -39,6 +45,10 @@ public class GlobalGrpcExceptionTranslator {
 
     @GrpcExceptionHandler(Exception.class)
     public StatusRuntimeException handleException(Exception ex) {
-        return Status.INTERNAL.withDescription(ex.getMessage()).asRuntimeException();
+        String description = ex.getMessage();
+        if (description == null || description.isBlank()) {
+            description = ErrorMessage.UNHANDLED_ERROR.name();
+        }
+        return Status.INTERNAL.withDescription(description).asRuntimeException();
     }
 }

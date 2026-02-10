@@ -9,6 +9,7 @@ import com.leaf.profile.dto.UserProfilePrivacyDTO;
 import com.leaf.profile.repository.UserProfilePrivacyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.neo4j.driver.exceptions.ClientException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +22,25 @@ public class UserProfilePrivacyService {
 
     private final UserProfilePrivacyRepository userProfilePrivacyRepository;
 
-    @Transactional(readOnly = true)
     public UserProfilePrivacyDTO getUserProfilePrivacy(String userId) {
         UserProfilePrivacy userProfilePrivacy = userProfilePrivacyRepository
             .findByUserId(userId)
-            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+            .orElseGet(() -> {
+                try {
+                    // Auto-create if not exists
+                    UserProfilePrivacy newPrivacy = UserProfilePrivacy.builder().userId(userId).build();
+                    return userProfilePrivacyRepository.save(newPrivacy);
+                } catch (ClientException e) {
+                    // Handle concurrent creation - retry query
+                    if (e.getMessage().contains("already exists") || e.getMessage().contains("unique constraint")) {
+                        log.debug("Concurrent creation detected for userId: {}, retrying query", userId);
+                        return userProfilePrivacyRepository
+                            .findByUserId(userId)
+                            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+                    }
+                    throw e;
+                }
+            });
         return UserProfilePrivacyDTO.toUserProfilePrivacyDTO(userProfilePrivacy);
     }
 

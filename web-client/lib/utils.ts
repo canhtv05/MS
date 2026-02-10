@@ -88,3 +88,17 @@ export function normalizeWebsiteUrl(url: string): string {
   if (/^https?:\/\//i.test(trimmedUrl)) return trimmedUrl;
   return `https://${trimmedUrl}`;
 }
+
+export function hasValue(obj: unknown, target: unknown): boolean {
+  if (obj === target) return true;
+
+  if (Array.isArray(obj)) {
+    return obj.some(v => hasValue(v, target));
+  }
+
+  if (obj && typeof obj === 'object') {
+    return Object.values(obj).some(v => hasValue(v, target));
+  }
+
+  return false;
+}

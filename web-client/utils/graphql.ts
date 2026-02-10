@@ -2,6 +2,10 @@ import { api } from '@/utils/api';
 import { GRAPHQL_ENDPOINT } from '@/configs/endpoints';
 import { print, DocumentNode } from 'graphql';
 import { handleMutationError } from './handler-mutation-error';
+import { hasValue } from '@/lib/utils';
+import { ErrorMessage } from '@/enums/error-message';
+import cookieUtils from './cookieUtils';
+import queryClient from '@/configs/queryclient';
 
 interface GraphQLResponseError {
   message?: string;
@@ -32,6 +36,16 @@ export const getGraphQLClient = () => {
         Array.isArray(response.data.errors) &&
         response.data.errors.length > 0
       ) {
+        const message = response.data.errors;
+        if (
+          hasValue(message, ErrorMessage.UNAUTHENTICATED) ||
+          hasValue(message, ErrorMessage.UNAUTHORIZED)
+        ) {
+          cookieUtils.clearAuthenticated();
+          queryClient.removeQueries({ queryKey: ['auth', 'me'] });
+          queryClient.removeQueries({ queryKey: ['profile', 'me'] });
+          return Promise.reject(new Error(ErrorMessage.UNAUTHENTICATED));
+        }
         handleMutationError({ errors: response.data.errors }, 'graphql-toast');
       }
       return response.data.data as T;
