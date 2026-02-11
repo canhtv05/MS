@@ -1,10 +1,9 @@
 package com.leaf.profile.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.grpc.Gender;
 import com.leaf.common.grpc.RelationshipStatus;
-import com.leaf.common.utils.json.InstantToStringSerializer;
+import com.leaf.common.utils.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileIntroduceDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +39,7 @@ public class UserProfileIntroduceDTO implements Serializable {
     String tiktokUrl;
     String facebookUrl;
 
-    @JsonSerialize(using = InstantToStringSerializer.class)
+    @JsonSerialize(using = LocalDateToStringSerializer.class)
     LocalDate dob;
 
     Gender gender;

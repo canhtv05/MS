@@ -85,7 +85,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
         </Label>
         <div className="flex items-center gap-2.5">
           <div className="flex-1">
-            <Popover open={dobOpen} onOpenChange={setDobOpen}>
+            <Popover modal={false} open={dobOpen} onOpenChange={setDobOpen}>
               <PopoverTrigger
                 className={cn(
                   'flex h-10 w-full items-center justify-between rounded-md border border-input',
@@ -108,13 +108,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                       duration: 0.15,
                       ease: 'easeOut',
                     }}
-                    className="
-    mt-2
-    rounded-md
-    border border-input
-    bg-popover
-    p-1
-  "
+                    className="mt-2 rounded-md border border-input bg-popover p-1"
                   >
                     <Calendar
                       mode="single"
@@ -124,7 +118,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                       defaultMonth={dobDate}
                       onSelect={date => {
                         if (date) {
-                          setEditValue(date.toISOString());
+                          setEditValue(date.toLocaleDateString());
                           setDobOpen(false);
                         }
                       }}

@@ -3,7 +3,8 @@
     "min": "{{field}} must be at least {{min}} characters",
     "max": "{{field}} has maximum {{max}} characters",
     "email": "{{field}} must be a valid email",
-    "url": "{{field}} must be a valid url"
+    "url": "{{field}} must be a valid url",
+    "pattern": "{{field}} has invalid format"
   },
   "required": "{{field}} is required"
 }

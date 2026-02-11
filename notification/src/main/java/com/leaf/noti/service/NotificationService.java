@@ -4,7 +4,8 @@ import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.config.cache.RedisCacheService;
+import com.leaf.framework.service.KeyCacheService;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.dto.VerifyEmailTokenRes;
 import com.leaf.noti.enums.VerificationStatus;
@@ -29,7 +30,8 @@ import org.springframework.util.StringUtils;
 public class NotificationService {
 
     private final GrpcAuthClient grpcAuthClient;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final KeyCacheService keyCacheService;
     private final TokenUtil tokenUtil;
     private final EmailVerificationLogsRepository emailVerificationLogsRepository;
     private final EmailService emailService;
@@ -88,7 +90,7 @@ public class NotificationService {
                     .build();
             }
 
-            String keyVerification = redisService.getKeyVerification(tokenDTO.getUsername());
+            String keyVerification = keyCacheService.getKeyVerification(tokenDTO.getUsername());
             String tokenFromRedis = redisService.get(keyVerification, String.class);
 
             if (!StringUtils.hasText(tokenFromRedis) || !Objects.equals(tokenFromRedis, token)) {
@@ -143,7 +145,7 @@ public class NotificationService {
         }
 
         try {
-            String keyVerification = redisService.getKeyVerification(request.getUsername());
+            String keyVerification = keyCacheService.getKeyVerification(request.getUsername());
             redisService.evict(keyVerification);
             request.setTo(logs.getEmail());
             request.setFullName(logs.getFullname());

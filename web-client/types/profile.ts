@@ -95,3 +95,27 @@ export interface ICreateInterestReq {
   title: string;
   color: string;
 }
+
+export interface IUserProfileUpdateInterestReq {
+  interestIds: string[];
+}
+
+export interface IUpdateProfileIntroduceDTO {
+  city: string;
+  hometown: string;
+  jobTitle: string;
+  company: string;
+  school: string;
+  websiteUrl: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  xUrl: string;
+  instagramUrl: string;
+  tiktokUrl: string;
+  facebookUrl: string;
+  dob: string;
+  gender: Gender;
+  relationshipStatus: RelationshipStatus;
+  phoneNumber: string;
+  interests: string[];
+}

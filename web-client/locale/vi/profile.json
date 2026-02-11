@@ -151,6 +151,7 @@
   "select_interests": "Chọn sở thích",
   "create_custom_interest": "Tạo sở thích tùy chỉnh",
   "create_custom_interest_description": "Thêm một sở thích cá nhân với tiêu đề và màu sắc riêng",
+  "update_user_profile_interest": "Cập nhật sở thích",
   "interest_title": "Tiêu đề sở thích",
   "enter_interest_title": "Nhập tiêu đề sở thích...",
   "interest_title_required": "Tiêu đề sở thích là bắt buộc",
@@ -163,5 +164,9 @@
   "hex_color_placeholder": "#FFFFFF",
   "hex_color_help_text": "Nhập màu theo định dạng HEX (ví dụ: #FFAA00 hoặc #FFAA00FF)",
   "create_interest_loading": "Đang tạo sở thích",
-  "create_interest_success": "Tạo sở thích thành công"
+  "create_interest_success": "Tạo sở thích thành công",
+  "update_user_profile_interest_loading": "Đang cập nhật sở thích",
+  "update_user_profile_interest_success": "Cập nhật sở thích thành công",
+  "update_user_profile_introduce_success": "Cập nhật thông tin giới thiệu thành công",
+  "update_user_profile_introduce_loading": "Đang cập nhật thông tin giới thiệu"
 }

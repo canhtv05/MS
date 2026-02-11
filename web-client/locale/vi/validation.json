@@ -3,7 +3,8 @@
     "min": "{{field}} phải có ít nhất {{min}} ký tự",
     "max": "{{field}} có tối đa {{max}} ký tự",
     "email": "{{field}} phải là một email hợp lệ",
-    "url": "{{field}} phải là một url hợp lệ"
+    "url": "{{field}} phải là một url hợp lệ",
+    "pattern": "{{field}} không đúng định dạng"
   },
   "required": "{{field}} là bắt buộc"
 }

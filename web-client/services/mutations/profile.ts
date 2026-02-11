@@ -16,9 +16,12 @@ import {
   IPrivacyDTO,
   IInterestDTO,
   ICreateInterestReq,
+  IUserProfileUpdateInterestReq,
+  IUpdateProfileIntroduceDTO,
 } from '@/types/profile';
 import { useProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
+import { CACHE_KEY } from '@/configs/cache-key';
 
 export const useProfileMutation = () => {
   const { t } = useTranslation('profile');
@@ -27,7 +30,7 @@ export const useProfileMutation = () => {
   const queryClient = useQueryClient();
 
   const changeCoverImageMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.CHANGE_COVER_IMAGE],
     mutationFn: async (payload: MultipartFile): Promise<IResponseObject<IProfileDTO>> => {
       const formData = new FormData();
       formData.append('file', payload.file);
@@ -49,15 +52,15 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      Promise.all([
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'user-profile'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
         }),
       ]);
       toast.success(t('change_cover_image_success'), {
@@ -67,7 +70,7 @@ export const useProfileMutation = () => {
   });
 
   const changeAvatarImageMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.CHANGE_AVATAR_IMAGE],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.CHANGE_AVATAR_IMAGE],
     mutationFn: async (payload: MultipartFile): Promise<IResponseObject<IProfileDTO>> => {
       const formData = new FormData();
       formData.append('file', payload.file);
@@ -89,15 +92,15 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      Promise.all([
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'user-profile'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
         }),
       ]);
       toast.success(t('change_avatar_image_success'), {
@@ -107,7 +110,7 @@ export const useProfileMutation = () => {
   });
 
   const changeCoverImageFromMediaHistoryMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY],
     mutationFn: async (payload: IChangeCoverByUrlReq): Promise<IResponseObject<IProfileDTO>> => {
       const response = await api.post(
         API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY,
@@ -126,15 +129,15 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      Promise.all([
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'user-profile'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'media-history-infinite', user?.auth?.username],
+          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
         }),
       ]);
       toast.success(t('change_cover_image_success'), {
@@ -144,7 +147,7 @@ export const useProfileMutation = () => {
   });
 
   const updateBioProfileMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.UPDATE_BIO],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_BIO],
     mutationFn: async (payload: IUpdateBioProfileReq): Promise<IResponseObject<IProfileDTO>> => {
       const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_BIO, payload);
       return response.data;
@@ -160,12 +163,12 @@ export const useProfileMutation = () => {
       if (user && data?.data) {
         setUser({ ...user, profile: data.data });
       }
-      Promise.all([
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'user-profile'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
         }),
       ]);
       toast.success(t('update_bio_profile_success'), {
@@ -175,7 +178,7 @@ export const useProfileMutation = () => {
   });
 
   const updatePrivacyMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.UPDATE_PRIVACY],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_PRIVACY],
     mutationFn: async (payload: IPrivacyDTO): Promise<IResponseObject<IPrivacyDTO>> => {
       const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_PRIVACY, payload);
       return response.data;
@@ -186,16 +189,16 @@ export const useProfileMutation = () => {
         id: 'update-privacy-toast',
       });
     },
-    onSuccess: () => {
-      Promise.all([
+    onSuccess: async () => {
+      await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me'],
+          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'privacy', user?.auth?.username],
+          queryKey: CACHE_KEY.PROFILE.QUERY.PRIVACY(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'user-profile', user?.auth?.username],
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
       ]);
       toast.success(t('update_privacy_success'), {
@@ -205,7 +208,7 @@ export const useProfileMutation = () => {
   });
 
   const createInterestMutation = useMutation({
-    mutationKey: [API_ENDPOINTS.PROFILE.INTERESTS],
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.INTERESTS],
     mutationFn: async (payload: ICreateInterestReq): Promise<IResponseObject<IInterestDTO>> => {
       const response = await api.post(API_ENDPOINTS.PROFILE.INTERESTS, payload);
       return response.data;
@@ -218,12 +221,65 @@ export const useProfileMutation = () => {
     },
     onSuccess: async data => {
       queryClient.invalidateQueries({
-        queryKey: ['profile', 'interests'],
+        queryKey: CACHE_KEY.PROFILE.QUERY.INTERESTS(),
       });
       toast.success(t('profile:create_interest_success'), {
         id: 'create-interest-toast',
       });
       return data?.data as IInterestDTO;
+    },
+  });
+
+  const updateUserProfileInterestMutation = useMutation({
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_USER_PROFILE_INTEREST],
+    mutationFn: async (payload: IUserProfileUpdateInterestReq): Promise<IResponseObject<void>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTEREST, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'update-user-profile-interest-toast'),
+    onMutate: () => {
+      toast.loading(t('update_user_profile_interest_loading'), {
+        id: 'update-user-profile-interest-toast',
+      });
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: CACHE_KEY.PROFILE.QUERY.INTERESTS(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
+        }),
+      ]);
+      toast.success(t('update_user_profile_interest_success'), {
+        id: 'update-user-profile-interest-toast',
+      });
+    },
+  });
+
+  const updateUserProfileIntroduceMutation = useMutation({
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_USER_PROFILE_INTRODUCE],
+    mutationFn: async (
+      payload: IUpdateProfileIntroduceDTO,
+    ): Promise<IResponseObject<IUpdateProfileIntroduceDTO>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTRODUCE, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'update-user-profile-introduce-toast'),
+    onMutate: () => {
+      toast.loading(t('update_user_profile_introduce_loading'), {
+        id: 'update-user-profile-introduce-toast',
+      });
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
+        }),
+      ]);
+      toast.success(t('update_user_profile_introduce_success'), {
+        id: 'update-user-profile-introduce-toast',
+      });
     },
   });
 
@@ -234,5 +290,7 @@ export const useProfileMutation = () => {
     updateBioProfileMutation,
     updatePrivacyMutation,
     createInterestMutation,
+    updateUserProfileInterestMutation,
+    updateUserProfileIntroduceMutation,
   };
 };

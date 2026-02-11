@@ -1,16 +1,35 @@
 package com.leaf.profile.controller;
 
+import com.leaf.common.dto.ResponseObject;
+import com.leaf.profile.dto.UpdateProfileIntroduceDTO;
+import com.leaf.profile.dto.UserProfileIntroduceDTO;
+import com.leaf.profile.dto.UserProfileUpdateInterestReq;
+import com.leaf.profile.service.UserProfileIntroduceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 public class UserProfileIntroduceController {
-    // private final UserProfilePrivacyService userProfilePrivacyService;
-    // @PostMapping("/me/update-privacy")
-    // public ResponseEntity<ResponseObject<PrivacyDTO>> updatePrivacy(@Valid
-    // @RequestBody PrivacyDTO req) {
-    // return
-    // ResponseEntity.ok(ResponseObject.success(userProfilePrivacyService.updateUserProfilePrivacy(req)));
-    // }
+
+    private final UserProfileIntroduceService userProfileIntroduceService;
+
+    @PostMapping("/me/update-user-profile-interest")
+    public ResponseEntity<ResponseObject<Void>> updateUserProfileInterest(
+        @Valid @RequestBody UserProfileUpdateInterestReq req
+    ) {
+        userProfileIntroduceService.updateUserProfileInterest(req);
+        return ResponseEntity.ok(ResponseObject.success());
+    }
+
+    @PostMapping("/me/update-user-profile-introduce")
+    public ResponseEntity<ResponseObject<UserProfileIntroduceDTO>> updateUserProfileIntroduce(
+        @Valid @RequestBody UpdateProfileIntroduceDTO req
+    ) {
+        return ResponseEntity.ok(ResponseObject.success(userProfileIntroduceService.updateUserProfileIntroduce(req)));
+    }
 }

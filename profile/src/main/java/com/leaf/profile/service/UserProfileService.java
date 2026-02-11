@@ -5,8 +5,8 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.ImageResponse;
 import com.leaf.common.grpc.ResourceType;
+import com.leaf.framework.config.cache.RedisCacheService;
 import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.service.RedisService;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.ChangeCoverByUrlReq;
 import com.leaf.profile.dto.SendFriendRequestDTO;
@@ -30,7 +30,7 @@ public class UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
     private final GrpcFileClient grpcFileClient;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
 
     @Transactional
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {

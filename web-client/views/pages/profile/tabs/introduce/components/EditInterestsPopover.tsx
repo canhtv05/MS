@@ -113,7 +113,6 @@ export const EditInterestsPopover = ({
 
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: '100px',
       threshold: 0,
     });
 
@@ -154,7 +153,6 @@ export const EditInterestsPopover = ({
   };
 
   const handleSave = () => {
-    // Get all selected interest IDs (both server and custom)
     const allSelectedIds = Array.from(selectedIds);
     onSave(allSelectedIds);
     setIsOpen(false);
@@ -170,9 +168,10 @@ export const EditInterestsPopover = ({
   const selectedCount = selectedIds.size;
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      {/* @ts-expect-error PopoverTrigger is not a valid component */}
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+    <Popover modal={false} open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <div className="inline-flex items-center justify-center">{trigger}</div>
+      </PopoverTrigger>
       <PopoverPortal>
         <PopoverPositioner sideOffset={8} align="start">
           <PopoverPopup

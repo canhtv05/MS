@@ -164,6 +164,7 @@
   "select_interests": "Select your interests",
   "create_custom_interest": "Create Custom Interest",
   "create_custom_interest_description": "Add a personalized interest with your own title and color",
+  "update_user_profile_interest": "Update user profile interest",
   "interest_title": "Interest Title",
   "enter_interest_title": "Enter interest title...",
   "interest_title_required": "Interest title is required",
@@ -176,5 +177,9 @@
   "hex_color_placeholder": "#FFFFFF",
   "hex_color_help_text": "Enter color in HEX format (e.g. #FFAA00 or #FFAA00FF)",
   "create_interest_loading": "Creating interest",
-  "create_interest_success": "Interest created successfully"
+  "create_interest_success": "Interest created successfully",
+  "update_user_profile_interest_loading": "Updating user profile interest",
+  "update_user_profile_interest_success": "User profile interest updated successfully",
+  "update_user_profile_introduce_success": "User profile introduce updated successfully",
+  "update_user_profile_introduce_loading": "Updating user profile introduce"
 }

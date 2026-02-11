@@ -3,8 +3,9 @@ package com.leaf.framework.util;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.framework.config.ApplicationProperties;
+import com.leaf.framework.config.cache.RedisCacheService;
 import com.leaf.framework.constant.CommonConstants;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.service.KeyCacheService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
 
     private final ApplicationProperties applicationProperties;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final KeyCacheService keyCacheService;
 
     public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(applicationProperties.getSecurity().getBase64Secret());
@@ -47,7 +49,7 @@ public class JwtUtil {
                 return TokenStatus.EXPIRED;
             }
 
-            String keyToken = redisService.getKeyToken(username, channel);
+            String keyToken = keyCacheService.getKeyToken(username, channel);
             String tokenExisting = redisService.get(keyToken, String.class);
             log.info("Token existing: {}", tokenExisting);
             log.info("Auth token hex: {}", AESUtils.hexString(authToken));

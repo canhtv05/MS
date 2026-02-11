@@ -32,9 +32,10 @@ import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.DateUtils;
+import com.leaf.framework.config.cache.RedisCacheService;
 import com.leaf.framework.security.AuthoritiesConstants;
 import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.service.KeyCacheService;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -75,7 +76,8 @@ public class UserService {
     private final UserPermissionRepository userPermissionRepository;
     private final AuthService authService;
     private final KafkaProducerService kafkaProducerService;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final KeyCacheService keyCacheService;
 
     @Transactional(readOnly = true)
     public UserDTO findById(Long id) {
@@ -228,7 +230,7 @@ public class UserService {
         if (!hasOTP) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
         }
-        String keyForgotPassword = redisService.getKeyForgotPassword(user.getUsername());
+        String keyForgotPassword = keyCacheService.getKeyForgotPassword(user.getUsername());
         if (!request.getOTP().equals(redisService.get(keyForgotPassword, String.class))) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_INVALID);
         }
@@ -252,7 +254,7 @@ public class UserService {
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new ApiException(ErrorMessage.EMAIL_NOT_FOUND));
 
-        String keyForgotPassword = redisService.getKeyForgotPassword(user.getUsername());
+        String keyForgotPassword = keyCacheService.getKeyForgotPassword(user.getUsername());
         String otp = redisService.get(keyForgotPassword, String.class);
         if (CommonUtils.isEmpty(otp)) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
@@ -441,7 +443,7 @@ public class UserService {
     }
 
     private boolean hasOTP(String username) {
-        String keyForgotPassword = redisService.getKeyForgotPassword(username);
+        String keyForgotPassword = keyCacheService.getKeyForgotPassword(username);
         return StringUtils.isNotEmpty(redisService.get(keyForgotPassword, String.class));
     }
 }

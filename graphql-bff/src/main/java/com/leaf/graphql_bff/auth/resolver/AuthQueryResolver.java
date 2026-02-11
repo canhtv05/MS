@@ -3,7 +3,7 @@ package com.leaf.graphql_bff.auth.resolver;
 import com.leaf.common.grpc.AuthMeResponse;
 import com.leaf.common.grpc.UserProfileIdRequest;
 import com.leaf.common.grpc.UserProfileResponse;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.config.cache.RedisCacheService;
 import com.leaf.graphql_bff.auth.client.AuthGrpcAuthClient;
 import com.leaf.graphql_bff.auth.client.AuthGrpcProfileClient;
 import com.leaf.graphql_bff.auth.dto.UserProfileDTO;
@@ -23,7 +23,7 @@ public class AuthQueryResolver {
 
     private final AuthGrpcAuthClient grpcAuthClient;
     private final AuthGrpcProfileClient grpcProfileClient;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
 
     @DgsQuery(field = "me")
     @PreAuthorize("isAuthenticated()")

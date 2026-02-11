@@ -4,7 +4,8 @@ import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.config.cache.RedisCacheService;
+import com.leaf.framework.service.KeyCacheService;
 import com.leaf.noti.config.EmailProperties;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.enums.VerificationStatus;
@@ -35,7 +36,8 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final KeyCacheService keyCacheService;
     private final EmailProperties emailProperties;
     private final TokenUtil tokenUtil;
     private final EmailVerificationLogsRepository emailVerificationLogsRepository;
@@ -55,7 +57,7 @@ public class EmailService {
             String encryptedToken = tokenUtil.encryptToken(token);
             String urlEncodedToken = URLEncoder.encode(encryptedToken, StandardCharsets.UTF_8);
             redisService.set(
-                redisService.getKeyVerification(event.getUsername()),
+                keyCacheService.getKeyVerification(event.getUsername()),
                 encryptedToken,
                 10,
                 TimeUnit.MINUTES
@@ -113,7 +115,7 @@ public class EmailService {
             helper.setSubject("🔐 Quên mật khẩu");
 
             String otp = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
-            String key = redisService.getKeyForgotPassword(event.getUsername());
+            String key = keyCacheService.getKeyForgotPassword(event.getUsername());
             redisService.set(key, otp, 10, TimeUnit.MINUTES);
 
             Context context = new Context();

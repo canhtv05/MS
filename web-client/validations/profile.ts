@@ -16,8 +16,7 @@ const validDomain = (value: string | null | undefined, allowOrigins: string[]) =
   }
 };
 
-export const updateProfileSchema = z.object({
-  bio: z.string().max(255, t('validation:string.max', { field: t('profile:bio'), max: 255 })),
+const baseProfileIntroduceSchema = z.object({
   city: z.string().max(255, t('validation:string.max', { field: t('profile:city'), max: 255 })),
   hometown: z
     .string()
@@ -84,8 +83,22 @@ export const updateProfileSchema = z.object({
     .enum(RelationshipStatus)
     .optional()
     .default(RelationshipStatus.RELATIONSHIP_STATUS_SINGLE),
+});
+
+export const updateProfileSchema = baseProfileIntroduceSchema.extend({
+  bio: z.string().max(255, t('validation:string.max', { field: t('profile:bio'), max: 255 })),
   phoneNumber: z
     .string()
     .max(255, t('validation:string.max', { field: t('profile:phoneNumber'), max: 255 })),
   interests: z.array(z.string()).optional(),
+});
+
+export const updateUserProfileIntroduceSchema = baseProfileIntroduceSchema.extend({
+  phoneNumber: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:phoneNumber'), max: 255 }))
+    .refine(
+      value => /^[0-9]{9,15}$/.test(value),
+      t('validation:string.pattern', { field: t('profile:phoneNumber'), pattern: '^[0-9]{9,15}$' }),
+    ),
 });

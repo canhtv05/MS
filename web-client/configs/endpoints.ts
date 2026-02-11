@@ -26,6 +26,8 @@ export const API_ENDPOINTS = {
     UPDATE_BIO: '/user-profile/me/update-bio',
     UPDATE_PRIVACY: '/user-profile/me/update-privacy',
     INTERESTS: '/user-profile/interests',
+    UPDATE_USER_PROFILE_INTEREST: '/user-profile/me/update-user-profile-interest',
+    UPDATE_USER_PROFILE_INTRODUCE: '/user-profile/me/update-user-profile-introduce',
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: '/notifications/verify-email',

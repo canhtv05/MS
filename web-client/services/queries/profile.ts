@@ -11,7 +11,7 @@ import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useProfileStore } from '@/stores/profile';
 import {
   UserDetailDocument,
@@ -25,14 +25,16 @@ import { getGraphQLClient } from '@/utils/graphql';
 import { ResourceType } from '@/enums/common';
 import { useAuthStore } from '@/stores/auth';
 import { handleMutationError } from '@/utils/handler-mutation-error';
+import { CACHE_KEY } from '@/configs/cache-key';
+import { useAppQuery } from '@/hooks/use-app-query';
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useProfileStore(state => state.userProfile);
   const setUserProfile = useProfileStore(state => state.setUserProfile);
   const isAuthenticated = cookieUtils.getAuthenticated();
 
-  const meQuery = useQuery({
-    queryKey: ['profile', 'me'],
+  const meQuery = useAppQuery<IResponseObject<IUserProfileDTO>>('PROFILE', {
+    queryKey: CACHE_KEY.PROFILE.QUERY.ME,
     queryFn: async (): Promise<IResponseObject<IUserProfileDTO>> => {
       const res = await api.get(API_ENDPOINTS.PROFILE.ME);
       setUserProfile(res.data.data);
@@ -40,8 +42,6 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
     },
     enabled: enabled && isAuthenticated && !userProfile,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 phút - profile ít thay đổi
-    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
   });
 
   return {
@@ -56,7 +56,7 @@ export const useMyMediaHistoryInfiniteQuery = (
   resourceType?: ResourceType[],
 ) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'media-history-infinite', userID, resourceType],
+    queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(userID, resourceType),
     queryFn: async ({
       pageParam = 1,
     }): Promise<IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>> => {
@@ -94,7 +94,7 @@ export const useInterestInfiniteQuery = (
   enabled: boolean = true,
 ) => {
   return useInfiniteQuery({
-    queryKey: ['profile', 'interests', ...Object.values(searchRequest)],
+    queryKey: CACHE_KEY.PROFILE.QUERY.INTERESTS(searchRequest as Record<string, unknown>),
     queryFn: async ({
       pageParam = 1,
     }): Promise<IResponseObject<ISearchResponse<IInterestDTO[]>>> => {
@@ -130,8 +130,8 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
     us = us.slice(1);
   }
 
-  const query = useQuery({
-    queryKey: ['profile', 'user-profile', us],
+  const query = useAppQuery<IDetailUserProfileDTO, unknown>('PROFILE', {
+    queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(us),
     queryFn: async (): Promise<IDetailUserProfileDTO> => {
       const client = getGraphQLClient();
       const variables: UserDetailQueryVariables = {
@@ -150,8 +150,6 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
     },
     enabled: enabled && !!us,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 phút - user profile ít thay đổi
-    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
   });
   return query;
 };
@@ -161,8 +159,8 @@ export const usePrivacyQuery = () => {
   const { userProfile, setUserProfile } = useProfileStore();
   const username = user?.auth?.username || '';
 
-  return useQuery({
-    queryKey: ['profile', 'privacy', username],
+  return useAppQuery<IUserProfilePrivacyDTO, unknown>('PROFILE', {
+    queryKey: CACHE_KEY.PROFILE.QUERY.PRIVACY(username),
     queryFn: async (): Promise<IUserProfilePrivacyDTO> => {
       const client = getGraphQLClient();
       const variables: UserProfilePrivacyQueryVariables = {
@@ -190,7 +188,5 @@ export const usePrivacyQuery = () => {
     },
     enabled: !!username,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 phút - privacy settings ít thay đổi
-    gcTime: 10 * 60 * 1000, // 10 phút - giữ cache lâu hơn
   });
 };

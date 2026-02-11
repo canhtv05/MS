@@ -8,8 +8,8 @@ import { EditInterestsPopover } from '../components/EditInterestsPopover';
 import { PenNewSquare } from '@solar-icons/react-perf/Outline';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
 import { Stars } from '@solar-icons/react-perf/BoldDuotone';
+import { useProfileMutation } from '@/services/mutations/profile';
 
 interface IInterestsTabProps {
   data?: IDetailUserProfileDTO;
@@ -19,22 +19,14 @@ interface IInterestsTabProps {
 export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
   const { t } = useTranslation('profile');
   const introduce = data?.introduce;
+  const { updateUserProfileInterestMutation } = useProfileMutation();
 
   const selectedInterests = useMemo(() => {
     return introduce?.interests || [];
   }, [introduce?.interests]);
 
   const handleSaveInterests = async (interestIds: string[]) => {
-    try {
-      // TODO: Implement API call to save interests
-      // Example: await api.post(API_ENDPOINTS.PROFILE.UPDATE_INTERESTS, { interestIds });
-      console.log('Saving interests:', interestIds);
-
-      toast.success(t('profile:interests_saved', 'Interests saved successfully'));
-    } catch (error) {
-      console.error('Failed to save interests:', error);
-      toast.error(t('profile:interests_save_error', 'Failed to save interests'));
-    }
+    updateUserProfileInterestMutation.mutate({ interestIds });
   };
 
   if (!selectedInterests || selectedInterests.length === 0) {
@@ -60,6 +52,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
               onSave={handleSaveInterests}
               trigger={
                 <IconButton
+                  disabled={updateUserProfileInterestMutation.isPending}
                   variant="default"
                   className={cn('transition-colors duration-200', 'cursor-pointer')}
                   title={t('profile:add_interests', 'Add Interests')}

@@ -17,9 +17,10 @@ import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
+import com.leaf.framework.config.cache.RedisCacheService;
 import com.leaf.framework.constant.CommonConstants;
 import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.service.KeyCacheService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -59,7 +60,8 @@ public class TokenProvider {
     private final SecretKey key;
     private final JwtParser jwtParser;
     private final SimpMessagingTemplate messagingTemplate;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final KeyCacheService keyCacheService;
     private final UserRepository userRepository;
     private final CookieUtil cookieUtil;
     private final Long tokenValidityDuration;
@@ -67,13 +69,15 @@ public class TokenProvider {
 
     public TokenProvider(
         SimpMessagingTemplate messagingTemplate,
-        RedisService redisService,
+        RedisCacheService redisService,
+        KeyCacheService keyCacheService,
         UserRepository userRepository,
         CookieUtil cookieUtil,
         ApplicationProperties applicationProperties
     ) {
         this.messagingTemplate = messagingTemplate;
         this.redisService = redisService;
+        this.keyCacheService = keyCacheService;
         this.userRepository = userRepository;
         this.cookieUtil = cookieUtil;
         String secret = applicationProperties.getSecurity().getBase64Secret();
@@ -93,7 +97,7 @@ public class TokenProvider {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String name = authentication.getName();
-        String keyToken = redisService.getKeyToken(name, channel);
+        String keyToken = keyCacheService.getKeyToken(name, channel);
         String tokenExisting = redisService.get(keyToken, String.class);
         String sessionId = UUID.randomUUID().toString();
 
@@ -296,8 +300,8 @@ public class TokenProvider {
             userRepository.save(user);
             Thread.startVirtualThread(() -> {
                 try {
-                    redisService.evict(redisService.getKeyToken(username, channel));
-                    redisService.evict(redisService.getKeyUser(username, channel));
+                    redisService.evict(keyCacheService.getKeyToken(username, channel));
+                    redisService.evict(keyCacheService.getKeyUser(username, channel));
                 } catch (Exception e) {
                     log.error("Async evict redis failed", e);
                 }
@@ -316,8 +320,8 @@ public class TokenProvider {
         userRepository.save(user);
         // to sent notification to all devices
         Thread.startVirtualThread(() -> {
-            redisService.evict(redisService.getKeyToken(username, "web"));
-            redisService.evict(redisService.getKeyUser(username, "mobile"));
+            redisService.evict(keyCacheService.getKeyToken(username, "web"));
+            redisService.evict(keyCacheService.getKeyUser(username, "mobile"));
         });
     }
 
@@ -352,7 +356,7 @@ public class TokenProvider {
     }
 
     private void cacheUserToken(String username, String channel, String sessionId, String token) {
-        String keyUser = redisService.getKeyUser(username, channel);
+        String keyUser = keyCacheService.getKeyUser(username, channel);
         UserSessionDTO userSessionDTO = UserSessionDTO.builder()
             .sessionId(sessionId)
             .channel(channel)
@@ -360,7 +364,7 @@ public class TokenProvider {
             .build();
         redisService.set(keyUser, userSessionDTO);
 
-        String keyToken = redisService.getKeyToken(username, channel);
+        String keyToken = keyCacheService.getKeyToken(username, channel);
         redisService.set(keyToken, AESUtils.hexString(token));
     }
 }
