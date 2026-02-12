@@ -2,7 +2,7 @@ package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.enums.TokenStatus;
-import com.leaf.framework.util.JwtUtil;
+import com.leaf.framework.blocking.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

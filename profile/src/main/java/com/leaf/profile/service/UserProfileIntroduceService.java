@@ -2,7 +2,7 @@ package com.leaf.profile.service;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.service.CommonService;
+import com.leaf.framework.blocking.service.CommonService;
 import com.leaf.profile.domain.Interest;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.domain.UserProfileIntroduce;

@@ -19,7 +19,7 @@ import com.leaf.file.dto.MediaHistoryGroupDTO;
 import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.repository.FileRepository;
 import com.leaf.file.service.FileService;
-import com.leaf.framework.security.SecurityUtils;
+import com.leaf.framework.blocking.security.SecurityUtils;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;

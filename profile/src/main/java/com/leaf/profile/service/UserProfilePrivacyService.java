@@ -2,7 +2,7 @@ package com.leaf.profile.service;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.security.SecurityUtils;
+import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.profile.domain.UserProfilePrivacy;
 import com.leaf.profile.dto.PrivacyDTO;
 import com.leaf.profile.dto.UserProfilePrivacyDTO;

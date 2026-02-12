@@ -1,6 +1,6 @@
 package com.leaf.auth.security;
 
-import com.leaf.framework.security.UserPrincipal;
+import com.leaf.framework.blocking.security.UserPrincipal;
 import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

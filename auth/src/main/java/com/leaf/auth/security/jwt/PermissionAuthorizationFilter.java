@@ -4,8 +4,8 @@ import com.leaf.auth.dto.PermissionSelect;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.security.CustomUserDetails;
 import com.leaf.auth.service.PublicApiService;
+import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.framework.constant.CommonConstants;
-import com.leaf.framework.security.SecurityUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -91,11 +91,20 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
-        String path = request.getRequestURI();
+        String requestPath = request.getRequestURI();
+        // Remove query string if present
+        final String path = requestPath.contains("?")
+            ? requestPath.substring(0, requestPath.indexOf("?"))
+            : requestPath;
+        // Các endpoint public của auth service đang được map trực tiếp từ
+        // AUTH_PUBLIC_ENDPOINTS
+        // (ví dụ: "/me/p/authenticate"), vì vậy tại đây chỉ cần so khớp với
+        // AUTH_PUBLIC_ENDPOINTS.
+        // Use exact match or path matcher for more accurate matching
         return (
-            Arrays.asList(CommonConstants.PREFIX_AUTH_PUBLIC_ENDPOINTS)
+            Arrays.asList(CommonConstants.AUTH_PUBLIC_ENDPOINTS)
                 .stream()
-                .anyMatch(res -> path.startsWith(res)) ||
+                .anyMatch(endpoint -> path.equals(endpoint) || pathMatcher.match(endpoint, path)) ||
             path.startsWith("/ws")
         );
     }

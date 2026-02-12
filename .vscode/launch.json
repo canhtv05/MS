@@ -95,6 +95,16 @@
       "projectName": "graphql-bff",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
-    }
+    },
+    // {
+    //   "type": "java",
+    //   "name": "Spring Boot-FrameworkApplication<framework>",
+    //   "request": "launch",
+    //   "cwd": "${workspaceFolder}",
+    //   "mainClass": "com.leaf.framework.FrameworkApplication",
+    //   "projectName": "framework",
+    //   "args": "",
+    //   "envFile": "${workspaceFolder}/.env"
+    // }
   ]
 }

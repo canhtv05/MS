@@ -4,7 +4,7 @@ import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchRequest;
 import com.leaf.common.dto.search.SearchResponse;
 import com.leaf.common.utils.CommonUtils;
-import com.leaf.framework.service.CommonService;
+import com.leaf.framework.blocking.service.CommonService;
 import com.leaf.profile.domain.Interest;
 import com.leaf.profile.dto.CreateInterestReq;
 import com.leaf.profile.dto.InterestDTO;

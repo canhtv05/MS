@@ -1,7 +1,7 @@
 package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.util.CookieUtil;
-import com.leaf.framework.util.JwtUtil;
+import com.leaf.framework.blocking.util.JwtUtil;
 import org.springframework.security.config.annotation.SecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
