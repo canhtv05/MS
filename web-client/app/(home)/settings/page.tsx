@@ -12,5 +12,5 @@ const SettingsModal = () => {
 
 export default withAuth(SettingsModal, {
   accessLevel: 'authenticated',
-  // redirectTo: '/home',
+  redirectTo: '/home',
 });

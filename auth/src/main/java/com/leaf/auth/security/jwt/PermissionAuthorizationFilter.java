@@ -102,7 +102,7 @@ public class PermissionAuthorizationFilter extends OncePerRequestFilter {
         // AUTH_PUBLIC_ENDPOINTS.
         // Use exact match or path matcher for more accurate matching
         return (
-            Arrays.asList(CommonConstants.AUTH_PUBLIC_ENDPOINTS)
+            Arrays.asList(CommonConstants.PREFIX_AUTH_PUBLIC_ENDPOINTS)
                 .stream()
                 .anyMatch(endpoint -> path.equals(endpoint) || pathMatcher.match(endpoint, path)) ||
             path.startsWith("/ws")

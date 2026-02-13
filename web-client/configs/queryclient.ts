@@ -8,14 +8,29 @@ const queryClient = new QueryClient({
     queries: {
       ...CACHE_POLICY.DYNAMIC,
       retry: (failureCount, error) => {
+        if (failureCount >= 1) {
+          return false;
+        }
+
         if (error instanceof AxiosError) {
-          // Không retry với 4xx errors
           if (error.response?.status && error.response.status < 500) {
             return false;
           }
         }
-        return failureCount < 2;
+
+        if (error instanceof Error) {
+          if (
+            error.message?.includes('GraphQL') ||
+            error.message?.includes('UNAUTHENTICATED') ||
+            error.message?.includes('UNAUTHORIZED')
+          ) {
+            return false;
+          }
+        }
+
+        return true;
       },
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff: 1s, 2s, 4s, ... max 30s
       throwOnError: error => {
         if (!(error instanceof AxiosError)) return true;
         if (!error.response) return true;
@@ -24,7 +39,7 @@ const queryClient = new QueryClient({
       },
     },
     mutations: {
-      retry: 0,
+      retry: false,
     },
   },
   queryCache: new QueryCache({

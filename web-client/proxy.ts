@@ -18,9 +18,9 @@ export default function proxy(request: NextRequest) {
   const authRoutes = ['/sign-in', '/sign-up'];
 
   if (authRoutes.some(route => pathname.startsWith(route))) {
-    // if (isAuthenticated) {
-    //   return NextResponse.redirect(new URL('/home', request.url));
-    // }
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/home', request.url));
+    }
   }
 
   /* customize

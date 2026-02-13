@@ -51,7 +51,7 @@ const ProtectedRoute = ({
       );
 
       if (!hasAdminRole) {
-        // router.replace(redirectTo || '/home');
+        router.replace(redirectTo || '/home');
       }
     }
   }, [isLoading, isAuthenticated, user, accessLevel, redirectTo, router]);

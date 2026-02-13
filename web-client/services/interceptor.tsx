@@ -20,7 +20,7 @@ const handleLogout = (clearAll = false) => {
       cookieUtils.clearAuthenticated();
       // With intercepting routes, changing URL automatically clears the modal
       // Use window.location for redirect in interceptor (not a component, can't use hooks)
-      // window.location.href = '/home';
+      window.location.href = '/home';
     } else {
       cookieUtils.clearAuthenticated();
     }
