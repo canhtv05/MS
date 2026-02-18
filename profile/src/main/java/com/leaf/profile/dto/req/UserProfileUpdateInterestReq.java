@@ -1,7 +1,8 @@
-package com.leaf.profile.dto;
+package com.leaf.profile.dto.req;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserProfileCreationReq implements Serializable {
+public class UserProfileUpdateInterestReq implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String userId;
-    private String fullname;
+    private List<String> interestIds;
 }

@@ -89,6 +89,10 @@ export function normalizeWebsiteUrl(url: string): string {
   return `https://${trimmedUrl}`;
 }
 
+export function normalizeString(s: string): string {
+  return s.trim().replace(/\s+/g, ' ');
+}
+
 export function hasValue(obj: unknown, target: unknown): boolean {
   if (obj === target) return true;
 
@@ -101,4 +105,17 @@ export function hasValue(obj: unknown, target: unknown): boolean {
   }
 
   return false;
+}
+
+export function parseDateForSaving(date?: string | Date): string {
+  if (!date || (date instanceof Date && isNaN(date.getTime()))) return '';
+
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return '';
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }

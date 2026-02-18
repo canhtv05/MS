@@ -1,5 +1,6 @@
-package com.leaf.profile.dto;
+package com.leaf.profile.dto.req;
 
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UpdateBioProfileReq implements Serializable {
+public class ChangeCoverByUrlReq implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String bio;
+    @NotBlank(message = "url is not blank")
+    private String url;
 }

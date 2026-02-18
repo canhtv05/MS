@@ -114,13 +114,15 @@ const Dialog = <T extends FieldValues = FieldValues>({
 
     eventHandlerRef.current = handleModalCloseEvent;
     document.addEventListener(`close-modal:${currentModalId}`, handleModalCloseEvent);
-
+    document.addEventListener('close-all-modals', handleModalCloseEvent);
     return () => {
       hasRegisteredRef.current = false;
       if (eventHandlerRef.current) {
         document.removeEventListener(`close-modal:${currentModalId}`, eventHandlerRef.current);
+        document.removeEventListener('close-all-modals', eventHandlerRef.current);
         eventHandlerRef.current = null;
       }
+      document.removeEventListener('close-all-modals', handleModalCloseEvent);
     };
   }, [open]);
 

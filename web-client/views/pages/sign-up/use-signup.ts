@@ -11,8 +11,8 @@ const useSignUp = () => {
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
-    mode: 'onSubmit',
-    reValidateMode: 'onBlur',
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       fullname: '',
       username: '',

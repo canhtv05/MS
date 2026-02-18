@@ -3,8 +3,13 @@
 import { z } from 'zod/v4';
 import i18next from 'i18next';
 import { Gender, RelationshipStatus } from '@/enums/common';
+import { normalizeString, parseDateForSaving } from '@/lib/utils';
 
 const t = i18next.t;
+
+// Cho phép chữ cái của mọi ngôn ngữ, nhiều từ cách nhau ĐÚNG 1 khoảng trắng.
+// Không cho khoảng trắng đầu/cuối, không double space, không số/ký tự đặc biệt.
+export const REGEX_FULLNAME = /^[\p{L}]+ [\p{L}]+( [\p{L}]+)*$/u;
 
 const validDomain = (value: string | null | undefined, allowOrigins: string[]) => {
   if (!value || value.trim() === '') return true;
@@ -77,7 +82,7 @@ const baseProfileIntroduceSchema = z.object({
       value => validDomain(value, ['x.com', 'x.app']),
       t('validation:string.url', { field: t('profile:xUrl') }),
     ),
-  dob: z.date().optional().default(new Date()),
+  dob: z.string().optional().default(parseDateForSaving(new Date().toISOString())),
   gender: z.enum(Gender).optional().default(Gender.GENDER_OTHER),
   relationshipStatus: z
     .enum(RelationshipStatus)
@@ -86,6 +91,12 @@ const baseProfileIntroduceSchema = z.object({
 });
 
 export const updateProfileSchema = baseProfileIntroduceSchema.extend({
+  fullname: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('profile:profile_name'), max: 255 }))
+    .min(3, t('validation:string.min', { field: t('profile:profile_name'), min: 3 }))
+    .regex(REGEX_FULLNAME, t('validation:fullname', { field: t('profile:profile_name') }))
+    .transform(value => normalizeString(value)),
   bio: z.string().max(255, t('validation:string.max', { field: t('profile:bio'), max: 255 })),
   phoneNumber: z
     .string()

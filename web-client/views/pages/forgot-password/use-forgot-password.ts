@@ -24,6 +24,8 @@ const useForgotPassword = () => {
 
   const forgotPasswordForm = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
     },
@@ -46,6 +48,8 @@ const useForgotPassword = () => {
 
   const verifyForgotPasswordOtpForm = useForm<z.infer<typeof verifyForgotPasswordOTPSchema>>({
     resolver: zodResolver(verifyForgotPasswordOTPSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       OTP: '',
       email: '',
@@ -71,6 +75,8 @@ const useForgotPassword = () => {
 
   const resetPasswordForm = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       OTP: '',
       email: '',

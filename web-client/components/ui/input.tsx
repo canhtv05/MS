@@ -4,6 +4,7 @@ import usePrevious from '@/hooks/use-previous';
 import { DangerCircle, Eye, EyeClosed } from '@solar-icons/react-perf/Linear';
 import { Label } from './label';
 import { XIcon } from '../animate-ui/icons';
+import { useTranslation } from 'react-i18next';
 
 const hasInputValue = (value?: string | number | readonly string[]) => {
   if (value === undefined || value === null) return false;
@@ -51,6 +52,7 @@ function Input({
   suppressHydrationWarning,
   ...props
 }: IInputProps) {
+  const { t } = useTranslation('validation');
   const [isEmpty, setIsEmpty] = React.useState(false);
   const [typeInput, setTypeInput] = React.useState(type);
   const [touched, setTouched] = React.useState(false);
@@ -150,7 +152,7 @@ function Input({
             type={typeInput}
             data-slot="input"
             className={cn(
-              'rounded-xl autofill:bg-transparent! h-full p-2.5 bg-background focus:outline-none',
+              'rounded-xl autofill:bg-transparent! bg-background focus:outline-none',
               'transition-colors duration-200 ease-in-out',
               'file:text-foreground placeholder:text-foreground/50 dark:bg-background flex w-full min-w-0 outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm',
               'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive text-foreground/70',
@@ -166,8 +168,10 @@ function Input({
               icon && !endIcon && 'pr-3!',
               !icon && endIcon && 'pl-3!',
               shouldShowError && 'border-red-500',
-              inputSize === 'lg' && 'p-3',
-              inputSize === 'sm' && 'px-3 py-1',
+              // Đồng bộ chiều cao với wrapper & icon để căn giữa theo trục Y
+              !inputSize && 'h-10 px-3 py-2',
+              inputSize === 'lg' && 'h-11 px-3 py-2.5',
+              inputSize === 'sm' && 'h-6 px-3 py-1',
             )}
             onChange={handleChange}
             onBlur={e => handleBlur(e.target.value)}
@@ -231,7 +235,7 @@ function Input({
       </div>
       {shouldShowError && (
         <span className="text-[12px] text-red-500 font-light text-left">
-          {errorText || 'Thông tin bắt buộc'}
+          {errorText || t('validation:required_field')}
         </span>
       )}
     </>

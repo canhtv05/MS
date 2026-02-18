@@ -6,5 +6,7 @@
     "url": "{{field}} phải là một url hợp lệ",
     "pattern": "{{field}} không đúng định dạng"
   },
-  "required": "{{field}} là bắt buộc"
+  "required": "{{field}} là bắt buộc",
+  "required_field": "Trường thông tin bắt buộc",
+  "fullname": "{{field}} phải là một tên hợp lệ. Nó phải chứa ít nhất 2 từ và không có ký tự đặc biệt"
 }

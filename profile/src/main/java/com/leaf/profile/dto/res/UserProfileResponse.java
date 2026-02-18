@@ -1,4 +1,4 @@
-package com.leaf.profile.dto;
+package com.leaf.profile.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

@@ -3,8 +3,8 @@ package com.leaf.profile.mapper;
 import com.leaf.common.grpc.UserProfileDTO;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.ConvertProto;
-import com.leaf.profile.dto.UserProfileCreationReq;
-import com.leaf.profile.dto.UserProfileResponse;
+import com.leaf.profile.dto.req.UserProfileCreationReq;
+import com.leaf.profile.dto.res.UserProfileResponse;
 import java.time.Instant;
 
 public class UserProfileGrpcMapper {

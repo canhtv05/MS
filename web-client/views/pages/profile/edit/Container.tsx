@@ -9,11 +9,11 @@ import { updateProfileSchema } from '@/validations/profile';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Introduce from '../modals/Introduce';
 import { useTranslation } from 'react-i18next';
-import { IUpdateBioProfileReq, IUserProfileDTO } from '@/types/profile';
+import { IUpdateBioAndFullnameProfileReq, IUserProfileDTO } from '@/types/profile';
 import { Gender, RelationshipStatus } from '@/enums/common';
 import { Skeleton } from '@/components/ui/skeleton';
 import dynamic from 'next/dynamic';
-import { cn } from '@/lib/utils';
+import { cn, parseDateForSaving } from '@/lib/utils';
 import { useProfileStore } from '@/stores/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
 import { IResponseObject } from '@/types/common';
@@ -58,10 +58,11 @@ const Container = () => {
   const { t } = useTranslation('profile');
   const { userProfile } = useProfileStore();
   const router = useRouter();
-  const { updateBioProfileMutation } = useProfileMutation();
+  const { updateBioAndFullnameProfileMutation } = useProfileMutation();
   const form = useForm<UpdateProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
+      fullname: userProfile?.fullname || '',
       bio: userProfile?.bio || '',
       city: userProfile?.introduce?.city || '',
       hometown: userProfile?.introduce?.hometown || '',
@@ -75,14 +76,15 @@ const Container = () => {
       instagramUrl: userProfile?.introduce?.instagramUrl || '',
       tiktokUrl: userProfile?.introduce?.tiktokUrl || '',
       facebookUrl: userProfile?.introduce?.facebookUrl || '',
-      dob: new Date(),
+      dob: parseDateForSaving(new Date()),
       gender: userProfile?.introduce?.gender || Gender.GENDER_OTHER,
       relationshipStatus:
         userProfile?.introduce?.relationshipStatus || RelationshipStatus.RELATIONSHIP_STATUS_SINGLE,
       phoneNumber: userProfile?.introduce?.phoneNumber || '',
       interests: userProfile?.introduce?.interests?.map(interest => interest.id) || [],
     },
-    mode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
   const {
@@ -90,10 +92,11 @@ const Container = () => {
   } = form;
 
   const onSubmit = (data: UpdateProfileFormValues) => {
-    const payload: IUpdateBioProfileReq = {
+    const payload: IUpdateBioAndFullnameProfileReq = {
       bio: data.bio,
+      fullname: data.fullname,
     };
-    updateBioProfileMutation.mutate(payload, {
+    updateBioAndFullnameProfileMutation.mutate(payload, {
       onSuccess: (data: IResponseObject<IProfileDTO>) => {
         form.reset({ ...form.getValues(), bio: data.data.bio });
       },

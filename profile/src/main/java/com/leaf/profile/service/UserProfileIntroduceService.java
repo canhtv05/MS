@@ -2,13 +2,14 @@ package com.leaf.profile.service;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.framework.blocking.service.CommonService;
 import com.leaf.profile.domain.Interest;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import com.leaf.profile.dto.UpdateProfileIntroduceDTO;
 import com.leaf.profile.dto.UserProfileIntroduceDTO;
-import com.leaf.profile.dto.UserProfileUpdateInterestReq;
+import com.leaf.profile.dto.req.UserProfileUpdateInterestReq;
 import com.leaf.profile.repository.InterestRepository;
 import com.leaf.profile.repository.UserProfileIntroduceRepository;
 import com.leaf.profile.repository.UserProfileRepository;
@@ -95,22 +96,24 @@ public class UserProfileIntroduceService {
         UserProfileIntroduce userProfileIntroduce = userProfileIntroduceRepository
             .findByUserId(currentUserLogin)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-        userProfileIntroduce.setCity(req.getCity());
-        userProfileIntroduce.setHometown(req.getHometown());
-        userProfileIntroduce.setJobTitle(req.getJobTitle());
-        userProfileIntroduce.setCompany(req.getCompany());
-        userProfileIntroduce.setSchool(req.getSchool());
-        userProfileIntroduce.setWebsiteUrl(req.getWebsiteUrl());
-        userProfileIntroduce.setGithubUrl(req.getGithubUrl());
-        userProfileIntroduce.setLinkedinUrl(req.getLinkedinUrl());
-        userProfileIntroduce.setXUrl(req.getXUrl());
-        userProfileIntroduce.setInstagramUrl(req.getInstagramUrl());
-        userProfileIntroduce.setTiktokUrl(req.getTiktokUrl());
-        userProfileIntroduce.setFacebookUrl(req.getFacebookUrl());
-        userProfileIntroduce.setDob(req.getDob());
-        userProfileIntroduce.setGender(req.getGender());
-        userProfileIntroduce.setRelationshipStatus(req.getRelationshipStatus());
-        userProfileIntroduce.setPhoneNumber(req.getPhoneNumber());
+
+        CommonUtils.updateIfNotNull(req.getCity(), userProfileIntroduce::setCity);
+        CommonUtils.updateIfNotNull(req.getHometown(), userProfileIntroduce::setHometown);
+        CommonUtils.updateIfNotNull(req.getJobTitle(), userProfileIntroduce::setJobTitle);
+        CommonUtils.updateIfNotNull(req.getCompany(), userProfileIntroduce::setCompany);
+        CommonUtils.updateIfNotNull(req.getSchool(), userProfileIntroduce::setSchool);
+        CommonUtils.updateIfNotNull(req.getWebsiteUrl(), userProfileIntroduce::setWebsiteUrl);
+        CommonUtils.updateIfNotNull(req.getGithubUrl(), userProfileIntroduce::setGithubUrl);
+        CommonUtils.updateIfNotNull(req.getLinkedinUrl(), userProfileIntroduce::setLinkedinUrl);
+        CommonUtils.updateIfNotNull(req.getXUrl(), userProfileIntroduce::setXUrl);
+        CommonUtils.updateIfNotNull(req.getInstagramUrl(), userProfileIntroduce::setInstagramUrl);
+        CommonUtils.updateIfNotNull(req.getTiktokUrl(), userProfileIntroduce::setTiktokUrl);
+        CommonUtils.updateIfNotNull(req.getFacebookUrl(), userProfileIntroduce::setFacebookUrl);
+        CommonUtils.updateIfNotNull(req.getDob(), userProfileIntroduce::setDob);
+        CommonUtils.updateIfNotNull(req.getGender(), userProfileIntroduce::setGender);
+        CommonUtils.updateIfNotNull(req.getRelationshipStatus(), userProfileIntroduce::setRelationshipStatus);
+        CommonUtils.updateIfNotNull(req.getPhoneNumber(), userProfileIntroduce::setPhoneNumber);
+
         UserProfileIntroduce saved = userProfileIntroduceRepository.save(userProfileIntroduce);
         return UserProfileIntroduceDTO.toUserProfileIntroduceDTO(saved);
     }

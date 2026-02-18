@@ -6,7 +6,7 @@ import com.leaf.profile.service.UserProfilePrivacyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +16,7 @@ public class UserProfilePrivacyController {
 
     private final UserProfilePrivacyService userProfilePrivacyService;
 
-    @PostMapping("/me/update-privacy")
+    @PutMapping("/me/update-privacy")
     public ResponseEntity<ResponseObject<PrivacyDTO>> updatePrivacy(@Valid @RequestBody PrivacyDTO req) {
         return ResponseEntity.ok(ResponseObject.success(userProfilePrivacyService.updateUserProfilePrivacy(req)));
     }

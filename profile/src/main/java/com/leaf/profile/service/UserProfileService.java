@@ -5,14 +5,15 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.ImageResponse;
 import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.profile.domain.UserProfile;
-import com.leaf.profile.dto.ChangeCoverByUrlReq;
 import com.leaf.profile.dto.SendFriendRequestDTO;
-import com.leaf.profile.dto.UpdateBioProfileReq;
-import com.leaf.profile.dto.UserProfileCreationReq;
-import com.leaf.profile.dto.UserProfileResponse;
+import com.leaf.profile.dto.req.ChangeCoverByUrlReq;
+import com.leaf.profile.dto.req.UpdateBioAndFullnameProfileReq;
+import com.leaf.profile.dto.req.UserProfileCreationReq;
+import com.leaf.profile.dto.res.UserProfileResponse;
 import com.leaf.profile.grpc.GrpcFileClient;
 import com.leaf.profile.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -125,14 +126,15 @@ public class UserProfileService {
     }
 
     @Transactional
-    public UserProfileResponse updateBioProfile(UpdateBioProfileReq req) {
+    public UserProfileResponse updateBioAndFullnameProfile(UpdateBioAndFullnameProfileReq req) {
         String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
             new ApiException(ErrorMessage.UNAUTHENTICATED)
         );
         UserProfile userProfile = userProfileRepository
             .findByUserId(username)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-        userProfile.setBio(req.getBio());
+        CommonUtils.updateIfNotNull(req.getFullname(), userProfile::setFullname);
+        CommonUtils.updateIfNotNull(req.getBio(), userProfile::setBio);
         UserProfile saved = userProfileRepository.save(userProfile);
         String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
         redisService.evict(cacheKey);

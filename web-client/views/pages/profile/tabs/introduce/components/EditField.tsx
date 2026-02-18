@@ -14,7 +14,7 @@ import {
 } from '@/components/animate-ui/components/radix/select';
 import { Gender, RelationshipStatus } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
-import { cn } from '@/lib/utils';
+import { cn, parseDateForSaving } from '@/lib/utils';
 import { AltArrowDown, CheckRead } from '@solar-icons/react-perf/Outline';
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { Label } from '@/components/ui/label';
@@ -27,11 +27,16 @@ import {
   PopoverPopup,
 } from '@/components/animate-ui/primitives/base/popover';
 import { XIcon } from '@/components/animate-ui/icons';
+import { IDetailUserProfileDTO } from '@/types/profile';
+import { validateIntroduceField } from '../utils/introduceUpdateUtils';
+import i18n from '@/locale/i18n';
+import { enUS, vi } from 'date-fns/locale';
 
 interface IEditFieldProps {
   field: TIntroduceField;
   value: string;
   labelKey: string;
+  introduce?: IDetailUserProfileDTO['introduce'];
   onSave: (value: string) => void;
   onCancel: () => void;
 }
@@ -44,10 +49,18 @@ const renderIcon = (
   return <IconComponent className={className} />;
 };
 
-export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFieldProps) => {
+export const EditField = ({
+  field,
+  value,
+  labelKey,
+  introduce,
+  onSave,
+  onCancel,
+}: IEditFieldProps) => {
   const { t } = useTranslation('profile');
   const [editValue, setEditValue] = useState(value);
   const [dobOpen, setDobOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const IconComponent = getFieldIcon(field);
 
@@ -58,6 +71,12 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
   }, [field]);
 
   const handleSave = () => {
+    const validationError = validateIntroduceField(introduce, field, editValue);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError(null);
     onSave(editValue);
   };
 
@@ -111,6 +130,9 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                     className="mt-2 rounded-md border border-input bg-popover p-1"
                   >
                     <Calendar
+                      locale={i18n.language === 'vi' ? vi : enUS}
+                      fromYear={new Date().getFullYear() - 100}
+                      toYear={new Date().getFullYear()}
                       mode="single"
                       selected={dobDate}
                       captionLayout="dropdown"
@@ -118,7 +140,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
                       defaultMonth={dobDate}
                       onSelect={date => {
                         if (date) {
-                          setEditValue(date.toLocaleDateString());
+                          setEditValue(parseDateForSaving(date.toISOString()));
                           setDobOpen(false);
                         }
                       }}
@@ -144,6 +166,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
             <XIcon className="size-4" />
           </IconButton>
         </div>
+        {error && <p className="text-xs text-destructive">{error}</p>}
       </div>
     );
   }
@@ -202,6 +225,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
             <XIcon className="size-4" />
           </IconButton>
         </div>
+        {error && <p className="text-xs text-destructive">{error}</p>}
       </div>
     );
   }
@@ -237,6 +261,7 @@ export const EditField = ({ field, value, labelKey, onSave, onCancel }: IEditFie
           </div>
         </IconButton>
       </div>
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 };

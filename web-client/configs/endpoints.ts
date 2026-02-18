@@ -23,7 +23,7 @@ export const API_ENDPOINTS = {
     CHANGE_COVER_IMAGE: '/user-profile/me/change-cover-image',
     CHANGE_AVATAR_IMAGE: '/user-profile/me/change-avatar-image',
     CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY: '/user-profile/me/change-cover-image-from-media-history',
-    UPDATE_BIO: '/user-profile/me/update-bio',
+    UPDATE_BIO_AND_FULLNAME_PROFILE: '/user-profile/me/update-bio-and-fullname',
     UPDATE_PRIVACY: '/user-profile/me/update-privacy',
     INTERESTS: '/user-profile/interests',
     UPDATE_USER_PROFILE_INTEREST: '/user-profile/me/update-user-profile-interest',

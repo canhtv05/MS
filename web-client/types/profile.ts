@@ -18,8 +18,9 @@ export interface IImageHistoryGroupDTO {
   items: IImageHistoryDTO[];
 }
 
-export interface IUpdateBioProfileReq {
+export interface IUpdateBioAndFullnameProfileReq {
   bio: string;
+  fullname: string;
 }
 
 export interface IPrivacyDTO {

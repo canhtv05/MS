@@ -6,5 +6,7 @@
     "url": "{{field}} must be a valid url",
     "pattern": "{{field}} has invalid format"
   },
-  "required": "{{field}} is required"
+  "required": "{{field}} is required",
+  "required_field": "Required information field",
+  "fullname": "{{field}} must be a valid fullname. It must contain at least 2 words and no special characters"
 }

@@ -3,6 +3,7 @@ package com.leaf.common.utils;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -45,5 +46,11 @@ public class CommonUtils {
         }
 
         return collapsed.toLowerCase(Locale.ROOT);
+    }
+
+    public static <T> void updateIfNotNull(T value, Consumer<T> setter) {
+        if (CommonUtils.isNotEmpty(value)) {
+            setter.accept(value);
+        }
     }
 }

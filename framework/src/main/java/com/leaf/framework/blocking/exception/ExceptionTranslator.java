@@ -17,6 +17,7 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(Exception.class)
     public <T> ResponseEntity<ResponseObject<T>> handleGenericException(Exception ex) {
+        log.error("Internal Server Error: ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
             ResponseObject.error("500", ErrorMessage.UNHANDLED_ERROR.getMessage())
         );
@@ -24,6 +25,7 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleApiException(ApiException ex) {
+        log.error("Error: {}", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
             ResponseObject.error(ex.getErrorMessage(), ex.getMessage())
         );
@@ -31,11 +33,13 @@ public class ExceptionTranslator {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(NoResourceFoundException ex) {
+        log.error("Not Found: {}", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.error("400", ex.getLocalizedMessage()));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public <T> ResponseEntity<ResponseObject<T>> handleBadRequest(HttpRequestMethodNotSupportedException ex) {
+        log.error("Method Not Allowed: {}", ex);
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
             ResponseObject.error("405", ex.getLocalizedMessage())
         );

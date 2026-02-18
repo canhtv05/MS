@@ -12,7 +12,7 @@ import { MultipartFile } from '@/types/common';
 import {
   IChangeCoverByUrlReq,
   IDetailUserProfileDTO,
-  IUpdateBioProfileReq,
+  IUpdateBioAndFullnameProfileReq,
   IPrivacyDTO,
   IInterestDTO,
   ICreateInterestReq,
@@ -34,7 +34,7 @@ export const useProfileMutation = () => {
     mutationFn: async (payload: MultipartFile): Promise<IResponseObject<IProfileDTO>> => {
       const formData = new FormData();
       formData.append('file', payload.file);
-      const response = await api.post(API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE, formData, {
+      const response = await api.put(API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -57,7 +57,7 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
           queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
@@ -74,7 +74,7 @@ export const useProfileMutation = () => {
     mutationFn: async (payload: MultipartFile): Promise<IResponseObject<IProfileDTO>> => {
       const formData = new FormData();
       formData.append('file', payload.file);
-      const response = await api.post(API_ENDPOINTS.PROFILE.CHANGE_AVATAR_IMAGE, formData, {
+      const response = await api.put(API_ENDPOINTS.PROFILE.CHANGE_AVATAR_IMAGE, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -97,7 +97,7 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
           queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
@@ -112,7 +112,7 @@ export const useProfileMutation = () => {
   const changeCoverImageFromMediaHistoryMutation = useMutation({
     mutationKey: [CACHE_KEY.PROFILE.MUTATION.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY],
     mutationFn: async (payload: IChangeCoverByUrlReq): Promise<IResponseObject<IProfileDTO>> => {
-      const response = await api.post(
+      const response = await api.put(
         API_ENDPOINTS.PROFILE.CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY,
         payload,
       );
@@ -134,7 +134,7 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
           queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
@@ -146,16 +146,21 @@ export const useProfileMutation = () => {
     },
   });
 
-  const updateBioProfileMutation = useMutation({
-    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_BIO],
-    mutationFn: async (payload: IUpdateBioProfileReq): Promise<IResponseObject<IProfileDTO>> => {
-      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_BIO, payload);
+  const updateBioAndFullnameProfileMutation = useMutation({
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_BIO_AND_FULLNAME_PROFILE],
+    mutationFn: async (
+      payload: IUpdateBioAndFullnameProfileReq,
+    ): Promise<IResponseObject<IProfileDTO>> => {
+      const response = await api.put(
+        API_ENDPOINTS.PROFILE.UPDATE_BIO_AND_FULLNAME_PROFILE,
+        payload,
+      );
       return response.data;
     },
-    onError: error => handleMutationError(error, 'update-bio-profile-toast'),
+    onError: error => handleMutationError(error, 'update-bio-and-fullname-profile-toast'),
     onMutate: () => {
-      toast.loading(t('update_bio_profile_loading'), {
-        id: 'update-bio-profile-toast',
+      toast.loading(t('update_bio_and_fullname_profile_loading'), {
+        id: 'update-bio-and-fullname-profile-toast',
       });
     },
     onSuccess: async data => {
@@ -168,11 +173,11 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.ME,
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(),
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
       ]);
-      toast.success(t('update_bio_profile_success'), {
-        id: 'update-bio-profile-toast',
+      toast.success(t('update_bio_and_fullname_profile_success'), {
+        id: 'update-bio-and-fullname-profile-toast',
       });
     },
   });
@@ -180,7 +185,7 @@ export const useProfileMutation = () => {
   const updatePrivacyMutation = useMutation({
     mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_PRIVACY],
     mutationFn: async (payload: IPrivacyDTO): Promise<IResponseObject<IPrivacyDTO>> => {
-      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_PRIVACY, payload);
+      const response = await api.put(API_ENDPOINTS.PROFILE.UPDATE_PRIVACY, payload);
       return response.data;
     },
     onError: error => handleMutationError(error, 'update-privacy-toast'),
@@ -233,7 +238,7 @@ export const useProfileMutation = () => {
   const updateUserProfileInterestMutation = useMutation({
     mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_USER_PROFILE_INTEREST],
     mutationFn: async (payload: IUserProfileUpdateInterestReq): Promise<IResponseObject<void>> => {
-      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTEREST, payload);
+      const response = await api.put(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTEREST, payload);
       return response.data;
     },
     onError: error => handleMutationError(error, 'update-user-profile-interest-toast'),
@@ -260,9 +265,9 @@ export const useProfileMutation = () => {
   const updateUserProfileIntroduceMutation = useMutation({
     mutationKey: [CACHE_KEY.PROFILE.MUTATION.UPDATE_USER_PROFILE_INTRODUCE],
     mutationFn: async (
-      payload: IUpdateProfileIntroduceDTO,
+      payload: Partial<IUpdateProfileIntroduceDTO>,
     ): Promise<IResponseObject<IUpdateProfileIntroduceDTO>> => {
-      const response = await api.post(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTRODUCE, payload);
+      const response = await api.put(API_ENDPOINTS.PROFILE.UPDATE_USER_PROFILE_INTRODUCE, payload);
       return response.data;
     },
     onError: error => handleMutationError(error, 'update-user-profile-introduce-toast'),
@@ -287,7 +292,7 @@ export const useProfileMutation = () => {
     changeCoverImageMutation,
     changeCoverImageFromMediaHistoryMutation,
     changeAvatarImageMutation,
-    updateBioProfileMutation,
+    updateBioAndFullnameProfileMutation,
     updatePrivacyMutation,
     createInterestMutation,
     updateUserProfileInterestMutation,

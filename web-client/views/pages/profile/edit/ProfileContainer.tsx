@@ -5,7 +5,7 @@ import { getValidImageSrc } from '@/lib/image-utils';
 import images from '@/public/imgs';
 import { useRef, useEffect } from 'react';
 import Editor, { type Monaco } from '@monaco-editor/react';
-import type { editor } from 'monaco-editor';
+import type { editor, Uri } from 'monaco-editor';
 import { APP_CONFIGS } from '@/configs';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import Image from 'next/image';
@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useProfileModalStore } from '../use-profile-modal';
 import ChangeCover from '../modals/ChangeCover';
 import { UpdateProfileFormValues } from './Introduce';
+import { Input } from '@/components/ui/input';
 
 interface IProfileContainerProps {
   form: UseFormReturn<UpdateProfileFormValues>;
@@ -28,11 +29,26 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
   const monacoRef = useRef<Monaco | null>(null);
   const { resolvedTheme } = useTheme();
 
+  const editorOptions = {
+    ...APP_CONFIGS.EDITOR_CONFIGS.options,
+    semanticValidation: false,
+    syntaxValidation: false,
+    // Tắt tất cả diagnostics/error reporting
+    'diagnostics.enabled': false,
+  };
+
   const editorTheme = resolvedTheme === 'dark' ? 'dracula' : 'github-light';
 
   const handleEditorWillMount = (monaco: Monaco) => {
     monaco.editor.defineTheme('dracula', APP_CONFIGS.EDITOR_CONFIGS.draculaTheme);
     monaco.editor.defineTheme('github-light', APP_CONFIGS.EDITOR_CONFIGS.lightTheme);
+
+    // Disable diagnostics cho JavaScript language
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+      noSuggestionDiagnostics: true,
+    });
   };
 
   const handleEditorDidMount = (editorInstance: editor.IStandaloneCodeEditor, monaco: Monaco) => {
@@ -41,6 +57,24 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
 
     // Tắt Ctrl+Space (trigger suggest)
     editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Space, () => {});
+
+    const model = editorInstance.getModel();
+    if (model) {
+      // Xóa tất cả markers hiện có
+      monaco.editor.setModelMarkers(model, 'owner', []);
+
+      // Lắng nghe và xóa markers mới khi chúng được tạo
+      const disposable = monaco.editor.onDidChangeMarkers((uris: readonly Uri[]) => {
+        if (uris.includes(model.uri)) {
+          monaco.editor.setModelMarkers(model, 'owner', []);
+        }
+      });
+
+      // Cleanup khi editor bị dispose
+      editorInstance.onDidDispose(() => {
+        disposable.dispose();
+      });
+    }
   };
 
   useEffect(() => {
@@ -49,8 +83,45 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
     }
   }, [editorTheme]);
 
+  // Cleanup markers khi component unmount
+  useEffect(() => {
+    return () => {
+      if (editorRef.current && monacoRef.current) {
+        const model = editorRef.current.getModel();
+        if (model) {
+          monacoRef.current.editor.setModelMarkers(model, 'owner', []);
+        }
+      }
+    };
+  }, []);
+
   return (
-    <>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <h3 className="md:text-lg font-semibold">{t('profile_name')}</h3>
+        </div>
+        <Controller
+          name="fullname"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              {...field}
+              name="fullname"
+              value={field.value}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              className="w-full"
+              errorText={fieldState.error?.message}
+              id="fullname"
+              validate
+              required
+              placeholder={t('profile_name_placeholder')}
+            />
+          )}
+        />
+      </div>
+
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <h3 className="md:text-lg font-semibold">{t('avatar_image')}</h3>
@@ -129,7 +200,7 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
                 theme={editorTheme}
                 beforeMount={handleEditorWillMount}
                 onMount={handleEditorDidMount}
-                options={APP_CONFIGS.EDITOR_CONFIGS.options}
+                options={editorOptions}
               />
               {fieldState.error && (
                 <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
@@ -137,12 +208,12 @@ const ProfileContainer = ({ form, user }: IProfileContainerProps) => {
             </div>
           )}
         />
-        <ChangeCover
-          open={useProfileModalStore.getState().isChangeCoverOpen}
-          setOpen={() => useProfileModalStore.getState().closeChangeCover()}
-        />
       </div>
-    </>
+      <ChangeCover
+        open={useProfileModalStore.getState().isChangeCoverOpen}
+        setOpen={() => useProfileModalStore.getState().closeChangeCover()}
+      />
+    </div>
   );
 };
 

@@ -28,7 +28,7 @@ export const CACHE_KEY = {
       CHANGE_COVER_IMAGE: 'profile:change-cover-image',
       CHANGE_AVATAR_IMAGE: 'profile:change-avatar-image',
       CHANGE_COVER_IMAGE_FROM_MEDIA_HISTORY: 'profile:change-cover-image-from-media-history',
-      UPDATE_BIO: 'profile:update-bio',
+      UPDATE_BIO_AND_FULLNAME_PROFILE: 'profile:update-bio-and-fullname-profile',
       UPDATE_PRIVACY: 'profile:update-privacy',
       INTERESTS: 'profile:interests',
       UPDATE_USER_PROFILE_INTEREST: 'profile:update-user-profile-interest',

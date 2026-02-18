@@ -1,4 +1,4 @@
-package com.leaf.profile.dto;
+package com.leaf.profile.dto.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

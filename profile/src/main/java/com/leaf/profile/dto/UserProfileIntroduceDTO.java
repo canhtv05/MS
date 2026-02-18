@@ -67,24 +67,7 @@ public class UserProfileIntroduceDTO implements Serializable {
             .gender(userProfileIntroduce.getGender())
             .relationshipStatus(userProfileIntroduce.getRelationshipStatus())
             .phoneNumber(userProfileIntroduce.getPhoneNumber())
-            .interests(
-                userProfileIntroduce
-                    .getInterests()
-                    .stream()
-                    .map(interest ->
-                        InterestDTO.builder()
-                            .id(interest.getId())
-                            .title(interest.getTitle())
-                            .color(interest.getColor())
-                            .code(interest.getCode())
-                            .createdBy(interest.getCreatedBy())
-                            .createdDate(interest.getCreatedDate())
-                            .modifiedBy(interest.getModifiedBy())
-                            .modifiedDate(interest.getModifiedDate())
-                            .build()
-                    )
-                    .toList()
-            );
+            .interests(userProfileIntroduce.getInterests().stream().map(InterestDTO::toInterestDTO).toList());
         return builder.build();
     }
 }

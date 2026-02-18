@@ -4,6 +4,7 @@ interface ModalContextType {
   modalStack: string[];
   openModal: (modal: string) => void;
   closeTopModal: () => void;
+  closeAllModals: () => void;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -22,6 +23,11 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     setModalStack(modalStack.slice(0, -1));
   }, [modalStack]);
 
+  const closeAllModals = useCallback(() => {
+    setModalStack([]);
+    document.dispatchEvent(new CustomEvent('close-all-modals'));
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -34,7 +40,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   }, [closeTopModal]);
 
   return (
-    <ModalContext.Provider value={{ modalStack, openModal, closeTopModal }}>
+    <ModalContext.Provider value={{ modalStack, openModal, closeTopModal, closeAllModals }}>
       {children}
     </ModalContext.Provider>
   );

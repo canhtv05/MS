@@ -5,99 +5,70 @@ import Link from 'next/link';
 import { z } from 'zod/v4';
 import { AddSquare } from '@solar-icons/react-perf/Outline';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'next/navigation';
+import { MouseEvent } from 'react';
+import { useModal } from '@/contexts/ModalContext';
 
 export type UpdateProfileFormValues = z.input<typeof updateProfileSchema>;
 
 const IntroduceContent = () => {
   const { t } = useTranslation('profile');
+  const { user } = useAuthStore();
+  const username = user?.auth?.username;
+  const router = useRouter();
+  const { closeAllModals } = useModal();
+
+  const handleLinkClick =
+    (url: string) =>
+    (e: MouseEvent<HTMLAnchorElement>): void => {
+      e.preventDefault();
+      closeAllModals();
+      setTimeout(() => {
+        router.push(url);
+      }, 150);
+    };
 
   const INTRODUCE_FIELDS = [
     {
-      label: t('province_city_current'),
-      children: [
-        {
-          label: t('add_city'),
-          url: '/profile/introduce/city',
-        },
-        {
-          label: t('add_hometown'),
-          url: '/profile/introduce/hometown',
-        },
-      ],
-    },
-    {
-      label: t('career'),
-      children: [
-        {
-          label: t('add_career'),
-          url: '/profile/introduce/jobTitle',
-        },
-        {
-          label: t('add_company'),
-          url: '/profile/introduce/company',
-        },
-      ],
-    },
-    {
-      label: t('school_label'),
-      children: [
-        {
-          label: t('add_school'),
-          url: '/profile/introduce/school',
-        },
-      ],
-    },
-    {
-      label: t('social_network'),
-      children: [
-        {
-          label: t('add_website'),
-          url: '/profile/introduce/website',
-        },
-        {
-          label: t('add_github'),
-          url: '/profile/introduce/github',
-        },
-        {
-          label: t('add_linkedin'),
-          url: '/profile/introduce/linkedin',
-        },
-        {
-          label: t('add_facebook'),
-          url: '/profile/introduce/social',
-        },
-        {
-          label: t('add_instagram'),
-          url: '/profile/introduce/instagram',
-        },
-        {
-          label: t('add_tiktok'),
-          url: '/profile/introduce/tiktok',
-        },
-        {
-          label: t('add_x'),
-          url: '/profile/introduce/x',
-        },
-      ],
-    },
-    {
-      label: t('personal'),
+      label: t('navigation.basic_info'),
       children: [
         {
           label: t('add_dob'),
-          url: '/profile/introduce/dob',
+          url: `/user/@${username}?tab=introduce&subtab=basic_info`,
         },
         {
           label: t('add_gender'),
-          url: '/profile/introduce/gender',
+          url: `/user/@${username}?tab=introduce&subtab=basic_info`,
         },
         {
           label: t('add_relationship_status'),
-          url: '/profile/introduce/relationshipStatus',
+          url: `/user/@${username}?tab=introduce&subtab=basic_info`,
         },
         {
-          label: t('add_phone'),
-          url: '/profile/introduce/phoneNumber',
+          label: t('add_hometown'),
+          url: `/user/@${username}?tab=introduce&subtab=basic_info`,
+        },
+        {
+          label: t('add_city'),
+          url: `/user/@${username}?tab=introduce&subtab=basic_info`,
+        },
+      ],
+    },
+    {
+      label: t('navigation.work_and_education'),
+      children: [
+        {
+          label: t('add_school'),
+          url: `/user/@${username}?tab=introduce&subtab=work_and_education`,
+        },
+        {
+          label: t('add_career'),
+          url: `/user/@${username}?tab=introduce&subtab=work_and_education`,
+        },
+        {
+          label: t('add_company'),
+          url: `/user/@${username}?tab=introduce&subtab=work_and_education`,
         },
       ],
     },
@@ -106,7 +77,44 @@ const IntroduceContent = () => {
       children: [
         {
           label: t('add_interests'),
-          url: '/profile/introduce/interests',
+          url: `/user/@${username}?tab=introduce&subtab=interests`,
+        },
+      ],
+    },
+    {
+      label: t('navigation.contacts_and_social'),
+      children: [
+        {
+          label: t('add_phone'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_website'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_github'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_linkedin'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_facebook'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_instagram'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_tiktok'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
+        },
+        {
+          label: t('add_x'),
+          url: `/user/@${username}?tab=introduce&subtab=contacts_and_social`,
         },
       ],
     },
@@ -122,10 +130,10 @@ const IntroduceContent = () => {
               <Link
                 href={child.url}
                 key={child.label}
-                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
                 title={child.label}
+                onClick={handleLinkClick(child.url)}
               >
                 <AddSquare className="size-5 text-link" />
                 <span className="text-sm text-link hover:underline">{child.label}</span>
@@ -134,111 +142,6 @@ const IntroduceContent = () => {
           </div>
         </div>
       ))}
-      {/* <div className="flex flex-col items-center justify-center w-full">
-        <Controller
-          name="city"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <div className="w-full">
-              <Input
-                {...field}
-                id="city"
-                label="Tỉnh/Thành phố"
-                placeholder="Tỉnh/Thành phố"
-                type="text"
-                inputSize="md"
-                errorText={fieldState.error?.message}
-                value={field.value}
-                icon={<MapPointWave className="size-5 p-0.5 text-foreground/70" />}
-              />
-            </div>
-          )}
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center w-full">
-        <Controller
-          name="facebookUrl"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <div className="w-full">
-              <Input
-                {...field}
-                id="facebookUrl"
-                label="Facebook URL"
-                placeholder="https://www.facebook.com/username"
-                type="text"
-                inputSize="md"
-                errorText={fieldState.error?.message}
-                value={field.value}
-                icon={<FaceBookBoldDuotoneIcon className="size-5 p-0.5 text-foreground/70" />}
-              />
-            </div>
-          )}
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center w-full">
-        <Controller
-          name="instagramUrl"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <div className="w-full">
-              <Input
-                {...field}
-                id="instagramUrl"
-                label="Instagram URL"
-                placeholder="https://www.instagram.com/username"
-                type="text"
-                inputSize="md"
-                errorText={fieldState.error?.message}
-                value={field.value}
-                icon={<InstagramTwoOneIcon className="size-5 p-0.5 text-foreground/70" />}
-              />
-            </div>
-          )}
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center w-full">
-        <Controller
-          name="tiktokUrl"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <div className="w-full">
-              <Input
-                {...field}
-                id="tiktokUrl"
-                label="Tiktok URL"
-                placeholder="https://www.tiktok.com/username"
-                type="text"
-                inputSize="md"
-                errorText={fieldState.error?.message}
-                value={field.value}
-                icon={<TiktokIcon className="size-5 p-0.5 text-foreground/70" />}
-              />
-            </div>
-          )}
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center w-full">
-        <Controller
-          name="xUrl"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <div className="w-full">
-              <Input
-                {...field}
-                id="xUrl"
-                label="X URL"
-                placeholder="https://x.com/username"
-                type="text"
-                inputSize="md"
-                errorText={fieldState.error?.message}
-                value={field.value}
-                icon={<XTwitterIcon className="size-5 p-0.5 text-foreground/70" />}
-              />
-            </div>
-          )}
-        />
-      </div> */}
     </div>
   );
 };
