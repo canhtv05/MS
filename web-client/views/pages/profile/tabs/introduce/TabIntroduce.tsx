@@ -11,6 +11,8 @@ import NavIntroduce from './NavIntroduce';
 import MainIntroduce from './MainIntroduce';
 import { Skeleton } from '@/components/ui/skeleton';
 import IntroduceSkeleton from './IntroduceSkeleton';
+import { Separator } from '@/components/ui/separator';
+import FriendsContainer from '../friends/FriendsContainer';
 
 interface ITabIntroduce {
   data?: IDetailUserProfileDTO;
@@ -85,6 +87,12 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                   <div className="min-w-[250px] shrink-0">
                     <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
+                  <div>
+                    <Separator className="hidden sm:block lg:hidden my-2" />
+                  </div>
+                  <div>
+                    <Separator orientation="vertical" className="hidden lg:block h-auto" />
+                  </div>
                   <div className="flex-1 w-full min-w-0 overflow-x-hidden">
                     <MainIntroduce
                       menu={NAV_INTRODUCE_MENU}
@@ -97,6 +105,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
             </div>
           </Wrapper>
         </Show>
+        <FriendsContainer />
       </div>
     </div>
   );

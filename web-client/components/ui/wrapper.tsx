@@ -9,6 +9,7 @@ interface WrapperProps {
   title?: string;
   description?: string;
   button?: ReactNode;
+  endNode?: ReactNode;
   isLoading?: boolean;
   fallback?: ReactNode;
   className?: string;
@@ -19,6 +20,7 @@ const Wrapper = ({
   title,
   description,
   button,
+  endNode,
   isLoading,
   fallback,
   className,
@@ -36,7 +38,10 @@ const Wrapper = ({
                 <p className="text-xs text-muted-foreground">{description}</p>
               </Show>
             </div>
-            <Show when={!isLoading}>{button}</Show>
+            <Show when={!isLoading}>
+              <Show when={!!button}>{button}</Show>
+              <Show when={!!endNode}>{endNode}</Show>
+            </Show>
           </div>
         )}
         {children}

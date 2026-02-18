@@ -1,6 +1,5 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,20 +7,10 @@ import {
   Library,
   ClipboardText,
   UsersGroupTwoRounded,
-  LockKeyholeMinimalistic,
 } from '@solar-icons/react-perf/BoldDuotone';
-import useViewport from '@/hooks/use-view-port';
-import { PrivacyLevel, Viewport } from '@/enums/common';
-import { AltArrowDown } from '@solar-icons/react-perf/Outline';
-import {
-  DropdownMenu,
-  DropdownMenuArrow,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/animate-ui/components/radix/dropdown-menu';
-import { cn } from '@/lib/utils';
+import { PrivacyLevel } from '@/enums/common';
 import TabsItem from './TabsItem';
+import TabsNavigation, { ITabs } from '../../../../components/TabsNavigation';
 import { IDetailUserProfileDTO, IPrivacyDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
 import Wrapper from '@/components/ui/wrapper';
@@ -34,13 +23,7 @@ import PrivateSection from '../sections/PrivateSection';
 import { useAuthStore } from '@/stores/auth';
 
 type TTabsId = 'posts' | 'introduce' | 'friends' | 'gallery';
-export interface ITabs {
-  id: TTabsId;
-  labelKey: string;
-  icon: ReactNode;
-}
-
-const tabs: ITabs[] = [
+const tabs: ITabs<TTabsId>[] = [
   {
     id: 'posts',
     labelKey: 'posts',
@@ -63,7 +46,7 @@ const tabs: ITabs[] = [
   },
 ];
 
-const getPrivacyKey = (tabId: TTabsId): keyof IPrivacyDTO => {
+export const getPrivacyKey = (tabId: TTabsId): keyof IPrivacyDTO => {
   const mapping: Record<TTabsId, keyof IPrivacyDTO> = {
     posts: 'postsVisibility',
     introduce: 'introduceVisibility',
@@ -84,48 +67,18 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { width } = useViewport();
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    const handleSetMounted = () => {
-      setMounted(true);
-    };
-    handleSetMounted();
-  }, []);
 
   const tabParam = searchParams.get('tab');
   const activeTab =
     tabs.findIndex(tab => tab.id === tabParam) !== -1
       ? tabs.findIndex(tab => tab.id === tabParam)
       : 0;
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const handleTabClick = (index: number) => {
     const tabId = tabs[index].id;
     const newUrl = `${pathname}?tab=${tabId}`;
     router.push(newUrl, { scroll: false });
   };
-
-  const activeTabId = tabs[activeTab].id;
-
-  const maxVisible = !mounted
-    ? tabs.length
-    : width < Viewport.MD
-      ? 2
-      : width < Viewport.LG
-        ? 3
-        : tabs.length;
-
-  const visibleTabs = tabs.slice(0, maxVisible);
-  const hiddenTabs = tabs.slice(maxVisible);
-  const showDropdown = hiddenTabs.length > 0;
-  const renderItemsCount = visibleTabs.length + (showDropdown ? 1 : 0);
-
-  const isHiddenActive = hiddenTabs.some(tab => tab.id === activeTabId);
-  const activeRenderIndex = isHiddenActive ? visibleTabs.length : activeTab;
-
-  const indicatorIndex = hoverIndex !== null ? hoverIndex : activeRenderIndex;
 
   const handleHiddenTabSelect = (tabId: string) => {
     const newUrl = `${pathname}?tab=${tabId}`;
@@ -138,129 +91,30 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
 
   const isDisableSection = !isBypass;
 
+  // Hàm để lấy privacy config cho từng tab
+  const getTabPrivacy = (tabId: string) => {
+    const privacyKey = getPrivacyKey(tabId as TTabsId);
+    const privacy = data?.privacy?.[privacyKey];
+    return {
+      privacyKey,
+      privacyValue: privacy,
+      showLock:
+        privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
+        privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY,
+    };
+  };
+
   return (
-    <div className="w-full border-t dark:border-foreground/20">
-      <div className="relative px-3 rounded-b-lg w-full custom-bg-1 ">
-        <div className="relative">
-          <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
-          <div className="relative">
-            <div className="flex">
-              <Show
-                when={!isLoading}
-                fallback={Array.from({ length: mounted ? maxVisible : 3 }).map((_, index) => (
-                  <div key={index} className="flex-1 py-1 px-0 mx-1.5">
-                    <Skeleton className="h-8 w-full rounded-md" />
-                  </div>
-                ))}
-              >
-                {visibleTabs.map((tab, index) => (
-                  <button
-                    key={tab.id}
-                    className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer
-                  ${
-                    activeTab === index
-                      ? 'text-primary'
-                      : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
-                  }`}
-                    onClick={() => handleTabClick(index)}
-                    onMouseEnter={() => setHoverIndex(index)}
-                    onMouseLeave={() => setHoverIndex(null)}
-                  >
-                    <div className="flex gap-2 items-center justify-center relative">
-                      {tab.icon}
-                      <span className="truncate">{t(tab.labelKey)}</span>
-                      {(() => {
-                        const privacyKey = getPrivacyKey(tab.id);
-                        const privacy = data?.privacy?.[privacyKey];
-                        const condition =
-                          privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
-                          privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
-                        return (
-                          condition && (
-                            <LockKeyholeMinimalistic className="text-current absolute size-[10px] top-[14px] left-[8px]" />
-                          )
-                        );
-                      })()}
-                    </div>
-                  </button>
-                ))}
-              </Show>
-              <Show
-                when={!isLoading}
-                fallback={
-                  <div className="flex-1 py-1 px-0 mx-1.5 mr-0">
-                    <Skeleton className="h-full w-full" />
-                  </div>
-                }
-              >
-                {showDropdown && (
-                  <DropdownMenu modal={false}>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        className={`flex-1 py-3 text-sm flex gap-1 group items-center justify-center font-medium cursor-pointer outline-none
-                      ${
-                        isHiddenActive
-                          ? 'text-primary'
-                          : 'text-muted-foreground hover:text-foreground not-[&:hover]:transition-none hover:transition-colors hover:duration-300'
-                      }`}
-                        onMouseEnter={() => setHoverIndex(visibleTabs.length)}
-                        onMouseLeave={() => setHoverIndex(null)}
-                      >
-                        <div className="flex gap-1 items-center justify-center">
-                          <span className="truncate">{t('more') || 'More'}</span>
-                          <AltArrowDown size={14} className="mt-[2px]" />
-                        </div>
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="group z-100">
-                      <DropdownMenuArrow />
-                      {hiddenTabs.map(tab => (
-                        <DropdownMenuItem
-                          key={tab.id}
-                          onClick={() => handleHiddenTabSelect(tab.id)}
-                          className={cn(
-                            'cursor-pointer outline-none transition-[background-color,color] duration-200',
-                            'text-muted-foreground focus:text-primary!',
-                            activeTabId === tab.id
-                              ? 'text-primary group-hover:text-muted-foreground! group-hover:focus:text-primary!'
-                              : '',
-                          )}
-                        >
-                          <div className="flex gap-2 items-center relative">
-                            {tab.icon}
-                            <span className="truncate">{t(tab.labelKey)}</span>
-                            {(() => {
-                              const privacyKey = getPrivacyKey(tab.id);
-                              const privacy = data?.privacy?.[privacyKey];
-                              const condition =
-                                privacy === PrivacyLevel.PRIVACY_LEVEL_PRIVATE ||
-                                privacy === PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY;
-                              return (
-                                condition && (
-                                  <LockKeyholeMinimalistic className="text-current absolute size-[10px] top-[14px] left-[8px]" />
-                                )
-                              );
-                            })()}
-                          </div>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </Show>
-            </div>
-            <Show when={!isLoading}>
-              <div
-                className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,transform] duration-300 ease-out"
-                style={{
-                  width: `calc(${100 / renderItemsCount}%)`,
-                  transform: `translateX(${indicatorIndex * 100}%)`,
-                }}
-              ></div>
-            </Show>
-          </div>
-        </div>
-      </div>
+    <>
+      <TabsNavigation
+        tabs={tabs}
+        activeTab={activeTab}
+        isLoading={isLoading}
+        onTabClick={handleTabClick}
+        onHiddenTabSelect={handleHiddenTabSelect}
+        getTabPrivacy={getTabPrivacy}
+        translationNamespace="profile"
+      />
       <div className="mt-(--sp-layout) w-full rounded-lg">
         <div className="flex lg:flex-row flex-col gap-(--sp-layout) items-start justify-between">
           <Show when={!isDisableSection}>
@@ -418,7 +272,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

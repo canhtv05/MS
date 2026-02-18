@@ -23,6 +23,8 @@ import {
 import AvatarStatus from '@/components/AvatarStatus';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '@/components/ui/wrapper';
+import { getValidImageSrc } from '@/lib/image-utils';
+import images from '@/public/imgs';
 
 interface IHeroTabPost {
   data?: IDetailUserProfileDTO;
@@ -76,7 +78,7 @@ const HeroTabPost = ({ data }: IHeroTabPost) => {
       <div className="border-b group-hover:border-border border-border pb-3 flex gap-3 items-center justify-between">
         <AvatarStatus
           fallback={data.fullname}
-          src={data.avatarUrl}
+          src={getValidImageSrc(data.avatarUrl, images.avt1.src)}
           isOnline={true}
           hasAnimation={true}
           size={42}
