@@ -1,18 +1,18 @@
 'use client';
 
-import { ITabs } from './Tabs';
 import { IDetailUserProfileDTO } from '@/types/profile';
 import TabPost from './TabPost';
 import TabIntroduce from './introduce/TabIntroduce';
+import { ITabs } from '@/components/TabsNavigation';
 
 interface ITabsItem {
-  tabs: ITabs[];
+  tabs: ITabs<string>[];
   activeTab: number;
   data?: IDetailUserProfileDTO;
   isLoading?: boolean;
 }
 
-const switchTab = (tab: ITabs['id'], data?: IDetailUserProfileDTO, isLoading?: boolean) => {
+const switchTab = (tab: ITabs<string>['id'], data?: IDetailUserProfileDTO, isLoading?: boolean) => {
   switch (tab) {
     case 'posts':
       return <TabPost data={data} />;
