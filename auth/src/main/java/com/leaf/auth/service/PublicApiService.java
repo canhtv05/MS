@@ -1,11 +1,11 @@
 package com.leaf.auth.service;
 
-import com.leaf.auth.core.GenericCache;
 import com.leaf.auth.dto.PermissionSelect;
 import com.leaf.auth.dto.RoleSelect;
 import com.leaf.auth.repository.PermissionRepository;
 import com.leaf.auth.repository.RoleRepository;
 import com.leaf.common.enums.CacheKey;
+import com.leaf.framework.blocking.config.cache.InMemoryCacheService;
 import com.leaf.framework.blocking.security.AuthoritiesConstants;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import java.util.List;
@@ -20,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PublicApiService {
 
-    private final GenericCache<String, List<PermissionSelect>> permissionCache;
+    private final InMemoryCacheService<String, List<PermissionSelect>> permissionCache;
     private final PermissionRepository permissionRepository;
     private final RoleRepository roleRepository;
 
     public List<PermissionSelect> getPermissionSelect() {
-        if (permissionCache.get(CacheKey.LIST_PERMISSION.name()).isPresent()) {
+        if (permissionCache.containsKey(CacheKey.LIST_PERMISSION.name())) {
             return permissionCache.get(CacheKey.LIST_PERMISSION.name()).get();
         }
         List<PermissionSelect> permissions = permissionRepository

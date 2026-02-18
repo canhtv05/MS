@@ -12,12 +12,6 @@ import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.stereotype.Service;
 
-/**
- * Blocking version of RedisCacheService for use in blocking contexts (e.g.,
- * Spring MVC).
- * For reactive contexts (e.g., Spring Cloud Gateway), use
- * ReactiveRedisCacheService instead.
- */
 @Service
 @Slf4j
 @RequiredArgsConstructor
