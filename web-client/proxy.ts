@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { routes } from '@/configs/routes';
 
 export default function proxy(request: NextRequest) {
   const cookie = request.cookies.get('LEAF_KEY');
@@ -15,11 +16,11 @@ export default function proxy(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-  const authRoutes = ['/sign-in', '/sign-up'];
+  const authRoutes = [routes.auth.signIn, routes.auth.signUp];
 
   if (authRoutes.some(route => pathname.startsWith(route))) {
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/home', request.url));
+      return NextResponse.redirect(new URL(routes.home, request.url));
     }
   }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_FRONTEND_URL } from '@/configs/endpoints';
+import { routes } from '@/configs/routes';
 import cookieUtils from './cookieUtils';
 import { PUBLIC_ROUTERS } from './common';
 
@@ -42,6 +43,6 @@ export const handleRedirectLogin = (clearStorage = true) => {
     if (clearStorage) {
       cookieUtils.deleteStorage();
     }
-    // window.location.href = `/sign-in?returnUrl=${encodeURIComponent(currentPath)}`;
+    window.location.href = `${routes.auth.signIn}?returnUrl=${encodeURIComponent(currentPath)}`;
   }
 };

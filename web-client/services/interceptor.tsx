@@ -1,14 +1,24 @@
 'use client';
 
-import { api, handleRedirectLogin } from '@/utils/api';
-import cookieUtils from '../utils/cookieUtils';
-import { getClientContext } from '@/utils/client-context';
 import { ReactNode } from 'react';
+import { api } from '@/utils/api';
+import cookieUtils from '@/utils/cookieUtils';
+import { getClientContext } from '@/utils/client-context';
 import { logger } from '@/lib/logger';
+import { routes } from '@/configs/routes';
 
 interface IApiInterceptor {
   children: ReactNode;
 }
+
+const redirectToSignIn = () => {
+  if (typeof window === 'undefined') return;
+
+  const currentPath = window.location.pathname + window.location.search;
+  const search = `?returnUrl=${encodeURIComponent(currentPath)}`;
+
+  window.location.href = `${routes.auth.signIn}${search}`;
+};
 
 const handleLogout = (clearAll = false) => {
   if (typeof window !== 'undefined') {
@@ -18,9 +28,7 @@ const handleLogout = (clearAll = false) => {
     if (clearAll) {
       useAuthStore.getState().setUser(undefined);
       cookieUtils.clearAuthenticated();
-      // With intercepting routes, changing URL automatically clears the modal
-      // Use window.location for redirect in interceptor (not a component, can't use hooks)
-      window.location.href = '/home';
+      redirectToSignIn();
     } else {
       cookieUtils.clearAuthenticated();
     }
@@ -49,7 +57,6 @@ api.interceptors.request.use(
     return config;
   },
   error => {
-    handleRedirectLogin();
     return Promise.reject(error);
   },
 );
@@ -57,8 +64,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   async error => {
-    // gateway xử lý refresh token
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+
+    // gateway xử lý refresh token – nếu vẫn trả 401 thì coi như hết hạn phiên đăng nhập
+    if (status === 401) {
       logger.log('[Interceptor] Unauthorized (401), logging out');
       handleLogout(true);
       return Promise.reject(error);
