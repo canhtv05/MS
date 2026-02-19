@@ -12,7 +12,7 @@ import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore, useUserProfileStore } from '@/stores/profile';
 import {
   UserDetailDocument,
   UserDetailQuery,
@@ -29,8 +29,8 @@ import { CACHE_KEY } from '@/configs/cache-key';
 import { useAppQuery } from '@/hooks/use-app-query';
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
-  const userProfile = useProfileStore(state => state.userProfile);
-  const setUserProfile = useProfileStore(state => state.setUserProfile);
+  const userProfile = useMyProfileStore(state => state.myProfile);
+  const setUserProfile = useMyProfileStore(state => state.setMyProfile);
   const isAuthenticated = cookieUtils.getAuthenticated();
 
   const meQuery = useAppQuery<IResponseObject<IUserProfileDTO>>('PROFILE', {
@@ -124,7 +124,8 @@ export const useInterestInfiniteQuery = (
 
 export const useUserProfileQuery = (username?: string, enabled: boolean = true) => {
   const { user } = useAuthStore();
-  const { setUserProfile } = useProfileStore();
+  const { setMyProfile: setUserProfile } = useMyProfileStore();
+  const { setUser } = useUserProfileStore();
   let us = username || '';
   if (us.startsWith('@')) {
     us = us.slice(1);
@@ -142,6 +143,7 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
       if (us === user?.auth?.username && res.userDetail) {
         setUserProfile(res.userDetail as unknown as IDetailUserProfileDTO);
       }
+      setUser(res.userDetail as unknown as IDetailUserProfileDTO);
       return res.userDetail as unknown as IDetailUserProfileDTO;
     },
     throwOnError: error => {
@@ -156,7 +158,7 @@ export const useUserProfileQuery = (username?: string, enabled: boolean = true) 
 
 export const usePrivacyQuery = () => {
   const { user } = useAuthStore();
-  const { userProfile, setUserProfile } = useProfileStore();
+  const { myProfile: userProfile, setMyProfile: setUserProfile } = useMyProfileStore();
   const username = user?.auth?.username || '';
 
   return useAppQuery<IUserProfilePrivacyDTO, unknown>('PROFILE', {

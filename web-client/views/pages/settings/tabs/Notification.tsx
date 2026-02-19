@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { startTransition, useEffect, useState } from 'react';
 import { PrivacyLevel } from '@/enums/common';
 import { TFunction } from 'i18next';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 
 interface IRenderSelectProps {
   value: string;
@@ -65,7 +65,7 @@ const RenderSelect = ({ value, onValueChange, labelKey, t }: IRenderSelectProps)
 
 const Notification = () => {
   const { t } = useTranslation('settings');
-  const { userProfile } = useProfileStore();
+  const { myProfile: userProfile } = useMyProfileStore();
   const [profileVisibility, setProfileVisibility] = useState<string>(
     userProfile?.privacy?.profileVisibility || PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
   );

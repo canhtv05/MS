@@ -13,7 +13,7 @@ interface ITabPost {
   data?: IDetailUserProfileDTO;
 }
 
-const MOCK_POSTS: IFeedPost[] = [
+export const MOCK_POSTS: IFeedPost[] = [
   {
     id: '1',
     author: {

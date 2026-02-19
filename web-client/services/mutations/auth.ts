@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthStore } from '@/stores/auth';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 import {
   IChangePasswordRequest,
   IForgotPasswordRequest,
@@ -40,7 +40,7 @@ export const useAuthMutation = (isLogoutAllDevices = false) => {
   const returnUrl = searchParams.get('returnUrl');
 
   const { setUser, logout } = useAuthStore();
-  const setUserProfile = useProfileStore(state => state.setUserProfile);
+  const setUserProfile = useMyProfileStore(state => state.setMyProfile);
 
   const loginMutation = useMutation({
     mutationKey: [CACHE_KEY.AUTH.MUTATION.LOGIN],

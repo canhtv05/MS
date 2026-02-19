@@ -83,6 +83,7 @@ export function formatWebsiteUrl(url: string): string {
 }
 
 export function normalizeWebsiteUrl(url: string): string {
+  if (!url || url === '') return '';
   const trimmedUrl = url.trim();
   if (trimmedUrl === '') return trimmedUrl;
   if (/^https?:\/\//i.test(trimmedUrl)) return trimmedUrl;

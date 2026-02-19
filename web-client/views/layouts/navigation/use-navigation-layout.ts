@@ -1,10 +1,10 @@
 'use client';
 
 import { useAuthStore } from '@/stores/auth';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 
 const useNavigationLayout = () => {
-  const { userProfile } = useProfileStore();
+  const { myProfile: userProfile } = useMyProfileStore();
   const { user } = useAuthStore();
 
   return {

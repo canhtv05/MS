@@ -14,7 +14,7 @@ import { Gender, RelationshipStatus } from '@/enums/common';
 import { Skeleton } from '@/components/ui/skeleton';
 import dynamic from 'next/dynamic';
 import { cn, parseDateForSaving } from '@/lib/utils';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
 import { IResponseObject } from '@/types/common';
 import { IProfileDTO } from '@/types/auth';
@@ -56,7 +56,7 @@ const EditProfileContainer = ({
 
 const Container = () => {
   const { t } = useTranslation('profile');
-  const { userProfile } = useProfileStore();
+  const { myProfile: userProfile } = useMyProfileStore();
   const router = useRouter();
   const { updateBioAndFullnameProfileMutation } = useProfileMutation();
   const form = useForm<UpdateProfileFormValues>({

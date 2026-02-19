@@ -19,13 +19,13 @@ import {
   IUserProfileUpdateInterestReq,
   IUpdateProfileIntroduceDTO,
 } from '@/types/profile';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
 import { CACHE_KEY } from '@/configs/cache-key';
 
 export const useProfileMutation = () => {
   const { t } = useTranslation('profile');
-  const { setUserProfile } = useProfileStore();
+  const { setMyProfile: setUserProfile } = useMyProfileStore();
   const { user, setUser } = useAuthStore();
   const queryClient = useQueryClient();
 

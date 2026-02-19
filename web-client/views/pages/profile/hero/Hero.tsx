@@ -31,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import Image from 'next/image';
-import { useProfileStore } from '@/stores/profile';
+import { useMyProfileStore } from '@/stores/profile';
 import { getValidImageSrc } from '@/lib/image-utils';
 import Container from '../edit/Container';
 import Show from '@/components/Show';
@@ -85,7 +85,7 @@ const HeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
 
 const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
   const user = useAuthStore(state => state.user);
-  const { userProfile } = useProfileStore(state => state);
+  const { myProfile: userProfile } = useMyProfileStore(state => state);
   const { isParentDialogOpen, openParentDialog, closeParentDialog, isPending } =
     useProfileModalStore();
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
