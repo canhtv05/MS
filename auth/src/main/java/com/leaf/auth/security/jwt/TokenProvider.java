@@ -18,7 +18,7 @@ import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
-import com.leaf.framework.blocking.service.KeyCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
@@ -61,7 +61,7 @@ public class TokenProvider {
     private final JwtParser jwtParser;
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisCacheService redisService;
-    private final KeyCacheService keyCacheService;
+    private final SessionStore keyCacheService;
     private final UserRepository userRepository;
     private final CookieUtil cookieUtil;
     private final Long tokenValidityDuration;
@@ -70,7 +70,7 @@ public class TokenProvider {
     public TokenProvider(
         SimpMessagingTemplate messagingTemplate,
         RedisCacheService redisService,
-        KeyCacheService keyCacheService,
+        SessionStore keyCacheService,
         UserRepository userRepository,
         CookieUtil cookieUtil,
         ApplicationProperties applicationProperties

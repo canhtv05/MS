@@ -5,7 +5,7 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
-import com.leaf.framework.blocking.service.KeyCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.dto.VerifyEmailTokenRes;
 import com.leaf.noti.enums.VerificationStatus;
@@ -31,7 +31,7 @@ public class NotificationService {
 
     private final GrpcAuthClient grpcAuthClient;
     private final RedisCacheService redisService;
-    private final KeyCacheService keyCacheService;
+    private final SessionStore keyCacheService;
     private final TokenUtil tokenUtil;
     private final EmailVerificationLogsRepository emailVerificationLogsRepository;
     private final EmailService emailService;

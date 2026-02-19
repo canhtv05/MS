@@ -7,6 +7,7 @@ import { ThreeSquares } from '@solar-icons/react-perf/category/style/BoldDuotone
 import { useState } from 'react';
 import Show from '@/components/Show';
 import { logger } from '@/lib/logger';
+import FriendCard from './FriendCard';
 
 const FriendsContainer = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -51,7 +52,7 @@ const FriendsContainer = () => {
         </div>
       }
     >
-      <div className="max-w-[300px]">
+      <div className="max-w-[250px]">
         <TabsNavigation
           tabs={manyTabs}
           activeTab={activeTab}
@@ -62,11 +63,19 @@ const FriendsContainer = () => {
         />
       </div>
       <Wrapper className="mt-(--sp-card)">
-        <div className="flex flex-col gap-4">
-          <Show when={activeTab === 0}>Bạn ơi1</Show>
-          <Show when={activeTab === 1}>Bạn ơi2</Show>
-          <Show when={activeTab === 2}>Bạn ơi3</Show>
-          <Show when={activeTab === 3}>Bạn ơi4</Show>
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-x-(--sp-card) gap-y-[calc(var(--sp-card)*2)]">
+          <Show when={activeTab === 0}>
+            <FriendCard />
+            <FriendCard />
+            <FriendCard />
+            <FriendCard />
+          </Show>
+          <Show when={activeTab === 1}>
+            <FriendCard />
+            <FriendCard />
+            <FriendCard />
+            <FriendCard />
+          </Show>
         </div>
       </Wrapper>
     </Wrapper>

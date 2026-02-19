@@ -3,7 +3,7 @@ package com.leaf.framework.blocking.util;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
-import com.leaf.framework.blocking.service.KeyCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
@@ -21,7 +21,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Blocking version of JwtUtil for use in blocking contexts (e.g., Spring MVC).
- * For reactive contexts (e.g., Spring Cloud Gateway), use ReactiveJwtUtil instead.
+ * For reactive contexts (e.g., Spring Cloud Gateway), use ReactiveJwtUtil
+ * instead.
  */
 @Slf4j
 @Component
@@ -30,7 +31,7 @@ public class JwtUtil {
 
     private final ApplicationProperties applicationProperties;
     private final RedisCacheService redisService;
-    private final KeyCacheService keyCacheService;
+    private final SessionStore keyCacheService;
 
     public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(applicationProperties.getSecurity().getBase64Secret());

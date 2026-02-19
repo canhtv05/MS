@@ -35,7 +35,7 @@ import com.leaf.common.utils.DateUtils;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.AuthoritiesConstants;
 import com.leaf.framework.blocking.security.SecurityUtils;
-import com.leaf.framework.blocking.service.KeyCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -77,7 +77,7 @@ public class UserService {
     private final AuthService authService;
     private final KafkaProducerService kafkaProducerService;
     private final RedisCacheService redisService;
-    private final KeyCacheService keyCacheService;
+    private final SessionStore keyCacheService;
 
     @Transactional(readOnly = true)
     public UserDTO findById(Long id) {

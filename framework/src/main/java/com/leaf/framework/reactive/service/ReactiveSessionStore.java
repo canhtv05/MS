@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
  */
 @Service
 @RequiredArgsConstructor
-public class ReactiveKeyCacheService {
+public class ReactiveSessionStore {
 
     private final Environment environment;
 

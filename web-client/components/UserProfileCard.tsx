@@ -16,6 +16,7 @@ interface IUserProfileCard {
   hideInfo?: boolean;
   className?: string;
   size?: number;
+  hasBorder?: boolean;
 }
 
 const UserProfileCard = ({
@@ -27,6 +28,7 @@ const UserProfileCard = ({
   hideInfo = false,
   className,
   size = 35,
+  hasBorder = true,
 }: IUserProfileCard) => {
   const validAvatarUrl = getValidImageSrc(avatarUrl, images.avt1.src);
 
@@ -35,7 +37,10 @@ const UserProfileCard = ({
       <div className="relative">
         <Avatar className="relative" style={{ width: `${size}px`, height: `${size}px` }}>
           <AvatarImage
-            className="rounded-full border-2 border-purple-300 cursor-pointer"
+            className={cn(
+              'rounded-full cursor-pointer',
+              hasBorder ? 'border-2 border-purple-300' : '',
+            )}
             src={validAvatarUrl}
             alt={username}
           />

@@ -5,7 +5,7 @@ import com.leaf.common.utils.AESUtils;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import com.leaf.framework.reactive.cache.ReactiveRedisCacheService;
-import com.leaf.framework.reactive.service.ReactiveKeyCacheService;
+import com.leaf.framework.reactive.service.ReactiveSessionStore;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -33,7 +33,7 @@ public class ReactiveJwtUtil {
 
     private final ApplicationProperties applicationProperties;
     private final ReactiveRedisCacheService redisService;
-    private final ReactiveKeyCacheService keyCacheService;
+    private final ReactiveSessionStore keyCacheService;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(applicationProperties.getSecurity().getBase64Secret());

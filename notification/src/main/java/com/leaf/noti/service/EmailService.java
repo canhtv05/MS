@@ -5,7 +5,7 @@ import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
-import com.leaf.framework.blocking.service.KeyCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.noti.config.EmailProperties;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.enums.VerificationStatus;
@@ -37,7 +37,7 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
     private final RedisCacheService redisService;
-    private final KeyCacheService keyCacheService;
+    private final SessionStore keyCacheService;
     private final EmailProperties emailProperties;
     private final TokenUtil tokenUtil;
     private final EmailVerificationLogsRepository emailVerificationLogsRepository;

@@ -88,7 +88,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                     <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
                   <div>
-                    <Separator className="hidden sm:block lg:hidden my-2" />
+                    <Separator className="block lg:hidden my-2" />
                   </div>
                   <div>
                     <Separator orientation="vertical" className="hidden lg:block h-auto" />
