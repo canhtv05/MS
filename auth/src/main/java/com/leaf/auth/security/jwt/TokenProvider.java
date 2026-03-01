@@ -13,12 +13,16 @@ import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
+import com.leaf.common.socket.WsMessage;
+import com.leaf.common.socket.WsSessionRevokedMessage;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
+import com.leaf.framework.blocking.service.RedisPubService;
 import com.leaf.framework.blocking.service.SessionStore;
+import com.leaf.framework.blocking.service.UserSessionService;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
@@ -66,6 +70,8 @@ public class TokenProvider {
     private final CookieUtil cookieUtil;
     private final Long tokenValidityDuration;
     private final Long refreshTokenValidityDuration;
+    private final RedisPubService redisPubService;
+    private final UserSessionService userSessionService;
 
     public TokenProvider(
         SimpMessagingTemplate messagingTemplate,
@@ -73,7 +79,9 @@ public class TokenProvider {
         SessionStore keyCacheService,
         UserRepository userRepository,
         CookieUtil cookieUtil,
-        ApplicationProperties applicationProperties
+        ApplicationProperties applicationProperties,
+        RedisPubService redisPubService,
+        UserSessionService userSessionService
     ) {
         this.messagingTemplate = messagingTemplate;
         this.redisService = redisService;
@@ -81,6 +89,8 @@ public class TokenProvider {
         this.userRepository = userRepository;
         this.cookieUtil = cookieUtil;
         String secret = applicationProperties.getSecurity().getBase64Secret();
+        this.redisPubService = redisPubService;
+        this.userSessionService = userSessionService;
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parser().verifyWith(key).build();
@@ -95,32 +105,16 @@ public class TokenProvider {
         String channel
     ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        String name = authentication.getName();
-        String keyToken = keyCacheService.getKeyToken(name, channel);
-        String tokenExisting = redisService.get(keyToken, String.class);
+        String name = userDetails.getUsername();
+        String oldToken = userSessionService.isUserOnline(name, channel);
         String sessionId = UUID.randomUUID().toString();
 
-        if (tokenExisting != null) {
-            NotificationPayload<?> payload = NotificationPayload.builder()
-                .type(NotificationType.FORCE_LOGOUT)
-                .message("Tài khoản của bạn vừa đăng nhập ở nơi khác")
-                .title("Phiên đăng nhập")
-                .sessionId(sessionId)
-                .timestamp(Instant.now())
-                .username(userDetails.getUsername())
-                .build();
-            messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
-
-            User user = userRepository
-                .findByUsername(name)
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
-            user.setRefreshToken(null);
-            userRepository.save(user);
-            redisService.evict(keyToken);
-        }
-
         String token = this.generateToken(authentication, this.tokenValidityDuration, channel, sessionId);
+        if (StringUtils.isNotBlank(oldToken)) {
+            Thread.startVirtualThread(() -> {
+                this.handleKickOldSessionAsync(name, token, oldToken, channel);
+            });
+        }
         String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, channel, sessionId);
         this.cacheUserToken(name, channel, sessionId, token);
 
@@ -300,8 +294,7 @@ public class TokenProvider {
             userRepository.save(user);
             Thread.startVirtualThread(() -> {
                 try {
-                    redisService.evict(keyCacheService.getKeyToken(username, channel));
-                    redisService.evict(keyCacheService.getKeyUser(username, channel));
+                    userSessionService.removeOldSessionByChanelType(username, channel);
                 } catch (Exception e) {
                     log.error("Async evict redis failed", e);
                 }
@@ -320,8 +313,8 @@ public class TokenProvider {
         userRepository.save(user);
         // to sent notification to all devices
         Thread.startVirtualThread(() -> {
-            redisService.evict(keyCacheService.getKeyToken(username, "web"));
-            redisService.evict(keyCacheService.getKeyUser(username, "mobile"));
+            userSessionService.removeOldSessionByChanelType(username, "web");
+            userSessionService.removeOldSessionByChanelType(username, "mobile");
         });
     }
 
@@ -356,15 +349,27 @@ public class TokenProvider {
     }
 
     private void cacheUserToken(String username, String channel, String sessionId, String token) {
-        String keyUser = keyCacheService.getKeyUser(username, channel);
         UserSessionDTO userSessionDTO = UserSessionDTO.builder()
+            .username(username)
             .sessionId(sessionId)
             .channel(channel)
             .secretKey(AESUtils.generateSecretKey())
             .build();
-        redisService.set(keyUser, userSessionDTO);
+        userSessionService.cacheUserSession(userSessionDTO);
+        userSessionService.cacheToken(username, channel, token);
+    }
 
-        String keyToken = keyCacheService.getKeyToken(username, channel);
-        redisService.set(keyToken, AESUtils.hexString(token));
+    public void handleKickOldSessionAsync(String userId, String newToken, String oldToken, String channelType) {
+        WsSessionRevokedMessage payload = WsSessionRevokedMessage.builder()
+            .tokenSessionValid(newToken)
+            .tokenSessionCurrent(oldToken)
+            .channelType(channelType)
+            .build();
+        WsMessage wsMessage = WsMessage.builder()
+            .type(WsMessage.WsType.KICK)
+            .userId(userId)
+            .data(JsonF.toJson(payload))
+            .build();
+        redisPubService.pubWebsocketTopic(wsMessage);
     }
 }

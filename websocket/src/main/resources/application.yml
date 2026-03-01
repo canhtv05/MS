@@ -1,11 +1,9 @@
 server:
-  servlet:
-    context-path: /notifications
-  port: 1004
+  port: 1007
 
 grpc:
   server:
-    port: 9004
+    port: 9007
   client:
     auth-service:
       address: static://localhost:9001
@@ -13,7 +11,7 @@ grpc:
 
 spring:
   application:
-    name: notification
+    name: websocket-service
 
   profiles:
     active: dev

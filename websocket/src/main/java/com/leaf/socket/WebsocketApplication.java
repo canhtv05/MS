@@ -3,7 +3,7 @@ package com.leaf.socket;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = { "com.leaf", "com.leaf.common" })
+@SpringBootApplication(scanBasePackages = { "com.leaf" })
 public class WebsocketApplication {
 
     public static void main(String[] args) {

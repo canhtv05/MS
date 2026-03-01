@@ -1,5 +1,6 @@
 package com.leaf.framework.blocking.security;
 
+import com.leaf.common.dto.UserSessionDTO;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,19 @@ public final class SecurityUtils {
             return (String) authentication.getPrincipal();
         } else if (Objects.nonNull(authentication.getName())) {
             return authentication.getName();
+        }
+        return null;
+    }
+
+    public static UserSessionDTO.AuthInfo getAuthInfo() {
+        try {
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            Authentication authentication = securityContext.getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal principal) {
+                return new UserSessionDTO.AuthInfo(principal.getChannel(), principal.getUsername());
+            }
+        } catch (Exception e) {
+            //
         }
         return null;
     }

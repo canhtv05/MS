@@ -13,7 +13,7 @@
 	<artifactId>profile</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>profile</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Profile project for Spring Boot</description>
 	<url />
 	<licenses>
 		<license />

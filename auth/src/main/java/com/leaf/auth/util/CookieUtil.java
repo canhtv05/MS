@@ -1,6 +1,7 @@
 package com.leaf.auth.util;
 
 import com.leaf.auth.dto.TokenPair;
+import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
@@ -10,26 +11,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+@Getter
 @Component
 @RequiredArgsConstructor
 public class CookieUtil {
 
-    @Getter
     private final ApplicationProperties properties;
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
         TokenPair tokenPair = TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
         String jsonData = JsonF.toJson(tokenPair);
+        if (CommonUtils.isEmpty(jsonData)) {
+            return null;
+        }
 
         // replace các kí tự sao cho giống với thư viện js-cookie
         // https://www.npmjs.com/package/js-cookie
-        String encode = URLEncoder.encode(jsonData, StandardCharsets.UTF_8);
+        String encode = URLEncoder.encode(Objects.requireNonNull(jsonData), StandardCharsets.UTF_8);
 
         Cookie cookie = new Cookie(CommonConstants.COOKIE_NAME, encode);
         // cookie.setHttpOnly(true);
@@ -63,8 +68,7 @@ public class CookieUtil {
                 if (c.getName().equals(CommonConstants.COOKIE_NAME)) try {
                     String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
 
-                    TokenPair cookieValue = JsonF.jsonToObject(decoded, TokenPair.class);
-                    return cookieValue;
+                    return JsonF.jsonToObject(decoded, TokenPair.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return null;
