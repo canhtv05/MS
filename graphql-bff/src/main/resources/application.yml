@@ -16,6 +16,8 @@ grpc:
       negotiationType: plaintext
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: graphql-bff
 

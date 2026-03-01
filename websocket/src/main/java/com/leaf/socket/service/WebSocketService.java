@@ -19,4 +19,9 @@ public class WebSocketService {
         WsMessage payload = WsMessage.builder().type(WsMessage.WsType.MESSAGE).message(message).build();
         wsSessionManager.sendToUser(userId, payload);
     }
+
+    public void sendToAll(String message) {
+        WsMessage payload = WsMessage.builder().type(WsMessage.WsType.MESSAGE).message(message).build();
+        wsSessionManager.send(payload);
+    }
 }

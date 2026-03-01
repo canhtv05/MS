@@ -55,12 +55,13 @@ spring:
               filters:
                 - StripPrefix=2
 
+            # WebSocket: set path /ws so downstream always receives /ws (avoids empty path → NoResourceFoundException)
             - id: websocket-service
               uri: lb:ws://websocket-service
               predicates:
                 - Path=/ws/**
               filters:
-                - StripPrefix=1
+                - SetPath=/ws
 
 grpc:
   client:

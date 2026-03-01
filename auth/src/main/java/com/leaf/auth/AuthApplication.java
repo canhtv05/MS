@@ -13,12 +13,9 @@ import org.springframework.context.annotation.FilterType;
 @EnableCaching
 @EnableConfigurationProperties(ApplicationProperties.class)
 @ComponentScan(
-    basePackages = { "com.leaf.auth", "com.leaf.common", "com.leaf.framework" },
+    basePackages = { "com.leaf" },
     excludeFilters = {
-        // Exclude entire reactive package (for Spring WebFlux/reactive stack only)
-        // Auth uses blocking stack, so only blocking package should be scanned
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com\\.leaf\\.framework\\.reactive\\..*"),
-        // Exclude SecurityConfig from blocking (auth has its own security config)
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
     }
 )

@@ -2,8 +2,16 @@ package com.leaf.socket;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
-@SpringBootApplication(scanBasePackages = { "com.leaf" })
+@SpringBootApplication
+@ComponentScan(
+    basePackages = { "com.leaf" },
+    excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com\\.leaf\\.framework\\.reactive\\..*")
+    }
+)
 public class WebsocketApplication {
 
     public static void main(String[] args) {

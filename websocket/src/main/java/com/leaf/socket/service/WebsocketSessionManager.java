@@ -20,12 +20,16 @@ public class WebsocketSessionManager {
     public static final String WS_ATTRIBUTE_TOKEN_ID = "tokenId";
     public static final String WS_ATTRIBUTE_CHANNEL_TYPE = "channelType";
 
+    /** Key for sessions without token (ConcurrentHashMap does not allow null key). */
+    private static final String ANONYMOUS_USER_KEY = "__anonymous__";
+
     private final ConcurrentHashMap<String, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
 
     public void addSession(WebSocketSession session) {
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
         String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+        String mapKey = userId != null ? userId : ANONYMOUS_USER_KEY;
         log.info(
             "[WS] addSession userId={} tokenId={} channelType={} with sessionId={}",
             userId,
@@ -33,15 +37,16 @@ public class WebsocketSessionManager {
             channelType,
             session.getId()
         );
-        userSessions.computeIfAbsent(userId, k -> ConcurrentHashMap.newKeySet()).add(session);
-        log.info("[WS] after addSession for user={} total session online: {}", userId, userSessions.get(userId).size());
+        userSessions.computeIfAbsent(mapKey, k -> ConcurrentHashMap.newKeySet()).add(session);
+        log.info("[WS] after addSession for user={} total session online: {}", mapKey, userSessions.get(mapKey).size());
     }
 
     public void removeSession(WebSocketSession session) {
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
         String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
-        userSessions.computeIfPresent(userId, (uid, sessions) -> {
+        String mapKey = userId != null ? userId : ANONYMOUS_USER_KEY;
+        userSessions.computeIfPresent(mapKey, (uid, sessions) -> {
             sessions.remove(session);
             log.info(
                 "[WS] removeSession userId={} tokenId={} channelType={} with sessionId={}",
@@ -54,7 +59,7 @@ public class WebsocketSessionManager {
                 log.info("[WS] all sessions closed for userId={}, removing user from map", uid);
                 return null;
             }
-            log.info("[WS] after removeSession userId={} remainingSessions={}", uid, userSessions.get(userId).size());
+            log.info("[WS] after removeSession userId={} remainingSessions={}", uid, userSessions.get(uid).size());
             return sessions;
         });
     }
@@ -103,6 +108,26 @@ public class WebsocketSessionManager {
             } catch (IOException ignored) {
                 //
             }
+        }
+    }
+
+    public void send(WsMessage msg) {
+        if (userSessions.isEmpty()) {
+            log.debug("[WS] send to all: no sessions");
+            return;
+        }
+        try {
+            String payload = JsonF.toJson(msg);
+            for (Set<WebSocketSession> sessions : userSessions.values()) {
+                for (WebSocketSession s : sessions) {
+                    if (s.isOpen()) {
+                        s.sendMessage(new TextMessage(payload));
+                    }
+                }
+            }
+            log.debug("[WS] send to all: broadcast done");
+        } catch (Exception e) {
+            log.error("[WS] send to all error", e);
         }
     }
 

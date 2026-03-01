@@ -2,9 +2,7 @@ package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
-import com.leaf.auth.dto.NotificationPayload;
 import com.leaf.auth.dto.res.RefreshTokenRes;
-import com.leaf.auth.enums.NotificationType;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.CustomUserDetails;
@@ -18,10 +16,8 @@ import com.leaf.common.socket.WsSessionRevokedMessage;
 import com.leaf.common.utils.AESUtils;
 import com.leaf.common.utils.CommonUtils;
 import com.leaf.common.utils.JsonF;
-import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.framework.blocking.service.RedisPubService;
-import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.framework.blocking.service.UserSessionService;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
@@ -34,7 +30,6 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -46,7 +41,6 @@ import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,9 +57,6 @@ public class TokenProvider {
     private static final String USER_GLOBAL_KEY = "isGlobal";
     private final SecretKey key;
     private final JwtParser jwtParser;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final RedisCacheService redisService;
-    private final SessionStore keyCacheService;
     private final UserRepository userRepository;
     private final CookieUtil cookieUtil;
     private final Long tokenValidityDuration;
@@ -74,18 +65,12 @@ public class TokenProvider {
     private final UserSessionService userSessionService;
 
     public TokenProvider(
-        SimpMessagingTemplate messagingTemplate,
-        RedisCacheService redisService,
-        SessionStore keyCacheService,
         UserRepository userRepository,
         CookieUtil cookieUtil,
         ApplicationProperties applicationProperties,
         RedisPubService redisPubService,
         UserSessionService userSessionService
     ) {
-        this.messagingTemplate = messagingTemplate;
-        this.redisService = redisService;
-        this.keyCacheService = keyCacheService;
         this.userRepository = userRepository;
         this.cookieUtil = cookieUtil;
         String secret = applicationProperties.getSecurity().getBase64Secret();

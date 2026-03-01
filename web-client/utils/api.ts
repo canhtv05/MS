@@ -10,7 +10,7 @@ export const api = axios.create({
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': 'true',
   },
-  withCredentials: true,
+  // withCredentials: true,
 });
 
 export const apiHandler = async <T>(promise: Promise<{ data: T }>) => {

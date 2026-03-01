@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.leaf</groupId>
-	<artifactId>Websocket</artifactId>
+	<artifactId>websocket</artifactId>
 	<version>0.0.1</version>
-	<name>Websocket</name>
+	<name>websocket</name>
 	<description>Websocket for Spring Boot</description>
 	<url/>
 	<licenses>

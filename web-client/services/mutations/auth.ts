@@ -12,7 +12,7 @@ import {
   IVerifyOTPReq,
 } from '@/types/auth';
 import { IResponseObject } from '@/types/common';
-import { api } from '@/utils/api';
+import { api, handleRedirectLogin } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
 import { handleMutationError } from '@/utils/handler-mutation-error';
@@ -78,6 +78,10 @@ export const useAuthMutation = (isLogoutAllDevices = false) => {
             queryFn: async () => {
               const client = getGraphQLClient();
               const data = await client.request<MeQuery>(MeDocument);
+              if (!data.me) {
+                handleRedirectLogin(true);
+                return;
+              }
               useAuthStore.getState().setUser(data.me as IUserProfileDTO);
               return data.me as IUserProfileDTO;
             },

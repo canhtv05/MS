@@ -63,15 +63,20 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         boolean isPublic = isPublicEndpoint(request);
         boolean isGraphql = isGraphqlEndpoint(request);
+        boolean isWebSocket = isWebSocketEndpoint(request);
 
         if (isPublic) {
             return chain.filter(exchange);
         }
-        if (isGraphql) {
+        if (isGraphql || isWebSocket) {
             return handleOptionalAuthentication(exchange, chain);
         }
 
         return handleRequiredAuthentication(exchange, chain);
+    }
+
+    private boolean isWebSocketEndpoint(ServerHttpRequest request) {
+        return "/ws".equals(request.getURI().getPath()) || request.getURI().getPath().startsWith("/ws/");
     }
 
     private boolean isPublicEndpoint(ServerHttpRequest request) {
