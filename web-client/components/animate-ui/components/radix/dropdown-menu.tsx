@@ -285,7 +285,7 @@ function DropdownMenuArrow({ className, children, ...props }: DropdownMenuArrowP
     <DropdownMenuArrowPrimitive
       {...props}
       style={{ zIndex: 100, ...props.style }}
-      className={cn('z-100! -translate-y-1', className)}
+      className={cn('z-100! -translate-y-0.5', className)}
     >
       {children || (
         <svg

@@ -29,7 +29,7 @@ const FriendCard = () => {
           sideOffset={4}
           side="bottom"
           align="end"
-          className="w-[220px] z-120! [&_span]:text-foreground/70 shadow-none"
+          className="w-[220px] [&_span]:text-foreground/70 shadow-none"
         >
           <DropdownMenuGroup>
             <DropdownMenuItem>Xem trang cá nhân</DropdownMenuItem>

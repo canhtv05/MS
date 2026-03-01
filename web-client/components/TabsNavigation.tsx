@@ -1,9 +1,10 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, startTransition, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LockKeyholeMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
 import useViewport from '@/hooks/use-view-port';
+import { useNavigation } from '@/contexts/NavigationContext';
 import { PrivacyLevel, Viewport } from '@/enums/common';
 import { AltArrowDown } from '@solar-icons/react-perf/Outline';
 import {
@@ -40,6 +41,8 @@ interface TabsNavigationProps<T> {
   getTabPrivacy?: (tabId: string) => TabPrivacyConfig | null;
   moreLabelKey?: string;
   variant?: 'default' | 'no-border';
+  // Thanh active full theo width của button thay vì theo label
+  indicatorFullWidth?: boolean;
 }
 
 const TabsNavigation = <T,>({
@@ -53,22 +56,53 @@ const TabsNavigation = <T,>({
   getTabPrivacy,
   moreLabelKey = 'more',
   variant = 'default',
+  indicatorFullWidth = false,
 }: TabsNavigationProps<T>) => {
   const { t } = useTranslation(translationNamespace);
   const { width } = useViewport();
+  const { isCollapsed } = useNavigation();
+
+  const tabsContainerRef = useRef<HTMLDivElement | null>(null);
+  const labelRefs = useRef<(HTMLElement | null)[]>([]);
+  const [indicatorStyle, setIndicatorStyle] = useState<{ width: number; left: number }>({
+    width: 0,
+    left: 0,
+  });
+  const [hasInitialIndicator, setHasInitialIndicator] = useState(false);
+  const [measureTrigger, setMeasureTrigger] = useState(0);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    const handleSetMounted = () => {
-      setMounted(true);
-    };
-    handleSetMounted();
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
+
+  // Chiều rộng sidebar theo layout: lg expanded = 256px (w-64), collapsed = 72px; md = 72px
+  const SIDEBAR_EXPANDED_PX = 256;
+  const SIDEBAR_COLLAPSED_PX = 72;
+  const sidebarWidth =
+    width >= Viewport.LG
+      ? isCollapsed
+        ? SIDEBAR_COLLAPSED_PX
+        : SIDEBAR_EXPANDED_PX
+      : width >= Viewport.MD
+        ? SIDEBAR_COLLAPSED_PX
+        : 0;
+  const effectiveWidth = width - sidebarWidth;
 
   const activeTabId = tabs[activeTab]?.id;
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-  // Tính toán maxVisible động
+  // Lắng nghe collapse: sau khi sidebar transition xong thì reset hover và kích hoạt đo lại indicator
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setHoverIndex(null);
+      setMeasureTrigger(prev => prev + 1);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [isCollapsed]);
+
+  // Tính toán maxVisible động theo effectiveWidth (đã trừ sidebar, phản ánh collapse/expand)
   const calculateMaxVisible = (): number => {
     // Nếu truyền vào là số cụ thể
     if (typeof maxVisibleProp === 'number') {
@@ -78,15 +112,15 @@ const TabsNavigation = <T,>({
     // Nếu truyền vào là object với breakpoints
     if (maxVisibleProp && typeof maxVisibleProp === 'object') {
       if (!mounted) return tabs.length;
-      if (width < Viewport.MD) return maxVisibleProp.mobile ?? 2;
-      if (width < Viewport.LG) return maxVisibleProp.tablet ?? 3;
+      if (effectiveWidth < Viewport.MD) return maxVisibleProp.mobile ?? 2;
+      if (effectiveWidth < Viewport.LG) return maxVisibleProp.tablet ?? 3;
       return maxVisibleProp.desktop ?? tabs.length;
     }
 
-    // Mặc định: tự động tính toán dựa trên viewport
+    // Mặc định: theo chiều rộng container (đã tính sidebar) thay vì viewport
     if (!mounted) return tabs.length;
-    if (width < Viewport.MD) return 2;
-    if (width < Viewport.LG) return 3;
+    if (effectiveWidth < Viewport.MD) return 2;
+    if (effectiveWidth < Viewport.LG) return 3;
     return tabs.length;
   };
 
@@ -101,6 +135,62 @@ const TabsNavigation = <T,>({
   const activeRenderIndex = isHiddenActive ? visibleTabs.length : activeTab;
 
   const indicatorIndex = hoverIndex !== null ? hoverIndex : activeRenderIndex;
+
+  useEffect(() => {
+    if (!mounted || isLoading) return;
+
+    const runMeasure = () => {
+      const container = tabsContainerRef.current;
+      const labelEl = labelRefs.current[indicatorIndex];
+      if (!container || !labelEl) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const labelRect = labelEl.getBoundingClientRect();
+
+      const buttonEl = labelEl.closest('button');
+
+      const width =
+        indicatorFullWidth && buttonEl ? buttonEl.getBoundingClientRect().width : labelRect.width;
+      const left =
+        indicatorFullWidth && buttonEl
+          ? buttonEl.getBoundingClientRect().left - containerRect.left
+          : labelRect.left - containerRect.left;
+
+      startTransition(() => {
+        setIndicatorStyle({
+          width,
+          left,
+        });
+      });
+
+      if (!hasInitialIndicator) {
+        startTransition(() => {
+          setHasInitialIndicator(true);
+        });
+      }
+    };
+
+    // Khi collapse/expand sidebar, DOM/layout chưa kịp cập nhật → đo sau 2 frame (sau paint) để vị trí indicator đúng
+    let raf2Id: number;
+    const raf1Id = requestAnimationFrame(() => {
+      raf2Id = requestAnimationFrame(() => {
+        runMeasure();
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1Id);
+      if (typeof raf2Id === 'number') cancelAnimationFrame(raf2Id);
+    };
+  }, [
+    indicatorIndex,
+    mounted,
+    renderItemsCount,
+    effectiveWidth,
+    isLoading,
+    hasInitialIndicator,
+    indicatorFullWidth,
+    measureTrigger,
+  ]);
 
   return (
     <div
@@ -117,7 +207,7 @@ const TabsNavigation = <T,>({
       >
         <div className="relative">
           <div className="absolute bottom-0 left-0 right-0 h-px w-full" />
-          <div className="relative">
+          <div className="relative" ref={tabsContainerRef}>
             <div className="flex">
               <Show
                 when={!isLoading}
@@ -140,7 +230,12 @@ const TabsNavigation = <T,>({
                     onMouseEnter={() => setHoverIndex(index)}
                     onMouseLeave={() => setHoverIndex(null)}
                   >
-                    <div className="flex gap-2 items-center justify-center relative">
+                    <div
+                      className="flex gap-2 items-center justify-center relative px-[10px]"
+                      ref={el => {
+                        labelRefs.current[index] = el;
+                      }}
+                    >
                       {tab.icon}
                       <span className="truncate">{t(tab.labelKey)}</span>
                       {(() => {
@@ -182,7 +277,12 @@ const TabsNavigation = <T,>({
                         onMouseEnter={() => setHoverIndex(visibleTabs.length)}
                         onMouseLeave={() => setHoverIndex(null)}
                       >
-                        <div className="flex gap-1 items-center justify-center">
+                        <div
+                          className="flex gap-1 items-center justify-center px-[10px]"
+                          ref={el => {
+                            labelRefs.current[visibleTabs.length] = el;
+                          }}
+                        >
                           <span className="truncate">{t(moreLabelKey) || 'More'}</span>
                           <AltArrowDown size={14} className="mt-[2px]" />
                         </div>
@@ -228,12 +328,12 @@ const TabsNavigation = <T,>({
                 )}
               </Show>
             </div>
-            <Show when={!isLoading}>
+            <Show when={!isLoading && hasInitialIndicator}>
               <div
-                className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,transform] duration-300 ease-out"
+                className="absolute rounded-lg -bottom-px h-[3px] bg-primary transition-[width,left] duration-300 ease-out"
                 style={{
-                  width: `calc(${100 / renderItemsCount}%)`,
-                  transform: `translateX(${indicatorIndex * 100}%)`,
+                  width: indicatorStyle.width,
+                  left: indicatorStyle.left,
                 }}
               ></div>
             </Show>

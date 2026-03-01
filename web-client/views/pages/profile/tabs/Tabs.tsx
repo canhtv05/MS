@@ -14,7 +14,7 @@ import TabsNavigation, { ITabs } from '../../../../components/TabsNavigation';
 import { IDetailUserProfileDTO, IPrivacyDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
 import Wrapper from '@/components/ui/wrapper';
-import ImageSection from '../sections/ImageSection';
+import ImageSection from '../sections/AlbumSection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import FriendSection from '../sections/FriendSection';
 import { Skeleton } from '@/components/ui/skeleton';

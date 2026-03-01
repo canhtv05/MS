@@ -204,9 +204,9 @@ const FriendCardHover = () => {
 
   return (
     <div className={cn('flex items-center gap-4')}>
-      <HoverCard openDelay={100} closeDelay={50} open={open} onOpenChange={setOpen}>
+      <HoverCard openDelay={100} closeDelay={200} open={open} onOpenChange={setOpen}>
         <HoverCardTrigger asChild>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer" onClick={() => setOpen(prev => !prev)}>
             <FriendCardAvatar
               validAvatarUrl={validAvatarUrl}
               username={user?.fullname || 'Người dùng'}
@@ -216,8 +216,9 @@ const FriendCardHover = () => {
         </HoverCardTrigger>
         <HoverCardContent
           className="border-border w-80 p-0 shadow-none"
-          sideOffset={20}
+          sideOffset={12}
           align="start"
+          side="top"
           transition={{ type: 'keyframes', duration: 0.25, ease: 'easeInOut' }}
         >
           <div className="flex items-start gap-3 p-3 pb-2 border-b border-border/60">
@@ -252,7 +253,7 @@ const FriendCardHover = () => {
               </div>
             </div>
           )}
-          <div className="w-full px-3 pb-3">
+          <div className="w-full p-3">
             <div className="text-sm w-full text-center flex gap-10 items-center justify-center">
               <div className="flex flex-col">
                 <strong className="font-bold">2.3k</strong>
@@ -308,7 +309,7 @@ const FriendCardHover = () => {
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <div className="relative cursor-pointer">
-                  <IconButton variant="accent">
+                  <IconButton variant="default">
                     <MenuDots />
                   </IconButton>
                 </div>
@@ -317,7 +318,7 @@ const FriendCardHover = () => {
                 sideOffset={4}
                 side="top"
                 align="end"
-                className="w-[220px] z-120! [&_span]:text-foreground/70 shadow-none"
+                className="w-[220px] [&_span]:text-foreground/70 shadow-none"
               >
                 <DropdownMenuGroup>
                   <DropdownMenuItem>Ẩn bớt bài viết từ người này</DropdownMenuItem>

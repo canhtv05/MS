@@ -24,9 +24,12 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   }, [modalStack]);
 
   const closeAllModals = useCallback(() => {
+    const stack = [...modalStack];
+    for (let i = stack.length - 1; i >= 0; i--) {
+      document.dispatchEvent(new CustomEvent(`close-modal:${stack[i]}`));
+    }
     setModalStack([]);
-    document.dispatchEvent(new CustomEvent('close-all-modals'));
-  }, []);
+  }, [modalStack]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {

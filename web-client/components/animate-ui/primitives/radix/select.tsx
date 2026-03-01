@@ -11,6 +11,7 @@ import { Highlight, HighlightItem, HighlightItemProps, HighlightProps } from '..
 type SelectOpenContextType = {
   isOpen: boolean;
   setIsOpen: (o: boolean) => void;
+  modal: boolean;
 };
 
 type SelectHighlightContextType = {
@@ -34,9 +35,11 @@ function useSelect() {
   );
 }
 
-type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
+type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root> & {
+  modal?: boolean;
+};
 
-function Select(props: SelectProps) {
+function Select({ modal = true, ...props }: SelectProps) {
   const [isOpen, setIsOpen] = useControlledState({
     value: props?.open,
     defaultValue: props?.defaultOpen,
@@ -44,7 +47,7 @@ function Select(props: SelectProps) {
   });
   const [highlightedValue, setHighlightedValue] = React.useState<string | null>(null);
 
-  const openValue = React.useMemo(() => ({ isOpen, setIsOpen }), [isOpen, setIsOpen]);
+  const openValue = React.useMemo(() => ({ isOpen, setIsOpen, modal }), [isOpen, setIsOpen, modal]);
   const highlightValue = React.useMemo(
     () => ({ highlightedValue, setHighlightedValue }),
     [highlightedValue, setHighlightedValue],
@@ -55,9 +58,10 @@ function Select(props: SelectProps) {
       <SelectHighlightProvider value={highlightValue}>
         <SelectPrimitive.Root
           data-slot="select"
-          open={isOpen}
           {...props}
+          open={isOpen}
           onOpenChange={setIsOpen}
+          {...(modal !== undefined ? { modal: modal } : {})}
         />
       </SelectHighlightProvider>
     </SelectOpenProvider>
@@ -165,7 +169,46 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
     },
     ref,
   ) => {
-    const { isOpen } = useSelectOpen();
+    const { isOpen, modal } = useSelectOpen();
+
+    React.useLayoutEffect(() => {
+      if (!isOpen || modal || typeof document === 'undefined') return;
+
+      const body = document.body;
+      const html = document.documentElement;
+
+      const fixStyles = () => {
+        // Force overflow auto and reset padding-right to 0 to prevent jitter
+        body.style.setProperty('overflow', 'auto', 'important');
+        body.style.setProperty('padding-right', '0px', 'important');
+        body.style.setProperty('pointer-events', 'auto', 'important');
+        html.style.setProperty('overflow', 'auto', 'important');
+
+        // Remove Radix's scroll lock attribute if present
+        if (body.hasAttribute('data-scroll-locked')) {
+          body.removeAttribute('data-scroll-locked');
+        }
+      };
+
+      // Run immediately before paint
+      fixStyles();
+
+      // Observe body for changes to catch Radix re-applying styles
+      const observer = new MutationObserver(fixStyles);
+      observer.observe(body, {
+        attributes: true,
+        attributeFilter: ['style', 'data-scroll-locked'],
+      });
+
+      return () => {
+        observer.disconnect();
+        // Remove our overrides to let the system return to normal
+        body.style.removeProperty('overflow');
+        body.style.removeProperty('padding-right');
+        body.style.removeProperty('pointer-events');
+        html.style.removeProperty('overflow');
+      };
+    }, [isOpen, modal]);
 
     // Filter out any props that shouldn't be passed to the DOM element
     const motionProps = props;

@@ -17,6 +17,7 @@ import { XIcon } from '../animate-ui/icons';
 import { IconButton } from '../animate-ui/components/buttons/icon';
 import { toast } from 'sonner';
 import { useModal } from '@/contexts/ModalContext';
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
 type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -71,6 +72,9 @@ const Dialog = <T extends FieldValues = FieldValues>({
   const closeTopModalRef = useRef(closeTopModal);
   const onCloseRef = useRef(onClose);
   const isPendingRef = useRef(isPending);
+  const isFetching = useIsFetching();
+  const isMutating = useIsMutating();
+  const busy = isFetching + isMutating > 0;
 
   useEffect(() => {
     openModalRef.current = openModal;
@@ -80,17 +84,17 @@ const Dialog = <T extends FieldValues = FieldValues>({
   }, [openModal, closeTopModal, onClose, isPending]);
 
   const handleClose = useCallback(() => {
-    if (isPendingRef.current || isClosingRef.current) return;
+    if (isPendingRef.current || isClosingRef.current || busy) return;
     isClosingRef.current = true;
     onCloseRef.current?.();
     closeTopModalRef.current();
     setTimeout(() => {
       isClosingRef.current = false;
     }, 0);
-  }, []);
+  }, [busy]);
 
   const handleExternalCloseRef = useRef(() => {
-    if (isPendingRef.current || isClosingRef.current) return;
+    if (isPendingRef.current || isClosingRef.current || busy) return;
     isClosingRef.current = true;
     onCloseRef.current?.();
     setTimeout(() => {
@@ -127,7 +131,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
   }, [open]);
 
   const isAcceptDisabled =
-    disableAccept || isPending || (form ? !form.formState.isValid : disableAccept);
+    disableAccept || isPending || busy || (form ? !form.formState.isValid : disableAccept);
   const handleAccept = () => {
     if (isAcceptDisabled) {
       toast.error(t('button.accept_disabled'), { id: 'accept-disabled-toast' });
@@ -139,8 +143,15 @@ const Dialog = <T extends FieldValues = FieldValues>({
   };
 
   return (
-    <DialogRoot open={open} onOpenChange={isOpen => !isOpen && handleClose()}>
+    <DialogRoot open={open} onOpenChange={isOpen => !isOpen && handleClose()} modal={true}>
       <DialogContent
+        showOverlay={false}
+        customOverlay={
+          <div
+            className="fixed inset-0 z-200 bg-black/80 animate-in fade-in-0 duration-200"
+            aria-hidden
+          />
+        }
         className={cn(
           sizeClasses[size],
           hasBorder && 'p-0 gap-5 z-200!',
@@ -148,7 +159,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
         )}
         showCloseButton={false}
         onEscapeKeyDown={e => {
-          if (isPending) {
+          if (isPending || busy) {
             e.preventDefault();
             return;
           }
@@ -157,10 +168,12 @@ const Dialog = <T extends FieldValues = FieldValues>({
           handleClose();
         }}
         onInteractOutside={e => {
-          if (isPending) {
-            e.preventDefault();
-          }
+          if (isPending || busy) e.preventDefault();
         }}
+        onPointerDownOutside={e => {
+          if (isPending || busy) e.preventDefault();
+        }}
+        onOpenAutoFocus={e => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle
@@ -174,10 +187,11 @@ const Dialog = <T extends FieldValues = FieldValues>({
                 {title}
               </span>
               <IconButton
-                disabled={isPending}
+                disabled={isPending || busy}
                 className="rounded-full absolute! right-0"
                 variant="ghost"
                 onClick={handleClose}
+                autoFocus={false}
               >
                 <XIcon />
               </IconButton>
@@ -206,7 +220,8 @@ const Dialog = <T extends FieldValues = FieldValues>({
               className="w-auto"
               variant={'outline'}
               onClick={handleClose}
-              disabled={isPending}
+              disabled={isPending || busy}
+              autoFocus={false}
             >
               {t('button.close')}
             </Button>
@@ -218,6 +233,7 @@ const Dialog = <T extends FieldValues = FieldValues>({
               type="submit"
               form={id}
               disabled={isAcceptDisabled}
+              autoFocus={false}
             >
               {t('button.accept')}
             </Button>

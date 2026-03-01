@@ -101,7 +101,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
           <div
             key={interest.id}
             className={cn(
-              'group flex items-center gap-1.5 rounded-full px-2.5 py-1',
+              'group flex items-center gap-1.5 rounded-full px-2.5 py-2',
               'border transition-colors duration-200',
               'cursor-default',
               'hover:opacity-90',
@@ -123,7 +123,7 @@ export const InterestsTab = ({ data, isOwner = false }: IInterestsTabProps) => {
               className="size-2 rounded-full shrink-0"
               style={{ backgroundColor: interest.color }}
             />
-            <span className="text-xs font-medium leading-tight" style={{ color: interest.color }}>
+            <span className="text-xs font-medium leading-0" style={{ color: interest.color }}>
               {interest.title}
             </span>
           </div>

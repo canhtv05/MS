@@ -169,9 +169,9 @@ const HeaderLayout = () => {
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px] z-120! [&_span]:text-foreground/70"
+                    className="w-[220px] [&_span]:text-foreground/70"
                   >
-                    <DropdownMenuArrow className="z-120!" />
+                    <DropdownMenuArrow />
                     <DropdownMenuLabel className="flex gap-2">
                       <UserProfileCard
                         username={user?.auth?.username || ''}
@@ -249,9 +249,9 @@ const HeaderLayout = () => {
                       align="end"
                       alignOffset={0}
                       sideOffset={10}
-                      className="w-[220px] z-120!"
+                      className="w-[220px]"
                     >
-                      <DropdownMenuArrow className="z-120!" />
+                      <DropdownMenuArrow />
                       <HomeHeaderDropdown
                         currentLang={currentLang}
                         handleChangeLang={handleChangeLang}
