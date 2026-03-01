@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "spring.kafka.consumer.trusted-packages",
+      "type": "java.lang.String",
+      "description": "A description for 'spring.kafka.consumer.trusted-packages'"
+    },
+    {
+      "name": "spring.mail.verify-url",
+      "type": "java.lang.String",
+      "description": "A description for 'spring.mail.verify-url'"
+    },
+    {
+      "name": "spring.app.secret-key",
+      "type": "java.lang.String",
+      "description": "A description for 'spring.app.secret-key'"
+    }
+  ]
+}

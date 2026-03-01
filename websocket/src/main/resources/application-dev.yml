@@ -1,0 +1,32 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/notification}
+  app:
+    secret-key: ${BASE_64_SECRET:${APPLICATION_SECURITY_BASE64SECRET}}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    verify-url: http://localhost:3000/verify-email
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      trusted-packages: com.leaf.common.dto.event
+      enable-auto-commit: false
