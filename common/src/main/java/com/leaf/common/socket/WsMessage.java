@@ -30,7 +30,8 @@ public class WsMessage {
         KICK,
         ERROR,
         MESSAGE,
-        RESPONSE_API
+        RESPONSE_API,
+        FRIEND_REQUEST
     }
 
     public static WsMessage error(String message) {

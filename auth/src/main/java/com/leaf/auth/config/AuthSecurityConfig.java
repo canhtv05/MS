@@ -8,7 +8,7 @@ import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.service.PublicApiService;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.dto.ResponseObject;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.blocking.util.JwtUtil;
 import com.leaf.framework.constant.CommonConstants;
 import jakarta.servlet.http.HttpServletResponse;

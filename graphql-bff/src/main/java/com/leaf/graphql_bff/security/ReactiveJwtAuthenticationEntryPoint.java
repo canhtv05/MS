@@ -2,7 +2,7 @@ package com.leaf.graphql_bff.security;
 
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.JsonF;
 import java.nio.charset.StandardCharsets;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;

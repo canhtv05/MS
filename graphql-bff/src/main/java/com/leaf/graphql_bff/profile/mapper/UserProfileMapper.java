@@ -1,6 +1,6 @@
 package com.leaf.graphql_bff.profile.mapper;
 
-import com.leaf.common.utils.ConvertProto;
+import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
 import com.leaf.graphql_bff.profile.dto.InterestDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfileIntroduceDTO;

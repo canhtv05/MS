@@ -31,6 +31,8 @@ export const API_ENDPOINTS = {
     INTERESTS: '/user-profile/interests',
     UPDATE_USER_PROFILE_INTEREST: '/user-profile/me/update-user-profile-interest',
     UPDATE_USER_PROFILE_INTRODUCE: '/user-profile/me/update-user-profile-introduce',
+    SEND_FRIEND_REQUEST: '/user-profile/send-friend-request',
+    DELETE_FRIEND_REQUEST: '/user-profile/friend-request/{id}',
   },
   NOTIFICATIONS: {
     VERIFY_EMAIL: '/notifications/verify-email',

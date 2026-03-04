@@ -3,8 +3,8 @@ package com.leaf.noti.util;
 import com.google.protobuf.Timestamp;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.grpc.VerifyEmailTokenDTO;
-import com.leaf.common.utils.AESUtils;
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.FwUtil;
 import com.leaf.noti.config.NotificationProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -55,7 +55,7 @@ public class TokenUtil {
         return VerifyEmailTokenDTO.newBuilder()
             .setUsername(body.getSubject())
             .setEmail(body.get(EMAIL_KEY, String.class))
-            .setFullname(CommonUtils.getSafeObject(body.get(FULLNAME_KEY, String.class), String.class, ""))
+            .setFullname(CommonUtil.getSafeObject(body.get(FULLNAME_KEY, String.class), String.class, ""))
             .setExpiredAt(expiredAt)
             .setJti(body.getId())
             .build();
@@ -63,7 +63,7 @@ public class TokenUtil {
 
     public String encryptToken(String rawToken) {
         try {
-            return AESUtils.encrypt(rawToken, getSecret());
+            return FwUtil.encrypt(rawToken, getSecret());
         } catch (Exception e) {
             throw new RuntimeException("Failed to encrypt token", e);
         }
@@ -71,7 +71,7 @@ public class TokenUtil {
 
     public String decryptToken(String encryptedToken) {
         try {
-            return AESUtils.decrypt(encryptedToken, getSecret());
+            return FwUtil.decrypt(encryptedToken, getSecret());
         } catch (Exception e) {
             throw new RuntimeException("Failed to decrypt token", e);
         }

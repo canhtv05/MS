@@ -1,7 +1,8 @@
 package com.leaf.auth.security.jwt;
 
-import com.leaf.auth.util.CookieUtil;
+import com.leaf.common.dto.TokenPairDTO;
 import com.leaf.common.enums.TokenStatus;
+import com.leaf.framework.blocking.util.CommonUtil;
 import com.leaf.framework.blocking.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +10,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +20,10 @@ import org.springframework.web.filter.GenericFilterBean;
 public class JWTFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
-    private final CookieUtil cookieUtil;
     private final JwtUtil jwtUtil;
 
-    public JWTFilter(TokenProvider tokenProvider, CookieUtil cookieUtil, JwtUtil jwtUtil) {
+    public JWTFilter(TokenProvider tokenProvider, JwtUtil jwtUtil) {
         this.tokenProvider = tokenProvider;
-        this.cookieUtil = cookieUtil;
         this.jwtUtil = jwtUtil;
     }
 
@@ -43,9 +43,13 @@ public class JWTFilter extends GenericFilterBean {
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
         } else {
-            var tokenPair = cookieUtil.getTokenCookie(httpServletRequest);
-            if (tokenPair != null) {
-                jwt = tokenPair.getAccessToken();
+            Optional<TokenPairDTO> tokenPair = CommonUtil.tokenFromCookie(
+                httpServletRequest.getHeader(HttpHeaders.COOKIE)
+            );
+            if (CommonUtil.isNotEmpty(tokenPair)) {
+                jwt = tokenPair.get().getAccessToken();
+            } else {
+                jwt = null;
             }
         }
 

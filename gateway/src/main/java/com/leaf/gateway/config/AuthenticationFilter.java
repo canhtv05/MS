@@ -4,8 +4,8 @@ import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import com.leaf.framework.reactive.util.ReactiveJwtUtil;
@@ -68,7 +68,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         if (isPublic) {
             return chain.filter(exchange);
         }
-        if (isGraphql || isWebSocket) {
+        if (isWebSocket) {
+            return handleWebSocketAuthentication(exchange, chain);
+        }
+        if (isGraphql) {
             return handleOptionalAuthentication(exchange, chain);
         }
 
@@ -103,7 +106,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String refreshToken = tokens.refreshToken();
 
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
-        final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
+        final String finalChannel = CommonUtil.getSafeObject(channelFromHeader, String.class, "web");
 
         if (StringUtils.isEmpty(accessToken)) {
             if (StringUtils.isEmpty(refreshToken)) {
@@ -136,6 +139,26 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             });
     }
 
+    private Mono<Void> handleWebSocketAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
+        TokenPair tokens = resolveTokens(exchange, false);
+        String accessToken = tokens.accessToken();
+
+        if (StringUtils.isEmpty(accessToken)) {
+            return chain.filter(exchange);
+        }
+
+        return jwtUtil
+            .validateToken(accessToken)
+            .flatMap(status -> {
+                if (status.equals(TokenStatus.VALID)) {
+                    var request = addAuthHeader(exchange.getRequest(), accessToken);
+                    return chain.filter(exchange.mutate().request(request).build());
+                }
+                return chain.filter(exchange);
+            })
+            .onErrorResume(e -> chain.filter(exchange));
+    }
+
     private Mono<Void> handleOptionalAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
         TokenPair tokens = resolveTokens(exchange, true);
         String accessToken = tokens.accessToken();
@@ -145,7 +168,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         log.info("Refresh token: {}", refreshToken);
 
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
-        final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
+        final String finalChannel = CommonUtil.getSafeObject(channelFromHeader, String.class, "web");
 
         if (StringUtils.isEmpty(accessToken)) {
             if (StringUtils.isEmpty(refreshToken)) {
@@ -193,8 +216,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private void addAuthCookie(ServerHttpResponse response, String accessToken, String refreshToken) {
         try {
             Map<String, String> tokens = new HashMap<>();
-            tokens.put(AuthKey.ACCESS_TOKEN.getKey(), CommonUtils.getSafeObject(accessToken, String.class, ""));
-            tokens.put(AuthKey.REFRESH_TOKEN.getKey(), CommonUtils.getSafeObject(refreshToken, String.class, ""));
+            tokens.put(AuthKey.ACCESS_TOKEN.getKey(), CommonUtil.getSafeObject(accessToken, String.class, ""));
+            tokens.put(AuthKey.REFRESH_TOKEN.getKey(), CommonUtil.getSafeObject(refreshToken, String.class, ""));
             String tokenData = JsonF.toJson(tokens);
             String encoded = URLEncoder.encode(tokenData, StandardCharsets.UTF_8);
 

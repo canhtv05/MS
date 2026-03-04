@@ -206,7 +206,7 @@ const FriendCardHover = () => {
     <div className={cn('flex items-center gap-4')}>
       <HoverCard openDelay={100} closeDelay={200} open={open} onOpenChange={setOpen}>
         <HoverCardTrigger asChild>
-          <div className="cursor-pointer" onClick={() => setOpen(prev => !prev)}>
+          <div className="cursor-pointer">
             <FriendCardAvatar
               validAvatarUrl={validAvatarUrl}
               username={user?.fullname || 'Người dùng'}

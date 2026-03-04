@@ -2,7 +2,7 @@ package com.leaf.socket.service;
 
 import com.leaf.common.socket.WsMessage;
 import com.leaf.common.socket.WsSessionRevokedMessage;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.JsonF;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,18 +36,13 @@ public class RedisWsListener {
     }
 
     private void processForceLogout(WsMessage msg) {
-        try {
-            WsSessionRevokedMessage result = JsonF.jsonToObject(msg.getData(), WsSessionRevokedMessage.class);
-            log.info("[WS] processForceLogout with data: {}", JsonF.toJson(result));
-            if (ObjectUtils.isEmpty(result)) {
-                wsSessionManager.sendToUser(msg.getUserId(), msg);
-                Thread.sleep(100);
-                wsSessionManager.closeAllSessionsOfUser(msg.getUserId());
-            } else {
-                wsSessionManager.closeCurrentSessionsOfUser(msg.getUserId(), result, msg);
-            }
-        } catch (InterruptedException e) {
-            //
+        WsSessionRevokedMessage result = JsonF.jsonToObject(msg.getData(), WsSessionRevokedMessage.class);
+        log.info("[WS] processForceLogout with data: {}", JsonF.toJson(result));
+        if (ObjectUtils.isEmpty(result)) {
+            wsSessionManager.sendToUser(msg.getUserId(), msg);
+            wsSessionManager.closeAllSessionsOfUser(msg.getUserId());
+        } else {
+            wsSessionManager.closeCurrentSessionsOfUser(msg.getUserId(), result, msg);
         }
     }
 }

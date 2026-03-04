@@ -5,9 +5,13 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.grpc.ImageResponse;
 import com.leaf.common.grpc.ResourceType;
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.common.socket.WsMessage;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
+import com.leaf.framework.blocking.service.CommonService;
+import com.leaf.framework.blocking.service.RedisPubService;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.SendFriendRequestDTO;
 import com.leaf.profile.dto.req.ChangeCoverByUrlReq;
@@ -32,6 +36,7 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
     private final GrpcFileClient grpcFileClient;
     private final RedisCacheService redisService;
+    private final RedisPubService redisPubService;
 
     @Transactional
     public UserProfileResponse createUserProfile(UserProfileCreationReq req) {
@@ -39,23 +44,6 @@ public class UserProfileService {
 
         var saved = userProfileRepository.save(userProfile);
         return UserProfileResponse.toUserProfileResponse(saved);
-    }
-
-    @Transactional
-    public SendFriendRequestDTO sendFriendRequestDTO(SendFriendRequestDTO request) {
-        String userId = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
-            new ApiException(ErrorMessage.UNAUTHENTICATED)
-        );
-
-        String currentUserId = userProfileRepository
-            .findByUserIdReturnString(userId)
-            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-
-        if (userProfileRepository.isSent(currentUserId, request.getReceiverId())) {
-            throw new ApiException(ErrorMessage.FRIEND_REQUEST_ALREADY_SENT);
-        }
-
-        return userProfileRepository.sendFriendRequest(currentUserId, request.getReceiverId());
     }
 
     @Transactional(readOnly = true)
@@ -133,11 +121,43 @@ public class UserProfileService {
         UserProfile userProfile = userProfileRepository
             .findByUserId(username)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-        CommonUtils.updateIfNotNull(req.getFullname(), userProfile::setFullname);
-        CommonUtils.updateIfNotNull(req.getBio(), userProfile::setBio);
+        CommonUtil.updateIfNotNull(req.getFullname(), userProfile::setFullname);
+        CommonUtil.updateIfNotNull(req.getBio(), userProfile::setBio);
         UserProfile saved = userProfileRepository.save(userProfile);
         String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
         redisService.evict(cacheKey);
         return UserProfileResponse.toUserProfileResponse(saved);
+    }
+
+    @Transactional
+    public SendFriendRequestDTO sendFriendRequest(SendFriendRequestDTO request) {
+        String senderName = CommonService.getCurrentUserLogin();
+        if (!userProfileRepository.existsByUserId(request.getReceiverName())) {
+            throw new ApiException(ErrorMessage.USER_PROFILE_RECEIVER_NOT_FOUND);
+        }
+
+        // if (userProfileRepository.isSent(currentUserId, request.getReceiverId())) {
+        // throw new ApiException(ErrorMessage.FRIEND_REQUEST_ALREADY_SENT);
+        // }
+        SendFriendRequestDTO sendFriendRequest = userProfileRepository.sendFriendRequest(
+            senderName,
+            request.getReceiverName()
+        );
+        WsMessage payload = WsMessage.builder()
+            .type(WsMessage.WsType.FRIEND_REQUEST)
+            .data(JsonF.toJson(sendFriendRequest))
+            .userId(request.getReceiverName())
+            .build();
+        redisPubService.pubWebsocketTopic(payload);
+        return sendFriendRequest;
+    }
+
+    @Transactional
+    public void deleteFriendRequest(String id) {
+        // test
+        userProfileRepository
+            .findByUserIdReturnString(id)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+        userProfileRepository.deleteFriendRequest(id);
     }
 }

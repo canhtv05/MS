@@ -1,4 +1,4 @@
-package com.leaf.auth.dto;
+package com.leaf.common.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenPair {
+public class TokenPairDTO {
 
     String accessToken;
     String refreshToken;

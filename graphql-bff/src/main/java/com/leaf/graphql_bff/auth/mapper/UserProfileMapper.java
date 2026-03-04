@@ -2,7 +2,7 @@ package com.leaf.graphql_bff.auth.mapper;
 
 import com.leaf.common.grpc.AuthMeResponse;
 import com.leaf.common.grpc.UserProfileResponse;
-import com.leaf.common.utils.ConvertProto;
+import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.graphql_bff.auth.dto.AuthMeDTO;
 import com.leaf.graphql_bff.auth.dto.ProfileDTO;
 import com.leaf.graphql_bff.auth.dto.UserProfileDTO;

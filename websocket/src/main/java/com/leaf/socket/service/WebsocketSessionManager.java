@@ -2,7 +2,7 @@ package com.leaf.socket.service;
 
 import com.leaf.common.socket.WsMessage;
 import com.leaf.common.socket.WsSessionRevokedMessage;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.JsonF;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +20,9 @@ public class WebsocketSessionManager {
     public static final String WS_ATTRIBUTE_TOKEN_ID = "tokenId";
     public static final String WS_ATTRIBUTE_CHANNEL_TYPE = "channelType";
 
-    /** Key for sessions without token (ConcurrentHashMap does not allow null key). */
+    /**
+     * Key for sessions without token (ConcurrentHashMap does not allow null key).
+     */
     private static final String ANONYMOUS_USER_KEY = "__anonymous__";
 
     private final ConcurrentHashMap<String, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();

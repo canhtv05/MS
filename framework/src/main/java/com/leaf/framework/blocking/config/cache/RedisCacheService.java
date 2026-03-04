@@ -1,7 +1,7 @@
 package com.leaf.framework.blocking.config.cache;
 
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +25,7 @@ public class RedisCacheService {
 
     public <K, V> void set(K key, V value, long ttl, TimeUnit timeUnit) {
         try {
-            if (CommonUtils.isEmpty(key, value)) return;
+            if (CommonUtil.isEmpty(key, value)) return;
 
             String data = JsonF.toJson(value);
             Duration duration = Duration.of(ttl, timeUnit.toChronoUnit());
@@ -37,7 +37,7 @@ public class RedisCacheService {
 
     public <K, V> void set(K key, V value) {
         try {
-            if (CommonUtils.isEmpty(key, value)) return;
+            if (CommonUtil.isEmpty(key, value)) return;
 
             String data = JsonF.toJson(value);
             this.getBucket(key.toString()).set(data);
@@ -48,7 +48,7 @@ public class RedisCacheService {
 
     public <K, V> V get(K key, Class<V> clazz) {
         try {
-            if (CommonUtils.isEmpty(key)) return null;
+            if (CommonUtil.isEmpty(key)) return null;
 
             String data = this.getBucket(key.toString()).get();
             if (Objects.isNull(data)) return null;

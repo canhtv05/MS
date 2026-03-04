@@ -1,4 +1,4 @@
-package com.leaf.common.utils;
+package com.leaf.framework.blocking.util;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import org.apache.logging.log4j.util.Strings;
 
-public class DateUtils {
+public class DateUtil {
 
     private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 

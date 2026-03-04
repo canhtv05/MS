@@ -33,6 +33,8 @@ export const CACHE_KEY = {
       INTERESTS: 'profile:interests',
       UPDATE_USER_PROFILE_INTEREST: 'profile:update-user-profile-interest',
       UPDATE_USER_PROFILE_INTRODUCE: 'profile:update-user-profile-introduce',
+      SEND_FRIEND_REQUEST: 'profile:send-friend-request',
+      DELETE_FRIEND_REQUEST: 'profile:delete-friend-request',
     },
   },
   NOTIFICATION: {

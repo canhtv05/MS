@@ -18,6 +18,7 @@ import {
   ICreateInterestReq,
   IUserProfileUpdateInterestReq,
   IUpdateProfileIntroduceDTO,
+  ISendFriendRequestDTO,
 } from '@/types/profile';
 import { useMyProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
@@ -288,6 +289,52 @@ export const useProfileMutation = () => {
     },
   });
 
+  const sendFriendRequestMutation = useMutation({
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.SEND_FRIEND_REQUEST],
+    mutationFn: async (
+      payload: ISendFriendRequestDTO,
+    ): Promise<IResponseObject<ISendFriendRequestDTO>> => {
+      const response = await api.post(API_ENDPOINTS.PROFILE.SEND_FRIEND_REQUEST, payload);
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'send-friend-request-toast'),
+    onMutate: () => {
+      toast.loading(t('send_friend_request_loading'), {
+        id: 'send-friend-request-toast',
+      });
+    },
+    onSuccess: async data => {
+      toast.success(t('send_friend_request_success'), {
+        id: 'send-friend-request-toast',
+      });
+      return data?.data as ISendFriendRequestDTO;
+    },
+  });
+
+  const deleteFriendRequestMutation = useMutation({
+    mutationKey: [CACHE_KEY.PROFILE.MUTATION.DELETE_FRIEND_REQUEST],
+    mutationFn: async (id: string): Promise<IResponseObject<void>> => {
+      const response = await api.delete(API_ENDPOINTS.PROFILE.DELETE_FRIEND_REQUEST, {
+        params: {
+          id,
+        },
+      });
+      return response.data;
+    },
+    onError: error => handleMutationError(error, 'delete-friend-request-toast'),
+    onMutate: () => {
+      toast.loading(t('delete_friend_request_loading'), {
+        id: 'delete-friend-request-toast',
+      });
+    },
+    onSuccess: async data => {
+      toast.success(t('delete_friend_request_success'), {
+        id: 'delete-friend-request-toast',
+      });
+      return data?.data as void;
+    },
+  });
+
   return {
     changeCoverImageMutation,
     changeCoverImageFromMediaHistoryMutation,
@@ -297,5 +344,7 @@ export const useProfileMutation = () => {
     createInterestMutation,
     updateUserProfileInterestMutation,
     updateUserProfileIntroduceMutation,
+    sendFriendRequestMutation,
+    deleteFriendRequestMutation,
   };
 };

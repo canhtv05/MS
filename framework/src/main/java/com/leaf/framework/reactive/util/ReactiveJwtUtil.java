@@ -1,7 +1,7 @@
 package com.leaf.framework.reactive.util;
 
 import com.leaf.common.enums.TokenStatus;
-import com.leaf.common.utils.AESUtils;
+import com.leaf.framework.blocking.util.FwUtil;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import com.leaf.framework.reactive.cache.ReactiveRedisCacheService;
@@ -63,8 +63,8 @@ public class ReactiveJwtUtil {
                     .flatMap(keyToken -> redisService.get(keyToken, String.class))
                     .map(tokenExisting -> {
                         log.info("Token existing: {}", tokenExisting);
-                        log.info("Auth token hex: {}", AESUtils.hexString(authToken));
-                        if (Objects.equals(tokenExisting, AESUtils.hexString(authToken))) {
+                        log.info("Auth token hex: {}", FwUtil.hexString(authToken));
+                        if (Objects.equals(tokenExisting, FwUtil.hexString(authToken))) {
                             return TokenStatus.VALID;
                         } else {
                             return TokenStatus.INVALID;

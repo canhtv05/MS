@@ -1,4 +1,10 @@
-import { Gender, PrivacyLevel, RelationshipStatus, ResourceType } from '@/enums/common';
+import {
+  FriendRequestStatus,
+  Gender,
+  PrivacyLevel,
+  RelationshipStatus,
+  ResourceType,
+} from '@/enums/common';
 import { IMediaHistoryGroupDTO } from './file';
 
 export type { IProfileDTO as IUserProfileDTO } from './auth';
@@ -119,4 +125,11 @@ export interface IUpdateProfileIntroduceDTO {
   relationshipStatus: RelationshipStatus;
   phoneNumber: string;
   interests: string[];
+}
+
+export interface ISendFriendRequestDTO {
+  senderName?: string;
+  receiverName: string;
+  sendAt?: string;
+  status?: FriendRequestStatus;
 }

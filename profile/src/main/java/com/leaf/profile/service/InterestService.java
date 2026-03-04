@@ -3,8 +3,8 @@ package com.leaf.profile.service;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchRequest;
 import com.leaf.common.dto.search.SearchResponse;
-import com.leaf.common.utils.CommonUtils;
 import com.leaf.framework.blocking.service.CommonService;
+import com.leaf.framework.blocking.util.CommonUtil;
 import com.leaf.profile.domain.Interest;
 import com.leaf.profile.dto.InterestDTO;
 import com.leaf.profile.dto.req.CreateInterestReq;
@@ -45,7 +45,7 @@ public class InterestService {
     public InterestDTO createInterest(CreateInterestReq req) {
         String currentUserLogin = CommonService.getCurrentUserLogin();
         Interest saved = interestRepository.createIfNotExists(
-            CommonUtils.toSlug(req.getTitle()),
+            CommonUtil.toSlug(req.getTitle()),
             req.getTitle(),
             req.getColor(),
             currentUserLogin,

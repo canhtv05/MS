@@ -2,7 +2,7 @@ package com.leaf.profile.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.utils.json.InstantToStringSerializer;
+import com.leaf.framework.blocking.util.json.InstantToStringSerializer;
 import com.leaf.profile.domain.UserProfile;
 import java.io.Serializable;
 import java.time.Instant;

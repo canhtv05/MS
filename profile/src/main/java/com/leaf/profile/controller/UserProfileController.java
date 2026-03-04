@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,11 +26,11 @@ public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    @PostMapping("/friend-request")
+    @PostMapping("/send-friend-request")
     public ResponseEntity<ResponseObject<SendFriendRequestDTO>> sendFriendRequest(
-        @RequestBody SendFriendRequestDTO request
+        @Valid @RequestBody SendFriendRequestDTO request
     ) {
-        return ResponseEntity.ok(ResponseObject.success(userProfileService.sendFriendRequestDTO(request)));
+        return ResponseEntity.ok(ResponseObject.success(userProfileService.sendFriendRequest(request)));
     }
 
     @GetMapping("/me")
@@ -68,5 +69,11 @@ public class UserProfileController {
         @Valid @RequestBody UpdateBioAndFullnameProfileReq req
     ) {
         return ResponseEntity.ok(ResponseObject.success(userProfileService.updateBioAndFullnameProfile(req)));
+    }
+
+    @DeleteMapping("/friend-request/{id}")
+    public ResponseEntity<ResponseObject<Void>> deleteFriendRequest(@PathVariable String id) {
+        userProfileService.deleteFriendRequest(id);
+        return ResponseEntity.ok(ResponseObject.success());
     }
 }

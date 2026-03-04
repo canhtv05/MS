@@ -3,7 +3,7 @@ package com.leaf.profile.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.grpc.Gender;
 import com.leaf.common.grpc.RelationshipStatus;
-import com.leaf.common.utils.json.LocalDateToStringSerializer;
+import com.leaf.framework.blocking.util.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import java.io.Serializable;
 import java.time.LocalDate;

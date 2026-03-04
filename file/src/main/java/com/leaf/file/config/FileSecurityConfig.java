@@ -4,8 +4,10 @@ import com.leaf.framework.blocking.security.SecurityCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
+@Component(value = "fileSecurityConfig")
 public class FileSecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {};

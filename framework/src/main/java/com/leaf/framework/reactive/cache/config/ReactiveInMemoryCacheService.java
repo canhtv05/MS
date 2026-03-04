@@ -1,6 +1,6 @@
 package com.leaf.framework.reactive.cache.config;
 
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.framework.blocking.util.CommonUtil;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +16,7 @@ public class ReactiveInMemoryCacheService<K, V> {
 
     public Mono<Void> put(K key, V value) {
         try {
-            if (CommonUtils.isEmpty(key, value)) return Mono.empty();
+            if (CommonUtil.isEmpty(key, value)) return Mono.empty();
             cache.put(key, value);
             return Mono.empty();
         } catch (Exception e) {
@@ -27,7 +27,7 @@ public class ReactiveInMemoryCacheService<K, V> {
 
     public Mono<V> get(K key) {
         try {
-            if (CommonUtils.isEmpty(key)) return Mono.empty();
+            if (CommonUtil.isEmpty(key)) return Mono.empty();
             return Mono.justOrEmpty(cache.get(key));
         } catch (Exception e) {
             log.error(e.getMessage());

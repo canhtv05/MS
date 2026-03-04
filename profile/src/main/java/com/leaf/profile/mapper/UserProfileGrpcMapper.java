@@ -1,8 +1,8 @@
 package com.leaf.profile.mapper;
 
 import com.leaf.common.grpc.UserProfileDTO;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.ConvertProto;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.profile.dto.req.UserProfileCreationReq;
 import com.leaf.profile.dto.res.UserProfileResponse;
 import java.time.Instant;
@@ -33,22 +33,22 @@ public class UserProfileGrpcMapper {
         }
 
         com.leaf.common.grpc.UserProfileResponse.Builder builder = com.leaf.common.grpc.UserProfileResponse.newBuilder()
-            .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
-            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
-            .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
-            .setBio(CommonUtils.getSafeObject(response.getBio(), String.class, ""))
-            .setCoverUrl(CommonUtils.getSafeObject(response.getCoverUrl(), String.class, ""))
-            .setAvatarUrl(CommonUtils.getSafeObject(response.getAvatarUrl(), String.class, ""))
-            .setFollowersCount(CommonUtils.getSafeObject(response.getFollowersCount(), Long.class, 0L))
-            .setFollowingCount(CommonUtils.getSafeObject(response.getFollowingCount(), Long.class, 0L))
+            .setId(CommonUtil.getSafeObject(response.getId(), String.class, ""))
+            .setUserId(CommonUtil.getSafeObject(response.getUserId(), String.class, ""))
+            .setFullname(CommonUtil.getSafeObject(response.getFullname(), String.class, ""))
+            .setBio(CommonUtil.getSafeObject(response.getBio(), String.class, ""))
+            .setCoverUrl(CommonUtil.getSafeObject(response.getCoverUrl(), String.class, ""))
+            .setAvatarUrl(CommonUtil.getSafeObject(response.getAvatarUrl(), String.class, ""))
+            .setFollowersCount(CommonUtil.getSafeObject(response.getFollowersCount(), Long.class, 0L))
+            .setFollowingCount(CommonUtil.getSafeObject(response.getFollowingCount(), Long.class, 0L))
             .setLastOnlineAt(
                 ConvertProto.convertInstantToTimestamp(
-                    CommonUtils.getSafeObject(response.getLastOnlineAt(), Instant.class, Instant.now())
+                    CommonUtil.getSafeObject(response.getLastOnlineAt(), Instant.class, Instant.now())
                 )
             )
             .setCreatedDate(
                 ConvertProto.convertInstantToTimestamp(
-                    CommonUtils.getSafeObject(response.getCreatedDate(), Instant.class, Instant.now())
+                    CommonUtil.getSafeObject(response.getCreatedDate(), Instant.class, Instant.now())
                 )
             );
         return builder.build();
@@ -59,8 +59,8 @@ public class UserProfileGrpcMapper {
             return null;
         }
         return UserProfileDTO.newBuilder()
-            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
-            .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
+            .setUserId(CommonUtil.getSafeObject(response.getUserId(), String.class, ""))
+            .setFullname(CommonUtil.getSafeObject(response.getFullname(), String.class, ""))
             .build();
     }
 }

@@ -3,8 +3,8 @@ package com.leaf.socket.config;
 import static com.leaf.socket.service.WebsocketSessionManager.*;
 
 import com.leaf.common.socket.WsMessage;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.socket.service.WebSocketService;
 import com.leaf.socket.service.WebsocketSessionManager;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class WebSocketHandlerCustomizer extends TextWebSocketHandler {
         String msgData = message.getPayload();
         try {
             WsMessage payload = JsonF.jsonToObject(msgData, WsMessage.class);
-            if (CommonUtils.isEmpty(payload) || CommonUtils.isEmpty(payload.getType())) {
+            if (CommonUtil.isEmpty(payload) || CommonUtil.isEmpty(payload.getType())) {
                 log.info(
                     "[WS] Received from userId={} channelType={} sessionId={} message: {}",
                     userId,

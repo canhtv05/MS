@@ -2,7 +2,7 @@ package com.leaf.framework.blocking.security;
 
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.JsonF;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;

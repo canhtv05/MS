@@ -30,21 +30,21 @@ export function useWebSocket(url: string | null) {
     {
       shouldReconnect: () => true,
       reconnectAttempts: 20,
-      reconnectInterval: n => Math.min(1000 * 2 ** n, 30000),
+      reconnectInterval: 2000, // cố định 2s cho nhanh, tránh backoff 16-30s
       onOpen: () => logger.info('[WS] connected', { url }),
       onClose: e =>
         logger.info('[WS] closed', { code: e?.code, reason: e?.reason, wasClean: e?.wasClean }),
       onError: () => logger.warn('[WS] error', { url }),
-      onMessage: () => {},
+      onMessage: event => {
+        if (typeof event.data === 'string') {
+          logger.debug('[WS] raw message', event.data.slice(0, 200));
+        }
+      },
     },
     !!url,
   );
 
   const readyState = toReadyState(libReadyState);
-  const lastMessageStr =
-    lastMessage != null && typeof (lastMessage as MessageEvent).data === 'string'
-      ? (lastMessage as MessageEvent).data
-      : null;
 
   const disconnect = useCallback(() => {
     logger.debug('[WS] disconnect() called');
@@ -68,7 +68,8 @@ export function useWebSocket(url: string | null) {
   return {
     readyState,
     readyStateLabel: READY_STATE_LABEL[readyState],
-    lastMessage: lastMessageStr,
+    // Trả nguyên MessageEvent để mỗi lần message mới (kể cả data giống nhau) vẫn trigger re-render
+    lastMessage,
     disconnect,
     send,
   };

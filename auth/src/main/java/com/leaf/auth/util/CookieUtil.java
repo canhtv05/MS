@@ -1,14 +1,12 @@
 package com.leaf.auth.util;
 
-import com.leaf.auth.dto.TokenPair;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.common.dto.TokenPairDTO;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -25,10 +23,10 @@ public class CookieUtil {
     private final ApplicationProperties properties;
 
     public Cookie setTokenCookie(String accessToken, String refreshToken) {
-        TokenPair tokenPair = TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        TokenPairDTO tokenPair = TokenPairDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
         String jsonData = JsonF.toJson(tokenPair);
-        if (CommonUtils.isEmpty(jsonData)) {
+        if (CommonUtil.isEmpty(jsonData)) {
             return null;
         }
 
@@ -59,23 +57,5 @@ public class CookieUtil {
         String domain = properties.getSecurity().getCookieDomain();
         if (StringUtils.hasText(domain)) cookie.setDomain(domain);
         response.addCookie(cookie);
-    }
-
-    public TokenPair getTokenCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals(CommonConstants.COOKIE_NAME)) try {
-                    String decoded = URLDecoder.decode(c.getValue(), StandardCharsets.UTF_8);
-
-                    return JsonF.jsonToObject(decoded, TokenPair.class);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        }
-
-        return null;
     }
 }

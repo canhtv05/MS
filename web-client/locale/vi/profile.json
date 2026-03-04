@@ -178,5 +178,9 @@
   "update_user_profile_interest_loading": "Đang cập nhật sở thích",
   "update_user_profile_interest_success": "Cập nhật sở thích thành công",
   "update_user_profile_introduce_success": "Cập nhật thông tin giới thiệu thành công",
-  "update_user_profile_introduce_loading": "Đang cập nhật thông tin giới thiệu"
+  "update_user_profile_introduce_loading": "Đang cập nhật thông tin giới thiệu",
+  "send_friend_request_success": "Gửi lời mời kết bạn thành công",
+  "send_friend_request_loading": "Đang gửi lời mời kết bạn",
+  "delete_friend_request_success": "Xóa lời mời kết bạn thành công",
+  "delete_friend_request_loading": "Đang xóa lời mời kết bạn"
 }

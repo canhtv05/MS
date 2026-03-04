@@ -14,7 +14,7 @@ public record JWTConfigurer(TokenProvider tokenProvider, CookieUtil cookieUtil, 
 
     @Override
     public void configure(HttpSecurity builder) throws Exception {
-        JWTFilter customFilter = new JWTFilter(tokenProvider, cookieUtil, jwtUtil);
+        JWTFilter customFilter = new JWTFilter(tokenProvider, jwtUtil);
         builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

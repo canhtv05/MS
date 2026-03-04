@@ -3,8 +3,8 @@ package com.leaf.profile.mapper;
 import com.google.protobuf.Timestamp;
 import com.leaf.common.grpc.Gender;
 import com.leaf.common.grpc.RelationshipStatus;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.ConvertProto;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.profile.dto.UserProfileIntroduceDTO;
 import java.util.ArrayList;
 
@@ -25,29 +25,29 @@ public class UserProfileIntroduceGrpcMapper {
             return null;
         }
         var builder = com.leaf.common.grpc.UserProfileIntroduceDTO.newBuilder()
-            .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
-            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
-            .setCity(CommonUtils.getSafeObject(response.getCity(), String.class, ""))
-            .setHometown(CommonUtils.getSafeObject(response.getHometown(), String.class, ""))
-            .setJobTitle(CommonUtils.getSafeObject(response.getJobTitle(), String.class, ""))
-            .setCompany(CommonUtils.getSafeObject(response.getCompany(), String.class, ""))
-            .setSchool(CommonUtils.getSafeObject(response.getSchool(), String.class, ""))
-            .setWebsiteUrl(CommonUtils.getSafeObject(response.getWebsiteUrl(), String.class, ""))
-            .setGithubUrl(CommonUtils.getSafeObject(response.getGithubUrl(), String.class, ""))
-            .setLinkedinUrl(CommonUtils.getSafeObject(response.getLinkedinUrl(), String.class, ""))
-            .setXUrl(CommonUtils.getSafeObject(response.getXUrl(), String.class, ""))
-            .setInstagramUrl(CommonUtils.getSafeObject(response.getInstagramUrl(), String.class, ""))
-            .setTiktokUrl(CommonUtils.getSafeObject(response.getTiktokUrl(), String.class, ""))
-            .setFacebookUrl(CommonUtils.getSafeObject(response.getFacebookUrl(), String.class, ""))
-            .setGender(CommonUtils.getSafeObject(response.getGender(), Gender.class, Gender.GENDER_UNSPECIFIED))
+            .setId(CommonUtil.getSafeObject(response.getId(), String.class, ""))
+            .setUserId(CommonUtil.getSafeObject(response.getUserId(), String.class, ""))
+            .setCity(CommonUtil.getSafeObject(response.getCity(), String.class, ""))
+            .setHometown(CommonUtil.getSafeObject(response.getHometown(), String.class, ""))
+            .setJobTitle(CommonUtil.getSafeObject(response.getJobTitle(), String.class, ""))
+            .setCompany(CommonUtil.getSafeObject(response.getCompany(), String.class, ""))
+            .setSchool(CommonUtil.getSafeObject(response.getSchool(), String.class, ""))
+            .setWebsiteUrl(CommonUtil.getSafeObject(response.getWebsiteUrl(), String.class, ""))
+            .setGithubUrl(CommonUtil.getSafeObject(response.getGithubUrl(), String.class, ""))
+            .setLinkedinUrl(CommonUtil.getSafeObject(response.getLinkedinUrl(), String.class, ""))
+            .setXUrl(CommonUtil.getSafeObject(response.getXUrl(), String.class, ""))
+            .setInstagramUrl(CommonUtil.getSafeObject(response.getInstagramUrl(), String.class, ""))
+            .setTiktokUrl(CommonUtil.getSafeObject(response.getTiktokUrl(), String.class, ""))
+            .setFacebookUrl(CommonUtil.getSafeObject(response.getFacebookUrl(), String.class, ""))
+            .setGender(CommonUtil.getSafeObject(response.getGender(), Gender.class, Gender.GENDER_UNSPECIFIED))
             .setRelationshipStatus(
-                CommonUtils.getSafeObject(
+                CommonUtil.getSafeObject(
                     response.getRelationshipStatus(),
                     RelationshipStatus.class,
                     RelationshipStatus.RELATIONSHIP_STATUS_SINGLE
                 )
             )
-            .setPhoneNumber(CommonUtils.getSafeObject(response.getPhoneNumber(), String.class, ""))
+            .setPhoneNumber(CommonUtil.getSafeObject(response.getPhoneNumber(), String.class, ""))
             .addAllInterests(
                 response.getInterests() != null
                     ? response.getInterests().stream().map(this::toGrpcInterestDTO).toList()
@@ -67,12 +67,12 @@ public class UserProfileIntroduceGrpcMapper {
             return null;
         }
         var builder = com.leaf.common.grpc.InterestDTO.newBuilder()
-            .setId(CommonUtils.getSafeObject(interest.getId(), String.class, ""))
-            .setTitle(CommonUtils.getSafeObject(interest.getTitle(), String.class, ""))
-            .setColor(CommonUtils.getSafeObject(interest.getColor(), String.class, ""))
-            .setCode(CommonUtils.getSafeObject(interest.getCode(), String.class, ""))
-            .setCreatedBy(CommonUtils.getSafeObject(interest.getCreatedBy(), String.class, ""))
-            .setModifiedBy(CommonUtils.getSafeObject(interest.getModifiedBy(), String.class, ""));
+            .setId(CommonUtil.getSafeObject(interest.getId(), String.class, ""))
+            .setTitle(CommonUtil.getSafeObject(interest.getTitle(), String.class, ""))
+            .setColor(CommonUtil.getSafeObject(interest.getColor(), String.class, ""))
+            .setCode(CommonUtil.getSafeObject(interest.getCode(), String.class, ""))
+            .setCreatedBy(CommonUtil.getSafeObject(interest.getCreatedBy(), String.class, ""))
+            .setModifiedBy(CommonUtil.getSafeObject(interest.getModifiedBy(), String.class, ""));
 
         var createdDateTimestamp = ConvertProto.convertInstantToTimestamp(interest.getCreatedDate());
         if (createdDateTimestamp != null) {

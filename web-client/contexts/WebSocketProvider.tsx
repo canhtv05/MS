@@ -8,11 +8,13 @@ import cookieUtils from '@/utils/cookieUtils';
 import { handleRedirectLogin } from '@/utils/api';
 import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useMemo, useEffect, ReactNode } from 'react';
+import { WsType } from '@/enums/common';
+import { toast } from 'sonner';
 
 export type WebSocketContextValue = {
   readyState: WsReadyState;
   readyStateLabel: string;
-  lastMessage: string | null;
+  lastMessage: MessageEvent | null;
   send: (message: string) => boolean;
   sendToUser: (userId: string, data: Record<string, unknown>) => boolean;
   sendToAll: (data: Record<string, unknown>) => boolean;
@@ -24,13 +26,6 @@ export function useWebSocketContext(): WebSocketContextValue | null {
   return useContext(WebSocketContext);
 }
 
-/** Gửi message tới server (server có thể forward theo type). */
-const WS_TYPE = {
-  SEND_TO_USER: 'SEND_TO_USER',
-  SEND_TO_ALL: 'SEND_TO_ALL',
-} as const;
-
-/** Kết nối WS khi đã login; F5 thì reconnect. Xử lý message KICK → redirect login. */
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const user = useAuthStore(s => s.user);
   const setUser = useAuthStore(s => s.setUser);
@@ -53,7 +48,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   const sendToUser = useCallback(
     (userId: string, data: Record<string, unknown>) => {
-      const payload = JSON.stringify({ type: WS_TYPE.SEND_TO_USER, userId, data });
+      const payload = JSON.stringify({ type: WsType.MESSAGE, userId, data });
       const ok = send(payload);
       if (ok) logger.debug('[WS Provider] sendToUser', { userId, data });
       return ok;
@@ -63,7 +58,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   const sendToAll = useCallback(
     (data: Record<string, unknown>) => {
-      const payload = JSON.stringify({ type: WS_TYPE.SEND_TO_ALL, data });
+      const payload = JSON.stringify({ type: WsType.MESSAGE, data });
       const ok = send(payload);
       if (ok) logger.debug('[WS Provider] sendToAll', data);
       return ok;
@@ -72,16 +67,19 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (!lastMessage) return;
+    if (!lastMessage || typeof lastMessage.data !== 'string') return;
     try {
-      const msg = JSON.parse(lastMessage) as { type?: string };
+      const msg = JSON.parse(lastMessage.data);
       logger.debug('[WS Provider] lastMessage', msg);
-      if (msg?.type === 'KICK') {
+      if (msg?.type === WsType.KICK) {
         logger.info('[WS Provider] KICK received, redirect to login');
         setUser(undefined);
         cookieUtils.clearAuthenticated();
         handleRedirectLogin(true);
         router.refresh();
+      } else if (msg?.type === WsType.FRIEND_REQUEST) {
+        logger.info('[WS Provider] FRIEND_REQUEST received', msg);
+        toast.success(`Bạn có yêu cầu kết bạn mới ${JSON.stringify(msg)}`);
       }
     } catch {
       // ignore non-JSON or parse error

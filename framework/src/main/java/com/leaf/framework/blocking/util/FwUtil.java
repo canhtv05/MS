@@ -1,4 +1,4 @@
-package com.leaf.common.utils;
+package com.leaf.framework.blocking.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -15,7 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AESUtils {
+public class FwUtil {
 
     private static final String AES = "AES";
     private static final int AES_KEY_SIZE = 128;
@@ -29,7 +29,7 @@ public class AESUtils {
         }
     }
 
-    private AESUtils() {}
+    private FwUtil() {}
 
     public static String encrypt(String data, String key)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {

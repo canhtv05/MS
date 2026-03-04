@@ -13,12 +13,12 @@ import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.socket.WsMessage;
 import com.leaf.common.socket.WsSessionRevokedMessage;
-import com.leaf.common.utils.AESUtils;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.framework.blocking.service.RedisPubService;
 import com.leaf.framework.blocking.service.UserSessionService;
+import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.FwUtil;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
@@ -189,10 +189,10 @@ public class TokenProvider {
 
     @Transactional(readOnly = true)
     public RefreshTokenRes processRefreshInternal(String refreshToken, String channel) {
-        if (CommonUtils.isEmpty(refreshToken)) {
+        if (CommonUtil.isEmpty(refreshToken)) {
             throw new ApiException(ErrorMessage.REFRESH_TOKEN_INVALID);
         }
-        if (CommonUtils.isEmpty(channel)) {
+        if (CommonUtil.isEmpty(channel)) {
             throw new ApiException(ErrorMessage.CHANNEL_INVALID);
         }
 
@@ -338,7 +338,7 @@ public class TokenProvider {
             .username(username)
             .sessionId(sessionId)
             .channel(channel)
-            .secretKey(AESUtils.generateSecretKey())
+            .secretKey(FwUtil.generateSecretKey())
             .build();
         userSessionService.cacheUserSession(userSessionDTO);
         userSessionService.cacheToken(username, channel, token);

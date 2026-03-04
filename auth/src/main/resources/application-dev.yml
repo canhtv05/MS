@@ -1,6 +1,8 @@
 logging:
   level:
-    root: INFO
+    '[root]': WARN
+    '[com.leaf]': INFO
+    '[org.springframework]': WARN
 
 spring:
   datasource:

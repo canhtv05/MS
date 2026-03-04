@@ -1,3 +1,5 @@
+import { WsType } from '@/enums/common';
+
 export interface IResponseObject<T> {
   code: string;
   message: string;
@@ -34,4 +36,12 @@ export interface ISearchRequest {
 export interface ISearchResponse<T> {
   data: T;
   pagination: IPagination;
+}
+
+export interface WsMessage {
+  type: WsType;
+  topic: string;
+  userId: string;
+  message: string;
+  data: string;
 }
