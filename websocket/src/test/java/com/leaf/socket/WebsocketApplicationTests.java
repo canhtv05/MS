@@ -1,4 +1,4 @@
-package com.leaf.notification;
+package com.leaf.socket;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
