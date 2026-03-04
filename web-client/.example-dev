@@ -1,4 +1,4 @@
 NEXT_PUBLIC_API_FRONTEND_URL=/api/proxy
 NEXT_PUBLIC_API_BACKEND_URL=http://localhost:1000/api/v1
-NEXT_PUBLIC_WS_URL=ws://localhost:1000/ws
+NEXT_PUBLIC_WS_URL=ws://localhost:1000
 # NEXT_PUBLIC_API_BACKEND_URL=https://unspilt-enthusedly-shantell.ngrok-free.dev/api/v
