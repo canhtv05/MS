@@ -1,7 +1,7 @@
 package com.leaf.profile.mapper;
 
 import com.leaf.common.grpc.PrivacyLevel;
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.profile.dto.UserProfilePrivacyDTO;
 
 public class UserProfilePrivacyGrpcMapper {
@@ -19,38 +19,38 @@ public class UserProfilePrivacyGrpcMapper {
             return null;
         }
         return com.leaf.common.grpc.UserProfilePrivacyDTO.newBuilder()
-            .setId(CommonUtil.getSafeObject(response.getId(), String.class, ""))
-            .setUserId(CommonUtil.getSafeObject(response.getUserId(), String.class, ""))
+            .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
+            .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
             .setFriendsVisibility(
-                CommonUtil.getSafeObject(
+                CommonUtils.getSafeObject(
                     response.getFriendsVisibility(),
                     PrivacyLevel.class,
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC
                 )
             )
             .setProfileVisibility(
-                CommonUtil.getSafeObject(
+                CommonUtils.getSafeObject(
                     response.getProfileVisibility(),
                     PrivacyLevel.class,
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC
                 )
             )
             .setPostsVisibility(
-                CommonUtil.getSafeObject(
+                CommonUtils.getSafeObject(
                     response.getPostsVisibility(),
                     PrivacyLevel.class,
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC
                 )
             )
             .setIntroduceVisibility(
-                CommonUtil.getSafeObject(
+                CommonUtils.getSafeObject(
                     response.getIntroduceVisibility(),
                     PrivacyLevel.class,
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC
                 )
             )
             .setGalleryVisibility(
-                CommonUtil.getSafeObject(
+                CommonUtils.getSafeObject(
                     response.getGalleryVisibility(),
                     PrivacyLevel.class,
                     PrivacyLevel.PRIVACY_LEVEL_PUBLIC

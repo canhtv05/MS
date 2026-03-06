@@ -3,24 +3,24 @@ package com.leaf.socket.config;
 import static com.leaf.socket.service.WebsocketSessionManager.*;
 
 import com.leaf.common.socket.WsMessage;
-import com.leaf.framework.blocking.util.CommonUtil;
-import com.leaf.framework.blocking.util.JsonF;
+import com.leaf.common.socket.WsMessageProtoMapper;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.socket.service.WebSocketService;
 import com.leaf.socket.service.WebsocketSessionManager;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class WebSocketHandlerCustomizer extends TextWebSocketHandler {
+public class WebSocketHandlerCustomizer extends BinaryWebSocketHandler {
 
     private final WebsocketSessionManager sessionManager;
     private final WebSocketService webSocketService;
@@ -56,54 +56,50 @@ public class WebSocketHandlerCustomizer extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
-        String msgData = message.getPayload();
         try {
-            WsMessage payload = JsonF.jsonToObject(msgData, WsMessage.class);
-            if (CommonUtil.isEmpty(payload) || CommonUtil.isEmpty(payload.getType())) {
+            ByteBuffer buf = message.getPayload();
+            byte[] bytes = new byte[buf.remaining()];
+            buf.duplicate().get(bytes);
+            WsMessage payload = WsMessageProtoMapper.fromByteArray(bytes);
+            if (CommonUtils.isEmpty(payload) || CommonUtils.isEmpty(payload.getType())) {
                 log.info(
-                    "[WS] Received from userId={} channelType={} sessionId={} message: {}",
+                    "[WS] Received from userId={} channelType={} sessionId={} invalid or empty type",
                     userId,
                     channelType,
-                    session,
-                    msgData
+                    session.getId()
                 );
-                session.sendMessage(new TextMessage(JsonF.toJson(WsMessage.error("Message invalid!"))));
-                log.error(
-                    "Response from userId={} channelType={} message: {}",
-                    userId,
-                    channelType,
-                    "Message invalid!"
-                );
+                sendError(session, "Message invalid!");
                 return;
             }
-            String logMsg = String.format(
-                "[WS] Received from userId=%s channelType=%s sessionId=%s message: %s",
+            log.info(
+                "[WS] Received from userId={} channelType={} sessionId={} type={}",
                 userId,
                 channelType,
                 session.getId(),
-                msgData
+                payload.getType()
             );
-            log.info(logMsg);
             webSocketService.handleMessage(session, payload);
         } catch (Exception e) {
-            String logMsg = String.format(
-                "[WS] handleTextMessage userId=%s channelType=%s sessionId=%s error=%s",
+            log.error(
+                "[WS] handleBinaryMessage userId={} channelType={} sessionId={} error={}",
                 userId,
                 channelType,
                 session.getId(),
-                e.getMessage()
+                e.getMessage(),
+                e
             );
-            log.error(logMsg, e);
             try {
-                session.sendMessage(new TextMessage(JsonF.toJson(WsMessage.error(e.getMessage()))));
-            } catch (IOException ex) {
+                sendError(session, e.getMessage());
+            } catch (IOException ignored) {
                 //
             }
-        } finally {
-            MDC.clear();
         }
+    }
+
+    private void sendError(WebSocketSession session, String message) throws IOException {
+        session.sendMessage(new BinaryMessage(WsMessageProtoMapper.toByteArray(WsMessage.error(message))));
     }
 }

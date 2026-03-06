@@ -3,7 +3,7 @@ package com.leaf.framework.blocking.util.json;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.leaf.framework.blocking.util.DateUtil;
+import com.leaf.framework.blocking.util.DateUtils;
 import java.io.IOException;
 import java.time.Instant;
 
@@ -11,6 +11,6 @@ public class StringToInstantDeserializer extends JsonDeserializer<Instant> {
 
     @Override
     public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        return DateUtil.stringToDate(p.getValueAsString());
+        return DateUtils.stringToDate(p.getValueAsString());
     }
 }

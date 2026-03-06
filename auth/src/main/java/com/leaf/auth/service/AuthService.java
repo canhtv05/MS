@@ -20,9 +20,9 @@ import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.framework.blocking.security.SecurityUtils;
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.JsonF;
-import com.leaf.framework.blocking.util.JwtUtil;
+import com.leaf.framework.blocking.util.JwtUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,7 +54,7 @@ public class AuthService {
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
     @Transactional
     public AuthenticateRes authenticate(
@@ -117,7 +117,7 @@ public class AuthService {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest httpServletRequest = attributes.getRequest();
         HttpServletResponse httpServletResponse = attributes.getResponse();
-        Optional<TokenPairDTO> cookieTokenPair = CommonUtil.tokenFromCookie(
+        Optional<TokenPairDTO> cookieTokenPair = CommonUtils.tokenFromCookie(
             httpServletRequest.getHeader(HttpHeaders.COOKIE)
         );
         if (cookieTokenPair.isEmpty() || StringUtils.isBlank(cookieTokenPair.get().getAccessToken())) {
@@ -235,7 +235,7 @@ public class AuthService {
             }
             String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
             String refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
-            if (CommonUtil.isEmpty(accessToken, refreshToken)) {
+            if (CommonUtils.isEmpty(accessToken, refreshToken)) {
                 throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
             }
             return TokenPairDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();

@@ -1,6 +1,6 @@
 package com.leaf.graphql_bff.exception;
 
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -20,7 +20,7 @@ public class GraphqlGrpcExceptionHandler extends DataFetcherExceptionResolverAda
             log.error("gRPC call failed at field {}: {}", env.getField().getName(), statusEx.getStatus(), statusEx);
 
             String safeMessage = statusEx.getStatus().getDescription();
-            if (CommonUtil.isEmpty(safeMessage)) {
+            if (CommonUtils.isEmpty(safeMessage)) {
                 safeMessage = "Internal server error";
             }
 

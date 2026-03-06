@@ -17,7 +17,7 @@ import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ObjectUtils;
 
 @UtilityClass
-public class CommonUtil {
+public class CommonUtils {
 
     private static final Pattern NON_ALPHANUMERIC_PATTERN = Pattern.compile("[^A-Za-z0-9]+");
 

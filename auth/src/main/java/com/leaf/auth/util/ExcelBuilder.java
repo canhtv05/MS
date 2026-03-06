@@ -5,7 +5,7 @@ import com.leaf.auth.dto.excel.ReadExcelResult;
 import com.leaf.auth.dto.excel.RowHeader;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.blocking.util.DateUtil;
+import com.leaf.framework.blocking.util.DateUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.time.ZoneId;
@@ -75,7 +75,7 @@ public class ExcelBuilder {
                 });
 
                 // 5) Ẩn sheet nguồn
-                hidden.protectSheet(DateUtil.getCurrentDate());
+                hidden.protectSheet(DateUtils.getCurrentDate());
                 int hiddenIndex = wb.getSheetIndex(hidden);
                 wb.setSheetHidden(hiddenIndex, true);
             }

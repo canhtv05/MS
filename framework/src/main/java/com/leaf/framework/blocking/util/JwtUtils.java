@@ -17,15 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-/**
- * Blocking version of JwtUtil for use in blocking contexts (e.g., Spring MVC).
- * For reactive contexts (e.g., Spring Cloud Gateway), use ReactiveJwtUtil
- * instead.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtil {
+public class JwtUtils {
 
     private final ApplicationProperties applicationProperties;
     private final UserSessionService userSessionService;
@@ -53,8 +48,8 @@ public class JwtUtil {
 
             String tokenExisting = userSessionService.getOldToken(username, channel);
             log.info("Token existing: {}", tokenExisting);
-            log.info("Auth token hex: {}", FwUtil.hexString(authToken));
-            if (Objects.equals(tokenExisting, FwUtil.hexString(authToken))) {
+            log.info("Auth token hex: {}", FwUtils.hexString(authToken));
+            if (Objects.equals(tokenExisting, FwUtils.hexString(authToken))) {
                 return TokenStatus.VALID;
             } else {
                 return TokenStatus.INVALID;

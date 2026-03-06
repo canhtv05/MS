@@ -10,7 +10,7 @@ import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.framework.blocking.service.CommonService;
 import com.leaf.framework.blocking.service.RedisPubService;
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.profile.domain.UserProfile;
 import com.leaf.profile.dto.SendFriendRequestDTO;
@@ -121,8 +121,8 @@ public class UserProfileService {
         UserProfile userProfile = userProfileRepository
             .findByUserId(username)
             .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
-        CommonUtil.updateIfNotNull(req.getFullname(), userProfile::setFullname);
-        CommonUtil.updateIfNotNull(req.getBio(), userProfile::setBio);
+        CommonUtils.updateIfNotNull(req.getFullname(), userProfile::setFullname);
+        CommonUtils.updateIfNotNull(req.getBio(), userProfile::setBio);
         UserProfile saved = userProfileRepository.save(userProfile);
         String cacheKey = CacheKey.USER_PROFILE.name() + ":" + username;
         redisService.evict(cacheKey);

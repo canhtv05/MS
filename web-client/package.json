@@ -29,6 +29,7 @@
     "js-cookie": "^3.0.5",
     "motion": "^12.30.0",
     "next": "^16.1.1",
+    "protobufjs": "^7.2.6",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
     "react": "^19.2.3",

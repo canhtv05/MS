@@ -9,7 +9,7 @@ import com.leaf.auth.service.PublicApiService;
 import com.leaf.auth.util.CookieUtil;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.framework.blocking.util.JsonF;
-import com.leaf.framework.blocking.util.JwtUtil;
+import com.leaf.framework.blocking.util.JwtUtils;
 import com.leaf.framework.constant.CommonConstants;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
@@ -40,14 +40,14 @@ public class AuthSecurityConfig {
     private final TokenProvider tokenProvider;
     private final CookieUtil cookieUtil;
     private final CorsFilter corsFilter;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
     private final PublicApiService publicApiService;
 
     public AuthSecurityConfig(
         TokenProvider tokenProvider,
         CorsFilter corsFilter,
         CookieUtil cookieUtil,
-        JwtUtil jwtUtil,
+        JwtUtils jwtUtil,
         PublicApiService publicApiService
     ) {
         this.tokenProvider = tokenProvider;

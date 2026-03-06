@@ -30,14 +30,22 @@ export function useWebSocket(url: string | null) {
     {
       shouldReconnect: () => true,
       reconnectAttempts: 20,
-      reconnectInterval: 2000, // cố định 2s cho nhanh, tránh backoff 16-30s
-      onOpen: () => logger.info('[WS] connected', { url }),
+      reconnectInterval: 2000,
+      onOpen: () => {
+        const ws = getWebSocket();
+        if (ws && 'binaryType' in ws) (ws as WebSocket).binaryType = 'arraybuffer';
+        logger.info('[WS] connected', { url });
+      },
       onClose: e =>
         logger.info('[WS] closed', { code: e?.code, reason: e?.reason, wasClean: e?.wasClean }),
       onError: () => logger.warn('[WS] error', { url }),
       onMessage: event => {
-        if (typeof event.data === 'string') {
-          logger.debug('[WS] raw message', event.data.slice(0, 200));
+        if (event.data instanceof ArrayBuffer) {
+          logger.debug(
+            '[WS] binary message received',
+            (event.data as ArrayBuffer).byteLength,
+            'bytes',
+          );
         }
       },
     },
@@ -52,14 +60,15 @@ export function useWebSocket(url: string | null) {
     if (ws) ws.close();
   }, [getWebSocket]);
 
-  const send = useCallback(
-    (message: string) => {
+  /** Gửi dữ liệu dạng byte (protobuf). */
+  const sendBinary = useCallback(
+    (bytes: Uint8Array) => {
       if (libReadyState !== 1) {
-        logger.warn('[WS] send() ignored, readyState:', libReadyState);
+        logger.warn('[WS] sendBinary() ignored, readyState:', libReadyState);
         return false;
       }
-      sendMessage(message);
-      logger.debug('[WS] send:', message.slice(0, 100));
+      sendMessage(bytes);
+      logger.debug('[WS] sendBinary:', bytes.byteLength, 'bytes');
       return true;
     },
     [sendMessage, libReadyState],
@@ -68,9 +77,8 @@ export function useWebSocket(url: string | null) {
   return {
     readyState,
     readyStateLabel: READY_STATE_LABEL[readyState],
-    // Trả nguyên MessageEvent để mỗi lần message mới (kể cả data giống nhau) vẫn trigger re-render
     lastMessage,
     disconnect,
-    send,
+    sendBinary,
   };
 }

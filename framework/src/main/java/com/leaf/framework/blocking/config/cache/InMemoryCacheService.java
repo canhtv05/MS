@@ -1,6 +1,6 @@
 package com.leaf.framework.blocking.config.cache;
 
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class InMemoryCacheService<K, V> {
 
     public void put(K key, V value) {
         try {
-            if (CommonUtil.isEmpty(key, value)) return;
+            if (CommonUtils.isEmpty(key, value)) return;
             cache.put(key, value);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -25,7 +25,7 @@ public class InMemoryCacheService<K, V> {
 
     public Optional<V> get(K key) {
         try {
-            if (CommonUtil.isEmpty(key)) return Optional.empty();
+            if (CommonUtils.isEmpty(key)) return Optional.empty();
             return Optional.ofNullable(cache.get(key));
         } catch (Exception e) {
             log.error(e.getMessage());

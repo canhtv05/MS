@@ -1,15 +1,15 @@
 package com.leaf.socket.service;
 
 import com.leaf.common.socket.WsMessage;
+import com.leaf.common.socket.WsMessageProtoMapper;
 import com.leaf.common.socket.WsSessionRevokedMessage;
-import com.leaf.framework.blocking.util.JsonF;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 @Component
@@ -88,7 +88,7 @@ public class WebsocketSessionManager {
                     tokenSessionId
                 );
                 try {
-                    s.sendMessage(new TextMessage(JsonF.toJson(msg)));
+                    s.sendMessage(new BinaryMessage(WsMessageProtoMapper.toByteArray(msg)));
                     Thread.sleep(100);
                     s.close();
                 } catch (Exception ignored) {
@@ -119,11 +119,11 @@ public class WebsocketSessionManager {
             return;
         }
         try {
-            String payload = JsonF.toJson(msg);
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
             for (Set<WebSocketSession> sessions : userSessions.values()) {
                 for (WebSocketSession s : sessions) {
                     if (s.isOpen()) {
-                        s.sendMessage(new TextMessage(payload));
+                        s.sendMessage(new BinaryMessage(payload));
                     }
                 }
             }
@@ -140,10 +140,10 @@ public class WebsocketSessionManager {
             return;
         }
         try {
-            String payload = JsonF.toJson(msg);
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
             for (WebSocketSession s : sessions) {
                 if (s.isOpen()) {
-                    s.sendMessage(new TextMessage(payload));
+                    s.sendMessage(new BinaryMessage(payload));
                 }
             }
         } catch (Exception e) {
@@ -158,11 +158,11 @@ public class WebsocketSessionManager {
             return;
         }
         try {
-            String payload = JsonF.toJson(msg);
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
             for (WebSocketSession s : sessions) {
                 String sChannel = (String) s.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
                 if (s.isOpen() && channelType.equalsIgnoreCase(sChannel)) {
-                    s.sendMessage(new TextMessage(payload));
+                    s.sendMessage(new BinaryMessage(payload));
                 }
             }
         } catch (Exception e) {

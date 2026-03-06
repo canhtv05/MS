@@ -34,8 +34,8 @@ import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.AuthoritiesConstants;
 import com.leaf.framework.blocking.security.SecurityUtils;
 import com.leaf.framework.blocking.service.SessionStore;
-import com.leaf.framework.blocking.util.CommonUtil;
-import com.leaf.framework.blocking.util.DateUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.DateUtils;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -214,7 +214,7 @@ public class UserService {
 
     @Transactional
     public void resetPassword(ResetPasswordReq request) {
-        if (CommonUtil.isEmpty(request.getEmail(), request.getNewPassword(), request.getOTP())) {
+        if (CommonUtils.isEmpty(request.getEmail(), request.getNewPassword(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
 
@@ -242,7 +242,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void verifyForgotPasswordOTP(VerifyOTPReq request) {
-        if (CommonUtil.isEmpty(request.getEmail(), request.getOTP())) {
+        if (CommonUtils.isEmpty(request.getEmail(), request.getOTP())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
 
@@ -256,7 +256,7 @@ public class UserService {
 
         String keyForgotPassword = keyCacheService.getKeyForgotPassword(user.getUsername());
         String otp = redisService.get(keyForgotPassword, String.class);
-        if (CommonUtil.isEmpty(otp)) {
+        if (CommonUtils.isEmpty(otp)) {
             throw new ApiException(ErrorMessage.FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED);
         }
 
@@ -267,7 +267,7 @@ public class UserService {
 
     @Transactional
     public void changePassword(String cookieValue, ChangePasswordReq req, HttpServletResponse response) {
-        if (CommonUtil.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
+        if (CommonUtils.isEmpty(req.getCurrentPassword(), req.getNewPassword())) {
             throw new ApiException(ErrorMessage.VALIDATION_ERROR);
         }
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
@@ -344,7 +344,7 @@ public class UserService {
 
                 row.createCell(1).setCellValue(item.getUsername());
                 row.createCell(2).setCellValue(item.isActivated() ? "Hoạt động" : "Không hoạt động");
-                row.createCell(3).setCellValue(DateUtil.dateToString(item.getCreatedDate()));
+                row.createCell(3).setCellValue(DateUtils.dateToString(item.getCreatedDate()));
                 r++;
             }
             IntStream.range(1, headers.size()).forEach(sheet::autoSizeColumn);

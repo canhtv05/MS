@@ -4,7 +4,7 @@ import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
@@ -106,7 +106,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String refreshToken = tokens.refreshToken();
 
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
-        final String finalChannel = CommonUtil.getSafeObject(channelFromHeader, String.class, "web");
+        final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
 
         if (StringUtils.isEmpty(accessToken)) {
             if (StringUtils.isEmpty(refreshToken)) {
@@ -168,7 +168,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         log.info("Refresh token: {}", refreshToken);
 
         String channelFromHeader = exchange.getRequest().getHeaders().getFirst("X-Channel");
-        final String finalChannel = CommonUtil.getSafeObject(channelFromHeader, String.class, "web");
+        final String finalChannel = CommonUtils.getSafeObject(channelFromHeader, String.class, "web");
 
         if (StringUtils.isEmpty(accessToken)) {
             if (StringUtils.isEmpty(refreshToken)) {
@@ -216,8 +216,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private void addAuthCookie(ServerHttpResponse response, String accessToken, String refreshToken) {
         try {
             Map<String, String> tokens = new HashMap<>();
-            tokens.put(AuthKey.ACCESS_TOKEN.getKey(), CommonUtil.getSafeObject(accessToken, String.class, ""));
-            tokens.put(AuthKey.REFRESH_TOKEN.getKey(), CommonUtil.getSafeObject(refreshToken, String.class, ""));
+            tokens.put(AuthKey.ACCESS_TOKEN.getKey(), CommonUtils.getSafeObject(accessToken, String.class, ""));
+            tokens.put(AuthKey.REFRESH_TOKEN.getKey(), CommonUtils.getSafeObject(refreshToken, String.class, ""));
             String tokenData = JsonF.toJson(tokens);
             String encoded = URLEncoder.encode(tokenData, StandardCharsets.UTF_8);
 

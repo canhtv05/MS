@@ -15,7 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class FwUtil {
+public class FwUtils {
 
     private static final String AES = "AES";
     private static final int AES_KEY_SIZE = 128;
@@ -29,7 +29,7 @@ public class FwUtil {
         }
     }
 
-    private FwUtil() {}
+    private FwUtils() {}
 
     public static String encrypt(String data, String key)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {

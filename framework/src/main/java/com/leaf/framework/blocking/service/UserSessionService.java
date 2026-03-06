@@ -3,7 +3,7 @@ package com.leaf.framework.blocking.service;
 import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.exception.NoAuthenticationError;
-import com.leaf.framework.blocking.util.FwUtil;
+import com.leaf.framework.blocking.util.FwUtils;
 import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +39,7 @@ public class UserSessionService {
         try {
             redisService.set(
                 sessionStore.getKeyToken(username, channelType),
-                FwUtil.hexString(token),
+                FwUtils.hexString(token),
                 this.applicationProperties.getSecurity().getValidDurationInSeconds(),
                 TimeUnit.SECONDS
             );

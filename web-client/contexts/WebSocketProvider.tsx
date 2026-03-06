@@ -10,14 +10,15 @@ import { useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useMemo, useEffect, ReactNode } from 'react';
 import { WsType } from '@/enums/common';
 import { toast } from 'sonner';
+import { encodeWsMessage, decodeWsMessage, type WsMessagePayload } from '@/lib/ws-proto';
 
 export type WebSocketContextValue = {
   readyState: WsReadyState;
   readyStateLabel: string;
   lastMessage: MessageEvent | null;
-  send: (message: string) => boolean;
-  sendToUser: (userId: string, data: Record<string, unknown>) => boolean;
-  sendToAll: (data: Record<string, unknown>) => boolean;
+  send: (payload: WsMessagePayload) => Promise<boolean>;
+  sendToUser: (userId: string, data: Record<string, unknown>) => Promise<boolean>;
+  sendToAll: (data: Record<string, unknown>) => Promise<boolean>;
 };
 
 const WebSocketContext = createContext<WebSocketContextValue | null>(null);
@@ -34,7 +35,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user || cookieUtils.getAuthenticated();
   const wsUrl = useMemo(() => (isAuthenticated ? `${WS_BASE_URL}/ws` : null), [isAuthenticated]);
 
-  const { readyState, readyStateLabel, lastMessage, disconnect, send } = useWebSocket(wsUrl);
+  const { readyState, readyStateLabel, lastMessage, disconnect, sendBinary } = useWebSocket(wsUrl);
 
   useEffect(() => {
     if (isAuthenticated && wsUrl) {
@@ -46,10 +47,26 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, wsUrl, disconnect]);
 
+  const send = useCallback(
+    async (payload: WsMessagePayload) => {
+      try {
+        const bytes = await encodeWsMessage(payload);
+        return sendBinary(bytes);
+      } catch (e) {
+        logger.error('[WS Provider] send encode error', e);
+        return false;
+      }
+    },
+    [sendBinary],
+  );
+
   const sendToUser = useCallback(
-    (userId: string, data: Record<string, unknown>) => {
-      const payload = JSON.stringify({ type: WsType.MESSAGE, userId, data });
-      const ok = send(payload);
+    async (userId: string, data: Record<string, unknown>) => {
+      const ok = await send({
+        type: WsType.MESSAGE,
+        userId,
+        data: JSON.stringify(data),
+      });
       if (ok) logger.debug('[WS Provider] sendToUser', { userId, data });
       return ok;
     },
@@ -57,9 +74,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   );
 
   const sendToAll = useCallback(
-    (data: Record<string, unknown>) => {
-      const payload = JSON.stringify({ type: WsType.MESSAGE, data });
-      const ok = send(payload);
+    async (data: Record<string, unknown>) => {
+      const ok = await send({
+        type: WsType.MESSAGE,
+        data: JSON.stringify(data),
+      });
       if (ok) logger.debug('[WS Provider] sendToAll', data);
       return ok;
     },
@@ -67,23 +86,22 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (!lastMessage || typeof lastMessage.data !== 'string') return;
-    try {
-      const msg = JSON.parse(lastMessage.data);
-      logger.debug('[WS Provider] lastMessage', msg);
-      if (msg?.type === WsType.KICK) {
-        logger.info('[WS Provider] KICK received, redirect to login');
-        setUser(undefined);
-        cookieUtils.clearAuthenticated();
-        handleRedirectLogin(true);
-        router.refresh();
-      } else if (msg?.type === WsType.FRIEND_REQUEST) {
-        logger.info('[WS Provider] FRIEND_REQUEST received', msg);
-        toast.success(`Bạn có yêu cầu kết bạn mới ${JSON.stringify(msg)}`);
-      }
-    } catch {
-      // ignore non-JSON or parse error
-    }
+    if (!lastMessage || !(lastMessage.data instanceof ArrayBuffer)) return;
+    decodeWsMessage(lastMessage.data)
+      .then(msg => {
+        logger.debug('[WS Provider] lastMessage (decoded)', msg);
+        if (msg.type === WsType.KICK) {
+          logger.info('[WS Provider] KICK received, redirect to login');
+          setUser(undefined);
+          cookieUtils.clearAuthenticated();
+          handleRedirectLogin(true);
+          router.refresh();
+        } else if (msg.type === WsType.FRIEND_REQUEST) {
+          logger.info('[WS Provider] FRIEND_REQUEST received', msg);
+          toast.success(`Bạn có yêu cầu kết bạn mới ${msg.data ?? ''}`);
+        }
+      })
+      .catch(e => logger.warn('[WS Provider] decode message error', e));
   }, [lastMessage, setUser, router]);
 
   const value = useMemo<WebSocketContextValue>(

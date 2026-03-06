@@ -1,6 +1,6 @@
 package com.leaf.framework.reactive.cache;
 
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.JsonF;
 import java.time.Duration;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class ReactiveRedisCacheService {
     public <K, V> Mono<Void> set(K key, V value, long ttl, TimeUnit timeUnit) {
         return Mono.fromCallable(() -> {
             try {
-                if (CommonUtil.isEmpty(key, value)) {
+                if (CommonUtils.isEmpty(key, value)) {
                     return null;
                 }
 
@@ -48,7 +48,7 @@ public class ReactiveRedisCacheService {
     public <K, V> Mono<Void> set(K key, V value) {
         return Mono.fromCallable(() -> {
             try {
-                if (CommonUtil.isEmpty(key, value)) {
+                if (CommonUtils.isEmpty(key, value)) {
                     return null;
                 }
 
@@ -67,7 +67,7 @@ public class ReactiveRedisCacheService {
     public <K, V> Mono<V> get(K key, Class<V> clazz) {
         return Mono.fromCallable(() -> {
             try {
-                if (CommonUtil.isEmpty(key)) {
+                if (CommonUtils.isEmpty(key)) {
                     return null;
                 }
 

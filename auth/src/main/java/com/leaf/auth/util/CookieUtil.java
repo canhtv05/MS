@@ -1,7 +1,7 @@
 package com.leaf.auth.util;
 
 import com.leaf.common.dto.TokenPairDTO;
-import com.leaf.framework.blocking.util.CommonUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
@@ -26,7 +26,7 @@ public class CookieUtil {
         TokenPairDTO tokenPair = TokenPairDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 
         String jsonData = JsonF.toJson(tokenPair);
-        if (CommonUtil.isEmpty(jsonData)) {
+        if (CommonUtils.isEmpty(jsonData)) {
             return null;
         }
 

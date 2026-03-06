@@ -2,8 +2,8 @@ package com.leaf.auth.security.jwt;
 
 import com.leaf.common.dto.TokenPairDTO;
 import com.leaf.common.enums.TokenStatus;
-import com.leaf.framework.blocking.util.CommonUtil;
-import com.leaf.framework.blocking.util.JwtUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -20,9 +20,9 @@ import org.springframework.web.filter.GenericFilterBean;
 public class JWTFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
-    public JWTFilter(TokenProvider tokenProvider, JwtUtil jwtUtil) {
+    public JWTFilter(TokenProvider tokenProvider, JwtUtils jwtUtil) {
         this.tokenProvider = tokenProvider;
         this.jwtUtil = jwtUtil;
     }
@@ -43,10 +43,10 @@ public class JWTFilter extends GenericFilterBean {
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
         } else {
-            Optional<TokenPairDTO> tokenPair = CommonUtil.tokenFromCookie(
+            Optional<TokenPairDTO> tokenPair = CommonUtils.tokenFromCookie(
                 httpServletRequest.getHeader(HttpHeaders.COOKIE)
             );
-            if (CommonUtil.isNotEmpty(tokenPair)) {
+            if (CommonUtils.isNotEmpty(tokenPair)) {
                 jwt = tokenPair.get().getAccessToken();
             } else {
                 jwt = null;

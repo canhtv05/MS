@@ -3,9 +3,9 @@ package com.leaf.socket.config;
 import static com.leaf.socket.service.WebsocketSessionManager.*;
 
 import com.leaf.common.dto.TokenPairDTO;
-import com.leaf.framework.blocking.util.CommonUtil;
-import com.leaf.framework.blocking.util.FwUtil;
-import com.leaf.framework.blocking.util.JwtUtil;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.FwUtils;
+import com.leaf.framework.blocking.util.JwtUtils;
 import com.leaf.framework.constant.CommonConstants;
 import io.jsonwebtoken.Claims;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 @Slf4j
 public class WebsocketInterceptorCustomizer implements HandshakeInterceptor {
 
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
     @Override
     public boolean beforeHandshake(
@@ -45,12 +45,12 @@ public class WebsocketInterceptorCustomizer implements HandshakeInterceptor {
                 }
             }
 
-            if (CommonUtil.isEmpty(token)) {
-                Optional<TokenPairDTO> tokenPair = CommonUtil.tokenFromCookie(
+            if (CommonUtils.isEmpty(token)) {
+                Optional<TokenPairDTO> tokenPair = CommonUtils.tokenFromCookie(
                     request.getHeaders().getFirst(HttpHeaders.COOKIE)
                 );
                 token = tokenPair.get().getAccessToken();
-                if (CommonUtil.isNotEmpty(token)) {
+                if (CommonUtils.isNotEmpty(token)) {
                     setAttributes(attributes, token);
                 }
             } else {
@@ -77,7 +77,7 @@ public class WebsocketInterceptorCustomizer implements HandshakeInterceptor {
         String username = claims.getSubject();
         String channel = claims.get(CommonConstants.CHANNEL_KEY, String.class);
         attributes.put(WS_ATTRIBUTE_USER_ID, username);
-        attributes.put(WS_ATTRIBUTE_TOKEN_ID, FwUtil.hexString(token));
+        attributes.put(WS_ATTRIBUTE_TOKEN_ID, FwUtils.hexString(token));
         attributes.put(WS_ATTRIBUTE_CHANNEL_TYPE, channel != null ? channel : "web");
     }
 }
