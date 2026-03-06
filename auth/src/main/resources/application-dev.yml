@@ -3,6 +3,8 @@ logging:
     '[root]': WARN
     '[com.leaf]': INFO
     '[org.springframework]': WARN
+    # disable log of InitializeUserDetailsBeanManagerConfigurer
+    '[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]': ERROR
 
 spring:
   datasource:
