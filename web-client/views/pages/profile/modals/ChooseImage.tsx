@@ -1,6 +1,10 @@
 'use client';
 
-import { useMyMediaHistoryInfiniteQuery } from '@/services/queries/profile';
+import {
+  useMyMediaHistoryInfiniteQuery,
+  type MediaHistoryInfiniteData,
+  type MediaHistoryPageResponse,
+} from '@/services/queries/profile';
 import { useAuthStore } from '@/stores/auth';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,8 +15,6 @@ import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IImageHistoryGroupDTO } from '@/types/profile';
 import { ResourceType } from '@/enums/common';
-import type { InfiniteData } from '@tanstack/react-query';
-import type { IResponseObject, ISearchResponse } from '@/types/common';
 
 interface ChooseImageProps {
   onSelect?: (url: string | null) => void;
@@ -36,13 +38,12 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
       isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
     );
 
-  type PageResponse = IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>;
-
-  const groups = useMemo(() => {
-    const pages = (data as InfiniteData<PageResponse> | undefined)?.pages ?? [];
+  const groups = useMemo((): IImageHistoryGroupDTO[] => {
+    const dataTyped = data as MediaHistoryInfiniteData | undefined;
+    const pages = dataTyped?.pages ?? [];
     if (!pages.length) return [];
     const groupMap = new Map<string, IImageHistoryGroupDTO>();
-    pages.forEach((page: PageResponse) => {
+    pages.forEach((page: MediaHistoryPageResponse) => {
       const pageGroups = page?.data?.data ?? [];
       pageGroups.forEach((group: IImageHistoryGroupDTO) => {
         if (groupMap.has(group.date)) {

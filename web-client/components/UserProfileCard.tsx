@@ -15,7 +15,6 @@ interface IUserProfileCard {
   hideInfo?: boolean;
   className?: string;
   size?: number;
-  hasBorder?: boolean;
 }
 
 const UserProfileCard = ({
@@ -27,7 +26,6 @@ const UserProfileCard = ({
   hideInfo = false,
   className,
   size = 35,
-  hasBorder = true,
 }: IUserProfileCard) => {
   const validAvatarUrl = getValidImageSrc(avatarUrl, images.avt1.src);
 
@@ -39,7 +37,6 @@ const UserProfileCard = ({
         isOnline={true}
         hasRing={hasRing}
         size={size}
-        ringClassName={hasBorder ? 'after:border-white dark:after:border-gray-800' : ''}
       />
       <Activity mode={hideInfo ? 'hidden' : 'visible'}>
         <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>

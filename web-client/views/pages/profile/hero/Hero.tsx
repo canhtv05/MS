@@ -248,7 +248,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
               }
             >
               <IconButton
-                className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
+                className="absolute! size-8 right-0 cursor-pointer bottom-0 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
                 variant={'outline'}
                 onClick={() => openParentDialog()}
               >

@@ -163,7 +163,6 @@ const HeaderLayout = () => {
                         src={getValidImageSrc(user?.profile?.avatarUrl, images.avt1.src)}
                         fallback={user?.auth?.username}
                         isOnline={true}
-                        ringClassName="after:border-white dark:after:border-gray-800"
                       />
                     </div>
                   </DropdownMenuTrigger>

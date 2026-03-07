@@ -15,7 +15,11 @@ import {
 import { hexToRgba } from '@/utils/common';
 import { Input } from '@/components/ui/input';
 import { Magnifer } from '@solar-icons/react-perf/Outline';
-import { useInterestInfiniteQuery } from '@/services/queries/profile';
+import {
+  useInterestInfiniteQuery,
+  type InterestsInfiniteData,
+  type InterestsPageResponse,
+} from '@/services/queries/profile';
 import useDebounce from '@/hooks/use-debounce';
 import { Loader2Icon } from '@/components/animate-ui/icons';
 import { CreateInterestDialog } from './CreateInterestDialog';
@@ -71,13 +75,14 @@ export const EditInterestsPopover = ({
   }, [isFetching, debouncedSearchText]);
 
   const allInterests = useMemo(() => {
-    if (!interestsData?.pages) return customInterests;
-    const serverInterests = interestsData.pages.flatMap(page => page.data.data);
+    const dataTyped = interestsData as InterestsInfiniteData | undefined;
+    if (!dataTyped?.pages?.length) return customInterests;
+    const serverInterests = dataTyped.pages.flatMap(
+      (page: InterestsPageResponse) => page.data?.data ?? [],
+    );
     const seenIds = new Set<string>();
-    const uniqueServerInterests = serverInterests.filter(i => {
-      if (seenIds.has(i.id)) {
-        return false;
-      }
+    const uniqueServerInterests = serverInterests.filter((i: IInterestDTO) => {
+      if (seenIds.has(i.id)) return false;
       seenIds.add(i.id);
       return true;
     });

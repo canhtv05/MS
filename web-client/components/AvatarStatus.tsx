@@ -2,10 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Ring from '@/components/ui/ring';
-import { cn } from '@/lib/utils';
 import { StaticImageData } from 'next/image';
-
-import { ClassValue } from 'clsx';
 
 interface IAvatarStatus {
   src: StaticImageData | string;
@@ -13,7 +10,6 @@ interface IAvatarStatus {
   isOnline?: boolean;
   hasAnimation?: boolean;
   size?: number;
-  ringClassName?: ClassValue;
   hasRing?: boolean;
 }
 
@@ -23,7 +19,6 @@ const AvatarStatus = ({
   isOnline = true,
   hasAnimation = true,
   size = 35,
-  ringClassName,
   hasRing = true,
 }: IAvatarStatus) => {
   return (
@@ -38,11 +33,7 @@ const AvatarStatus = ({
       </Avatar>
       {hasRing && (
         <div className="absolute bottom-0 -right-0.5">
-          <Ring
-            afterBorderClassName={cn(ringClassName)}
-            isOnline={isOnline}
-            hasAnimation={hasAnimation}
-          />
+          <Ring isOnline={isOnline} hasAnimation={hasAnimation} />
         </div>
       )}
     </div>

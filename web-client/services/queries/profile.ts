@@ -26,6 +26,12 @@ import { useAuthStore } from '@/stores/auth';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { CACHE_KEY } from '@/configs/cache-key';
 import { useAppInfiniteQuery, useAppQuery } from '@/hooks/use-app-query';
+import type { InfiniteData } from '@tanstack/react-query';
+
+export type MediaHistoryPageResponse = IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>;
+export type InterestsPageResponse = IResponseObject<ISearchResponse<IInterestDTO[]>>;
+export type MediaHistoryInfiniteData = InfiniteData<MediaHistoryPageResponse>;
+export type InterestsInfiniteData = InfiniteData<InterestsPageResponse>;
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useMyProfileStore(state => state.myProfile);
@@ -54,11 +60,9 @@ export const useMyMediaHistoryInfiniteQuery = (
   userID?: string,
   resourceType?: ResourceType,
 ) => {
-  return useAppInfiniteQuery<IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>>('PROFILE', {
+  return useAppInfiniteQuery<MediaHistoryPageResponse>('PROFILE', {
     queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(userID, resourceType),
-    queryFn: async ({
-      pageParam = 1,
-    }): Promise<IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>> => {
+    queryFn: async ({ pageParam = 1 }): Promise<MediaHistoryPageResponse> => {
       const res = await api.post(
         API_ENDPOINTS.FILES.SEARCH_MEDIA_HISTORY,
         {},
@@ -90,11 +94,9 @@ export const useInterestInfiniteQuery = (
   searchRequest: ISearchRequest,
   enabled: boolean = true,
 ) => {
-  return useAppInfiniteQuery<IResponseObject<ISearchResponse<IInterestDTO[]>>>('PROFILE', {
+  return useAppInfiniteQuery<InterestsPageResponse>('PROFILE', {
     queryKey: CACHE_KEY.PROFILE.QUERY.INTERESTS(searchRequest as Record<string, unknown>),
-    queryFn: async ({
-      pageParam = 1,
-    }): Promise<IResponseObject<ISearchResponse<IInterestDTO[]>>> => {
+    queryFn: async ({ pageParam = 1 }): Promise<InterestsPageResponse> => {
       const res = await api.get(API_ENDPOINTS.PROFILE.INTERESTS, {
         params: {
           page: pageParam,
