@@ -3,49 +3,77 @@ package com.leaf.post.service;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
 import com.leaf.common.security.SecurityUtils;
-import com.leaf.post.dto.req.PostCreationRequest;
-import com.leaf.post.dto.res.PostResponse;
-import com.leaf.post.entity.Post;
+import com.leaf.post.domain.Post;
+import com.leaf.post.dto.PostCreationReq;
+import com.leaf.post.dto.PostResponse;
 import com.leaf.post.repository.PostRepository;
-
+// import profile.src.java.com.leaf.profile.repository.UserProfileRepository;
+import java.util.List;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostService {
 
-    private final PostRepository postRepository;
+    PostRepository postRepository;
 
-    public PostResponse createPost(PostCreationRequest request) {
-        String username = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new ApiException(ErrorMessage.UNAUTHENTICATED));
-        Post post = new Post();
-        post.setContent(request.getContent());
-        post.setReactionCounts(0L);
-        post.setHashtags(null);
-        post.setUserId(username);
+    // UserProfileRepository userProfileRepository;
 
-        postRepository.save(post);
-        return toPostResponse(post);
+    /* ================= CREATE POST ================= */
+
+    public PostResponse createPost(PostCreationReq request) {
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            throw new ApiException(ErrorMessage.POST_CONTENT_EMPTY);
+        }
+
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
+
+        String userId = userProfileRepository
+            .findByUserIdReturnString(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        Post post = postRepository.createPost(userId, request.getContent(), request.getVisibility().name());
+
+        return PostResponse.from(post);
     }
 
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll()
-                .stream()
-                .map(this::toPostResponse)
-                .collect(Collectors.toList());
+    /* ================= GET MY POSTS ================= */
+
+    public List<PostResponse> getMyPosts() {
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
+
+        String userId = userProfileRepository
+            .findByUserIdReturnString(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        return postRepository.findPostsByUserId(userId).stream().map(PostResponse::from).toList();
     }
 
-    private PostResponse toPostResponse(Post post) {
-        PostResponse response = new PostResponse();
-        response.setId(post.getId());
-        response.setContent(post.getContent());
-        response.setReactionCounts(post.getReactionCounts());
-        return response;
+    /* ================= DELETE POST ================= */
+
+    public void deletePost(String postId) {
+        String username = SecurityUtils.getCurrentUserLogin().orElseThrow(() ->
+            new ApiException(ErrorMessage.UNAUTHENTICATED)
+        );
+
+        String userId = userProfileRepository
+            .findByUserIdReturnString(username)
+            .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
+
+        if (!postRepository.isOwner(userId, postId)) {
+            throw new ApiException(ErrorMessage.ACCESS_DENIED);
+        }
+
+        postRepository.softDelete(postId).orElseThrow(() -> new ApiException(ErrorMessage.POST_NOT_FOUND));
     }
 }

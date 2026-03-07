@@ -50,11 +50,10 @@ public enum ErrorMessage {
         "FORGET_PASSWORD_OTP_NOT_SENT_OR_EXPIRED",
         "Mã OTP chưa được gửi hoặc đã hết hạn"
     ),
-    FORGET_PASSWORD_OTP_INVALID("FORGET_PASSWORD_OTP_INVALID", "Mã OTP không hợp lệ");
-
+    FORGET_PASSWORD_OTP_INVALID("FORGET_PASSWORD_OTP_INVALID", "Mã OTP không hợp lệ"),
 
     // post
-    
+    POST_CONTENT_EMPTY("POST_CONTENT_EMPTY", "Nội dung bài viết trống");
 
     private final String code;
     private final String message;
