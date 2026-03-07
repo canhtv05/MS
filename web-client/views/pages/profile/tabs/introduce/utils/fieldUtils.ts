@@ -11,7 +11,7 @@ import {
   Star,
   Phone,
   Link as LinkIcon,
-} from '@solar-icons/react-perf/Outline';
+} from '@solar-icons/react-perf/BoldDuotone';
 import {
   GithubIcon,
   FaceBookBoldDuotoneIcon,

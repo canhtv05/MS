@@ -19,6 +19,8 @@ const ChangePassword = ({ onSuccess }: IChangePasswordProps) => {
 
   const form = useForm<z.infer<typeof changePasswordSchema>>({
     resolver: zodResolver(changePasswordSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     defaultValues: {
       currentPassword: '',
       newPassword: '',

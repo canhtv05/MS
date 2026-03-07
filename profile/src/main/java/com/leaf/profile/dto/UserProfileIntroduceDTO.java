@@ -1,10 +1,9 @@
 package com.leaf.profile.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.leaf.common.grpc.Gender;
 import com.leaf.common.grpc.RelationshipStatus;
-import com.leaf.common.utils.json.InstantToStringSerializer;
+import com.leaf.framework.blocking.util.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileIntroduceDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +39,7 @@ public class UserProfileIntroduceDTO implements Serializable {
     String tiktokUrl;
     String facebookUrl;
 
-    @JsonSerialize(using = InstantToStringSerializer.class)
+    @JsonSerialize(using = LocalDateToStringSerializer.class)
     LocalDate dob;
 
     Gender gender;
@@ -69,19 +67,7 @@ public class UserProfileIntroduceDTO implements Serializable {
             .gender(userProfileIntroduce.getGender())
             .relationshipStatus(userProfileIntroduce.getRelationshipStatus())
             .phoneNumber(userProfileIntroduce.getPhoneNumber())
-            .interests(
-                userProfileIntroduce
-                    .getInterests()
-                    .stream()
-                    .map(interest ->
-                        InterestDTO.builder()
-                            .id(interest.getId())
-                            .title(interest.getTitle())
-                            .color(interest.getColor())
-                            .build()
-                    )
-                    .toList()
-            );
+            .interests(userProfileIntroduce.getInterests().stream().map(InterestDTO::toInterestDTO).toList());
         return builder.build();
     }
 }

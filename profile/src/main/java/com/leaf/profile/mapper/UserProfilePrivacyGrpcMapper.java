@@ -1,7 +1,7 @@
 package com.leaf.profile.mapper;
 
 import com.leaf.common.grpc.PrivacyLevel;
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.profile.dto.UserProfilePrivacyDTO;
 
 public class UserProfilePrivacyGrpcMapper {

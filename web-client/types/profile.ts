@@ -1,4 +1,10 @@
-import { Gender, PrivacyLevel, RelationshipStatus, ResourceType } from '@/enums/common';
+import {
+  FriendRequestStatus,
+  Gender,
+  PrivacyLevel,
+  RelationshipStatus,
+  ResourceType,
+} from '@/enums/common';
 import { IMediaHistoryGroupDTO } from './file';
 
 export type { IProfileDTO as IUserProfileDTO } from './auth';
@@ -18,8 +24,9 @@ export interface IImageHistoryGroupDTO {
   items: IImageHistoryDTO[];
 }
 
-export interface IUpdateBioProfileReq {
+export interface IUpdateBioAndFullnameProfileReq {
   bio: string;
+  fullname: string;
 }
 
 export interface IPrivacyDTO {
@@ -36,8 +43,13 @@ export interface IChangeCoverByUrlReq {
 
 export interface IInterestDTO {
   id: string;
+  code: string;
   title: string;
   color: string;
+  createdBy: string;
+  createdDate: string;
+  modifiedBy: string;
+  modifiedDate: string;
 }
 
 export interface IUserProfileIntroduceDTO {
@@ -84,4 +96,40 @@ export interface IDetailUserProfileDTO {
   followersCount: number;
   followingCount: number;
   createdDate: string;
+}
+
+export interface ICreateInterestReq {
+  title: string;
+  color: string;
+}
+
+export interface IUserProfileUpdateInterestReq {
+  interestIds: string[];
+}
+
+export interface IUpdateProfileIntroduceDTO {
+  city: string;
+  hometown: string;
+  jobTitle: string;
+  company: string;
+  school: string;
+  websiteUrl: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  xUrl: string;
+  instagramUrl: string;
+  tiktokUrl: string;
+  facebookUrl: string;
+  dob: string;
+  gender: Gender;
+  relationshipStatus: RelationshipStatus;
+  phoneNumber: string;
+  interests: string[];
+}
+
+export interface ISendFriendRequestDTO {
+  senderName?: string;
+  receiverName: string;
+  sendAt?: string;
+  status?: FriendRequestStatus;
 }

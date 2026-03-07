@@ -1,0 +1,68 @@
+package com.leaf.graphql_bff.security;
+
+import com.leaf.framework.constant.CommonConstants;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtGrantedAuthoritiesConverterAdapter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+@Configuration
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+public class ReactiveSecurityConfig {
+
+    private final ReactiveCustomJwtDecoder customJwtDecoder;
+    private final ReactiveJwtAuthenticationEntryPoint reactiveJwtAuthenticationEntryPoint;
+
+    public ReactiveSecurityConfig(
+        ReactiveCustomJwtDecoder customJwtDecoder,
+        ReactiveJwtAuthenticationEntryPoint reactiveJwtAuthenticationEntryPoint
+    ) {
+        this.customJwtDecoder = customJwtDecoder;
+        this.reactiveJwtAuthenticationEntryPoint = reactiveJwtAuthenticationEntryPoint;
+    }
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+            .authorizeExchange(exchanges ->
+                exchanges
+                    .pathMatchers(CommonConstants.GRAPHQL_PUBLIC_ENDPOINTS)
+                    .permitAll()
+                    .pathMatchers("/graphql")
+                    .permitAll()
+                    .pathMatchers("/")
+                    .permitAll()
+                    .anyExchange()
+                    .authenticated()
+            )
+            .oauth2ResourceServer(oauth2 ->
+                oauth2
+                    .jwt(jwt ->
+                        jwt.jwtDecoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter())
+                    )
+                    .authenticationEntryPoint(reactiveJwtAuthenticationEntryPoint)
+            )
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+            .build();
+    }
+
+    @Bean
+    public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("auth");
+
+        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(
+            new ReactiveJwtGrantedAuthoritiesConverterAdapter(jwtGrantedAuthoritiesConverter)
+        );
+
+        return converter;
+    }
+}

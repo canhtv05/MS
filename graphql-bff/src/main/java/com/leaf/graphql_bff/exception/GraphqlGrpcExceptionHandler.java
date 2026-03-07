@@ -1,6 +1,6 @@
 package com.leaf.graphql_bff.exception;
 
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.framework.blocking.util.CommonUtils;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;

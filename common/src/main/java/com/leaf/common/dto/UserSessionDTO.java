@@ -1,5 +1,6 @@
 package com.leaf.common.dto;
 
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,10 +16,21 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserSessionDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     String sessionId;
     String channel;
     String username;
     String secretKey;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AuthInfo {
+
+        String channel;
+        String username;
+    }
 }

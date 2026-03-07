@@ -30,10 +30,31 @@ function Popover(props: PopoverProps) {
   );
 }
 
-type PopoverTriggerProps = React.ComponentProps<typeof PopoverPrimitive.Trigger>;
+type PopoverTriggerProps = Omit<
+  React.ComponentProps<typeof PopoverPrimitive.Trigger>,
+  'asChild'
+> & {
+  asChild?: boolean;
+  children?: React.ReactNode;
+};
 
-function PopoverTrigger(props: PopoverTriggerProps) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
+  const triggerProps = {
+    'data-slot': 'popover-trigger',
+    ...props,
+  };
+
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <PopoverPrimitive.Trigger
+        {...triggerProps}
+        nativeButton={false}
+        render={children as React.ReactElement<Record<string, unknown>>}
+      />
+    );
+  }
+
+  return <PopoverPrimitive.Trigger {...triggerProps}>{children}</PopoverPrimitive.Trigger>;
 }
 
 type PopoverPortalProps = Omit<React.ComponentProps<typeof PopoverPrimitive.Portal>, 'keepMounted'>;

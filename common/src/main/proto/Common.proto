@@ -12,7 +12,7 @@ message SearchRequest {
     string sortField = 5;
 }
 
-message PageResponse {  
+message PageResponse {
     int32 currentPage = 1;
     int32 size = 2;
     int64 total = 3;
@@ -48,4 +48,20 @@ enum RelationshipStatus {
     RELATIONSHIP_STATUS_DIVORCED = 9;             // Ly hôn
     RELATIONSHIP_STATUS_HIDDEN = 10;
     RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP = 11;
+}
+
+enum WsType {
+  WS_TYPE_UNSPECIFIED = 0;
+  WS_TYPE_PING = 1;
+  WS_TYPE_PONG = 2;
+  WS_TYPE_SUBSCRIBE = 3;
+  WS_TYPE_UNSUBSCRIBE = 4;
+  WS_TYPE_KICK = 5;
+  WS_TYPE_ERROR = 6;
+  WS_TYPE_MESSAGE = 7;
+  WS_TYPE_RESPONSE_API = 8;
+  WS_TYPE_FRIEND_REQUEST = 9;
+  WS_TYPE_USER_ONLINE = 10;       //  user vừa connect
+  WS_TYPE_USER_OFFLINE = 11;      //  user vừa disconnect
+  WS_TYPE_CHECK_USER_ONLINE = 12; // client -> server: hỏi userId có online không
 }

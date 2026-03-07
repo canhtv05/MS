@@ -27,6 +27,7 @@ public class GlobalRestExceptionTranslator {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ResponseObject<Object>> handleApiException(ApiException ex) {
+        log.error("Error: {}", ex);
         return ResponseEntity.badRequest().body(ResponseObject.error(ex.getErrorMessage().getCode(), ex.getMessage()));
     }
 

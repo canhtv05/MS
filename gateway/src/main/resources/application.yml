@@ -4,6 +4,12 @@ server:
 app:
   api-prefix: /api/v1
 
+logging:
+  level:
+    '[root]': WARN
+    '[com.leaf]': INFO
+    '[org.springframework]': WARN
+
 spring:
   application:
     name: gateway
@@ -52,6 +58,20 @@ spring:
               uri: lb://graphql-bff
               predicates:
                 - Path=${app.api-prefix}/graphql/**
+              filters:
+                - StripPrefix=2
+
+            - id: websocket-service-ws
+              uri: lb:ws://websocket-service
+              predicates:
+                - Path=/ws/**
+              filters:
+                - SetPath=/ws
+
+            - id: websocket-service-http
+              uri: lb://websocket-service
+              predicates:
+                - Path=${app.api-prefix}/presence/**
               filters:
                 - StripPrefix=2
 

@@ -10,7 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserProfileRepository extends Neo4jRepository<UserProfile, String> {
-    Optional<UserProfile> findByUserId(String userId);
+    @Query(
+        """
+        MATCH (u:user_profile {user_id: $userId})
+        RETURN u
+        """
+    )
+    Optional<UserProfile> findByUserId(@Param("userId") String userId);
 
     @Query(
         """
@@ -20,29 +26,42 @@ public interface UserProfileRepository extends Neo4jRepository<UserProfile, Stri
     )
     Optional<String> findByUserIdReturnString(@Param("userId") String userId);
 
+    boolean existsByUserId(@Param("userId") String userId);
+
     @Query(
         """
-        MATCH (sender:user_profile {id: $senderId})
-        MATCH (receiver:user_profile {id: $receiverId})
+        MATCH (sender:user_profile {user_id: $senderName})
+        MATCH (receiver:user_profile {user_id: $receiverName})
         CREATE (sender)-[fq:FRIEND_REQUESTS {
         	id: randomUUID(),
         	status: 'PENDING',
         	send_at: datetime()
         }]->(receiver)
         RETURN
-        	sender.id AS senderId,
-        	receiver.id AS receiverId,
+        	sender.user_id AS senderName,
+        	receiver.user_id AS receiverName,
         	fq.send_at AS sendAt,
         	fq.status AS status
         """
     )
-    SendFriendRequestDTO sendFriendRequest(@Param("senderId") String senderId, @Param("receiverId") String receiverId);
+    SendFriendRequestDTO sendFriendRequest(
+        @Param("senderName") String senderName,
+        @Param("receiverName") String receiverName
+    );
 
     @Query(
         """
-        MATCH (sender:user_profile {id: $senderId})-[r:FRIEND_REQUESTS]->(receiver:user_profile {id:$receiverId})
+        MATCH (sender:user_profile {user_id: $senderName})-[r:FRIEND_REQUESTS]->(receiver:user_profile {user_id:$receiverName})
         return COUNT(r) > 0
         """
     )
-    boolean isSent(@Param(value = "senderId") String senderId, @Param("receiverId") String receiverId);
+    boolean isSent(@Param(value = "senderName") String senderName, @Param("receiverName") String receiverName);
+
+    @Query(
+        """
+        MATCH (fq:FRIEND_REQUESTS {id: $id})
+        DELETE fq
+        """
+    )
+    void deleteFriendRequest(@Param("id") String id);
 }

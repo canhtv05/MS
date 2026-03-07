@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.leaf.common.grpc";
+option java_outer_classname = "SocketProto";
+
+import "Common.proto";
+
+message WsMessageProto {
+  WsType type = 1;
+  string topic = 2;
+  string userId = 3;
+  string message = 4;
+  string data = 5;
+}
+
+message WsSessionRevokedMessageProto {
+  string tokenSessionValid = 1;
+  string tokenSessionCurrent = 2;
+  string channelType = 3;
+}

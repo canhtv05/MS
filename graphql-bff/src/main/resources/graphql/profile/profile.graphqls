@@ -65,8 +65,13 @@ type UserProfileIntroduceDTO {
 
 type InterestDTO {
   id: String
+  code: String
   title: String
   color: String
+  createdBy: String
+  createdDate: DateTime
+  modifiedBy: String
+  modifiedDate: DateTime
 }
 
 type GetFileImagesResponse {

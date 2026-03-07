@@ -4,11 +4,11 @@ import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
-import com.leaf.framework.util.JwtUtil;
+import com.leaf.framework.reactive.util.ReactiveJwtUtil;
 import com.leaf.gateway.grpc.GrpcAuthClient;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -48,7 +48,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     private final GrpcAuthClient grpcAuthClient;
     private final ApplicationProperties applicationProperties;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
-    private final JwtUtil jwtUtil;
+    private final ReactiveJwtUtil jwtUtil;
 
     @Value("${app.api-prefix}")
     private String API_PREFIX;
@@ -63,15 +63,23 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         boolean isPublic = isPublicEndpoint(request);
         boolean isGraphql = isGraphqlEndpoint(request);
+        boolean isWebSocket = isWebSocketEndpoint(request);
 
         if (isPublic) {
             return chain.filter(exchange);
+        }
+        if (isWebSocket) {
+            return handleWebSocketAuthentication(exchange, chain);
         }
         if (isGraphql) {
             return handleOptionalAuthentication(exchange, chain);
         }
 
         return handleRequiredAuthentication(exchange, chain);
+    }
+
+    private boolean isWebSocketEndpoint(ServerHttpRequest request) {
+        return "/ws".equals(request.getURI().getPath()) || request.getURI().getPath().startsWith("/ws/");
     }
 
     private boolean isPublicEndpoint(ServerHttpRequest request) {
@@ -110,22 +118,45 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         final String finalAccessToken = accessToken;
 
-        try {
-            TokenStatus status = jwtUtil.validateToken(finalAccessToken);
-            if (status.equals(TokenStatus.VALID)) {
-                var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
-                return chain.filter(exchange.mutate().request(request).build());
-            }
-            if (status.equals(TokenStatus.EXPIRED)) {
-                if (StringUtils.isEmpty(refreshToken)) {
-                    return unauthenticated(exchange.getResponse());
+        return jwtUtil
+            .validateToken(finalAccessToken)
+            .flatMap(status -> {
+                if (status.equals(TokenStatus.VALID)) {
+                    var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
+                    return chain.filter(exchange.mutate().request(request).build());
                 }
-                return refreshAndContinueRequired(exchange, chain, refreshToken, finalChannel);
-            }
-            return unauthenticated(exchange.getResponse());
-        } catch (Exception e) {
-            return unauthenticated(exchange.getResponse());
+                if (status.equals(TokenStatus.EXPIRED)) {
+                    if (StringUtils.isEmpty(refreshToken)) {
+                        return unauthenticated(exchange.getResponse());
+                    }
+                    return refreshAndContinueRequired(exchange, chain, refreshToken, finalChannel);
+                }
+                return unauthenticated(exchange.getResponse());
+            })
+            .onErrorResume(e -> {
+                log.error("Error validating token", e);
+                return unauthenticated(exchange.getResponse());
+            });
+    }
+
+    private Mono<Void> handleWebSocketAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
+        TokenPair tokens = resolveTokens(exchange, false);
+        String accessToken = tokens.accessToken();
+
+        if (StringUtils.isEmpty(accessToken)) {
+            return chain.filter(exchange);
         }
+
+        return jwtUtil
+            .validateToken(accessToken)
+            .flatMap(status -> {
+                if (status.equals(TokenStatus.VALID)) {
+                    var request = addAuthHeader(exchange.getRequest(), accessToken);
+                    return chain.filter(exchange.mutate().request(request).build());
+                }
+                return chain.filter(exchange);
+            })
+            .onErrorResume(e -> chain.filter(exchange));
     }
 
     private Mono<Void> handleOptionalAuthentication(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -149,23 +180,26 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         final String finalAccessToken = accessToken;
 
-        try {
-            TokenStatus status = jwtUtil.validateToken(finalAccessToken);
-            if (status.equals(TokenStatus.VALID)) {
-                var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
-                return chain.filter(exchange.mutate().request(request).build());
-            }
-            if (status.equals(TokenStatus.EXPIRED)) {
-                if (StringUtils.isEmpty(refreshToken)) {
-                    return chain.filter(exchange);
+        return jwtUtil
+            .validateToken(finalAccessToken)
+            .flatMap(status -> {
+                if (status.equals(TokenStatus.VALID)) {
+                    var request = addAuthHeader(exchange.getRequest(), finalAccessToken);
+                    return chain.filter(exchange.mutate().request(request).build());
                 }
-                return refreshAndContinueOptional(exchange, chain, refreshToken, finalChannel);
-            }
+                if (status.equals(TokenStatus.EXPIRED)) {
+                    if (StringUtils.isEmpty(refreshToken)) {
+                        return chain.filter(exchange);
+                    }
+                    return refreshAndContinueOptional(exchange, chain, refreshToken, finalChannel);
+                }
 
-            return chain.filter(exchange);
-        } catch (Exception e) {
-            return chain.filter(exchange);
-        }
+                return chain.filter(exchange);
+            })
+            .onErrorResume(e -> {
+                log.error("Error validating token for GraphQL", e);
+                return chain.filter(exchange);
+            });
     }
 
     Mono<Void> unauthenticated(ServerHttpResponse response) {

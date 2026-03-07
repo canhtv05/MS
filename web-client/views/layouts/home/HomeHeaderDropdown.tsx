@@ -48,8 +48,8 @@ const HomeHeaderDropdown = ({
           </div>
           <Switch
             className={cn(
-              'group relative flex h-6 w-10 cursor-pointer items-center rounded-full border-none',
-              'data-[state=checked]:bg-emerald-500 bg-foreground pl-0.5',
+              'group relative flex h-6 w-11 cursor-pointer items-center rounded-full border-none',
+              'data-[state=checked]:bg-emerald-500 bg-foreground px-0.5',
             )}
             checked={theme === 'dark'}
             onCheckedChange={checked => {
@@ -58,8 +58,8 @@ const HomeHeaderDropdown = ({
           >
             <SwitchThumb
               className={cn(
-                'h-5 w-5 aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform',
-                'group-data-[state=checked]:translate-x-4',
+                'h-5 w-5 aspect-square rounded-full data-[state=checked]:bg-white bg-background transition-transform translate-y-0',
+                'group-data-[state=checked]:translate-x-5',
               )}
               pressedAnimation={{ width: 20 }}
             />

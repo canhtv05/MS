@@ -4,7 +4,8 @@ import com.leaf.common.dto.event.ForgotPasswordEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.blocking.config.cache.RedisCacheService;
+import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.noti.config.EmailProperties;
 import com.leaf.noti.domain.EmailVerificationLogs;
 import com.leaf.noti.enums.VerificationStatus;
@@ -13,6 +14,8 @@ import com.leaf.noti.util.TokenUtil;
 import io.jsonwebtoken.Jwts;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +36,8 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
+    private final SessionStore keyCacheService;
     private final EmailProperties emailProperties;
     private final TokenUtil tokenUtil;
     private final EmailVerificationLogsRepository emailVerificationLogsRepository;
@@ -50,41 +54,47 @@ public class EmailService {
             Date expiredAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000); // 10min
 
             String token = tokenUtil.generateToken(event, expiredAt);
-            redisService.set(redisService.getKeyVerification(token), event.getUsername(), 10, TimeUnit.MINUTES);
-            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
+            String encryptedToken = tokenUtil.encryptToken(token);
+            String urlEncodedToken = URLEncoder.encode(encryptedToken, StandardCharsets.UTF_8);
+            redisService.set(
+                keyCacheService.getKeyVerification(event.getUsername()),
+                encryptedToken,
+                10,
+                TimeUnit.MINUTES
+            );
 
-            String jti = Jwts.parserBuilder()
+            var claims = Jwts.parserBuilder()
                 .setSigningKey(tokenUtil.getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getId();
+                .getBody();
+            String jti = claims.getId();
+            EmailVerificationLogs logs = emailVerificationLogsRepository.findByUserId(event.getUsername()).orElse(null);
 
-            if (Objects.isNull(logs)) {
-                emailVerificationLogsRepository.save(
-                    EmailVerificationLogs.builder()
-                        .userId(event.getUsername())
-                        .token(token)
-                        .verifiedAt(null)
-                        .jti(jti)
-                        .expiredAt(expiredAt.toInstant())
-                        .email(event.getTo())
-                        .verificationStatus(VerificationStatus.PENDING)
-                        .build()
-                );
+            if (logs == null) {
+                logs = EmailVerificationLogs.builder()
+                    .userId(event.getUsername())
+                    .fullname(event.getFullName())
+                    .email(event.getTo())
+                    .token(encryptedToken)
+                    .jti(jti)
+                    .expiredAt(expiredAt.toInstant())
+                    .verificationStatus(VerificationStatus.PENDING)
+                    .build();
+                emailVerificationLogsRepository.save(logs);
             } else {
-                logs.setToken(token);
+                logs.setToken(encryptedToken);
+                logs.setJti(jti);
                 logs.setExpiredAt(expiredAt.toInstant());
                 logs.setVerificationStatus(VerificationStatus.PENDING);
                 logs.setVerifiedAt(null);
-                logs.setJti(jti);
                 emailVerificationLogsRepository.save(logs);
             }
 
             Context context = new Context();
             context.setVariable("username", event.getUsername());
-            context.setVariable("token", token);
-            context.setVariable("verificationUrl", emailProperties.getVerifyUrl() + "?token=" + token);
+            context.setVariable("token", encryptedToken);
+            context.setVariable("verificationUrl", emailProperties.getVerifyUrl() + "?token=" + urlEncodedToken);
 
             String body = templateEngine.process("email-verification", context);
 
@@ -105,7 +115,7 @@ public class EmailService {
             helper.setSubject("🔐 Quên mật khẩu");
 
             String otp = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
-            String key = redisService.getKeyForgotPassword(event.getUsername());
+            String key = keyCacheService.getKeyForgotPassword(event.getUsername());
             redisService.set(key, otp, 10, TimeUnit.MINUTES);
 
             Context context = new Context();

@@ -3,7 +3,7 @@ package com.leaf.graphql_bff.auth.resolver;
 import com.leaf.common.grpc.AuthMeResponse;
 import com.leaf.common.grpc.UserProfileIdRequest;
 import com.leaf.common.grpc.UserProfileResponse;
-import com.leaf.framework.service.RedisService;
+import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.graphql_bff.auth.client.AuthGrpcAuthClient;
 import com.leaf.graphql_bff.auth.client.AuthGrpcProfileClient;
 import com.leaf.graphql_bff.auth.dto.UserProfileDTO;
@@ -23,33 +23,28 @@ public class AuthQueryResolver {
 
     private final AuthGrpcAuthClient grpcAuthClient;
     private final AuthGrpcProfileClient grpcProfileClient;
-    private final RedisService redisService;
+    private final RedisCacheService redisService;
 
     @DgsQuery(field = "me")
     @PreAuthorize("isAuthenticated()")
     public Mono<UserProfileDTO> me() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(username -> {
-            String cacheKey = "USER_PROFILE:" + username;
-            UserProfileDTO cached = redisService.get(cacheKey, UserProfileDTO.class);
-            if (cached != null) {
-                return Mono.just(cached);
-            }
-            Mono<AuthMeResponse> authMono = Mono.fromCallable(() -> grpcAuthClient.authMe(username)).subscribeOn(
-                Schedulers.boundedElastic()
-            );
+        return SecurityUtils.getCurrentUserLogin().flatMap(username ->
+            Mono.fromCallable(() -> resolveMe(username)).subscribeOn(Schedulers.boundedElastic())
+        );
+    }
 
-            Mono<UserProfileResponse> userProfileMono = Mono.fromCallable(() ->
-                grpcProfileClient.getUserProfile(UserProfileIdRequest.newBuilder().setUserId(username).build())
-            ).subscribeOn(Schedulers.boundedElastic());
-
-            return Mono.zip(authMono, userProfileMono).map(tuple -> {
-                UserProfileDTO userProfileDTO = UserProfileMapper.getInstance().toUserProfileDTO(
-                    tuple.getT1(),
-                    tuple.getT2()
-                );
-                redisService.set(cacheKey, userProfileDTO, 1, TimeUnit.HOURS);
-                return userProfileDTO;
-            });
-        });
+    private UserProfileDTO resolveMe(String username) {
+        String cacheKey = "USER_PROFILE:" + username;
+        UserProfileDTO cached = redisService.get(cacheKey, UserProfileDTO.class);
+        if (cached != null) {
+            return cached;
+        }
+        AuthMeResponse authMe = grpcAuthClient.authMe(username);
+        UserProfileResponse userProfile = grpcProfileClient.getUserProfile(
+            UserProfileIdRequest.newBuilder().setUserId(username).build()
+        );
+        UserProfileDTO dto = UserProfileMapper.getInstance().toUserProfileDTO(authMe, userProfile);
+        redisService.set(cacheKey, dto, 1, TimeUnit.HOURS);
+        return dto;
     }
 }

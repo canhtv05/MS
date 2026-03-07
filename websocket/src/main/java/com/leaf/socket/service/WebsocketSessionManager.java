@@ -1,0 +1,258 @@
+package com.leaf.socket.service;
+
+import com.leaf.common.socket.WsMessage;
+import com.leaf.common.socket.WsMessageProtoMapper;
+import com.leaf.common.socket.WsSessionRevokedMessage;
+import com.leaf.framework.blocking.util.CommonUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.WebSocketSession;
+
+@Component
+@Slf4j
+public class WebsocketSessionManager {
+
+    public static final String WS_ATTRIBUTE_USER_ID = "userId";
+    public static final String WS_ATTRIBUTE_TOKEN_ID = "tokenId";
+    public static final String WS_ATTRIBUTE_CHANNEL_TYPE = "channelType";
+    private static final String ANONYMOUS_USER_KEY = "__anonymous__";
+    private static final long IDLE_TIMEOUT_MS = 2 * 60 * 1000L; // 2 phút
+
+    private final ConcurrentHashMap<String, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Long> sessionLastActivity = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Set<WebSocketSession>> topicSubscriptions = new ConcurrentHashMap<>();
+
+    public void addSession(WebSocketSession session) {
+        String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
+        String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
+        String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+        String mapKey = userId != null ? userId : ANONYMOUS_USER_KEY;
+        log.info(
+            "[WS] addSession userId={} tokenId={} channelType={} with sessionId={}",
+            userId,
+            tokenSessionId,
+            channelType,
+            session.getId()
+        );
+        userSessions.computeIfAbsent(mapKey, k -> ConcurrentHashMap.newKeySet()).add(session);
+        sessionLastActivity.put(session.getId(), System.currentTimeMillis());
+        log.info("[WS] after addSession for user={} total session online: {}", mapKey, userSessions.get(mapKey).size());
+    }
+
+    public void updateLastActivity(WebSocketSession session) {
+        if (session != null && session.getId() != null) {
+            sessionLastActivity.put(session.getId(), System.currentTimeMillis());
+        }
+    }
+
+    public void removeSession(WebSocketSession session) {
+        sessionLastActivity.remove(session.getId());
+        String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
+        String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
+        String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+        String mapKey = userId != null ? userId : ANONYMOUS_USER_KEY;
+        userSessions.computeIfPresent(mapKey, (uid, sessions) -> {
+            sessions.remove(session);
+            log.info(
+                "[WS] removeSession userId={} tokenId={} channelType={} with sessionId={}",
+                uid,
+                tokenSessionId,
+                channelType,
+                session.getId()
+            );
+            if (sessions.isEmpty()) {
+                log.info("[WS] all sessions closed for userId={}, removing user from map", uid);
+                return null;
+            }
+            log.info("[WS] after removeSession userId={} remainingSessions={}", uid, userSessions.get(uid).size());
+            return sessions;
+        });
+    }
+
+    public void closeIdleSessions(long idleThresholdMs) {
+        long now = System.currentTimeMillis();
+        List<WebSocketSession> toClose = new ArrayList<>();
+        for (Set<WebSocketSession> sessions : userSessions.values()) {
+            for (WebSocketSession s : sessions) {
+                Long last = sessionLastActivity.get(s.getId());
+                if (last != null && (now - last) > idleThresholdMs && s.isOpen()) {
+                    toClose.add(s);
+                }
+            }
+        }
+        for (WebSocketSession s : toClose) {
+            try {
+                log.info(
+                    "[WS] closing idle session sessionId={} userId={}",
+                    s.getId(),
+                    s.getAttributes().get(WS_ATTRIBUTE_USER_ID)
+                );
+                s.close();
+            } catch (IOException ignored) {
+                //
+            }
+        }
+    }
+
+    public static long getIdleTimeoutMs() {
+        return IDLE_TIMEOUT_MS;
+    }
+
+    public boolean isUserOnline(String userId) {
+        if (userId == null) return false;
+        Set<WebSocketSession> sessions = userSessions.get(userId);
+        if (ObjectUtils.isEmpty(sessions)) return false;
+        return sessions.stream().anyMatch(WebSocketSession::isOpen);
+    }
+
+    public void closeCurrentSessionsOfUser(String userId, WsSessionRevokedMessage payload, WsMessage msg) {
+        log.info("[WS] closeCurrentSessionsOfUser userId={} ...", userId);
+        Set<WebSocketSession> sessions = userSessions.get(userId);
+        if (ObjectUtils.isEmpty(sessions)) {
+            log.info("[WS] closeCurrentSessionsOfUser userId={} not found session!", userId);
+            return;
+        }
+        for (WebSocketSession s : sessions) {
+            String tokenSessionId = (String) s.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
+            String channelType = (String) s.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+            if (
+                payload.getChannelType().equalsIgnoreCase(channelType) &&
+                payload.getTokenSessionCurrent() != null &&
+                payload.getTokenSessionCurrent().equals(tokenSessionId)
+            ) {
+                log.info(
+                    "[WS] closeCurrentSessionsOfUser userId={} channelType={} sessionId={}",
+                    userId,
+                    channelType,
+                    tokenSessionId
+                );
+                try {
+                    s.sendMessage(new BinaryMessage(WsMessageProtoMapper.toByteArray(msg)));
+                    Thread.sleep(100);
+                    s.close();
+                } catch (Exception ignored) {
+                    //
+                }
+            }
+        }
+    }
+
+    public void closeAllSessionsOfUser(String userId) {
+        log.info("[WS] closeAllSessionsOfUser userId={} ...", userId);
+        Set<WebSocketSession> sessions = userSessions.remove(userId);
+        if (ObjectUtils.isEmpty(sessions)) {
+            return;
+        }
+        for (WebSocketSession s : sessions) {
+            try {
+                s.close();
+            } catch (IOException ignored) {
+                //
+            }
+        }
+    }
+
+    public void send(WsMessage msg) {
+        if (userSessions.isEmpty()) {
+            log.debug("[WS] send to all: no sessions");
+            return;
+        }
+        try {
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
+            for (Set<WebSocketSession> sessions : userSessions.values()) {
+                for (WebSocketSession s : sessions) {
+                    if (s.isOpen()) {
+                        s.sendMessage(new BinaryMessage(payload));
+                    }
+                }
+            }
+            log.debug("[WS] send to all: broadcast done");
+        } catch (Exception e) {
+            log.error("[WS] send to all error", e);
+        }
+    }
+
+    public void sendToUser(String userId, WsMessage msg) {
+        Set<WebSocketSession> sessions = userSessions.get(userId);
+        if (ObjectUtils.isEmpty(sessions)) {
+            log.info("[WS] sendToUser userId={} not found session!", userId);
+            return;
+        }
+        try {
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
+            for (WebSocketSession s : sessions) {
+                if (s.isOpen()) {
+                    s.sendMessage(new BinaryMessage(payload));
+                }
+            }
+        } catch (Exception e) {
+            log.error("[WS] sendToUser {} error", userId, e);
+        }
+    }
+
+    public void sendToUserByChannel(String userId, String channelType, WsMessage msg) {
+        Set<WebSocketSession> sessions = userSessions.get(userId);
+        if (ObjectUtils.isEmpty(sessions)) {
+            log.info("[WS] sendToUserByChannel userId={} not found session!", userId);
+            return;
+        }
+        try {
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
+            for (WebSocketSession s : sessions) {
+                String sChannel = (String) s.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+                if (s.isOpen() && channelType.equalsIgnoreCase(sChannel)) {
+                    s.sendMessage(new BinaryMessage(payload));
+                }
+            }
+        } catch (Exception e) {
+            log.error("[WS] sendToUser {} error", userId, e);
+        }
+    }
+
+    public void subscribe(WebSocketSession session, String topic) {
+        if (CommonUtils.isEmpty(session, topic)) return;
+        topicSubscriptions.computeIfAbsent(topic, k -> ConcurrentHashMap.newKeySet()).add(session);
+        log.info("[WS] subscribe to topic={} for session={}", topic, session.getId());
+    }
+
+    public void unsubscribe(WebSocketSession session, String topic) {
+        if (CommonUtils.isEmpty(session, topic)) return;
+        topicSubscriptions.computeIfPresent(topic, (t, sessions) -> {
+            sessions.remove(session);
+            return sessions.isEmpty() ? null : sessions;
+        });
+        log.info("[WS] unsubscribe from topic={} for session={}", topic, session.getId());
+    }
+
+    public void unSubscribeAll(WebSocketSession session) {
+        if (CommonUtils.isEmpty(session)) return;
+        topicSubscriptions.values().forEach(sessions -> sessions.remove(session));
+        log.info("[WS] unSubscribeAll for session={}", session.getId());
+    }
+
+    public void sendToTopic(String topic, WsMessage msg) {
+        Set<WebSocketSession> sessions = topicSubscriptions.get(topic);
+        if (ObjectUtils.isEmpty(sessions)) {
+            log.info("[WS] sendToTopic topic={} not found session!", topic);
+            return;
+        }
+        try {
+            byte[] payload = WsMessageProtoMapper.toByteArray(msg);
+            for (WebSocketSession s : sessions) {
+                if (s.isOpen()) {
+                    s.sendMessage(new BinaryMessage(payload));
+                }
+            }
+            log.debug("[WS] sendToTopic {} done", topic);
+        } catch (Exception e) {
+            log.error("[WS] sendToTopic {} error", topic, e);
+        }
+    }
+}

@@ -3,8 +3,11 @@ package com.leaf.profile.service;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchRequest;
 import com.leaf.common.dto.search.SearchResponse;
+import com.leaf.framework.blocking.service.CommonService;
+import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.profile.domain.Interest;
 import com.leaf.profile.dto.InterestDTO;
+import com.leaf.profile.dto.req.CreateInterestReq;
 import com.leaf.profile.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +39,18 @@ public class InterestService {
             .count(content.size())
             .build();
         return new SearchResponse<>(content, pageResponse);
+    }
+
+    @Transactional
+    public InterestDTO createInterest(CreateInterestReq req) {
+        String currentUserLogin = CommonService.getCurrentUserLogin();
+        Interest saved = interestRepository.createIfNotExists(
+            CommonUtils.toSlug(req.getTitle()),
+            req.getTitle(),
+            req.getColor(),
+            currentUserLogin,
+            currentUserLogin
+        );
+        return InterestDTO.toInterestDTO(saved);
     }
 }

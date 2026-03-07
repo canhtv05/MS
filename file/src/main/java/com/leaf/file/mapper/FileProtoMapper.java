@@ -3,11 +3,11 @@ package com.leaf.file.mapper;
 import com.google.protobuf.Timestamp;
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.grpc.ResourceType;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.ConvertProto;
 import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.ImageResponse;
 import com.leaf.file.dto.VideoResponse;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.ConvertProto;
 import java.util.List;
 
 public class FileProtoMapper {

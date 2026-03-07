@@ -8,10 +8,12 @@ import { PrivacyLevel } from '@/enums/common';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'next/navigation';
 import NavIntroduce from './NavIntroduce';
-import { Separator } from '@/components/ui/separator';
 import MainIntroduce from './MainIntroduce';
 import { Skeleton } from '@/components/ui/skeleton';
 import IntroduceSkeleton from './IntroduceSkeleton';
+import { Separator } from '@/components/ui/separator';
+import FriendsContainer from '../friends/FriendsContainer';
+import AlbumsContainer from '../albums/AlbumsContainer';
 
 interface ITabIntroduce {
   data?: IDetailUserProfileDTO;
@@ -50,7 +52,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
       : 'basic_info';
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 items-start">
+    <div className="flex flex-col lg:flex-row gap-6 items-start w-full min-w-0 overflow-x-hidden">
       <div className="flex flex-col gap-(--sp-layout) flex-1 w-full lg:w-auto min-w-0">
         <Show
           when={
@@ -64,8 +66,8 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
             </Wrapper>
           }
         >
-          <Wrapper title={t('profile:introduce')}>
-            <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch">
+          <Wrapper title={t('profile:introduce')} isLoading={isLoading}>
+            <div className="flex gap-(--sp-layout) flex-col lg:flex-row items-stretch w-full min-w-0 overflow-x-hidden">
               {isLoading ? (
                 <>
                   <div className="min-w-[250px] shrink-0">
@@ -77,7 +79,6 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                       ))}
                     </div>
                   </div>
-                  <Separator orientation="vertical" className="w-px self-stretch" />
                   <div className="flex-1 w-full">
                     <IntroduceSkeleton activeTab={activeTab} />
                   </div>
@@ -87,8 +88,13 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
                   <div className="min-w-[250px] shrink-0">
                     <NavIntroduce menu={NAV_INTRODUCE_MENU} activeTab={activeTab} />
                   </div>
-                  <div className="w-full lg:w-px h-px bg-border"></div>
-                  <div className="flex-1 w-full">
+                  <div>
+                    <Separator className="block lg:hidden my-2" />
+                  </div>
+                  <div>
+                    <Separator orientation="vertical" className="hidden lg:block h-auto" />
+                  </div>
+                  <div className="flex-1 w-full min-w-0 overflow-x-hidden">
                     <MainIntroduce
                       menu={NAV_INTRODUCE_MENU}
                       data={data}
@@ -100,6 +106,8 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
             </div>
           </Wrapper>
         </Show>
+        <FriendsContainer />
+        <AlbumsContainer />
       </div>
     </div>
   );

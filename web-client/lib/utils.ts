@@ -53,7 +53,13 @@ export function detectLocale(): string {
 }
 
 export function formatDateFromISOString(dateString: string): string {
+  if (!dateString) {
+    return '';
+  }
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return '';
+  }
 
   const res = new Intl.DateTimeFormat(detectLocale(), {
     day: '2-digit',
@@ -77,8 +83,40 @@ export function formatWebsiteUrl(url: string): string {
 }
 
 export function normalizeWebsiteUrl(url: string): string {
+  if (!url || url === '') return '';
   const trimmedUrl = url.trim();
   if (trimmedUrl === '') return trimmedUrl;
   if (/^https?:\/\//i.test(trimmedUrl)) return trimmedUrl;
   return `https://${trimmedUrl}`;
+}
+
+export function normalizeString(s: string): string {
+  return s.trim().replace(/\s+/g, ' ');
+}
+
+export function hasValue(obj: unknown, target: unknown): boolean {
+  if (obj === target) return true;
+
+  if (Array.isArray(obj)) {
+    return obj.some(v => hasValue(v, target));
+  }
+
+  if (obj && typeof obj === 'object') {
+    return Object.values(obj).some(v => hasValue(v, target));
+  }
+
+  return false;
+}
+
+export function parseDateForSaving(date?: string | Date): string {
+  if (!date || (date instanceof Date && isNaN(date.getTime()))) return '';
+
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d.getTime())) return '';
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 }

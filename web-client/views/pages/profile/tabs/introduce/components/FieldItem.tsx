@@ -34,7 +34,7 @@ export const FieldItem = ({ field, value, labelKey, onEdit }: IFieldItemProps) =
         'flex items-start gap-3 py-2.5 px-3',
         'group hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg',
         'border border-transparent hover:border-muted/50',
-        'transition-colors duration-200',
+        'duration-200',
       )}
     >
       {renderIcon(IconComponent, 'size-5 text-foreground/60 shrink-0 mt-0.5')}
@@ -54,7 +54,10 @@ export const FieldItem = ({ field, value, labelKey, onEdit }: IFieldItemProps) =
         <IconButton
           variant="ghost"
           onClick={onEdit}
-          className={cn('hover:text-primary cursor-pointer', 'shrink-0 mt-0.5')}
+          className={cn(
+            'hover:text-primary hover:bg-transparent! cursor-pointer',
+            'shrink-0 mt-0.5',
+          )}
           title={t('common:button.edit')}
         >
           <PenNewSquare className="size-4" />

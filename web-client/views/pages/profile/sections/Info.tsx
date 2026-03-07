@@ -12,6 +12,7 @@ import {
   SquareAcademicCap,
 } from '@solar-icons/react-perf/BoldDuotone';
 import Link from 'next/link';
+import Show from '@/components/Show';
 
 interface StatItemProps {
   value: number;
@@ -159,9 +160,13 @@ const Info = ({ isLoading, data }: IProfilePageProps) => {
 
       <div className="flex flex-wrap items-center justify-start gap-2 mt-3">
         <StatItem value={80} label={t('posts') || 'posts'} isLoading={isLoading} />
-        <span className="text-foreground/20">·</span>
+        <Show when={!isLoading}>
+          <span className="text-foreground/20">·</span>
+        </Show>
         <StatItem value={230000} label={t('followers') || 'followers'} isLoading={isLoading} />
-        <span className="text-foreground/20">·</span>
+        <Show when={!isLoading}>
+          <span className="text-foreground/20">·</span>
+        </Show>
         <StatItem value={150} label={t('following') || 'following'} isLoading={isLoading} />
       </div>
     </>

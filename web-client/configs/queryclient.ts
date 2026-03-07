@@ -1,58 +1,70 @@
 import { logger } from '@/lib/logger';
-import cookieUtils from '@/utils/cookieUtils';
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { CACHE_POLICY } from './cache-policy';
+import { environment } from '@/environments/environment.dev';
+
+const isDev = environment.production === false;
+
+const shouldRetryQuery = (failureCount: number, error: unknown): boolean => {
+  if (failureCount >= 1) {
+    return false;
+  }
+
+  if (error instanceof AxiosError) {
+    if (error.response?.status && error.response.status < 500) {
+      return false;
+    }
+  }
+
+  if (error instanceof Error) {
+    if (
+      error.message?.includes('GraphQL') ||
+      error.message?.includes('UNAUTHENTICATED') ||
+      error.message?.includes('UNAUTHORIZED')
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const shouldThrowOnError = (error: unknown): boolean => {
+  if (!(error instanceof AxiosError)) return true;
+  if (!error.response) return true;
+
+  return error.response.status >= 500;
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 0, // Tắt retry để lỗi được throw ngay
-      // Chỉ throw error cho server errors (5xx) và network errors
-      // 4xx errors (như 404) sẽ để component tự handle
-      throwOnError: error => {
-        if (error instanceof AxiosError) {
-          // Throw cho server errors (500, 502, 503, etc.)
-          if (error.response && error.response.status >= 500) {
-            return true;
-          }
-          // Throw cho network errors (không có response)
-          if (!error.response) {
-            return true;
-          }
-          // Không throw cho client errors (400, 401, 404, etc.)
-          return false;
-        }
-        // Throw cho các error khác
-        return true;
-      },
+      ...CACHE_POLICY.DYNAMIC,
+      retry: shouldRetryQuery,
+      // Exponential backoff: 1s, 2s, 4s, ... max 30s
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      throwOnError: shouldThrowOnError,
     },
     mutations: {
-      retry: 0,
+      retry: false,
     },
   },
   queryCache: new QueryCache({
     onSuccess(data, query) {
-      logger.log('✅ QueryCache Success:', {
+      if (!isDev) return;
+      logger.log('QueryCache Success:', {
         queryKey: query.queryKey,
         hasData: !!data,
       });
     },
     onError(error, query) {
+      if (!isDev) return;
       logger.error('🔴 QueryCache Error:', error);
       logger.log('Query Key:', query.queryKey);
-
-      if (error instanceof AxiosError) {
-        if (error.status === 401) {
-          logger.log('Handling 401 in QueryCache');
-          cookieUtils.clearAuthenticated();
-          queryClient.setQueryData(['auth', 'me'], undefined);
-          queryClient.setQueryData(['profile', 'me'], undefined);
-        } else if (error.status === 500) {
-          queryClient.clear();
-        }
-      }
     },
     onSettled(data, error, query) {
+      if (!isDev) return;
       logger.log('🏁 QueryCache Settled:', {
         queryKey: query.queryKey,
         hasData: !!data,
@@ -63,17 +75,9 @@ const queryClient = new QueryClient({
   }),
   mutationCache: new MutationCache({
     onError(error, _variables, _context, mutation) {
+      if (!isDev) return;
       logger.error('🔴 MutationCache Error:', error);
       logger.log('Mutation Key:', mutation.options.mutationKey);
-
-      if (error instanceof AxiosError) {
-        if (error?.response?.status === 401) {
-          logger.log('Handling 401 in MutationCache');
-          cookieUtils.clearAuthenticated();
-          queryClient.setQueryData(['auth', 'me'], undefined);
-          queryClient.setQueryData(['profile', 'me'], undefined);
-        }
-      }
     },
   }),
 });

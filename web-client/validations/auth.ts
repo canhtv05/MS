@@ -2,6 +2,7 @@
 
 import { z } from 'zod/v4';
 import i18next from 'i18next';
+import { REGEX_FULLNAME } from './profile';
 
 const t = i18next.t;
 
@@ -11,31 +12,45 @@ export const signInSchema = z.object({
     .min(
       3,
       t('validation:string.min', { field: t('auth:sign_in.label_email_or_username'), min: 3 }),
+    )
+    .max(
+      30,
+      t('validation:string.max', { field: t('auth:sign_in.label_email_or_username'), max: 30 }),
     ),
   password: z
     .string()
-    .min(3, t('validation:string.min', { field: t('auth:sign_in.password'), min: 3 })),
+    .min(3, t('validation:string.min', { field: t('auth:sign_in.password'), min: 3 }))
+    .max(100, t('validation:string.max', { field: t('auth:sign_in.password'), max: 100 })),
 });
 
 export const signUpSchema = z
   .object({
     fullname: z
       .string()
-      .min(3, t('validation:string.min', { field: t('auth:sign_up.full_name'), min: 3 })),
+      .min(3, t('validation:string.min', { field: t('auth:sign_up.full_name'), min: 3 }))
+      .max(100, t('validation:string.max', { field: t('auth:sign_up.full_name'), max: 100 }))
+      .regex(REGEX_FULLNAME, t('validation:fullname', { field: t('auth:sign_up.full_name') })),
     username: z
       .string()
-      .min(3, t('validation:string.min', { field: t('auth:sign_up.username'), min: 3 })),
+      .min(3, t('validation:string.min', { field: t('auth:sign_up.username'), min: 3 }))
+      .max(30, t('validation:string.max', { field: t('auth:sign_up.username'), max: 30 })),
     email: z
-      .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
+      .email()
+      .max(255, t('validation:string.max', { field: t('auth:sign_up.email'), max: 255 }))
       .refine(value => !value.split('@')[0].includes('+'), {
         message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
       }),
     password: z
       .string()
-      .min(3, t('validation:string.min', { field: t('auth:sign_up.password'), min: 3 })),
+      .min(3, t('validation:string.min', { field: t('auth:sign_up.password'), min: 3 }))
+      .max(100, t('validation:string.max', { field: t('auth:sign_up.password'), max: 100 })),
     confirmPassword: z
       .string()
-      .min(3, t('validation:string.min', { field: t('auth:sign_up.confirm_password'), min: 3 })),
+      .min(3, t('validation:string.min', { field: t('auth:sign_up.confirm_password'), min: 3 }))
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:sign_up.confirm_password'), max: 100 }),
+      ),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: t('auth:sign_up.password_not_match'),
@@ -49,18 +64,27 @@ export const changePasswordSchema = z
       .min(
         3,
         t('validation:string.min', { field: t('auth:change_password.current_password'), min: 3 }),
+      )
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:change_password.current_password'), max: 100 }),
       ),
     newPassword: z
       .string()
-      .min(
-        3,
-        t('validation:string.min', { field: t('auth:change_password.new_password'), min: 3 }),
+      .min(3, t('validation:string.min', { field: t('auth:change_password.new_password'), min: 3 }))
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:change_password.new_password'), max: 100 }),
       ),
     confirmPassword: z
       .string()
       .min(
         3,
         t('validation:string.min', { field: t('auth:change_password.confirm_password'), min: 3 }),
+      )
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:change_password.confirm_password'), max: 100 }),
       ),
   })
   .refine(
@@ -77,6 +101,8 @@ export const changePasswordSchema = z
 
 export const forgotPasswordSchema = z.object({
   email: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('auth:sign_up.email'), max: 255 }))
     .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
     .refine(value => !value.split('@')[0].includes('+'), {
       message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
@@ -86,11 +112,14 @@ export const forgotPasswordSchema = z.object({
 export const verifyForgotPasswordOTPSchema = z.object({
   OTP: z
     .string()
-    .min(
+    .min(6, t('validation:string.min', { field: t('auth:verify_forgot_password_otp.otp'), min: 6 }))
+    .max(
       6,
-      t('validation:string.min', { field: t('auth:verify_forgot_password_otp.otp'), min: 6 }),
+      t('validation:string.max', { field: t('auth:verify_forgot_password_otp.otp'), max: 6 }),
     ),
   email: z
+    .string()
+    .max(255, t('validation:string.max', { field: t('auth:sign_up.email'), max: 255 }))
     .email(t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }))
     .refine(value => !value.split('@')[0].includes('+'), {
       message: t('validation:string.email', { field: t('auth:sign_up.email'), min: 3 }),
@@ -101,12 +130,20 @@ export const resetPasswordSchema = verifyForgotPasswordOTPSchema
   .extend({
     newPassword: z
       .string()
-      .min(3, t('validation:string.min', { field: t('auth:reset_password.new_password'), min: 3 })),
+      .min(3, t('validation:string.min', { field: t('auth:reset_password.new_password'), min: 3 }))
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:reset_password.new_password'), max: 100 }),
+      ),
     confirmPassword: z
       .string()
       .min(
         3,
         t('validation:string.min', { field: t('auth:reset_password.confirm_password'), min: 3 }),
+      )
+      .max(
+        100,
+        t('validation:string.max', { field: t('auth:reset_password.confirm_password'), max: 100 }),
       ),
   })
   .refine(data => data.newPassword === data.confirmPassword, {

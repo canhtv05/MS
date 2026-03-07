@@ -2,13 +2,21 @@ package com.leaf.file;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication(
     exclude = {
         net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class,
         net.devh.boot.grpc.client.autoconfigure.GrpcClientHealthAutoConfiguration.class
     },
-    scanBasePackages = { "com.leaf.file", "com.leaf.common", "com.leaf" }
+    scanBasePackages = { "com.leaf" }
+)
+@ComponentScan(
+    basePackages = { "com.leaf" },
+    excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com\\.leaf\\.framework\\.reactive\\..*")
+    }
 )
 public class FileApplication {
 

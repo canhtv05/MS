@@ -36,7 +36,7 @@
     "GENDER_UNSPECIFIED": "Chưa xác định",
     "GENDER_MALE": "Nam",
     "GENDER_FEMALE": "Nữ",
-    "GENDER_OTHER": "Khác khác"
+    "GENDER_OTHER": "Khác"
   },
   "relationship_status": {
     "RELATIONSHIP_STATUS_SINGLE": "Độc thân",

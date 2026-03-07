@@ -46,6 +46,7 @@ const EditIntroduce = ({
             <EditField
               key={field}
               field={field}
+              introduce={introduce}
               value={editValue}
               labelKey={labelKey}
               onSave={value => handleSaveEdit(field, value)}

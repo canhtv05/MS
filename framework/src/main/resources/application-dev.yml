@@ -1,0 +1,9 @@
+logging:
+  level:
+    '[root]': WARN
+    '[com.leaf]': INFO
+    '[org.springframework]': WARN
+
+spring:
+  cache:
+    type: caffeine

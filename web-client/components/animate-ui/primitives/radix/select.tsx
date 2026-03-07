@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/immutability */
 'use client';
 
 import * as React from 'react';
 import { Select as SelectPrimitive } from 'radix-ui';
-import { AnimatePresence, motion, type HTMLMotionProps } from 'motion/react';
+import { motion, type HTMLMotionProps } from 'motion/react';
 import { getStrictContext } from '@/lib/get-strict-context';
 import { useControlledState } from '@/hooks/use-controlled-state';
 import { useDataState } from '@/hooks/use-data-state';
@@ -12,6 +11,7 @@ import { Highlight, HighlightItem, HighlightItemProps, HighlightProps } from '..
 type SelectOpenContextType = {
   isOpen: boolean;
   setIsOpen: (o: boolean) => void;
+  modal: boolean;
 };
 
 type SelectHighlightContextType = {
@@ -29,12 +29,17 @@ const [SelectHighlightProvider, useSelectHighlight] =
 function useSelect() {
   const openContext = useSelectOpen();
   const highlightContext = useSelectHighlight();
-  return { ...openContext, ...highlightContext };
+  return React.useMemo(
+    () => ({ ...openContext, ...highlightContext }),
+    [openContext, highlightContext],
+  );
 }
 
-type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
+type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root> & {
+  modal?: boolean;
+};
 
-function Select(props: SelectProps) {
+function Select({ modal = true, ...props }: SelectProps) {
   const [isOpen, setIsOpen] = useControlledState({
     value: props?.open,
     defaultValue: props?.defaultOpen,
@@ -42,10 +47,10 @@ function Select(props: SelectProps) {
   });
   const [highlightedValue, setHighlightedValue] = React.useState<string | null>(null);
 
-  const openValue = React.useMemo(() => ({ isOpen, setIsOpen }), [isOpen, setIsOpen]);
+  const openValue = React.useMemo(() => ({ isOpen, setIsOpen, modal }), [isOpen, setIsOpen, modal]);
   const highlightValue = React.useMemo(
     () => ({ highlightedValue, setHighlightedValue }),
-    [highlightedValue],
+    [highlightedValue, setHighlightedValue],
   );
 
   return (
@@ -53,14 +58,16 @@ function Select(props: SelectProps) {
       <SelectHighlightProvider value={highlightValue}>
         <SelectPrimitive.Root
           data-slot="select"
-          open={isOpen}
           {...props}
+          open={isOpen}
           onOpenChange={setIsOpen}
+          {...(modal !== undefined ? { modal: modal } : {})}
         />
       </SelectHighlightProvider>
     </SelectOpenProvider>
   );
 }
+Select.displayName = 'Select';
 
 type SelectGroupProps = React.ComponentProps<typeof SelectPrimitive.Group>;
 
@@ -95,7 +102,9 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
 );
 SelectTrigger.displayName = 'SelectTrigger';
 
-type SelectPortalProps = React.ComponentProps<typeof SelectPrimitive.Portal>;
+type SelectPortalProps = React.ComponentProps<typeof SelectPrimitive.Portal> & {
+  forceMount?: boolean;
+};
 
 function SelectPortal(props: SelectPortalProps) {
   return <SelectPrimitive.Portal data-slot="select-portal" {...props} />;
@@ -105,8 +114,10 @@ type SelectHighlightProps = Omit<HighlightProps, 'controlledItems' | 'enabled' |
   animateOnHover?: boolean;
 };
 
+const DEFAULT_HIGHLIGHT_TRANSITION = { type: 'spring' as const, stiffness: 350, damping: 35 };
+
 function SelectHighlight({
-  transition = { type: 'spring', stiffness: 350, damping: 35 },
+  transition = DEFAULT_HIGHLIGHT_TRANSITION,
   ...props
 }: SelectHighlightProps) {
   const { highlightedValue } = useSelectHighlight();
@@ -127,8 +138,10 @@ type SelectContentProps = Omit<
   React.ComponentProps<typeof SelectPrimitive.Content>,
   'forceMount' | 'asChild'
 > &
-  Omit<React.ComponentProps<typeof SelectPrimitive.Portal>, 'forceMount'> &
+  SelectPortalProps &
   HTMLMotionProps<'div'>;
+
+const DEFAULT_CONTENT_TRANSITION = { duration: 0.2 };
 
 const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
   (
@@ -147,61 +160,105 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
       sticky,
       hideWhenDetached,
       position,
-      transition = { duration: 0.2 },
+      transition = DEFAULT_CONTENT_TRANSITION,
       style,
       container,
       children,
+      forceMount,
       ...props
     },
     ref,
   ) => {
-    const { isOpen } = useSelectOpen();
+    const { isOpen, modal } = useSelectOpen();
+
+    React.useLayoutEffect(() => {
+      if (!isOpen || modal || typeof document === 'undefined') return;
+
+      const body = document.body;
+      const html = document.documentElement;
+
+      const fixStyles = () => {
+        // Force overflow auto and reset padding-right to 0 to prevent jitter
+        body.style.setProperty('overflow', 'auto', 'important');
+        body.style.setProperty('padding-right', '0px', 'important');
+        body.style.setProperty('pointer-events', 'auto', 'important');
+        html.style.setProperty('overflow', 'auto', 'important');
+
+        // Remove Radix's scroll lock attribute if present
+        if (body.hasAttribute('data-scroll-locked')) {
+          body.removeAttribute('data-scroll-locked');
+        }
+      };
+
+      // Run immediately before paint
+      fixStyles();
+
+      // Observe body for changes to catch Radix re-applying styles
+      const observer = new MutationObserver(fixStyles);
+      observer.observe(body, {
+        attributes: true,
+        attributeFilter: ['style', 'data-scroll-locked'],
+      });
+
+      return () => {
+        observer.disconnect();
+        // Remove our overrides to let the system return to normal
+        body.style.removeProperty('overflow');
+        body.style.removeProperty('padding-right');
+        body.style.removeProperty('pointer-events');
+        html.style.removeProperty('overflow');
+      };
+    }, [isOpen, modal]);
 
     // Filter out any props that shouldn't be passed to the DOM element
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { forceMount, ...motionProps } = props as typeof props & { forceMount?: boolean };
+    const motionProps = props;
+
+    // Radix types in this project don't expose `forceMount`, so we have to
+    // pass it via a lightly cast props object to avoid TypeScript errors.
+    const radixContentProps = {
+      asChild: true,
+      onCloseAutoFocus,
+      onEscapeKeyDown,
+      onPointerDownOutside,
+      side,
+      sideOffset,
+      align,
+      alignOffset,
+      avoidCollisions,
+      collisionBoundary,
+      collisionPadding,
+      arrowPadding,
+      sticky,
+      hideWhenDetached,
+      position,
+      ...(forceMount ? { forceMount: true } : {}),
+    } as React.ComponentProps<typeof SelectPrimitive.Content>;
 
     return (
-      <AnimatePresence>
-        {isOpen && (
-          <SelectPortal container={container}>
-            <SelectPrimitive.Content
-              asChild
-              onCloseAutoFocus={onCloseAutoFocus}
-              onEscapeKeyDown={onEscapeKeyDown}
-              onPointerDownOutside={onPointerDownOutside}
-              side={side}
-              sideOffset={sideOffset}
-              align={align}
-              alignOffset={alignOffset}
-              avoidCollisions={avoidCollisions}
-              collisionBoundary={collisionBoundary}
-              collisionPadding={collisionPadding}
-              arrowPadding={arrowPadding}
-              sticky={sticky}
-              hideWhenDetached={hideWhenDetached}
-              position={position}
-            >
-              <motion.div
-                ref={ref}
-                key="select-content"
-                data-slot="select-content"
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={transition}
-                style={{
-                  willChange: 'opacity, transform',
-                  ...style,
-                }}
-                {...motionProps}
-              >
-                {children}
-              </motion.div>
-            </SelectPrimitive.Content>
-          </SelectPortal>
-        )}
-      </AnimatePresence>
+      <SelectPortal container={container}>
+        <SelectPrimitive.Content {...radixContentProps}>
+          <motion.div
+            ref={ref}
+            key="select-content"
+            data-slot="select-content"
+            initial={false}
+            animate={
+              isOpen
+                ? { opacity: 1, y: 0, visibility: 'visible' as const }
+                : { opacity: 0, y: -4, transitionEnd: { visibility: 'hidden' as const } }
+            }
+            transition={transition}
+            style={{
+              willChange: 'opacity, transform',
+              pointerEvents: isOpen ? 'auto' : 'none',
+              ...style,
+            }}
+            {...motionProps}
+          >
+            {children}
+          </motion.div>
+        </SelectPrimitive.Content>
+      </SelectPortal>
     );
   },
 );
@@ -219,26 +276,19 @@ type SelectItemProps = Omit<React.ComponentProps<typeof SelectPrimitive.Item>, '
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
   ({ value, disabled, textValue, children, ...props }, ref) => {
     const { setHighlightedValue } = useSelectHighlight();
-    const [, highlightedRef] = useDataState<HTMLDivElement>('highlighted', undefined, val => {
-      if (val === true) {
+    const [isHighlighted, highlightedRef] = useDataState<HTMLDivElement>('highlighted', ref);
+
+    React.useEffect(() => {
+      if (isHighlighted === true) {
         const el = highlightedRef.current;
         const v = el?.dataset.value || el?.id || null;
         if (v) setHighlightedValue(v);
       }
-    });
+    }, [isHighlighted, highlightedRef, setHighlightedValue]);
 
     return (
       <SelectPrimitive.Item
-        ref={node => {
-          if (typeof ref === 'function') {
-            ref(node);
-          } else if (ref && 'current' in ref) {
-            (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-          }
-          if (highlightedRef && 'current' in highlightedRef) {
-            (highlightedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-          }
-        }}
+        ref={highlightedRef}
         value={value}
         disabled={disabled}
         textValue={textValue}

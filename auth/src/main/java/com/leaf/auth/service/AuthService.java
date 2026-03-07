@@ -4,7 +4,6 @@ import com.leaf.auth.context.AuthenticationContext;
 import com.leaf.auth.domain.Permission;
 import com.leaf.auth.domain.User;
 import com.leaf.auth.domain.UserPermission;
-import com.leaf.auth.dto.TokenPair;
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.auth.dto.req.LoginReq;
 import com.leaf.auth.dto.res.AuthenticateRes;
@@ -15,14 +14,15 @@ import com.leaf.auth.repository.UserPermissionRepository;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.util.CookieUtil;
+import com.leaf.common.dto.TokenPairDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.enums.TokenStatus;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
-import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.util.JwtUtil;
+import com.leaf.framework.blocking.security.SecurityUtils;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.JsonF;
+import com.leaf.framework.blocking.util.JwtUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.json.JsonParseException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -53,7 +54,7 @@ public class AuthService {
     // dùng AuthenticationManagerBuilder tránh vòng lặp phụ thuộc
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
 
     @Transactional
     public AuthenticateRes authenticate(
@@ -99,7 +100,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public VerifyTokenRes verifyToken(String cookieValueOrTokenString, boolean isInternal) {
-        TokenPair tokenPair = getTokenPair(cookieValueOrTokenString, isInternal);
+        TokenPairDTO tokenPair = getTokenPair(cookieValueOrTokenString, isInternal);
         if (StringUtils.isBlank(tokenPair.getAccessToken())) {
             throw new ApiException(ErrorMessage.ACCESS_TOKEN_INVALID);
         }
@@ -116,13 +117,15 @@ public class AuthService {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest httpServletRequest = attributes.getRequest();
         HttpServletResponse httpServletResponse = attributes.getResponse();
-        TokenPair cookieTokenPair = cookieUtil.getTokenCookie(httpServletRequest);
-        if (StringUtils.isBlank(cookieTokenPair.getAccessToken())) {
+        Optional<TokenPairDTO> cookieTokenPair = CommonUtils.tokenFromCookie(
+            httpServletRequest.getHeader(HttpHeaders.COOKIE)
+        );
+        if (cookieTokenPair.isEmpty() || StringUtils.isBlank(cookieTokenPair.get().getAccessToken())) {
             throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
         }
         RefreshTokenRes refreshTokenRes = refreshToken(
-            cookieTokenPair.getRefreshToken(),
-            cookieTokenPair.getAccessToken(),
+            tokenPair.getRefreshToken(),
+            tokenPair.getAccessToken(),
             httpServletRequest,
             httpServletResponse
         );
@@ -167,7 +170,7 @@ public class AuthService {
 
     @Transactional
     public void logout(String cookieValue, String channel, HttpServletResponse response) {
-        TokenPair tokenPair = getTokenPair(cookieValue, false);
+        TokenPairDTO tokenPair = getTokenPair(cookieValue, false);
         tokenProvider.revokeToken(tokenPair.getAccessToken(), channel);
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();
@@ -220,30 +223,30 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    private TokenPair getTokenPair(String cookieValueOrTokenString, boolean isInternal) {
+    private TokenPairDTO getTokenPair(String cookieValueOrTokenString, boolean isInternal) {
         if (StringUtils.isBlank(cookieValueOrTokenString) || isInternal) {
-            return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
+            return TokenPairDTO.builder().accessToken(cookieValueOrTokenString).build();
         }
         try {
             @SuppressWarnings("unchecked")
             Map<String, String> tokenData = JsonF.jsonToObject(cookieValueOrTokenString, Map.class);
             if (CollectionUtils.isEmpty(tokenData)) {
-                return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
+                return TokenPairDTO.builder().accessToken(cookieValueOrTokenString).build();
             }
             String accessToken = tokenData.get(AuthKey.ACCESS_TOKEN.getKey());
             String refreshToken = tokenData.get(AuthKey.REFRESH_TOKEN.getKey());
             if (CommonUtils.isEmpty(accessToken, refreshToken)) {
                 throw new ApiException(ErrorMessage.TOKEN_PAIR_INVALID);
             }
-            return TokenPair.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+            return TokenPairDTO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
         } catch (JsonParseException e) {
-            return TokenPair.builder().accessToken(cookieValueOrTokenString).build();
+            return TokenPairDTO.builder().accessToken(cookieValueOrTokenString).build();
         }
     }
 
     @Transactional
     public void logoutAllDevices(String cookieValue, HttpServletResponse response) {
-        TokenPair tokenPair = getTokenPair(cookieValue, false);
+        TokenPairDTO tokenPair = getTokenPair(cookieValue, false);
         tokenProvider.revokeAllTokens(tokenPair.getAccessToken());
         cookieUtil.deleteCookie(response);
         SecurityUtils.clear();

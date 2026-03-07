@@ -13,7 +13,7 @@ import {
   TabsTab as TabsTabPrimitive,
 } from '@/components/animate-ui/primitives/base/tabs';
 import { useState } from 'react';
-import UserCard from '@/components/UserCard';
+import AvatarStatus from '@/components/AvatarStatus';
 
 const SidebarLayout = () => {
   const { t } = useTranslation('layout');
@@ -82,10 +82,11 @@ const SidebarLayout = () => {
                         key={index}
                         className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer px-4 py-2"
                       >
-                        <UserCard
-                          name="John Doe"
-                          avatar="https://picsum.photos/150/150"
+                        <AvatarStatus
+                          fallback="John Doe"
+                          src="https://picsum.photos/150/150"
                           isOnline={index % 2 === 0}
+                          hasRing={false}
                         />
                       </div>
                     ))}
@@ -96,10 +97,11 @@ const SidebarLayout = () => {
                         key={index}
                         className="dark:hover:bg-gray-500/20 hover:bg-gray-300/20 cursor-pointer px-4 py-2"
                       >
-                        <UserCard
-                          name="John Doe"
-                          avatar="https://picsum.photos/150/150"
+                        <AvatarStatus
+                          fallback="John Doe"
+                          src="https://picsum.photos/150/150"
                           isOnline={index % 2 === 0}
+                          hasRing={false}
                         />
                       </div>
                     ))}

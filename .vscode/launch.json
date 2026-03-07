@@ -73,7 +73,8 @@
       "envFile": "${workspaceFolder}/.env",
       "env": {
         "SPRING_PROFILES_ACTIVE": "dev"
-      }
+      },
+      "vmArgs": " -Dcom.sun.management.jmxremote"
     },
     {
       "type": "java",
@@ -83,7 +84,8 @@
       "mainClass": "com.leaf.noti.NotificationApplication",
       "projectName": "notification",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52780 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=notification"
     },
     {
       "type": "java",
@@ -92,6 +94,17 @@
       "cwd": "${workspaceFolder}",
       "mainClass": "com.leaf.graphql_bff.GraphqlBffApplication",
       "projectName": "graphql-bff",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-WebsocketApplication<websocket>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.leaf.socket.WebsocketApplication",
+      "projectName": "websocket",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
     }

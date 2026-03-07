@@ -20,17 +20,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Authenticate a user from the database.
- */
 @Component
 @RequiredArgsConstructor
 public class DomainUserDetailsService implements UserDetailsService {
 
     private final AuthService authService;
     private final KafkaProducerService kafkaProducerService;
-
-    private static final String DEFAULT_CHANNEL = "WEB"; // Default channel nếu không có
 
     @Override
     @Transactional(readOnly = true)
@@ -65,9 +60,6 @@ public class DomainUserDetailsService implements UserDetailsService {
             );
         }
 
-        // Lấy channel từ AuthenticationContext (ThreadLocal)
-        String channel = getChannelFromContext();
-
         UserProfileDTO userProfileDTO = UserProfileDTO.toDTO(user);
         authService.mappingUserPermissions(userProfileDTO, user);
         List<GrantedAuthority> grantedAuthorities = userProfileDTO
@@ -81,21 +73,7 @@ public class DomainUserDetailsService implements UserDetailsService {
             grantedAuthorities,
             String.join(",", userProfileDTO.getRoles()),
             user.getIsGlobal(),
-            channel
+            AuthenticationContext.getChannel()
         );
-    }
-
-    /**
-     * Lấy channel từ AuthenticationContext (ThreadLocal)
-     * Channel được set từ controller trước khi authenticate
-     */
-    private String getChannelFromContext() {
-        String channel = AuthenticationContext.getChannel();
-
-        if (channel != null && !channel.isEmpty()) {
-            return channel.toUpperCase();
-        }
-
-        return DEFAULT_CHANNEL;
     }
 }

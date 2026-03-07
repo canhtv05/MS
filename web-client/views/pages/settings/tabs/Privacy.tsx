@@ -1,71 +1,14 @@
 'use client';
 
-import {
-  Select,
-  SelectArrow,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/animate-ui/components/radix/select';
 import { useTranslation } from 'react-i18next';
 import { PrivacyLevel } from '@/enums/common';
-import { TFunction } from 'i18next';
 import { usePrivacyQuery } from '@/services/queries/profile';
 import { IUserProfilePrivacyDTO } from '@/types/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
 import Show from '@/components/Show';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
-
-interface IRenderSelectProps {
-  value: string;
-  onValueChange: (value: string) => void;
-  labelKey: string;
-  t: TFunction<'settings', undefined>;
-}
-
-const RenderSelect = ({ value, onValueChange, labelKey, t }: IRenderSelectProps) => {
-  const privacyLevels = [
-    {
-      value: PrivacyLevel.PRIVACY_LEVEL_PUBLIC,
-      label: t(`common:privacy_level.${PrivacyLevel.PRIVACY_LEVEL_PUBLIC}`),
-    },
-    {
-      value: PrivacyLevel.PRIVACY_LEVEL_PRIVATE,
-      label: t(`common:privacy_level.${PrivacyLevel.PRIVACY_LEVEL_PRIVATE}`),
-    },
-    {
-      value: PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY,
-      label: t(`common:privacy_level.${PrivacyLevel.PRIVACY_LEVEL_FRIENDS_ONLY}`),
-    },
-    {
-      value: PrivacyLevel.PRIVACY_LEVEL_CUSTOM,
-      label: t(`common:privacy_level.${PrivacyLevel.PRIVACY_LEVEL_CUSTOM}`),
-    },
-  ];
-
-  return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="w-full transition-global cursor-pointer border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50">
-        <SelectValue placeholder={t('privacy.select_placeholder')} />
-      </SelectTrigger>
-      <SelectContent className="z-120!">
-        <SelectArrow />
-        <SelectGroup>
-          <SelectLabel>{t(labelKey)}</SelectLabel>
-          {privacyLevels.map(item => (
-            <SelectItem key={item.value} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  );
-};
+import RenderSelect from '../../profile/components/RenderSelect';
 
 const Privacy = () => {
   const { t } = useTranslation('settings');

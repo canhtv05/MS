@@ -3,6 +3,7 @@ package com.leaf.profile.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leaf.profile.domain.Interest;
 import java.io.Serializable;
+import java.time.Instant;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +23,13 @@ public class InterestDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     String id;
+    String code;
     String title;
     String color;
+    String createdBy;
+    Instant createdDate;
+    String modifiedBy;
+    Instant modifiedDate;
 
     public static InterestDTO toInterestDTO(Interest source) {
         InterestDTO target = new InterestDTO();

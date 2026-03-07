@@ -3,14 +3,7 @@
 import { updateProfileSchema } from '@/validations/profile';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod/v4';
-import {
-  MapPointWave,
-  UserCircle,
-  Share,
-  Heart,
-  SquareAcademicCap2,
-  Suitcase,
-} from '@solar-icons/react-perf/Outline';
+import { UserCircle, Share, SquareAcademicCap2, Suitcase } from '@solar-icons/react-perf/Outline';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Dispatch, SetStateAction } from 'react';
@@ -45,34 +38,24 @@ const Introduce = ({ form, open, setOpen }: IIntroduceProps) => {
 
   const INTRODUCE_FIELDS = [
     {
-      label: t('province_city'),
+      label: t('navigation.basic_info'),
       name: 'city',
-      icon: <MapPointWave className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-    },
-    {
-      label: t('career'),
-      name: 'jobTitle',
-      icon: <Suitcase className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-    },
-    {
-      label: t('school_label'),
-      name: 'school',
-      icon: <SquareAcademicCap2 className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-    },
-    {
-      label: t('social_network'),
-      name: 'social',
-      icon: <Share className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
-    },
-    {
-      label: t('personal'),
-      name: 'personal',
       icon: <UserCircle className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
     },
     {
-      label: t('interests'),
-      name: 'interests',
-      icon: <Heart className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+      label: t('navigation.work_and_education'),
+      name: 'jobTitle',
+      icon: <SquareAcademicCap2 className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('navigation.interests'),
+      name: 'school',
+      icon: <Suitcase className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
+    },
+    {
+      label: t('navigation.contacts_and_social'),
+      name: 'social',
+      icon: <Share className="size-5 px-0.5 pb-0.5 text-foreground/70" />,
     },
   ];
 

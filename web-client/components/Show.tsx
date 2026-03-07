@@ -3,13 +3,13 @@
 import { ReactNode } from 'react';
 
 interface IShowProps {
-  when: boolean;
+  when: boolean | undefined;
   children: ReactNode;
   fallback?: ReactNode;
 }
 
 const Show = ({ when, children, fallback }: IShowProps) => {
-  return when ? <>{children}</> : <>{fallback}</>;
+  return when === undefined ? null : when ? <>{children}</> : <>{fallback}</>;
 };
 
 export default Show;

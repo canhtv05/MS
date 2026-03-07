@@ -6,6 +6,7 @@ import { ReactNode, startTransition, useEffect, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner';
 import { AuthRefreshProvider, useAuthRefresh } from '@/contexts/AuthRefreshContext';
+import { WebSocketProvider } from '@/contexts/WebSocketProvider';
 import { APP_CONFIGS } from '@/configs';
 import i18next from '@/locale/i18n';
 import LoadingPage from '@/views/pages/loading';
@@ -58,11 +59,13 @@ const AppLayout = ({ children, initialLanguage }: AppLayoutProps) => {
         <QueryClientProvider client={APP_CONFIGS.QUERY_CLIENT}>
           <AuthRefreshProvider>
             <AuthLoadingGate>
-              <ModalProvider>
-                <NavigationProvider>
-                  <ApiInterceptor>{children}</ApiInterceptor>
-                </NavigationProvider>
-              </ModalProvider>
+              <WebSocketProvider>
+                <ModalProvider>
+                  <NavigationProvider>
+                    <ApiInterceptor>{children}</ApiInterceptor>
+                  </NavigationProvider>
+                </ModalProvider>
+              </WebSocketProvider>
             </AuthLoadingGate>
           </AuthRefreshProvider>
         </QueryClientProvider>

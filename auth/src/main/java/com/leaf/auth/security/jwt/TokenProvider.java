@@ -2,9 +2,7 @@ package com.leaf.auth.security.jwt;
 
 import com.leaf.auth.domain.Role;
 import com.leaf.auth.domain.User;
-import com.leaf.auth.dto.NotificationPayload;
 import com.leaf.auth.dto.res.RefreshTokenRes;
-import com.leaf.auth.enums.NotificationType;
 import com.leaf.auth.exception.CustomAuthenticationException;
 import com.leaf.auth.repository.UserRepository;
 import com.leaf.auth.security.CustomUserDetails;
@@ -13,13 +11,16 @@ import com.leaf.common.dto.UserSessionDTO;
 import com.leaf.common.enums.AuthKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.utils.AESUtils;
-import com.leaf.common.utils.CommonUtils;
-import com.leaf.common.utils.JsonF;
+import com.leaf.common.socket.WsMessage;
+import com.leaf.common.socket.WsSessionRevokedMessage;
+import com.leaf.framework.blocking.security.SecurityUtils;
+import com.leaf.framework.blocking.service.RedisPubService;
+import com.leaf.framework.blocking.service.UserSessionService;
+import com.leaf.framework.blocking.util.CommonUtils;
+import com.leaf.framework.blocking.util.FwUtils;
+import com.leaf.framework.blocking.util.JsonF;
 import com.leaf.framework.config.ApplicationProperties;
 import com.leaf.framework.constant.CommonConstants;
-import com.leaf.framework.security.SecurityUtils;
-import com.leaf.framework.service.RedisService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +30,6 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -41,7 +41,6 @@ import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -58,25 +57,25 @@ public class TokenProvider {
     private static final String USER_GLOBAL_KEY = "isGlobal";
     private final SecretKey key;
     private final JwtParser jwtParser;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final RedisService redisService;
     private final UserRepository userRepository;
     private final CookieUtil cookieUtil;
     private final Long tokenValidityDuration;
     private final Long refreshTokenValidityDuration;
+    private final RedisPubService redisPubService;
+    private final UserSessionService userSessionService;
 
     public TokenProvider(
-        SimpMessagingTemplate messagingTemplate,
-        RedisService redisService,
         UserRepository userRepository,
         CookieUtil cookieUtil,
-        ApplicationProperties applicationProperties
+        ApplicationProperties applicationProperties,
+        RedisPubService redisPubService,
+        UserSessionService userSessionService
     ) {
-        this.messagingTemplate = messagingTemplate;
-        this.redisService = redisService;
         this.userRepository = userRepository;
         this.cookieUtil = cookieUtil;
         String secret = applicationProperties.getSecurity().getBase64Secret();
+        this.redisPubService = redisPubService;
+        this.userSessionService = userSessionService;
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parser().verifyWith(key).build();
@@ -91,32 +90,16 @@ public class TokenProvider {
         String channel
     ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        String name = authentication.getName();
-        String keyToken = redisService.getKeyToken(name, channel);
-        String tokenExisting = redisService.get(keyToken, String.class);
+        String name = userDetails.getUsername();
+        String oldToken = userSessionService.isUserOnline(name, channel);
         String sessionId = UUID.randomUUID().toString();
 
-        if (tokenExisting != null) {
-            NotificationPayload<?> payload = NotificationPayload.builder()
-                .type(NotificationType.FORCE_LOGOUT)
-                .message("Tài khoản của bạn vừa đăng nhập ở nơi khác")
-                .title("Phiên đăng nhập")
-                .sessionId(sessionId)
-                .timestamp(Instant.now())
-                .username(userDetails.getUsername())
-                .build();
-            messagingTemplate.convertAndSendToUser(userDetails.getUsername(), "/queue/force-logout", payload);
-
-            User user = userRepository
-                .findByUsername(name)
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND));
-            user.setRefreshToken(null);
-            userRepository.save(user);
-            redisService.evict(keyToken);
-        }
-
         String token = this.generateToken(authentication, this.tokenValidityDuration, channel, sessionId);
+        if (StringUtils.isNotBlank(oldToken)) {
+            Thread.startVirtualThread(() -> {
+                this.handleKickOldSessionAsync(name, token, oldToken, channel);
+            });
+        }
         String refreshToken = this.generateToken(authentication, this.refreshTokenValidityDuration, channel, sessionId);
         this.cacheUserToken(name, channel, sessionId, token);
 
@@ -296,8 +279,7 @@ public class TokenProvider {
             userRepository.save(user);
             Thread.startVirtualThread(() -> {
                 try {
-                    redisService.evict(redisService.getKeyToken(username, channel));
-                    redisService.evict(redisService.getKeyUser(username, channel));
+                    userSessionService.removeOldSessionByChanelType(username, channel);
                 } catch (Exception e) {
                     log.error("Async evict redis failed", e);
                 }
@@ -316,8 +298,8 @@ public class TokenProvider {
         userRepository.save(user);
         // to sent notification to all devices
         Thread.startVirtualThread(() -> {
-            redisService.evict(redisService.getKeyToken(username, "web"));
-            redisService.evict(redisService.getKeyUser(username, "mobile"));
+            userSessionService.removeOldSessionByChanelType(username, "web");
+            userSessionService.removeOldSessionByChanelType(username, "mobile");
         });
     }
 
@@ -352,15 +334,27 @@ public class TokenProvider {
     }
 
     private void cacheUserToken(String username, String channel, String sessionId, String token) {
-        String keyUser = redisService.getKeyUser(username, channel);
         UserSessionDTO userSessionDTO = UserSessionDTO.builder()
+            .username(username)
             .sessionId(sessionId)
             .channel(channel)
-            .secretKey(AESUtils.generateSecretKey())
+            .secretKey(FwUtils.generateSecretKey())
             .build();
-        redisService.set(keyUser, userSessionDTO);
+        userSessionService.cacheUserSession(userSessionDTO);
+        userSessionService.cacheToken(username, channel, token);
+    }
 
-        String keyToken = redisService.getKeyToken(username, channel);
-        redisService.set(keyToken, AESUtils.hexString(token));
+    public void handleKickOldSessionAsync(String userId, String newToken, String oldToken, String channelType) {
+        WsSessionRevokedMessage payload = WsSessionRevokedMessage.builder()
+            .tokenSessionValid(newToken)
+            .tokenSessionCurrent(oldToken)
+            .channelType(channelType)
+            .build();
+        WsMessage wsMessage = WsMessage.builder()
+            .type(WsMessage.WsType.KICK)
+            .userId(userId)
+            .data(JsonF.toJson(payload))
+            .build();
+        redisPubService.pubWebsocketTopic(wsMessage);
     }
 }

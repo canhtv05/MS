@@ -2,7 +2,7 @@ package com.leaf.profile.service;
 
 import com.leaf.common.constant.EventConstants;
 import com.leaf.common.dto.event.UserCreatedEvent;
-import com.leaf.profile.dto.UserProfileCreationReq;
+import com.leaf.profile.dto.req.UserProfileCreationReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

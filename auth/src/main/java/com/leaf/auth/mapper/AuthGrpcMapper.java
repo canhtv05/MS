@@ -2,7 +2,7 @@ package com.leaf.auth.mapper;
 
 import com.leaf.auth.dto.UserProfileDTO;
 import com.leaf.common.grpc.AuthMeResponse;
-import com.leaf.common.utils.CommonUtils;
+import com.leaf.framework.blocking.util.CommonUtils;
 
 public class AuthGrpcMapper {
 

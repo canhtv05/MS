@@ -13,7 +13,7 @@
 	<artifactId>profile</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>profile</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Profile project for Spring Boot</description>
 	<url />
 	<licenses>
 		<license />
@@ -35,11 +35,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -49,24 +45,16 @@
 			<groupId>org.neo4j.driver</groupId>
 			<artifactId>neo4j-java-driver</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- client -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.leaf</groupId>
-			<artifactId>common</artifactId>
-			<version>0.0.1</version>
-		</dependency>
+		<!-- client & framework -->
 		<dependency>
 			<groupId>com.leaf</groupId>
 			<artifactId>framework</artifactId>
 			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+      <groupId>com.leaf</groupId>
+      <artifactId>websocket</artifactId>
+      <version>0.0.1</version>
 		</dependency>
 
 		<dependency>

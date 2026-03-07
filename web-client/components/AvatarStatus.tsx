@@ -23,7 +23,7 @@ const AvatarStatus = ({
   isOnline = true,
   hasAnimation = true,
   size = 35,
-  ringClassName = 'border-2',
+  ringClassName,
   hasRing = true,
 }: IAvatarStatus) => {
   return (
@@ -37,9 +37,9 @@ const AvatarStatus = ({
         <AvatarFallback>{fallback.charAt(0)}</AvatarFallback>
       </Avatar>
       {hasRing && (
-        <div className="absolute -bottom-0.5 -right-1">
+        <div className="absolute bottom-0 -right-0.5">
           <Ring
-            className={cn('border-2', ringClassName)}
+            afterBorderClassName={cn(ringClassName)}
             isOnline={isOnline}
             hasAnimation={hasAnimation}
           />

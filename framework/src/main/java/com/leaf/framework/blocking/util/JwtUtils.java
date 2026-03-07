@@ -1,0 +1,63 @@
+package com.leaf.framework.blocking.util;
+
+import com.leaf.common.enums.TokenStatus;
+import com.leaf.framework.blocking.service.UserSessionService;
+import com.leaf.framework.config.ApplicationProperties;
+import com.leaf.framework.constant.CommonConstants;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.Objects;
+import javax.crypto.SecretKey;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class JwtUtils {
+
+    private final ApplicationProperties applicationProperties;
+    private final UserSessionService userSessionService;
+
+    public SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(applicationProperties.getSecurity().getBase64Secret());
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Claims parseToken(String token) {
+        return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
+    }
+
+    public TokenStatus validateToken(String authToken) {
+        try {
+            Claims claims = parseToken(authToken);
+            String username = claims.getSubject();
+            String channel = claims.get(CommonConstants.CHANNEL_KEY, String.class);
+
+            Date expiration = claims.getExpiration();
+
+            if (expiration.before(new Date())) {
+                return TokenStatus.EXPIRED;
+            }
+
+            String tokenExisting = userSessionService.getOldToken(username, channel);
+            log.info("Token existing: {}", tokenExisting);
+            log.info("Auth token hex: {}", FwUtils.hexString(authToken));
+            if (Objects.equals(tokenExisting, FwUtils.hexString(authToken))) {
+                return TokenStatus.VALID;
+            } else {
+                return TokenStatus.INVALID;
+            }
+        } catch (ExpiredJwtException e) {
+            return TokenStatus.EXPIRED;
+        } catch (JwtException | IllegalArgumentException e) {
+            return TokenStatus.INVALID;
+        }
+    }
+}

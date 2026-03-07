@@ -50,7 +50,7 @@ const MainIntroduce = ({ data, isOwner = false }: IMainIntroduceProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0 overflow-x-hidden">
       <Suspense fallback={<IntroduceSkeleton activeTab={activeTab} />}>{renderTab()}</Suspense>
     </div>
   );

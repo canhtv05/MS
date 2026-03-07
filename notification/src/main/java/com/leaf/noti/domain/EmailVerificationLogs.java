@@ -4,6 +4,7 @@ import com.leaf.noti.enums.VerificationStatus;
 import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -20,7 +21,11 @@ public class EmailVerificationLogs {
     String id;
 
     String jti;
+
+    @Indexed(unique = true)
     String userId;
+
+    String fullname;
     Instant verifiedAt;
     Instant expiredAt;
     String token;
