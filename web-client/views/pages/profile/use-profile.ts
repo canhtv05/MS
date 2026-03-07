@@ -2,7 +2,7 @@
 
 import { useUserProfileQuery } from '@/services/queries/profile';
 import { useProfileMutation } from '@/services/mutations/profile';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/auth';
 import { toast } from 'sonner';
@@ -10,8 +10,15 @@ import { useTranslation } from 'react-i18next';
 import { ALLOWED_IMAGE_TYPES } from '@/utils/common';
 import { useProfileModalStore } from './use-profile-modal';
 
-const useProfile = ({ username }: { username: string }) => {
-  const { data, isLoading, isError, error } = useUserProfileQuery(username);
+const useProfile = ({
+  username,
+  refetchTrigger,
+}: {
+  username: string;
+  refetchTrigger?: string;
+}) => {
+  const { data, isLoading, isError, error, refetch } = useUserProfileQuery(username);
+  const isFirstMount = useRef(true);
   const queryClient = useQueryClient();
   const { t } = useTranslation('profile');
   const { changeCoverImageMutation, changeCoverImageFromMediaHistoryMutation } =
@@ -152,6 +159,16 @@ const useProfile = ({ username }: { username: string }) => {
       }
     };
   }, [coverImagePreview]);
+
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+    if (refetchTrigger !== undefined) {
+      refetch();
+    }
+  }, [refetchTrigger, refetch]);
 
   return {
     data,

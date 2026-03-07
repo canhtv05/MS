@@ -38,6 +38,8 @@ import Show from '@/components/Show';
 import { PrivacyLevel } from '@/enums/common';
 import PrivateSection from '../sections/PrivateSection';
 import { cn } from '@/lib/utils';
+import Ring from '@/components/ui/ring';
+import { useIsUserOnline } from '@/services/queries/presence';
 
 const HeroSectionButton = ({ t }: Pick<IProfilePageProps, 't'>) => {
   return (
@@ -91,6 +93,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
   const [selectedCoverFromHistory, setSelectedCoverFromHistory] = useState<string | null>(null);
   const [avatarFilePreview, setAvatarFilePreview] = useState<string | null>(null);
   const [isClickViewAvatar, setIsClickViewAvatar] = useState(false);
+  const { isOnline, isLoading: isOnlineLoading } = useIsUserOnline(data?.userId);
 
   useEffect(() => {
     if (!isParentDialogOpen) {
@@ -233,7 +236,17 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
                 </div>
               );
             })()}
-            {user?.auth?.username === data?.userId && (
+            <Show
+              when={user?.auth?.username === data?.userId}
+              fallback={
+                <Ring
+                  className="size-3"
+                  classContainer="absolute right-5 bottom-1"
+                  isOnline={isOnline}
+                  hasAnimation={!isOnlineLoading}
+                />
+              }
+            >
               <IconButton
                 className="absolute! size-8 right-1 cursor-pointer bottom-2 rounded-full dark:bg-gray-800 bg-white hover:dark:bg-gray-800 hover:bg-white hover:opacity-100"
                 variant={'outline'}
@@ -241,7 +254,7 @@ const Hero = ({ isLoading, t, data }: IProfilePageProps) => {
               >
                 <CameraMinimalistic />
               </IconButton>
-            )}
+            </Show>
           </div>
           <div className="flex flex-col items-center lg:items-start justify-end gap-1 mb-2 flex-1 min-w-0 w-full lg:w-auto text-center lg:text-left">
             <h2 className="md:mt-0 mt-2 text-2xl font-bold text-gray-800 dark:text-white leading-7 whitespace-normal break-normal w-full">

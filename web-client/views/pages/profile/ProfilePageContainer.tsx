@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import useProfile from './use-profile';
 import { use } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AxiosError } from 'axios';
 import { ErrorMessage } from '@/enums/error-message';
 import { useTranslation } from 'react-i18next';
@@ -67,6 +68,8 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
   const { username } = use(params);
   const decodedUsername = decodeURIComponent(username);
   const { user } = useAuthStore();
+  const searchParams = useSearchParams();
+  const refetchTrigger = `${searchParams.get('tab') ?? ''}_${searchParams.get('subtab') ?? ''}`;
   const {
     data,
     isLoading,
@@ -87,6 +90,7 @@ const ProfilePageContainer = ({ params }: { params: Promise<IProfileParams> }) =
     handleChangeCoverFromHistory,
   } = useProfile({
     username: decodedUsername.startsWith('@') ? decodedUsername.slice(1) : decodedUsername,
+    refetchTrigger,
   });
   const { t } = useTranslation(['profile', 'layout', 'common']);
 

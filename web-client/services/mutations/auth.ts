@@ -153,7 +153,6 @@ export const useAuthMutation = (isLogoutAllDevices = false) => {
       setUser(undefined);
       setUserProfile(undefined);
       queryClient.removeQueries({ queryKey: CACHE_KEY.AUTH.QUERY.ME });
-      // queryClient.removeQueries({ queryKey: CACHE_KEY.PROFILE.QUERY.ME });
       cookieUtils.clearAuthenticated();
       logout();
       toast.success(t('auth:change_password.change_password_success'), {

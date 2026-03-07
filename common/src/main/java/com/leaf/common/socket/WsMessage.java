@@ -31,7 +31,11 @@ public class WsMessage {
         ERROR,
         MESSAGE,
         RESPONSE_API,
-        FRIEND_REQUEST
+        FRIEND_REQUEST,
+        USER_ONLINE, // user vừa connect
+        USER_OFFLINE, // user vừa disconnect
+        CHECK_USER_ONLINE, // client -> server
+        USER_ONLINE_STATUS // server -> client
     }
 
     public static WsMessage error(String message) {

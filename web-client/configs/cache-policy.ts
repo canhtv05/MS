@@ -15,4 +15,9 @@ export const CACHE_POLICY = {
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
   },
+  PRESENCE: {
+    staleTime: 30 * 1000, // 30s
+    gcTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+  },
 } as const;

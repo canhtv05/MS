@@ -11,6 +11,8 @@ import { getDateLabel } from '@/utils/common';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import { IImageHistoryGroupDTO } from '@/types/profile';
 import { ResourceType } from '@/enums/common';
+import type { InfiniteData } from '@tanstack/react-query';
+import type { IResponseObject, ISearchResponse } from '@/types/common';
 
 interface ChooseImageProps {
   onSelect?: (url: string | null) => void;
@@ -31,18 +33,18 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
     useMyMediaHistoryInfiniteQuery(
       true,
       user?.auth?.username,
-      isAvatar ? [ResourceType.RESOURCE_TYPE_AVATAR] : [ResourceType.RESOURCE_TYPE_COVER],
+      isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
     );
 
-  const pages = data?.pages;
+  type PageResponse = IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>;
+
   const groups = useMemo(() => {
-    if (!pages) return [];
-
+    const pages = (data as InfiniteData<PageResponse> | undefined)?.pages ?? [];
+    if (!pages.length) return [];
     const groupMap = new Map<string, IImageHistoryGroupDTO>();
-
-    pages.forEach(page => {
-      const pageGroups = page?.data?.data || [];
-      pageGroups.forEach(group => {
+    pages.forEach((page: PageResponse) => {
+      const pageGroups = page?.data?.data ?? [];
+      pageGroups.forEach((group: IImageHistoryGroupDTO) => {
         if (groupMap.has(group.date)) {
           const existing = groupMap.get(group.date)!;
           existing.items = [...existing.items, ...group.items];
@@ -53,7 +55,7 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
     });
 
     return Array.from(groupMap.values());
-  }, [pages]);
+  }, [data]);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {

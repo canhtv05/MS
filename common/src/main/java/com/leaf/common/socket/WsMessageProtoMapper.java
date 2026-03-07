@@ -57,6 +57,10 @@ public final class WsMessageProtoMapper {
             case WS_TYPE_MESSAGE -> WsMessage.WsType.MESSAGE;
             case WS_TYPE_RESPONSE_API -> WsMessage.WsType.RESPONSE_API;
             case WS_TYPE_FRIEND_REQUEST -> WsMessage.WsType.FRIEND_REQUEST;
+            case WS_TYPE_USER_ONLINE -> WsMessage.WsType.USER_ONLINE;
+            case WS_TYPE_USER_OFFLINE -> WsMessage.WsType.USER_OFFLINE;
+            case WS_TYPE_CHECK_USER_ONLINE -> WsMessage.WsType.CHECK_USER_ONLINE;
+            case WS_TYPE_USER_ONLINE_STATUS -> WsMessage.WsType.USER_ONLINE_STATUS;
             default -> null;
         };
     }
@@ -75,6 +79,10 @@ public final class WsMessageProtoMapper {
             case MESSAGE -> WsType.WS_TYPE_MESSAGE;
             case RESPONSE_API -> WsType.WS_TYPE_RESPONSE_API;
             case FRIEND_REQUEST -> WsType.WS_TYPE_FRIEND_REQUEST;
+            case USER_ONLINE -> WsType.WS_TYPE_USER_ONLINE;
+            case USER_OFFLINE -> WsType.WS_TYPE_USER_OFFLINE;
+            case CHECK_USER_ONLINE -> WsType.WS_TYPE_CHECK_USER_ONLINE;
+            case USER_ONLINE_STATUS -> WsType.WS_TYPE_USER_ONLINE_STATUS;
         };
     }
 }

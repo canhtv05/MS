@@ -11,7 +11,6 @@ import { IResponseObject, ISearchRequest, ISearchResponse } from '@/types/common
 import { api } from '@/utils/api';
 import cookieUtils from '@/utils/cookieUtils';
 import { API_ENDPOINTS } from '@/configs/endpoints';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMyProfileStore, useUserProfileStore } from '@/stores/profile';
 import {
   UserDetailDocument,
@@ -26,7 +25,7 @@ import { ResourceType } from '@/enums/common';
 import { useAuthStore } from '@/stores/auth';
 import { handleMutationError } from '@/utils/handler-mutation-error';
 import { CACHE_KEY } from '@/configs/cache-key';
-import { useAppQuery } from '@/hooks/use-app-query';
+import { useAppInfiniteQuery, useAppQuery } from '@/hooks/use-app-query';
 
 export const useMyProfileQuery = (enabled: boolean = true) => {
   const userProfile = useMyProfileStore(state => state.myProfile);
@@ -53,9 +52,9 @@ export const useMyProfileQuery = (enabled: boolean = true) => {
 export const useMyMediaHistoryInfiniteQuery = (
   enabled: boolean = true,
   userID?: string,
-  resourceType?: ResourceType[],
+  resourceType?: ResourceType,
 ) => {
-  return useInfiniteQuery({
+  return useAppInfiniteQuery<IResponseObject<ISearchResponse<IImageHistoryGroupDTO[]>>>('PROFILE', {
     queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(userID, resourceType),
     queryFn: async ({
       pageParam = 1,
@@ -84,8 +83,6 @@ export const useMyMediaHistoryInfiniteQuery = (
     },
     enabled: enabled && !!userID,
     retry: 1,
-    staleTime: 2 * 60 * 1000, // 2 phút - media history có thể có media mới
-    gcTime: 5 * 60 * 1000, // 5 phút - giữ cache
   });
 };
 
@@ -93,7 +90,7 @@ export const useInterestInfiniteQuery = (
   searchRequest: ISearchRequest,
   enabled: boolean = true,
 ) => {
-  return useInfiniteQuery({
+  return useAppInfiniteQuery<IResponseObject<ISearchResponse<IInterestDTO[]>>>('PROFILE', {
     queryKey: CACHE_KEY.PROFILE.QUERY.INTERESTS(searchRequest as Record<string, unknown>),
     queryFn: async ({
       pageParam = 1,
@@ -117,8 +114,6 @@ export const useInterestInfiniteQuery = (
     },
     enabled: enabled,
     retry: 1,
-    staleTime: 2 * 60 * 1000, // 2 phút - interests có thể có interests mới
-    gcTime: 5 * 60 * 1000, // 5 phút - giữ cache lâu hơn
   });
 };
 

@@ -219,7 +219,7 @@ const FriendCardHover = () => {
           sideOffset={12}
           align="start"
           side="top"
-          transition={{ type: 'keyframes', duration: 0.25, ease: 'easeInOut' }}
+          transition={{ type: 'tween', duration: 0.1 }}
         >
           <div className="flex items-start gap-3 p-3 pb-2 border-b border-border/60">
             <FriendCardAvatar

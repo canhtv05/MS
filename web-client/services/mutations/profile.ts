@@ -23,6 +23,7 @@ import {
 import { useMyProfileStore } from '@/stores/profile';
 import { useAuthStore } from '@/stores/auth';
 import { CACHE_KEY } from '@/configs/cache-key';
+import { ResourceType } from '@/enums/common';
 
 export const useProfileMutation = () => {
   const { t } = useTranslation('profile');
@@ -101,7 +102,10 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
+          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(
+            user?.auth?.username,
+            ResourceType.RESOURCE_TYPE_AVATAR,
+          ),
         }),
       ]);
       toast.success(t('change_avatar_image_success'), {
@@ -138,7 +142,10 @@ export const useProfileMutation = () => {
           queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
         }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(user?.auth?.username),
+          queryKey: CACHE_KEY.PROFILE.QUERY.MEDIA_HISTORY_INFINITE(
+            user?.auth?.username,
+            ResourceType.RESOURCE_TYPE_COVER,
+          ),
         }),
       ]);
       toast.success(t('change_cover_image_success'), {
@@ -195,16 +202,27 @@ export const useProfileMutation = () => {
         id: 'update-privacy-toast',
       });
     },
-    onSuccess: async () => {
+    onSuccess: async data => {
+      const username = user?.auth?.username;
+      const newPrivacy = data?.data;
+
+      if (newPrivacy) {
+        const currentProfile = useMyProfileStore.getState().myProfile;
+        if (currentProfile?.userId === username && currentProfile?.privacy) {
+          useMyProfileStore.getState().setMyProfile({
+            ...currentProfile,
+            privacy: { ...currentProfile.privacy, ...newPrivacy },
+          });
+        }
+      }
+
       await Promise.all([
+        queryClient.invalidateQueries({ queryKey: CACHE_KEY.PROFILE.QUERY.ME }),
         queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.ME,
+          queryKey: CACHE_KEY.PROFILE.QUERY.PRIVACY(username),
         }),
-        queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.PRIVACY(user?.auth?.username),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.auth?.username),
+        queryClient.refetchQueries({
+          queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(username),
         }),
       ]);
       toast.success(t('update_privacy_success'), {

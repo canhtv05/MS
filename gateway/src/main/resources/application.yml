@@ -61,12 +61,19 @@ spring:
               filters:
                 - StripPrefix=2
 
-            - id: websocket-service
+            - id: websocket-service-ws
               uri: lb:ws://websocket-service
               predicates:
                 - Path=/ws/**
               filters:
                 - SetPath=/ws
+
+            - id: websocket-service-http
+              uri: lb://websocket-service
+              predicates:
+                - Path=${app.api-prefix}/presence/**
+              filters:
+                - StripPrefix=2
 
 grpc:
   client:

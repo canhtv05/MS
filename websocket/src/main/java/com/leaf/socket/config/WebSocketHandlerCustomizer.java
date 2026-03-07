@@ -30,7 +30,11 @@ public class WebSocketHandlerCustomizer extends BinaryWebSocketHandler {
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
         String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
+        boolean wasAlreadyOnline = CommonUtils.isNotEmpty(userId) && sessionManager.isUserOnline(userId);
         sessionManager.addSession(session);
+        if (CommonUtils.isNotEmpty(userId) && !wasAlreadyOnline) {
+            webSocketService.broadcastPresence(userId, true);
+        }
         log.info(
             "[WS] WebSocket connected: userId={}, tokenSession={}, channelType={}, sessionId={}",
             userId,
@@ -46,6 +50,9 @@ public class WebSocketHandlerCustomizer extends BinaryWebSocketHandler {
         String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
         sessionManager.removeSession(session);
+        if (CommonUtils.isNotEmpty(userId) && !sessionManager.isUserOnline(userId)) {
+            webSocketService.broadcastPresence(userId, false);
+        }
         log.info(
             "[WS] WebSocket disconnected: userId={}, tokenSession={}, channelType={}, sessionId={}",
             userId,
@@ -64,6 +71,7 @@ public class WebSocketHandlerCustomizer extends BinaryWebSocketHandler {
             byte[] bytes = new byte[buf.remaining()];
             buf.duplicate().get(bytes);
             WsMessage payload = WsMessageProtoMapper.fromByteArray(bytes);
+            sessionManager.updateLastActivity(session);
             if (CommonUtils.isEmpty(payload) || CommonUtils.isEmpty(payload.getType())) {
                 log.info(
                     "[WS] Received from userId={} channelType={} sessionId={} invalid or empty type",

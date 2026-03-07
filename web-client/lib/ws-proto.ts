@@ -7,7 +7,6 @@ const PROTO_URL = '/proto/socket.proto';
 let cachedType: protobuf.Type | null = null;
 let loadPromise: Promise<protobuf.Type> | null = null;
 
-/** Load proto từ file public/proto/socket.proto, cache và trả về WsMessageProto type. */
 async function getMessageTypeAsync(): Promise<protobuf.Type> {
   if (cachedType) return cachedType;
   if (loadPromise) return loadPromise;
@@ -25,7 +24,6 @@ async function getMessageTypeAsync(): Promise<protobuf.Type> {
   return loadPromise;
 }
 
-/** Map frontend WsType string enum to proto number (match backend). */
 const STRING_TO_PROTO: Record<string, number> = {
   PING: 1,
   PONG: 2,
@@ -36,6 +34,10 @@ const STRING_TO_PROTO: Record<string, number> = {
   MESSAGE: 7,
   RESPONSE_API: 8,
   FRIEND_REQUEST: 9,
+  USER_ONLINE: 10,
+  USER_OFFLINE: 11,
+  CHECK_USER_ONLINE: 12,
+  USER_ONLINE_STATUS: 13,
 };
 
 const PROTO_TO_STRING: Record<number, string> = Object.fromEntries(
@@ -50,7 +52,6 @@ export type WsMessagePayload = {
   data?: string;
 };
 
-/** Encode payload to protobuf bytes (Uint8Array). Dùng proto file public/proto/socket.proto. */
 export async function encodeWsMessage(payload: WsMessagePayload): Promise<Uint8Array> {
   const type = await getMessageTypeAsync();
   const protoType = STRING_TO_PROTO[payload.type] ?? 0;
@@ -72,7 +73,6 @@ export async function encodeWsMessage(payload: WsMessagePayload): Promise<Uint8A
   return type.encode(msg).finish();
 }
 
-/** Decode protobuf bytes to payload. Nhận dữ liệu dạng byte (ArrayBuffer | Uint8Array). Dùng proto file public/proto/socket.proto. */
 export async function decodeWsMessage(bytes: ArrayBuffer | Uint8Array): Promise<WsMessagePayload> {
   const type = await getMessageTypeAsync();
   const arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);

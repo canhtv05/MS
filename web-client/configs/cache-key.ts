@@ -1,3 +1,5 @@
+import { ResourceType } from '@/enums/common';
+
 export const CACHE_KEY = {
   AUTH: {
     QUERY: {
@@ -17,7 +19,7 @@ export const CACHE_KEY = {
   PROFILE: {
     QUERY: {
       ME: ['profile', 'me'] as const,
-      MEDIA_HISTORY_INFINITE: (userId?: string, resourceType?: unknown) =>
+      MEDIA_HISTORY_INFINITE: (userId?: string, resourceType?: ResourceType) =>
         ['profile', 'media-history-infinite', userId, resourceType] as const,
       INTERESTS: (searchRequest?: Record<string, unknown>) =>
         ['profile', 'interests', searchRequest] as const,

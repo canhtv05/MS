@@ -4,6 +4,8 @@ import com.leaf.common.socket.WsMessage;
 import com.leaf.common.socket.WsMessageProtoMapper;
 import com.leaf.common.socket.WsSessionRevokedMessage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +21,11 @@ public class WebsocketSessionManager {
     public static final String WS_ATTRIBUTE_USER_ID = "userId";
     public static final String WS_ATTRIBUTE_TOKEN_ID = "tokenId";
     public static final String WS_ATTRIBUTE_CHANNEL_TYPE = "channelType";
-
-    /**
-     * Key for sessions without token (ConcurrentHashMap does not allow null key).
-     */
     private static final String ANONYMOUS_USER_KEY = "__anonymous__";
+    private static final long IDLE_TIMEOUT_MS = 2 * 60 * 1000L; // 2 phút
 
     private final ConcurrentHashMap<String, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Long> sessionLastActivity = new ConcurrentHashMap<>();
 
     public void addSession(WebSocketSession session) {
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
@@ -40,10 +40,18 @@ public class WebsocketSessionManager {
             session.getId()
         );
         userSessions.computeIfAbsent(mapKey, k -> ConcurrentHashMap.newKeySet()).add(session);
+        sessionLastActivity.put(session.getId(), System.currentTimeMillis());
         log.info("[WS] after addSession for user={} total session online: {}", mapKey, userSessions.get(mapKey).size());
     }
 
+    public void updateLastActivity(WebSocketSession session) {
+        if (session != null && session.getId() != null) {
+            sessionLastActivity.put(session.getId(), System.currentTimeMillis());
+        }
+    }
+
     public void removeSession(WebSocketSession session) {
+        sessionLastActivity.remove(session.getId());
         String userId = (String) session.getAttributes().get(WS_ATTRIBUTE_USER_ID);
         String tokenSessionId = (String) session.getAttributes().get(WS_ATTRIBUTE_TOKEN_ID);
         String channelType = (String) session.getAttributes().get(WS_ATTRIBUTE_CHANNEL_TYPE);
@@ -64,6 +72,42 @@ public class WebsocketSessionManager {
             log.info("[WS] after removeSession userId={} remainingSessions={}", uid, userSessions.get(uid).size());
             return sessions;
         });
+    }
+
+    public void closeIdleSessions(long idleThresholdMs) {
+        long now = System.currentTimeMillis();
+        List<WebSocketSession> toClose = new ArrayList<>();
+        for (Set<WebSocketSession> sessions : userSessions.values()) {
+            for (WebSocketSession s : sessions) {
+                Long last = sessionLastActivity.get(s.getId());
+                if (last != null && (now - last) > idleThresholdMs && s.isOpen()) {
+                    toClose.add(s);
+                }
+            }
+        }
+        for (WebSocketSession s : toClose) {
+            try {
+                log.info(
+                    "[WS] closing idle session sessionId={} userId={}",
+                    s.getId(),
+                    s.getAttributes().get(WS_ATTRIBUTE_USER_ID)
+                );
+                s.close();
+            } catch (IOException ignored) {
+                //
+            }
+        }
+    }
+
+    public static long getIdleTimeoutMs() {
+        return IDLE_TIMEOUT_MS;
+    }
+
+    public boolean isUserOnline(String userId) {
+        if (userId == null) return false;
+        Set<WebSocketSession> sessions = userSessions.get(userId);
+        if (ObjectUtils.isEmpty(sessions)) return false;
+        return sessions.stream().anyMatch(WebSocketSession::isOpen);
     }
 
     public void closeCurrentSessionsOfUser(String userId, WsSessionRevokedMessage payload, WsMessage msg) {

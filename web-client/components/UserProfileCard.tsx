@@ -1,11 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import Ring from './ui/ring';
 import { Activity } from 'react';
 import { getValidImageSrc } from '@/lib/image-utils';
 import images from '@/public/imgs';
+import AvatarStatus from './AvatarStatus';
 
 interface IUserProfileCard {
   username: string;
@@ -34,24 +33,14 @@ const UserProfileCard = ({
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className="relative">
-        <Avatar className="relative" style={{ width: `${size}px`, height: `${size}px` }}>
-          <AvatarImage
-            className={cn(
-              'rounded-full cursor-pointer',
-              hasBorder ? 'border-2 border-purple-300' : '',
-            )}
-            src={validAvatarUrl}
-            alt={username}
-          />
-          <AvatarFallback>{username.charAt(0)}</AvatarFallback>
-        </Avatar>
-        {hasRing && (
-          <div className="absolute z-50 -bottom-0.5 -right-1 pointer-events-none">
-            <Ring className="border-card border-2" />
-          </div>
-        )}
-      </div>
+      <AvatarStatus
+        fallback={username}
+        src={validAvatarUrl}
+        isOnline={true}
+        hasRing={hasRing}
+        size={size}
+        ringClassName={hasBorder ? 'after:border-white dark:after:border-gray-800' : ''}
+      />
       <Activity mode={hideInfo ? 'hidden' : 'visible'}>
         <div className={cn('flex flex-col', responsive ? 'lg:flex hidden' : '')}>
           <h3 className="text-sm max-w-[150px] font-bold w-full text-foreground truncate">

@@ -4,21 +4,8 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "SocketProto";
 
-// WebSocket message types
-enum WsType {
-  WS_TYPE_UNSPECIFIED = 0;
-  WS_TYPE_PING = 1;
-  WS_TYPE_PONG = 2;
-  WS_TYPE_SUBSCRIBE = 3;
-  WS_TYPE_UNSUBSCRIBE = 4;
-  WS_TYPE_KICK = 5;
-  WS_TYPE_ERROR = 6;
-  WS_TYPE_MESSAGE = 7;
-  WS_TYPE_RESPONSE_API = 8;
-  WS_TYPE_FRIEND_REQUEST = 9;
-}
+import "Common.proto";
 
-// WebSocket frame payload
 message WsMessageProto {
   WsType type = 1;
   string topic = 2;
@@ -27,7 +14,6 @@ message WsMessageProto {
   string data = 5;
 }
 
-// Payload for session revoked / kick (e.g. in data field or Redis)
 message WsSessionRevokedMessageProto {
   string tokenSessionValid = 1;
   string tokenSessionCurrent = 2;
