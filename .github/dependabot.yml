@@ -7,7 +7,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
 
     # CHẶN NÂNG CẤP LÊN SPRING BOOT 4
     ignore:
