@@ -60,7 +60,6 @@ public final class WsMessageProtoMapper {
             case WS_TYPE_USER_ONLINE -> WsMessage.WsType.USER_ONLINE;
             case WS_TYPE_USER_OFFLINE -> WsMessage.WsType.USER_OFFLINE;
             case WS_TYPE_CHECK_USER_ONLINE -> WsMessage.WsType.CHECK_USER_ONLINE;
-            case WS_TYPE_USER_ONLINE_STATUS -> WsMessage.WsType.USER_ONLINE_STATUS;
             default -> null;
         };
     }
@@ -82,7 +81,6 @@ public final class WsMessageProtoMapper {
             case USER_ONLINE -> WsType.WS_TYPE_USER_ONLINE;
             case USER_OFFLINE -> WsType.WS_TYPE_USER_OFFLINE;
             case CHECK_USER_ONLINE -> WsType.WS_TYPE_CHECK_USER_ONLINE;
-            case USER_ONLINE_STATUS -> WsType.WS_TYPE_USER_ONLINE_STATUS;
         };
     }
 }

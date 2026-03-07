@@ -64,5 +64,4 @@ enum WsType {
   WS_TYPE_USER_ONLINE = 10;       //  user vừa connect
   WS_TYPE_USER_OFFLINE = 11;      //  user vừa disconnect
   WS_TYPE_CHECK_USER_ONLINE = 12; // client -> server: hỏi userId có online không
-  WS_TYPE_USER_ONLINE_STATUS = 13; // server -> client: trả về { userId, online }
 }

@@ -34,8 +34,7 @@ public class WsMessage {
         FRIEND_REQUEST,
         USER_ONLINE, // user vừa connect
         USER_OFFLINE, // user vừa disconnect
-        CHECK_USER_ONLINE, // client -> server
-        USER_ONLINE_STATUS // server -> client
+        CHECK_USER_ONLINE // client -> server
     }
 
     public static WsMessage error(String message) {

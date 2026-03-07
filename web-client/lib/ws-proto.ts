@@ -37,7 +37,6 @@ const STRING_TO_PROTO: Record<string, number> = {
   USER_ONLINE: 10,
   USER_OFFLINE: 11,
   CHECK_USER_ONLINE: 12,
-  USER_ONLINE_STATUS: 13,
 };
 
 const PROTO_TO_STRING: Record<number, string> = Object.fromEntries(

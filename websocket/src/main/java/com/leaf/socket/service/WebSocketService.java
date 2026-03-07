@@ -17,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 @Slf4j
 public class WebSocketService {
 
+    public static final String PRESENCE_TOPIC_PREFIX = "presence:";
     private final WebsocketSessionManager wsSessionManager;
 
     public void handleMessage(WebSocketSession session, WsMessage payload) {
@@ -31,10 +32,14 @@ public class WebSocketService {
                 String dataJson = JsonF.toJson(
                     UserOnlineStatusDTO.builder().userId(targetUserId).online(online).build()
                 );
-                sendToSession(
-                    session,
-                    WsMessage.builder().type(WsMessage.WsType.USER_ONLINE_STATUS).data(dataJson).build()
-                );
+                var type = online ? WsMessage.WsType.USER_ONLINE : WsMessage.WsType.USER_OFFLINE;
+                sendToSession(session, WsMessage.builder().type(type).userId(targetUserId).data(dataJson).build());
+                break;
+            case SUBSCRIBE:
+                wsSessionManager.subscribe(session, payload.getTopic());
+                break;
+            case UNSUBSCRIBE:
+                wsSessionManager.unsubscribe(session, payload.getTopic());
                 break;
             default:
                 break;
@@ -43,10 +48,11 @@ public class WebSocketService {
 
     public void broadcastPresence(String userId, boolean online) {
         if (StringUtils.isBlank(userId)) return;
+        String topic = PRESENCE_TOPIC_PREFIX + userId;
         WsMessage.WsType type = online ? WsMessage.WsType.USER_ONLINE : WsMessage.WsType.USER_OFFLINE;
         WsMessage msg = WsMessage.builder().type(type).userId(userId).data(userId).build();
-        wsSessionManager.send(msg);
-        log.debug("[WebSocketService] broadcast presence userId={} online={}", userId, online);
+        wsSessionManager.sendToTopic(topic, msg);
+        log.debug("[WebSocketService] presence -> topic {} userId={} online={}", topic, userId, online);
     }
 
     private void sendToSession(WebSocketSession session, WsMessage msg) {
@@ -72,5 +78,10 @@ public class WebSocketService {
         WsMessage payload = WsMessage.builder().type(WsMessage.WsType.MESSAGE).message(message).build();
         wsSessionManager.send(payload);
         log.info("[WebSocketService] Sent to all with message: {}", message);
+    }
+
+    public void sendToTopic(String topic, WsMessage payload) {
+        wsSessionManager.sendToTopic(topic, payload);
+        log.info("[WebSocketService] Sent to topic: {} with payload: {}", topic, payload);
     }
 }

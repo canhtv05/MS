@@ -14,7 +14,6 @@ enum WsType {
   WS_TYPE_USER_ONLINE = 10;
   WS_TYPE_USER_OFFLINE = 11;
   WS_TYPE_CHECK_USER_ONLINE = 12;
-  WS_TYPE_USER_ONLINE_STATUS = 13;
 }
 
 message WsMessageProto {
