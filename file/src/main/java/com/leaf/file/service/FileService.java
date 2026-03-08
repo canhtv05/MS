@@ -18,6 +18,7 @@ import com.leaf.file.repository.FileRepository;
 import com.leaf.file.util.FileStorageUtil;
 import com.leaf.framework.blocking.service.CommonService;
 import com.leaf.framework.blocking.util.CommonUtils;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -369,7 +370,7 @@ public class FileService {
         minioStorageService.removeObject(objectKey);
     }
 
-    public java.io.InputStream getObjectStream(String objectKey) {
+    public InputStream getObjectStream(String objectKey) {
         return minioStorageService.getObjectStream(objectKey);
     }
 }

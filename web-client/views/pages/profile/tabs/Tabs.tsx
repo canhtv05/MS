@@ -14,7 +14,7 @@ import TabsNavigation, { ITabs } from '../../../../components/TabsNavigation';
 import { IDetailUserProfileDTO, IPrivacyDTO } from '@/types/profile';
 import IntroduceSection from '../sections/IntroduceSection';
 import Wrapper from '@/components/ui/wrapper';
-import ImageSection from '../sections/AlbumSection';
+import GallerySection from '../sections/GallerySection';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import FriendSection from '../sections/FriendSection';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -191,7 +191,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                       fallback={
                         <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                           <Skeleton className="h-10 w-full rounded-md" />
-                          <ImageSection data={data} isLoading={isLoading} />
+                          <GallerySection data={data} isLoading={isLoading} />
                         </div>
                       }
                       title={t('pictures')}
@@ -215,7 +215,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                           </p>
                         }
                       >
-                        <ImageSection data={data} isLoading={isLoading} />
+                        <GallerySection data={data} isLoading={isLoading} />
                       </Show>
                     </Wrapper>
                   );
@@ -235,7 +235,7 @@ const Tabs = ({ data, isLoading }: TabsProps) => {
                       fallback={
                         <div className="p-(--sp-card) flex-1 h-auto custom-bg-1 rounded-md  mb-0">
                           <Skeleton className="h-10 w-full rounded-md" />
-                          <ImageSection data={data} isLoading={isLoading} />
+                          <GallerySection data={data} isLoading={isLoading} />
                         </div>
                       }
                       isLoading={!!isLoading}

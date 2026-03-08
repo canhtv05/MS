@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import IntroduceSkeleton from './IntroduceSkeleton';
 import { Separator } from '@/components/ui/separator';
 import FriendsContainer from '../friends/FriendsContainer';
-import AlbumsContainer from '../albums/AlbumsContainer';
+import GalleryContainer from '../gallery/GalleryContainer';
 
 interface ITabIntroduce {
   data?: IDetailUserProfileDTO;
@@ -107,7 +107,7 @@ const TabIntroduce = ({ data, isLoading }: ITabIntroduce) => {
           </Wrapper>
         </Show>
         <FriendsContainer />
-        <AlbumsContainer />
+        <GalleryContainer />
       </div>
     </div>
   );

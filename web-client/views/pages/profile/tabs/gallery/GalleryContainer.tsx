@@ -2,20 +2,21 @@
 
 import { Button } from '@/components/ui/button';
 import Wrapper from '@/components/ui/wrapper';
-import ImageCard from './ImageCard';
+import GalleryCard from './GalleryCard';
 import { useState } from 'react';
 import TabsNavigation, { ITabs } from '@/components/TabsNavigation';
 import { useTranslation } from 'react-i18next';
 import ChangePrivacy from '../../components/ChangePrivacy';
 import SwiperDialog from '../../components/SwiperDialog';
 import { useUserProfileStore } from '@/stores/profile';
-import { IImageHistoryDTO } from '@/types/profile';
 import Show from '@/components/Show';
 import { useIsFetching } from '@tanstack/react-query';
 import { CACHE_KEY } from '@/configs/cache-key';
 import { Skeleton } from '@/components/ui/skeleton';
+import { IImageResponse } from '@/types/file';
+import { getDisplayImageUrl } from '@/utils/imageUrl';
 
-interface IAlbumsContainerProps {
+interface IGalleryContainerProps {
   showMoreButton?: boolean;
 }
 
@@ -29,7 +30,7 @@ const LoadingSkeleton = () => {
   );
 };
 
-const AlbumsContainer = ({ showMoreButton = true }: IAlbumsContainerProps) => {
+const GalleryContainer = ({ showMoreButton = true }: IGalleryContainerProps) => {
   const { t } = useTranslation('profile');
   const [activeTab, setActiveTab] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
@@ -41,7 +42,7 @@ const AlbumsContainer = ({ showMoreButton = true }: IAlbumsContainerProps) => {
   const isLoading = isFetchingCount > 0 || !user?.userId;
 
   const list =
-    user?.images?.data?.map((item: IImageHistoryDTO) => ({
+    user?.images?.data?.map((item: IImageResponse) => ({
       imageUrl: item.imageUrl,
       originFileName: item.originFileName,
     })) || [];
@@ -119,7 +120,7 @@ const AlbumsContainer = ({ showMoreButton = true }: IAlbumsContainerProps) => {
             <Show when={!isLoading} fallback={<LoadingSkeleton />}>
               {list.map((item, index: number) => (
                 <div key={index} onClick={() => handleImageClick(index)}>
-                  <ImageCard src={item.imageUrl} alt={item.originFileName} />
+                  <GalleryCard src={getDisplayImageUrl(item.imageUrl)} alt={item.originFileName} />
                 </div>
               ))}
             </Show>
@@ -144,4 +145,4 @@ const AlbumsContainer = ({ showMoreButton = true }: IAlbumsContainerProps) => {
   );
 };
 
-export default AlbumsContainer;
+export default GalleryContainer;

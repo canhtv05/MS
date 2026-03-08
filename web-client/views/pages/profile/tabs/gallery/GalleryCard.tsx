@@ -4,12 +4,12 @@ import images from '@/public/imgs';
 import Image from 'next/image';
 import { memo } from 'react';
 
-type ImageCardProps = {
+type GalleryCardProps = {
   src?: string;
   alt?: string;
 };
 
-const ImageCard = ({ src = images.avt1.src, alt = 'Album image' }: ImageCardProps) => {
+const GalleryCard = ({ src = images.avt1.src, alt = 'Album image' }: GalleryCardProps) => {
   return (
     <article className="group relative w-full overflow-hidden rounded-xl bg-muted transition-[box-shadow,transform] duration-200 hover:shadow-lg focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background cursor-pointer aspect-square">
       <Image
@@ -18,6 +18,7 @@ const ImageCard = ({ src = images.avt1.src, alt = 'Album image' }: ImageCardProp
         fill
         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         className="object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+        unoptimized
       />
       <div
         className="absolute inset-0 bg-black/0 transition-colors duration-200 group-hover:bg-black/20"
@@ -27,4 +28,4 @@ const ImageCard = ({ src = images.avt1.src, alt = 'Album image' }: ImageCardProp
   );
 };
 
-export default memo(ImageCard);
+export default memo(GalleryCard);

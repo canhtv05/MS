@@ -4,7 +4,9 @@ import { IDetailUserProfileDTO } from '@/types/profile';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getDisplayImageUrl } from '@/utils/imageUrl';
 
 interface IFriendSectionProps {
   data?: IDetailUserProfileDTO;
@@ -13,6 +15,11 @@ interface IFriendSectionProps {
 
 const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
   const { t } = useTranslation();
+  const [failedUrls, setFailedUrls] = useState<Set<string>>(new Set());
+
+  const handleImageError = (url: string) => {
+    setFailedUrls(prev => new Set(prev).add(url));
+  };
 
   if (isLoading) {
     return (
@@ -40,18 +47,23 @@ const FriendSection = ({ data, isLoading }: IFriendSectionProps) => {
               )}
             >
               <div className="relative aspect-square">
-                <Image
-                  src={img.imageUrl}
-                  alt={img.originFileName}
-                  fill
-                  sizes="(max-width: 768px) 33vw, 200px"
-                  className="object-cover transition-all rounded-md duration-300 group-hover:scale-110 group-hover:brightness-110"
-                />
+                {failedUrls.has(img.imageUrl) ? (
+                  <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground text-xs rounded-md">
+                    {t('common:no_data')}
+                  </div>
+                ) : (
+                  <Image
+                    src={getDisplayImageUrl(img.imageUrl)}
+                    alt={img.originFileName ?? 'Image'}
+                    fill
+                    sizes="(max-width: 768px) 33vw, 200px"
+                    className="object-cover transition-all rounded-md duration-300 group-hover:scale-110 group-hover:brightness-110"
+                    unoptimized
+                    onError={() => handleImageError(img.imageUrl)}
+                  />
+                )}
               </div>
             </div>
-            <h3 className="text-xs text-center text-wrap whitespace-normal break-normal wrap-break-word mt-2">
-              {img.imageUrl}
-            </h3>
           </div>
         );
       })}

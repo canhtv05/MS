@@ -5,7 +5,7 @@ import TabPost from './TabPost';
 import TabIntroduce from './introduce/TabIntroduce';
 import { ITabs } from '@/components/TabsNavigation';
 import FriendsContainer from './friends/FriendsContainer';
-import AlbumsContainer from './albums/AlbumsContainer';
+import GalleryContainer from './gallery/GalleryContainer';
 
 interface ITabsItem {
   tabs: ITabs<string>[];
@@ -21,7 +21,7 @@ const switchTab = (tab: ITabs<string>['id'], data?: IDetailUserProfileDTO, isLoa
     case 'introduce':
       return <TabIntroduce data={data} isLoading={isLoading} />;
     case 'gallery':
-      return <AlbumsContainer showMoreButton={false} />;
+      return <GalleryContainer showMoreButton={false} />;
     case 'friends':
       return <FriendsContainer showMoreButton={false} />;
     default:

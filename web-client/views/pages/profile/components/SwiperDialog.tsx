@@ -13,6 +13,7 @@ import {
 import { IconButton } from '@/components/animate-ui/components/buttons/icon';
 import { XIcon } from '@/components/animate-ui/icons';
 import Image from 'next/image';
+import { getDisplayImageUrl } from '@/utils/imageUrl';
 
 interface ISwiperDialogProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ const SwiperDialog = ({
                 <SwiperSlide key={idx}>
                   <div className="relative h-full w-full">
                     <Image
-                      src={img.imageUrl}
+                      src={getDisplayImageUrl(img.imageUrl)}
                       alt={img.originFileName}
                       fill
                       sizes="(max-width: 768px) 100vw, 1200px"
