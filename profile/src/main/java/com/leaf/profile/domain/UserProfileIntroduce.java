@@ -1,7 +1,7 @@
 package com.leaf.profile.domain;
 
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.RelationshipStatus;
+import com.leaf.common.grpc.GenderGrpc;
+import com.leaf.common.grpc.RelationshipStatusGrpc;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,11 +79,11 @@ public class UserProfileIntroduce extends AbstractAuditingNeo4jEntity {
     LocalDate dob = null;
 
     @Builder.Default
-    Gender gender = Gender.GENDER_UNSPECIFIED;
+    GenderGrpc gender = GenderGrpc.GENDER_UNSPECIFIED;
 
     @Builder.Default
     @Property("relationship_status")
-    RelationshipStatus relationshipStatus = RelationshipStatus.RELATIONSHIP_STATUS_SINGLE;
+    RelationshipStatusGrpc relationshipStatus = RelationshipStatusGrpc.RELATIONSHIP_STATUS_SINGLE;
 
     @Builder.Default
     @Property("phone_number")

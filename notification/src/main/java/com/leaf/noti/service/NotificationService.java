@@ -3,7 +3,7 @@ package com.leaf.noti.service;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.VerifyEmailTokenDTO;
+import com.leaf.common.grpc.VerifyEmailTokenGrpcDTO;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.service.SessionStore;
 import com.leaf.noti.domain.EmailVerificationLogs;
@@ -50,7 +50,7 @@ public class NotificationService {
                     .build();
             }
 
-            VerifyEmailTokenDTO tokenDTO;
+            VerifyEmailTokenGrpcDTO tokenDTO;
             try {
                 String rawToken = tokenUtil.decryptToken(token);
                 tokenDTO = tokenUtil.parseToken(rawToken);
@@ -106,7 +106,7 @@ public class NotificationService {
 
             String fullname = StringUtils.hasText(tokenDTO.getFullname()) ? tokenDTO.getFullname() : logs.getFullname();
 
-            VerifyEmailTokenDTO request = VerifyEmailTokenDTO.newBuilder()
+            VerifyEmailTokenGrpcDTO request = VerifyEmailTokenGrpcDTO.newBuilder()
                 .setUsername(username)
                 .setEmail(tokenDTO.getEmail())
                 .setFullname(fullname)

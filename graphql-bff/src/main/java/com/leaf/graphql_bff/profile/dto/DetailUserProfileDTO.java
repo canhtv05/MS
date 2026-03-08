@@ -1,7 +1,7 @@
 package com.leaf.graphql_bff.profile.dto;
 
 import com.leaf.common.dto.search.SearchResponse;
-import com.leaf.common.grpc.ImageResponse;
+import com.leaf.common.grpc.ImageGrpcResponse;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
@@ -34,5 +34,5 @@ public class DetailUserProfileDTO implements Serializable {
     Long followersCount;
     Long followingCount;
     OffsetDateTime createdDate;
-    SearchResponse<ImageResponse> images;
+    SearchResponse<ImageGrpcResponse> images;
 }

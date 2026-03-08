@@ -2,7 +2,7 @@ package com.leaf.file.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.file.domain.Image;
 import com.leaf.framework.blocking.util.json.InstantToStringSerializer;
 import java.io.Serial;
@@ -25,12 +25,11 @@ public class ImageResponse implements Serializable {
     private String imageUrl;
     private Long fileSize;
     private String originFileName;
-    private String publicId;
 
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant createdAt;
 
-    private ResourceType resourceType;
+    private ResourceTypeGrpc resourceType;
 
     public static ImageResponse toImageResponse(Image file) {
         ImageResponse imageResponse = new ImageResponse();
@@ -40,5 +39,15 @@ public class ImageResponse implements Serializable {
         }
         imageResponse.setResourceType(file.getResourceType());
         return imageResponse;
+    }
+
+    public static Image toImage(ImageResponse imageResponse) {
+        Image image = new Image();
+        BeanUtils.copyProperties(imageResponse, image);
+        if (imageResponse.getCreatedAt() != null) {
+            image.setCreatedAt(imageResponse.getCreatedAt());
+        }
+        image.setResourceType(imageResponse.getResourceType());
+        return image;
     }
 }

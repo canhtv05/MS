@@ -8,22 +8,22 @@ option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "UserProfile";
 
 service UserProfileGrpcService {
-    rpc createUserProfile(UserProfileDTO) returns (UserProfileDTO);
-    rpc getUserProfile(UserProfileIdRequest) returns (UserProfileResponse);
-    rpc getUserProfilePrivacy(UserProfileIdRequest) returns (UserProfilePrivacyDTO);
-    rpc getUserProfileIntroduce(UserProfileIdRequest) returns (UserProfileIntroduceDTO);
+    rpc createUserProfile(UserProfileGrpcDTO) returns (UserProfileGrpcDTO);
+    rpc getUserProfile(UserProfileIdGrpcRequest) returns (UserProfileGrpcResponse);
+    rpc getUserProfilePrivacy(UserProfileIdGrpcRequest) returns (UserProfilePrivacyGrpcDTO);
+    rpc getUserProfileIntroduce(UserProfileIdGrpcRequest) returns (UserProfileIntroduceGrpcDTO);
 }
 
-message UserProfileDTO {
+message UserProfileGrpcDTO {
     string userId = 1;
     string fullname = 2;
 }
 
-message UserProfileIdRequest {
+message UserProfileIdGrpcRequest {
     string userId = 1;
 }
 
-message UserProfileResponse {
+message UserProfileGrpcResponse {
     string userId = 1;
     string fullname = 2;
     google.protobuf.Timestamp createdDate = 3;
@@ -36,17 +36,27 @@ message UserProfileResponse {
     string bio = 10;
 }
 
-message UserProfilePrivacyDTO {
+message UserProfilePrivacyGrpcRequest {
     string userId = 1;
-    PrivacyLevel profileVisibility = 2;
-    PrivacyLevel friendsVisibility = 3;
-    PrivacyLevel postsVisibility = 4;
-    PrivacyLevel introduceVisibility = 5;
-    PrivacyLevel galleryVisibility = 6;
+    PrivacyLevelGrpc profileVisibility = 2;
+    PrivacyLevelGrpc friendsVisibility = 3;
+    PrivacyLevelGrpc postsVisibility = 4;
+    PrivacyLevelGrpc introduceVisibility = 5;
+    PrivacyLevelGrpc galleryVisibility = 6;
     string id = 7;
 }
 
-message UserProfileIntroduceDTO {
+message UserProfilePrivacyGrpcDTO {
+    string id = 1;
+    string userId = 2;
+    PrivacyLevelGrpc profileVisibility = 3;
+    PrivacyLevelGrpc friendsVisibility = 4;
+    PrivacyLevelGrpc postsVisibility = 5;
+    PrivacyLevelGrpc introduceVisibility = 6;
+    PrivacyLevelGrpc galleryVisibility = 7;
+}
+
+message UserProfileIntroduceGrpcRequest {
     string userId = 1;
     string city = 2;
     string hometown = 3;
@@ -61,14 +71,14 @@ message UserProfileIntroduceDTO {
     string tiktokUrl = 12;
     string facebookUrl = 13;
     google.protobuf.Timestamp dob = 14;
-    Gender gender = 15;
-    RelationshipStatus relationshipStatus = 16;
+    GenderGrpc gender = 15;
+    RelationshipStatusGrpc relationshipStatus = 16;
     string phoneNumber = 17;
-    repeated InterestDTO interests = 18;
+    repeated InterestGrpc interests = 18;
     string id = 19;
 }
 
-message InterestDTO {
+message InterestGrpc {
     string id = 1;
     string title = 2;
     string color = 3;
@@ -77,4 +87,48 @@ message InterestDTO {
     google.protobuf.Timestamp createdDate = 6;
     string modifiedBy = 7;
     google.protobuf.Timestamp modifiedDate = 8;
+}
+
+message InterestGrpcRequest {
+    string id = 1;
+    string title = 2;
+    string color = 3;
+    string code = 4;
+    string createdBy = 5;
+    google.protobuf.Timestamp createdDate = 6;
+    string modifiedBy = 7;
+    google.protobuf.Timestamp modifiedDate = 8;
+}
+
+message InterestGrpcDTO {
+    string id = 1;
+    string title = 2;
+    string color = 3;
+    string code = 4;
+    string createdBy = 5;
+    google.protobuf.Timestamp createdDate = 6;
+    string modifiedBy = 7;
+    google.protobuf.Timestamp modifiedDate = 8;
+}
+
+message UserProfileIntroduceGrpcDTO {
+    string id = 1;
+    string userId = 2;
+    string city = 3;
+    string hometown = 4;
+    string jobTitle = 5;
+    string company = 6;
+    string school = 7;
+    string websiteUrl = 8;
+    string githubUrl = 9;
+    string linkedinUrl = 10;
+    string xUrl = 11;
+    string instagramUrl = 12;
+    string tiktokUrl = 13;
+    string facebookUrl = 14;
+    google.protobuf.Timestamp dob = 15;
+    GenderGrpc gender = 16;
+    RelationshipStatusGrpc relationshipStatus = 17;
+    string phoneNumber = 18;
+    repeated InterestGrpcDTO interests = 19;
 }

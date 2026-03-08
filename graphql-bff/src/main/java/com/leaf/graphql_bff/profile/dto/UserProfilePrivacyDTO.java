@@ -1,6 +1,6 @@
 package com.leaf.graphql_bff.profile.dto;
 
-import com.leaf.common.grpc.PrivacyLevel;
+import com.leaf.common.grpc.PrivacyLevelGrpc;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,9 +22,9 @@ public class UserProfilePrivacyDTO implements Serializable {
 
     String id;
     String userId;
-    PrivacyLevel profileVisibility;
-    PrivacyLevel friendsVisibility;
-    PrivacyLevel postsVisibility;
-    PrivacyLevel introduceVisibility;
-    PrivacyLevel galleryVisibility;
+    PrivacyLevelGrpc profileVisibility;
+    PrivacyLevelGrpc friendsVisibility;
+    PrivacyLevelGrpc postsVisibility;
+    PrivacyLevelGrpc introduceVisibility;
+    PrivacyLevelGrpc galleryVisibility;
 }

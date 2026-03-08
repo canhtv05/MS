@@ -3,7 +3,7 @@ package com.leaf.file.controller;
 import com.leaf.common.dto.ResponseObject;
 import com.leaf.common.dto.search.SearchRequest;
 import com.leaf.common.dto.search.SearchResponse;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.MediaHistoryGroupDTO;
 import com.leaf.file.service.FileService;
@@ -48,7 +48,7 @@ public class FileController {
     @PostMapping("/search-media-history")
     public ResponseEntity<ResponseObject<SearchResponse<MediaHistoryGroupDTO>>> searchMediaHistory(
         @ModelAttribute SearchRequest searchRequest,
-        @RequestParam List<ResourceType> resourceType
+        @RequestParam List<ResourceTypeGrpc> resourceType
     ) {
         return ResponseEntity.ok(fileService.getUserMediaHistory(searchRequest, resourceType));
     }

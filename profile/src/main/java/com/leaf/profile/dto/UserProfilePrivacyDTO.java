@@ -1,7 +1,7 @@
 package com.leaf.profile.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.leaf.common.grpc.PrivacyLevel;
+import com.leaf.common.grpc.PrivacyLevelGrpc;
 import com.leaf.profile.domain.UserProfilePrivacy;
 import java.io.Serializable;
 import lombok.AccessLevel;
@@ -23,11 +23,11 @@ public class UserProfilePrivacyDTO implements Serializable {
 
     String id;
     String userId;
-    PrivacyLevel profileVisibility;
-    PrivacyLevel friendsVisibility;
-    PrivacyLevel postsVisibility;
-    PrivacyLevel introduceVisibility;
-    PrivacyLevel galleryVisibility;
+    PrivacyLevelGrpc profileVisibility;
+    PrivacyLevelGrpc friendsVisibility;
+    PrivacyLevelGrpc postsVisibility;
+    PrivacyLevelGrpc introduceVisibility;
+    PrivacyLevelGrpc galleryVisibility;
 
     public static UserProfilePrivacyDTO toUserProfilePrivacyDTO(UserProfilePrivacy userProfilePrivacy) {
         UserProfilePrivacyDTO.UserProfilePrivacyDTOBuilder builder = UserProfilePrivacyDTO.builder()

@@ -1,6 +1,6 @@
 package com.leaf.file.domain;
 
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +19,6 @@ public class Image {
     String imageUrl;
     Long fileSize;
     String originFileName;
-    String publicId;
     Instant createdAt;
-    ResourceType resourceType;
+    ResourceTypeGrpc resourceType;
 }

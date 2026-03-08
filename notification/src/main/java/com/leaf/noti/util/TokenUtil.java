@@ -2,7 +2,7 @@ package com.leaf.noti.util;
 
 import com.google.protobuf.Timestamp;
 import com.leaf.common.dto.event.VerificationEmailEvent;
-import com.leaf.common.grpc.VerifyEmailTokenDTO;
+import com.leaf.common.grpc.VerifyEmailTokenGrpcDTO;
 import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.FwUtils;
 import com.leaf.noti.config.NotificationProperties;
@@ -45,14 +45,14 @@ public class TokenUtil {
             .compact();
     }
 
-    public VerifyEmailTokenDTO parseToken(String token) {
+    public VerifyEmailTokenGrpcDTO parseToken(String token) {
         var body = Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
 
         Date exp = body.getExpiration();
 
         Timestamp expiredAt = Timestamp.newBuilder().setSeconds(exp.getTime() / 1000).setNanos(0).build();
 
-        return VerifyEmailTokenDTO.newBuilder()
+        return VerifyEmailTokenGrpcDTO.newBuilder()
             .setUsername(body.getSubject())
             .setEmail(body.get(EMAIL_KEY, String.class))
             .setFullname(CommonUtils.getSafeObject(body.get(FULLNAME_KEY, String.class), String.class, ""))

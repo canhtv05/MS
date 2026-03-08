@@ -5,7 +5,7 @@ server:
 
 grpc:
   server:
-    port: 9002
+    port: 2002
 
 spring:
   application:

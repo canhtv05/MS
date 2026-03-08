@@ -6,6 +6,7 @@ import com.leaf.common.exception.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +43,15 @@ public class ExceptionTranslator {
         log.error("Method Not Allowed: {}", ex);
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
             ResponseObject.error("405", ex.getLocalizedMessage())
+        );
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ResponseObject<Void>> handlingAccessDeniedException(AccessDeniedException exception) {
+        ErrorMessage errorMessage = ErrorMessage.ACCESS_DENIED;
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+            ResponseObject.<Void>builder().code(errorMessage.getCode()).message(errorMessage.getMessage()).build()
         );
     }
 }

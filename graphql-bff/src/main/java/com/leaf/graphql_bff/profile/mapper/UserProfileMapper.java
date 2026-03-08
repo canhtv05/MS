@@ -1,10 +1,18 @@
 package com.leaf.graphql_bff.profile.mapper;
 
+import com.leaf.common.grpc.ImageGrpcResponse;
+import com.leaf.common.grpc.InterestGrpcDTO;
+import com.leaf.common.grpc.UserProfileGrpcResponse;
+import com.leaf.common.grpc.UserProfileIntroduceGrpcDTO;
+import com.leaf.common.grpc.UserProfilePrivacyGrpcDTO;
+import com.leaf.common.grpc.VideoGrpcResponse;
 import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
+import com.leaf.graphql_bff.profile.dto.ImageDTO;
 import com.leaf.graphql_bff.profile.dto.InterestDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfileIntroduceDTO;
 import com.leaf.graphql_bff.profile.dto.UserProfilePrivacyDTO;
+import com.leaf.graphql_bff.profile.dto.VideoDTO;
 import java.util.List;
 
 public class UserProfileMapper {
@@ -17,7 +25,7 @@ public class UserProfileMapper {
         return INSTANCE;
     }
 
-    private InterestDTO tInterestDTO(com.leaf.common.grpc.InterestDTO interestDTO) {
+    private InterestDTO tInterestDTO(InterestGrpcDTO interestDTO) {
         if (interestDTO == null) {
             return null;
         }
@@ -33,16 +41,14 @@ public class UserProfileMapper {
             .build();
     }
 
-    private List<InterestDTO> toListInterestDTO(List<com.leaf.common.grpc.InterestDTO> interestDTOList) {
+    private List<InterestDTO> toListInterestDTO(List<InterestGrpcDTO> interestDTOList) {
         if (interestDTOList == null) {
             return null;
         }
         return interestDTOList.stream().map(this::tInterestDTO).toList();
     }
 
-    public UserProfileIntroduceDTO toUserProfileIntroduceDTO(
-        com.leaf.common.grpc.UserProfileIntroduceDTO userProfileIntroduceDTO
-    ) {
+    public UserProfileIntroduceDTO toUserProfileIntroduceDTO(UserProfileIntroduceGrpcDTO userProfileIntroduceDTO) {
         if (userProfileIntroduceDTO == null) {
             return null;
         }
@@ -68,9 +74,7 @@ public class UserProfileMapper {
             .build();
     }
 
-    public UserProfilePrivacyDTO toUserProfilePrivacyDTO(
-        com.leaf.common.grpc.UserProfilePrivacyDTO userProfilePrivacyDTO
-    ) {
+    public UserProfilePrivacyDTO toUserProfilePrivacyDTO(UserProfilePrivacyGrpcDTO userProfilePrivacyDTO) {
         if (userProfilePrivacyDTO == null) {
             return null;
         }
@@ -85,7 +89,7 @@ public class UserProfileMapper {
             .build();
     }
 
-    public DetailUserProfileDTO toDetailUserProfileDTO(com.leaf.common.grpc.UserProfileResponse userProfileResponse) {
+    public DetailUserProfileDTO toDetailUserProfileDTO(UserProfileGrpcResponse userProfileResponse) {
         if (userProfileResponse == null) {
             return null;
         }
@@ -104,26 +108,25 @@ public class UserProfileMapper {
             .build();
     }
 
-    public com.leaf.graphql_bff.profile.dto.ImageDTO toImageDTO(com.leaf.common.grpc.ImageResponse imageResponse) {
+    public ImageDTO toImageDTO(ImageGrpcResponse imageResponse) {
         if (imageResponse == null) {
             return null;
         }
-        return com.leaf.graphql_bff.profile.dto.ImageDTO.builder()
+        return ImageDTO.builder()
             .imageUrl(imageResponse.getImageUrl())
             .contentType(imageResponse.getContentType())
             .fileSize(imageResponse.getFileSize())
             .originFileName(imageResponse.getOriginFileName())
-            .publicId(imageResponse.getPublicId())
             .createdAt(ConvertProto.convertTimestampToOffsetDateTime(imageResponse.getCreatedAt()))
             .resourceType(imageResponse.getResourceType())
             .build();
     }
 
-    public com.leaf.graphql_bff.profile.dto.VideoDTO toVideoDTO(com.leaf.common.grpc.VideoResponse videoResponse) {
+    public VideoDTO toVideoDTO(VideoGrpcResponse videoResponse) {
         if (videoResponse == null) {
             return null;
         }
-        return com.leaf.graphql_bff.profile.dto.VideoDTO.builder()
+        return VideoDTO.builder()
             .videoUrl(videoResponse.getVideoUrl())
             .playtimeSeconds(videoResponse.getPlaytimeSeconds())
             .playtimeString(videoResponse.getPlaytimeString())
@@ -132,7 +135,6 @@ public class UserProfileMapper {
             .contentType(videoResponse.getContentType())
             .fileSize(videoResponse.getFileSize())
             .originFileName(videoResponse.getOriginFileName())
-            .publicId(videoResponse.getPublicId())
             .createdAt(ConvertProto.convertTimestampToOffsetDateTime(videoResponse.getCreatedAt()))
             .resourceType(videoResponse.getResourceType())
             .build();

@@ -1,6 +1,7 @@
 package com.leaf.profile.mapper;
 
-import com.leaf.common.grpc.UserProfileDTO;
+import com.leaf.common.grpc.UserProfileGrpcDTO;
+import com.leaf.common.grpc.UserProfileGrpcResponse;
 import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.profile.dto.req.UserProfileCreationReq;
@@ -17,7 +18,7 @@ public class UserProfileGrpcMapper {
         return INSTANCE;
     }
 
-    public UserProfileCreationReq toUserProfileCreationReq(UserProfileDTO grpcRequest) {
+    public UserProfileCreationReq toUserProfileCreationReq(UserProfileGrpcDTO grpcRequest) {
         if (grpcRequest == null) {
             return null;
         }
@@ -27,12 +28,12 @@ public class UserProfileGrpcMapper {
             .build();
     }
 
-    public com.leaf.common.grpc.UserProfileResponse toGrpcUserProfileResponse(UserProfileResponse response) {
+    public UserProfileGrpcResponse toGrpcUserProfileResponse(UserProfileResponse response) {
         if (response == null) {
             return null;
         }
 
-        com.leaf.common.grpc.UserProfileResponse.Builder builder = com.leaf.common.grpc.UserProfileResponse.newBuilder()
+        UserProfileGrpcResponse.Builder builder = UserProfileGrpcResponse.newBuilder()
             .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
             .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
             .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
@@ -54,11 +55,11 @@ public class UserProfileGrpcMapper {
         return builder.build();
     }
 
-    public UserProfileDTO toGrpcUserProfileDTO(UserProfileResponse response) {
+    public UserProfileGrpcDTO toGrpcUserProfileDTO(UserProfileResponse response) {
         if (response == null) {
             return null;
         }
-        return UserProfileDTO.newBuilder()
+        return UserProfileGrpcDTO.newBuilder()
             .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
             .setFullname(CommonUtils.getSafeObject(response.getFullname(), String.class, ""))
             .build();

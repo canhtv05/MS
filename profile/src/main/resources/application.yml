@@ -6,10 +6,10 @@ server:
 
 grpc:
   server:
-    port: 9003
+    port: 2003
   client:
     file-service:
-      address: static://localhost:9002
+      address: static://localhost:2002
       negotiationType: plaintext
 
 spring:

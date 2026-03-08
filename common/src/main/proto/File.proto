@@ -8,49 +8,49 @@ import "google/protobuf/timestamp.proto";
 import "Common.proto";
 
 service FileGrpcService {
-    rpc uploadFiles(UploadFilesRequest) returns (FileResponse);
-    rpc uploadImage(UploadOneImageRequest) returns (ImageResponse);
-    rpc uploadVideo(UploadOneVideoRequest) returns (VideoResponse);
-    rpc getFileByIds(GetFilesByIdsRequest) returns (GetFilesByIdsResponse);
-    rpc deleteById(DeleteByIdRequest) returns (DeleteByIdResponse);
-    rpc getFileImages(GetFileImagesRequest) returns (GetFileImagesResponse);
+    rpc uploadFiles(UploadFilesGrpcRequest) returns (FileGrpcResponse);
+    rpc uploadImage(UploadOneImageGrpcRequest) returns (ImageGrpcResponse);
+    rpc uploadVideo(UploadOneVideoGrpcRequest) returns (VideoGrpcResponse);
+    rpc getFileByIds(GetFilesByIdsGrpcRequest) returns (GetFilesByIdsGrpcResponse);
+    rpc deleteById(DeleteByIdGrpcRequest) returns (DeleteByIdGrpcResponse);
+    rpc getFileImages(GetFileImagesGrpcRequest) returns (GetFileImagesGrpcResponse);
 }
 
-message UploadOneImageRequest {
+message UploadOneImageGrpcRequest {
     bytes file = 1;
-    ResourceType resourceType = 2;
+    ResourceTypeGrpc resourceType = 2;
     string userId = 3;
 }
 
-message UploadOneVideoRequest {
+message UploadOneVideoGrpcRequest {
     bytes file = 1;
-    ResourceType resourceType = 2;
+    ResourceTypeGrpc resourceType = 2;
     string userId = 3;
 }
 
-message UploadFilesRequest {
+message UploadFilesGrpcRequest {
     repeated bytes files = 1;
-    ResourceType resourceType = 2;
+    ResourceTypeGrpc resourceType = 2;
     string userId = 3;
 }
 
-message GetFilesByIdsRequest {
+message GetFilesByIdsGrpcRequest {
     repeated string ids = 1;
 }
 
-message GetFilesByIdsResponse {
-    repeated FileResponse files = 1;
+message GetFilesByIdsGrpcResponse {
+    repeated FileGrpcResponse files = 1;
 }
 
-message DeleteByIdRequest {
+message DeleteByIdGrpcRequest {
     string fileId = 1;
 }
 
-message DeleteByIdResponse {
+message DeleteByIdGrpcResponse {
     bool success = 1;
 }
 
-message VideoResponse {
+message VideoGrpcResponse {
     double playtimeSeconds = 1;
     string playtimeString = 2;
     string contentType = 3;
@@ -59,43 +59,41 @@ message VideoResponse {
     string previewVttUrl = 6;
     int64 fileSize = 7;
     string originFileName = 8;
-    string publicId = 9;
-    google.protobuf.Timestamp createdAt = 10;
-    ResourceType resourceType = 11;
+    google.protobuf.Timestamp createdAt = 9;
+    ResourceTypeGrpc resourceType = 10;
 }
 
-message ImageResponse {
+message ImageGrpcResponse {
     string contentType = 1;
     string imageUrl = 2;
     int64 fileSize = 3;
     string originFileName = 4;
-    string publicId = 5;
-    google.protobuf.Timestamp createdAt = 6;
-    ResourceType resourceType = 7;
+    google.protobuf.Timestamp createdAt = 5;
+    ResourceTypeGrpc resourceType = 6;
 }
 
-message FileResponse {
+message FileGrpcResponse {
     string ownerId = 1;
     int64 totalSize = 2;
-    repeated VideoResponse videos = 4;
-    repeated ImageResponse images = 5;
-    ResourceType resourceType = 6;
-    google.protobuf.Timestamp createdAt = 7;
-    google.protobuf.Timestamp updatedAt = 8;
+    repeated VideoGrpcResponse videos = 3;
+    repeated ImageGrpcResponse images = 4;
+    ResourceTypeGrpc resourceType = 5;
+    google.protobuf.Timestamp createdAt = 6;
+    google.protobuf.Timestamp updatedAt = 7;
 }
 
-message GetFileImagesRequest {
+message GetFileImagesGrpcRequest {
     string userId = 1;
-    repeated ResourceType resourceTypes = 2;
-    SearchRequest searchRequest = 3;
+    repeated ResourceTypeGrpc resourceTypes = 2;
+    SearchGrpcRequest searchRequest = 3;
 }
 
-message GetFileImagesResponse {
-    repeated ImageResponse data = 1;
-    PageResponse pagination = 2;
+message GetFileImagesGrpcResponse {
+    repeated ImageGrpcResponse data = 1;
+    PageGrpcResponse pagination = 2;
 }
 
-enum ResourceType {
+enum ResourceTypeGrpc {
     RESOURCE_TYPE_UNSPECIFIED = 0;
     RESOURCE_TYPE_AVATAR = 1;
     RESOURCE_TYPE_COVER = 2;

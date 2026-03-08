@@ -1,8 +1,8 @@
 package com.leaf.graphql_bff.auth.resolver;
 
-import com.leaf.common.grpc.AuthMeResponse;
-import com.leaf.common.grpc.UserProfileIdRequest;
-import com.leaf.common.grpc.UserProfileResponse;
+import com.leaf.common.grpc.AuthMeGrpcResponse;
+import com.leaf.common.grpc.UserProfileGrpcResponse;
+import com.leaf.common.grpc.UserProfileIdGrpcRequest;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.graphql_bff.auth.client.AuthGrpcAuthClient;
 import com.leaf.graphql_bff.auth.client.AuthGrpcProfileClient;
@@ -39,9 +39,9 @@ public class AuthQueryResolver {
         if (cached != null) {
             return cached;
         }
-        AuthMeResponse authMe = grpcAuthClient.authMe(username);
-        UserProfileResponse userProfile = grpcProfileClient.getUserProfile(
-            UserProfileIdRequest.newBuilder().setUserId(username).build()
+        AuthMeGrpcResponse authMe = grpcAuthClient.authMe(username);
+        UserProfileGrpcResponse userProfile = grpcProfileClient.getUserProfile(
+            UserProfileIdGrpcRequest.newBuilder().setUserId(username).build()
         );
         UserProfileDTO dto = UserProfileMapper.getInstance().toUserProfileDTO(authMe, userProfile);
         redisService.set(cacheKey, dto, 1, TimeUnit.HOURS);

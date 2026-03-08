@@ -1,7 +1,7 @@
 package com.leaf.file.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.file.domain.File;
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class FileResponse implements Serializable {
 
     private List<VideoResponse> videos;
     private List<ImageResponse> images;
-    private ResourceType resourceType;
+    private ResourceTypeGrpc resourceType;
 
     public static FileResponse toFileResponse(File file) {
         FileResponse fileResponse = new FileResponse();

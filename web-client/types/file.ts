@@ -19,7 +19,6 @@ export interface IVideoResponse {
   previewVttUrl: string;
   fileSize: number;
   originFileName: string;
-  publicId: string;
   createdAt: string;
   resourceType: ResourceType;
 }
@@ -29,7 +28,6 @@ export interface IImageResponse {
   imageUrl: string;
   fileSize: number;
   originFileName: string;
-  publicId: string;
   createdAt: string;
   resourceType: ResourceType;
 }

@@ -11,3 +11,9 @@ spring:
 
 cloudinary:
   url: ${CLOUDINARY_URL}
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:admin}
+  secret-key: ${MINIO_SECRET_KEY:12345678}
+  bucket: ${MINIO_BUCKET_NAME:leaf-bucket}

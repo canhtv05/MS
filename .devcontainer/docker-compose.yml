@@ -108,6 +108,20 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - '${MINIO_PORT}:9000' # API
+      - '${MINIO_CONSOLE_PORT}:9001' # Web console
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
 volumes:
   postgres_ms:
   redis_ms:
@@ -115,3 +129,4 @@ volumes:
   neo4j_ms:
   zookeeper_ms:
   kafka_ms:
+  minio_data:

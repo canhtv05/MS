@@ -3,16 +3,16 @@ server:
 
 grpc:
   server:
-    port: 9006
+    port: 2006
   client:
     profile-service:
-      address: static://localhost:9003
+      address: static://localhost:2003
       negotiationType: plaintext
     auth-service:
-      address: static://localhost:9001
+      address: static://localhost:2001
       negotiationType: plaintext
     file-service:
-      address: static://localhost:9002
+      address: static://localhost:2002
       negotiationType: plaintext
 
 spring:

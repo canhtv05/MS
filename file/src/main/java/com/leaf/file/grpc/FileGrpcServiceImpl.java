@@ -2,6 +2,9 @@ package com.leaf.file.grpc;
 
 import com.google.protobuf.ByteString;
 import com.leaf.common.grpc.*;
+import com.leaf.file.dto.FileResponse;
+import com.leaf.file.dto.ImageResponse;
+import com.leaf.file.dto.VideoResponse;
 import com.leaf.file.mapper.FileProtoMapper;
 import com.leaf.file.service.FileService;
 import io.grpc.stub.StreamObserver;
@@ -18,20 +21,23 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     private final FileService fileService;
 
     @Override
-    public void deleteById(DeleteByIdRequest request, StreamObserver<DeleteByIdResponse> responseObserver) {
+    public void deleteById(DeleteByIdGrpcRequest request, StreamObserver<DeleteByIdGrpcResponse> responseObserver) {
         fileService.deleteById(request.getFileId());
 
-        DeleteByIdResponse response = DeleteByIdResponse.newBuilder().setSuccess(true).build();
+        DeleteByIdGrpcResponse response = DeleteByIdGrpcResponse.newBuilder().setSuccess(true).build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getFileByIds(GetFilesByIdsRequest request, StreamObserver<GetFilesByIdsResponse> responseObserver) {
-        List<com.leaf.file.dto.FileResponse> files = fileService.getFilesByIds(request.getIdsList());
+    public void getFileByIds(
+        GetFilesByIdsGrpcRequest request,
+        StreamObserver<GetFilesByIdsGrpcResponse> responseObserver
+    ) {
+        List<FileResponse> files = fileService.getFilesByIds(request.getIdsList());
 
-        GetFilesByIdsResponse.Builder builder = GetFilesByIdsResponse.newBuilder();
+        GetFilesByIdsGrpcResponse.Builder builder = GetFilesByIdsGrpcResponse.newBuilder();
         files.forEach(f -> builder.addFiles(FileProtoMapper.toProto(f)));
 
         responseObserver.onNext(builder.build());
@@ -39,15 +45,12 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void uploadFiles(
-        UploadFilesRequest request,
-        StreamObserver<com.leaf.common.grpc.FileResponse> responseObserver
-    ) {
+    public void uploadFiles(UploadFilesGrpcRequest request, StreamObserver<FileGrpcResponse> responseObserver) {
         try {
             List<ByteString> bytesList = request.getFilesList();
             MultipartFile[] files = convertFromGrpc(bytesList);
-            com.leaf.file.dto.FileResponse dto = fileService.upload(files, request.getResourceType());
-            com.leaf.common.grpc.FileResponse protoResponse = FileProtoMapper.toProto(dto);
+            FileResponse dto = fileService.uploadFiles(files, request.getResourceType());
+            FileGrpcResponse protoResponse = FileProtoMapper.toProto(dto);
 
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
@@ -57,20 +60,12 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void uploadImage(
-        UploadOneImageRequest request,
-        StreamObserver<com.leaf.common.grpc.ImageResponse> responseObserver
-    ) {
+    public void uploadImage(UploadOneImageGrpcRequest request, StreamObserver<ImageGrpcResponse> responseObserver) {
         try {
             MultipartFile file = convertFromGrpc(request.getFile());
             String userId = request.getUserId();
-            com.leaf.file.dto.ImageResponse dto = fileService.processImageUpload(
-                file,
-                request.getResourceType(),
-                userId,
-                false
-            );
-            com.leaf.common.grpc.ImageResponse protoResponse = FileProtoMapper.mapImage(dto);
+            ImageResponse dto = fileService.uploadOneImage(file, request.getResourceType(), userId, false);
+            ImageGrpcResponse protoResponse = FileProtoMapper.mapImage(dto);
 
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
@@ -80,20 +75,12 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void uploadVideo(
-        UploadOneVideoRequest request,
-        StreamObserver<com.leaf.common.grpc.VideoResponse> responseObserver
-    ) {
+    public void uploadVideo(UploadOneVideoGrpcRequest request, StreamObserver<VideoGrpcResponse> responseObserver) {
         try {
             MultipartFile file = convertFromGrpc(request.getFile());
             String userId = request.getUserId();
-            com.leaf.file.dto.VideoResponse dto = fileService.processVideoUpload(
-                file,
-                request.getResourceType(),
-                userId,
-                false
-            );
-            com.leaf.common.grpc.VideoResponse protoResponse = FileProtoMapper.mapVideo(dto);
+            VideoResponse dto = fileService.uploadOneVideo(file, request.getResourceType(), userId, false);
+            VideoGrpcResponse protoResponse = FileProtoMapper.mapVideo(dto);
 
             responseObserver.onNext(protoResponse);
             responseObserver.onCompleted();
@@ -119,8 +106,11 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
     }
 
     @Override
-    public void getFileImages(GetFileImagesRequest request, StreamObserver<GetFileImagesResponse> responseObserver) {
-        SearchRequest searchRequest = SearchRequest.newBuilder()
+    public void getFileImages(
+        GetFileImagesGrpcRequest request,
+        StreamObserver<GetFileImagesGrpcResponse> responseObserver
+    ) {
+        SearchGrpcRequest searchRequest = SearchGrpcRequest.newBuilder()
             .setSearchText(request.getSearchRequest().getSearchText())
             .setPage(request.getSearchRequest().getPage())
             .setSize(request.getSearchRequest().getSize())
@@ -134,7 +124,7 @@ public class FileGrpcServiceImpl extends FileGrpcServiceGrpc.FileGrpcServiceImpl
             searchRequest
         );
 
-        GetFileImagesResponse response = GetFileImagesResponse.newBuilder()
+        GetFileImagesGrpcResponse response = GetFileImagesGrpcResponse.newBuilder()
             .addAllData(result.data().stream().map(FileProtoMapper::mapImage).toList())
             .setPagination(FileProtoMapper.toProto(result.pagination()))
             .build();

@@ -1,7 +1,7 @@
 package com.leaf.common.socket;
 
 import com.leaf.common.grpc.WsMessageProto;
-import com.leaf.common.grpc.WsType;
+import com.leaf.common.grpc.WsTypeGrpc;
 import org.apache.commons.lang3.ObjectUtils;
 
 public final class WsMessageProtoMapper {
@@ -43,8 +43,8 @@ public final class WsMessageProtoMapper {
         return fromProto(WsMessageProto.parseFrom(bytes));
     }
 
-    private static WsMessage.WsType toWsType(WsType proto) {
-        if (proto == null || proto == WsType.UNRECOGNIZED || proto == WsType.WS_TYPE_UNSPECIFIED) {
+    private static WsMessage.WsType toWsType(WsTypeGrpc proto) {
+        if (proto == null || proto == WsTypeGrpc.UNRECOGNIZED || proto == WsTypeGrpc.WS_TYPE_UNSPECIFIED) {
             return null;
         }
         return switch (proto) {
@@ -64,23 +64,23 @@ public final class WsMessageProtoMapper {
         };
     }
 
-    private static WsType toProtoType(WsMessage.WsType type) {
+    private static WsTypeGrpc toProtoType(WsMessage.WsType type) {
         if (type == null) {
-            return WsType.WS_TYPE_UNSPECIFIED;
+            return WsTypeGrpc.WS_TYPE_UNSPECIFIED;
         }
         return switch (type) {
-            case PING -> WsType.WS_TYPE_PING;
-            case PONG -> WsType.WS_TYPE_PONG;
-            case SUBSCRIBE -> WsType.WS_TYPE_SUBSCRIBE;
-            case UNSUBSCRIBE -> WsType.WS_TYPE_UNSUBSCRIBE;
-            case KICK -> WsType.WS_TYPE_KICK;
-            case ERROR -> WsType.WS_TYPE_ERROR;
-            case MESSAGE -> WsType.WS_TYPE_MESSAGE;
-            case RESPONSE_API -> WsType.WS_TYPE_RESPONSE_API;
-            case FRIEND_REQUEST -> WsType.WS_TYPE_FRIEND_REQUEST;
-            case USER_ONLINE -> WsType.WS_TYPE_USER_ONLINE;
-            case USER_OFFLINE -> WsType.WS_TYPE_USER_OFFLINE;
-            case CHECK_USER_ONLINE -> WsType.WS_TYPE_CHECK_USER_ONLINE;
+            case PING -> WsTypeGrpc.WS_TYPE_PING;
+            case PONG -> WsTypeGrpc.WS_TYPE_PONG;
+            case SUBSCRIBE -> WsTypeGrpc.WS_TYPE_SUBSCRIBE;
+            case UNSUBSCRIBE -> WsTypeGrpc.WS_TYPE_UNSUBSCRIBE;
+            case KICK -> WsTypeGrpc.WS_TYPE_KICK;
+            case ERROR -> WsTypeGrpc.WS_TYPE_ERROR;
+            case MESSAGE -> WsTypeGrpc.WS_TYPE_MESSAGE;
+            case RESPONSE_API -> WsTypeGrpc.WS_TYPE_RESPONSE_API;
+            case FRIEND_REQUEST -> WsTypeGrpc.WS_TYPE_FRIEND_REQUEST;
+            case USER_ONLINE -> WsTypeGrpc.WS_TYPE_USER_ONLINE;
+            case USER_OFFLINE -> WsTypeGrpc.WS_TYPE_USER_OFFLINE;
+            case CHECK_USER_ONLINE -> WsTypeGrpc.WS_TYPE_CHECK_USER_ONLINE;
         };
     }
 }

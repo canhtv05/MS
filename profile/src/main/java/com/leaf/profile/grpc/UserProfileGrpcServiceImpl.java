@@ -1,10 +1,13 @@
 package com.leaf.profile.grpc;
 
-import com.leaf.common.grpc.UserProfileDTO;
+import com.leaf.common.grpc.UserProfileGrpcDTO;
+import com.leaf.common.grpc.UserProfileGrpcResponse;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
-import com.leaf.common.grpc.UserProfileIdRequest;
-import com.leaf.common.grpc.UserProfileIntroduceDTO;
-import com.leaf.common.grpc.UserProfilePrivacyDTO;
+import com.leaf.common.grpc.UserProfileIdGrpcRequest;
+import com.leaf.common.grpc.UserProfileIntroduceGrpcDTO;
+import com.leaf.common.grpc.UserProfilePrivacyGrpcDTO;
+import com.leaf.profile.dto.UserProfileIntroduceDTO;
+import com.leaf.profile.dto.UserProfilePrivacyDTO;
 import com.leaf.profile.dto.req.UserProfileCreationReq;
 import com.leaf.profile.dto.res.UserProfileResponse;
 import com.leaf.profile.mapper.UserProfileGrpcMapper;
@@ -32,10 +35,10 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
         UserProfileIntroduceGrpcMapper.getInstance();
 
     @Override
-    public void createUserProfile(UserProfileDTO request, StreamObserver<UserProfileDTO> responseObserver) {
+    public void createUserProfile(UserProfileGrpcDTO request, StreamObserver<UserProfileGrpcDTO> responseObserver) {
         UserProfileCreationReq userProfileCreationReq = userProfileGrpcMapper.toUserProfileCreationReq(request);
         UserProfileResponse newUserProfile = userProfileService.createUserProfile(userProfileCreationReq);
-        UserProfileDTO response = userProfileGrpcMapper.toGrpcUserProfileDTO(newUserProfile);
+        UserProfileGrpcDTO response = userProfileGrpcMapper.toGrpcUserProfileDTO(newUserProfile);
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
@@ -43,13 +46,11 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
 
     @Override
     public void getUserProfile(
-        UserProfileIdRequest request,
-        StreamObserver<com.leaf.common.grpc.UserProfileResponse> responseObserver
+        UserProfileIdGrpcRequest request,
+        StreamObserver<UserProfileGrpcResponse> responseObserver
     ) {
         UserProfileResponse userProfile = userProfileService.getUserProfile(request.getUserId());
-        com.leaf.common.grpc.UserProfileResponse grpcResponse = userProfileGrpcMapper.toGrpcUserProfileResponse(
-            userProfile
-        );
+        UserProfileGrpcResponse grpcResponse = userProfileGrpcMapper.toGrpcUserProfileResponse(userProfile);
 
         responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
@@ -57,14 +58,13 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
 
     @Override
     public void getUserProfilePrivacy(
-        UserProfileIdRequest request,
-        StreamObserver<UserProfilePrivacyDTO> responseObserver
+        UserProfileIdGrpcRequest request,
+        StreamObserver<UserProfilePrivacyGrpcDTO> responseObserver
     ) {
-        com.leaf.profile.dto.UserProfilePrivacyDTO userProfilePrivacy = userProfilePrivacyService.getUserProfilePrivacy(
-            request.getUserId()
+        UserProfilePrivacyDTO userProfilePrivacy = userProfilePrivacyService.getUserProfilePrivacy(request.getUserId());
+        UserProfilePrivacyGrpcDTO grpcResponse = userProfilePrivacyGrpcMapper.toGrpcUserProfilePrivacyDTO(
+            userProfilePrivacy
         );
-        com.leaf.common.grpc.UserProfilePrivacyDTO grpcResponse =
-            userProfilePrivacyGrpcMapper.toGrpcUserProfilePrivacyDTO(userProfilePrivacy);
 
         responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
@@ -72,13 +72,15 @@ public class UserProfileGrpcServiceImpl extends UserProfileGrpcServiceGrpc.UserP
 
     @Override
     public void getUserProfileIntroduce(
-        UserProfileIdRequest request,
-        StreamObserver<UserProfileIntroduceDTO> responseObserver
+        UserProfileIdGrpcRequest request,
+        StreamObserver<UserProfileIntroduceGrpcDTO> responseObserver
     ) {
-        com.leaf.profile.dto.UserProfileIntroduceDTO userProfileIntroduce =
-            userProfileIntroduceService.getUserProfileIntroduce(request.getUserId());
-        com.leaf.common.grpc.UserProfileIntroduceDTO grpcResponse =
-            userProfileIntroduceGrpcMapper.toGrpcUserProfileIntroduceDTO(userProfileIntroduce);
+        UserProfileIntroduceDTO userProfileIntroduce = userProfileIntroduceService.getUserProfileIntroduce(
+            request.getUserId()
+        );
+        UserProfileIntroduceGrpcDTO grpcResponse = userProfileIntroduceGrpcMapper.toGrpcUserProfileIntroduceDTO(
+            userProfileIntroduce
+        );
 
         responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();

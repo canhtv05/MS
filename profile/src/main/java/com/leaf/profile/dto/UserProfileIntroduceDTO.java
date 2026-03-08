@@ -1,8 +1,8 @@
 package com.leaf.profile.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.RelationshipStatus;
+import com.leaf.common.grpc.GenderGrpc;
+import com.leaf.common.grpc.RelationshipStatusGrpc;
 import com.leaf.framework.blocking.util.json.LocalDateToStringSerializer;
 import com.leaf.profile.domain.UserProfileIntroduce;
 import java.io.Serializable;
@@ -42,8 +42,8 @@ public class UserProfileIntroduceDTO implements Serializable {
     @JsonSerialize(using = LocalDateToStringSerializer.class)
     LocalDate dob;
 
-    Gender gender;
-    RelationshipStatus relationshipStatus;
+    GenderGrpc gender;
+    RelationshipStatusGrpc relationshipStatus;
     String phoneNumber;
     List<InterestDTO> interests;
 

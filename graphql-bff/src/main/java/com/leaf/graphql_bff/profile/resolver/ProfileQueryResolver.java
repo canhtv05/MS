@@ -2,10 +2,10 @@ package com.leaf.graphql_bff.profile.resolver;
 
 import com.leaf.common.dto.PageResponse;
 import com.leaf.common.dto.search.SearchResponse;
-import com.leaf.common.grpc.GetFileImagesRequest;
-import com.leaf.common.grpc.ResourceType;
-import com.leaf.common.grpc.SearchRequest;
-import com.leaf.common.grpc.UserProfileIdRequest;
+import com.leaf.common.grpc.GetFileImagesGrpcRequest;
+import com.leaf.common.grpc.ResourceTypeGrpc;
+import com.leaf.common.grpc.SearchGrpcRequest;
+import com.leaf.common.grpc.UserProfileIdGrpcRequest;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcFileClient;
 import com.leaf.graphql_bff.profile.client.ProfileGrpcProfileClient;
 import com.leaf.graphql_bff.profile.dto.DetailUserProfileDTO;
@@ -33,7 +33,7 @@ public class ProfileQueryResolver {
     @DgsQuery(field = "userDetail")
     public Mono<DetailUserProfileDTO> userDetail(String username) {
         return Mono.fromCallable(() ->
-            grpcProfileClient.getUserProfile(UserProfileIdRequest.newBuilder().setUserId(username).build())
+            grpcProfileClient.getUserProfile(UserProfileIdGrpcRequest.newBuilder().setUserId(username).build())
         )
             .subscribeOn(Schedulers.boundedElastic())
             .flatMap(userProfileResponse ->
@@ -46,7 +46,7 @@ public class ProfileQueryResolver {
         DetailUserProfileDTO parent = dfe.getSource();
         return Mono.fromCallable(() ->
             grpcProfileClient.getUserProfileIntroduce(
-                UserProfileIdRequest.newBuilder().setUserId(parent.getUserId()).build()
+                UserProfileIdGrpcRequest.newBuilder().setUserId(parent.getUserId()).build()
             )
         )
             .subscribeOn(Schedulers.boundedElastic())
@@ -60,7 +60,7 @@ public class ProfileQueryResolver {
         DetailUserProfileDTO parent = dfe.getSource();
         return Mono.fromCallable(() ->
             grpcProfileClient.getUserProfilePrivacy(
-                UserProfileIdRequest.newBuilder().setUserId(parent.getUserId()).build()
+                UserProfileIdGrpcRequest.newBuilder().setUserId(parent.getUserId()).build()
             )
         )
             .subscribeOn(Schedulers.boundedElastic())
@@ -80,9 +80,11 @@ public class ProfileQueryResolver {
 
         return Mono.fromCallable(() ->
             grpcFileClient.getFileImagesResponse(
-                GetFileImagesRequest.newBuilder()
-                    .setSearchRequest(SearchRequest.newBuilder().setPage(safePage - 1).setSize(safeSize).build())
-                    .addAllResourceTypes(List.of(ResourceType.RESOURCE_TYPE_AVATAR, ResourceType.RESOURCE_TYPE_COVER))
+                GetFileImagesGrpcRequest.newBuilder()
+                    .setSearchRequest(SearchGrpcRequest.newBuilder().setPage(safePage - 1).setSize(safeSize).build())
+                    .addAllResourceTypes(
+                        List.of(ResourceTypeGrpc.RESOURCE_TYPE_AVATAR, ResourceTypeGrpc.RESOURCE_TYPE_COVER)
+                    )
                     .setUserId(parent.getUserId())
                     .build()
             )

@@ -78,19 +78,19 @@ spring:
 grpc:
   client:
     auth-service:
-      address: static://localhost:9001
+      address: static://localhost:2001
       negotiationType: plaintext
     file-service:
-      address: static://localhost:9002
+      address: static://localhost:2002
       negotiationType: plaintext
     profile-service:
-      address: static://localhost:9003
+      address: static://localhost:2003
       negotiationType: plaintext
     notification-service:
-      address: static://localhost:9004
+      address: static://localhost:2004
       negotiationType: plaintext
     graphql-bff:
-      address: static://localhost:9006
+      address: static://localhost:2006
       negotiationType: plaintext
 
 eureka:

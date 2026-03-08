@@ -1,7 +1,7 @@
 package com.leaf.graphql_bff.profile.dto;
 
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.RelationshipStatus;
+import com.leaf.common.grpc.GenderGrpc;
+import com.leaf.common.grpc.RelationshipStatusGrpc;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,8 +37,8 @@ public class UserProfileIntroduceDTO implements Serializable {
     String tiktokUrl;
     String facebookUrl;
     LocalDate dob;
-    Gender gender;
-    RelationshipStatus relationshipStatus;
+    GenderGrpc gender;
+    RelationshipStatusGrpc relationshipStatus;
     String phoneNumber;
     List<InterestDTO> interests;
 }

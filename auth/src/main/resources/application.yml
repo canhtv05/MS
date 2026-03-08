@@ -6,10 +6,10 @@ server:
 
 grpc:
   server:
-    port: 9001
+    port: 2001
   client:
     profile-service:
-      address: static://localhost:9003
+      address: static://localhost:2003
       negotiationType: plaintext
 
 spring:

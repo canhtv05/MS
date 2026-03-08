@@ -1,10 +1,13 @@
 package com.leaf.profile.mapper;
 
 import com.google.protobuf.Timestamp;
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.RelationshipStatus;
+import com.leaf.common.grpc.GenderGrpc;
+import com.leaf.common.grpc.InterestGrpcDTO;
+import com.leaf.common.grpc.RelationshipStatusGrpc;
+import com.leaf.common.grpc.UserProfileIntroduceGrpcDTO;
 import com.leaf.framework.blocking.util.CommonUtils;
 import com.leaf.framework.blocking.util.ConvertProto;
+import com.leaf.profile.dto.InterestDTO;
 import com.leaf.profile.dto.UserProfileIntroduceDTO;
 import java.util.ArrayList;
 
@@ -18,13 +21,11 @@ public class UserProfileIntroduceGrpcMapper {
         return INSTANCE;
     }
 
-    public com.leaf.common.grpc.UserProfileIntroduceDTO toGrpcUserProfileIntroduceDTO(
-        UserProfileIntroduceDTO response
-    ) {
+    public UserProfileIntroduceGrpcDTO toGrpcUserProfileIntroduceDTO(UserProfileIntroduceDTO response) {
         if (response == null) {
             return null;
         }
-        var builder = com.leaf.common.grpc.UserProfileIntroduceDTO.newBuilder()
+        var builder = UserProfileIntroduceGrpcDTO.newBuilder()
             .setId(CommonUtils.getSafeObject(response.getId(), String.class, ""))
             .setUserId(CommonUtils.getSafeObject(response.getUserId(), String.class, ""))
             .setCity(CommonUtils.getSafeObject(response.getCity(), String.class, ""))
@@ -39,12 +40,12 @@ public class UserProfileIntroduceGrpcMapper {
             .setInstagramUrl(CommonUtils.getSafeObject(response.getInstagramUrl(), String.class, ""))
             .setTiktokUrl(CommonUtils.getSafeObject(response.getTiktokUrl(), String.class, ""))
             .setFacebookUrl(CommonUtils.getSafeObject(response.getFacebookUrl(), String.class, ""))
-            .setGender(CommonUtils.getSafeObject(response.getGender(), Gender.class, Gender.GENDER_UNSPECIFIED))
+            .setGender(CommonUtils.getSafeObject(response.getGender(), GenderGrpc.class, GenderGrpc.GENDER_UNSPECIFIED))
             .setRelationshipStatus(
                 CommonUtils.getSafeObject(
                     response.getRelationshipStatus(),
-                    RelationshipStatus.class,
-                    RelationshipStatus.RELATIONSHIP_STATUS_SINGLE
+                    RelationshipStatusGrpc.class,
+                    RelationshipStatusGrpc.RELATIONSHIP_STATUS_SINGLE
                 )
             )
             .setPhoneNumber(CommonUtils.getSafeObject(response.getPhoneNumber(), String.class, ""))
@@ -62,11 +63,11 @@ public class UserProfileIntroduceGrpcMapper {
         return builder.build();
     }
 
-    public com.leaf.common.grpc.InterestDTO toGrpcInterestDTO(com.leaf.profile.dto.InterestDTO interest) {
+    public InterestGrpcDTO toGrpcInterestDTO(InterestDTO interest) {
         if (interest == null) {
             return null;
         }
-        var builder = com.leaf.common.grpc.InterestDTO.newBuilder()
+        var builder = InterestGrpcDTO.newBuilder()
             .setId(CommonUtils.getSafeObject(interest.getId(), String.class, ""))
             .setTitle(CommonUtils.getSafeObject(interest.getTitle(), String.class, ""))
             .setColor(CommonUtils.getSafeObject(interest.getColor(), String.class, ""))

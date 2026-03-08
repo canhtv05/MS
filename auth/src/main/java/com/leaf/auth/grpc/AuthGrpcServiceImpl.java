@@ -5,11 +5,11 @@ import com.leaf.auth.security.jwt.TokenProvider;
 import com.leaf.auth.service.AuthService;
 import com.leaf.auth.service.UserService;
 import com.leaf.common.grpc.AuthGrpcServiceGrpc;
-import com.leaf.common.grpc.AuthMeRequest;
-import com.leaf.common.grpc.AuthMeResponse;
-import com.leaf.common.grpc.RefreshTokenRequest;
-import com.leaf.common.grpc.RefreshTokenResponse;
-import com.leaf.common.grpc.VerifyEmailTokenDTO;
+import com.leaf.common.grpc.AuthMeGrpcRequest;
+import com.leaf.common.grpc.AuthMeGrpcResponse;
+import com.leaf.common.grpc.RefreshTokenGrpcRequest;
+import com.leaf.common.grpc.RefreshTokenGrpcResponse;
+import com.leaf.common.grpc.VerifyEmailTokenGrpcDTO;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -23,17 +23,23 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
     private final TokenProvider tokenProvider;
 
     @Override
-    public void verifyEmailToken(VerifyEmailTokenDTO request, StreamObserver<VerifyEmailTokenDTO> responseObserver) {
+    public void verifyEmailToken(
+        VerifyEmailTokenGrpcDTO request,
+        StreamObserver<VerifyEmailTokenGrpcDTO> responseObserver
+    ) {
         var response = userService.activeUserByUserName(request);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void refreshToken(RefreshTokenRequest request, StreamObserver<RefreshTokenResponse> responseObserver) {
+    public void refreshToken(
+        RefreshTokenGrpcRequest request,
+        StreamObserver<RefreshTokenGrpcResponse> responseObserver
+    ) {
         var response = tokenProvider.processRefreshInternal(request.getRefreshToken(), request.getChannel());
         responseObserver.onNext(
-            RefreshTokenResponse.newBuilder()
+            RefreshTokenGrpcResponse.newBuilder()
                 .setAccessToken(response.getAccessToken())
                 .setRefreshToken(response.getRefreshToken())
                 .build()
@@ -42,9 +48,9 @@ public class AuthGrpcServiceImpl extends AuthGrpcServiceGrpc.AuthGrpcServiceImpl
     }
 
     @Override
-    public void authMe(AuthMeRequest request, StreamObserver<AuthMeResponse> responseObserver) {
+    public void authMe(AuthMeGrpcRequest request, StreamObserver<AuthMeGrpcResponse> responseObserver) {
         var response = authService.getProfile(request.getUserId());
-        responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeResponse(response));
+        responseObserver.onNext(AuthGrpcMapper.getInstance().toAuthMeGrpcResponse(response));
         responseObserver.onCompleted();
     }
 }

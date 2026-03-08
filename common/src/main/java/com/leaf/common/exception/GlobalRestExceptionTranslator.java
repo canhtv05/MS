@@ -43,7 +43,7 @@ public class GlobalRestExceptionTranslator {
         return ResponseEntity.badRequest().body(ResponseObject.error(ErrorMessage.VALIDATION_ERROR, errors));
     }
 
-    @ExceptionHandler({ HttpMessageNotReadableException.class })
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ResponseObject<Object>> handleJsonError(HttpMessageNotReadableException ex) {
         log.warn("JSON Parse Error: {}", ex.getMessage());
         return ResponseEntity.badRequest().body(ResponseObject.error("400", "Malformed JSON request"));

@@ -1,8 +1,8 @@
 package com.leaf.profile.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.grpc.Gender;
-import com.leaf.common.grpc.RelationshipStatus;
+import com.leaf.common.grpc.GenderGrpc;
+import com.leaf.common.grpc.RelationshipStatusGrpc;
 import com.leaf.framework.blocking.util.json.LocalDateToStringSerializer;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
@@ -74,10 +74,10 @@ public class UpdateProfileIntroduceDTO {
     LocalDate dob;
 
     @Builder.Default
-    Gender gender = Gender.GENDER_UNSPECIFIED;
+    GenderGrpc gender = GenderGrpc.GENDER_UNSPECIFIED;
 
     @Builder.Default
-    RelationshipStatus relationshipStatus = RelationshipStatus.RELATIONSHIP_STATUS_SINGLE;
+    RelationshipStatusGrpc relationshipStatus = RelationshipStatusGrpc.RELATIONSHIP_STATUS_SINGLE;
 
     @Pattern(regexp = "^\\d{9,15}$", message = "Phone number must be between 9 and 15 digits")
     String phoneNumber;

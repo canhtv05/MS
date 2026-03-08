@@ -1,6 +1,6 @@
 package com.leaf.file.repository;
 
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.file.domain.File;
 import com.leaf.file.dto.FileResponse;
 import java.util.List;
@@ -20,7 +20,7 @@ public interface FileRepository extends MongoRepository<File, String> {
     List<File> findAllByIdIn(List<String> ids);
 
     @Query("{ 'ownerId': ?0, 'resourceType': { $in: ?1 } }")
-    List<FileResponse> getFilesByTypes(String userId, List<ResourceType> resourceTypes);
+    List<FileResponse> getFilesByTypes(String userId, List<ResourceTypeGrpc> resourceTypes);
 
     boolean existsByOwnerId(String ownerId);
 }

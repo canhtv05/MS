@@ -3,8 +3,8 @@ package com.leaf.profile.service;
 import com.leaf.common.enums.CacheKey;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.ImageResponse;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ImageGrpcResponse;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.common.socket.WsMessage;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.SecurityUtils;
@@ -78,9 +78,9 @@ public class UserProfileService {
                 .findByUserId(username)
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_PROFILE_NOT_FOUND));
 
-            ImageResponse res = grpcFileClient.uploadImage(
+            ImageGrpcResponse res = grpcFileClient.uploadImage(
                 file,
-                isAvatar ? ResourceType.RESOURCE_TYPE_AVATAR : ResourceType.RESOURCE_TYPE_COVER,
+                isAvatar ? ResourceTypeGrpc.RESOURCE_TYPE_AVATAR : ResourceTypeGrpc.RESOURCE_TYPE_COVER,
                 username
             );
             if (isAvatar) {

@@ -4,6 +4,7 @@ import { print, DocumentNode } from 'graphql';
 import { handleMutationError } from './handler-mutation-error';
 import { hasValue } from '@/lib/utils';
 import { ErrorMessage } from '@/enums/error-message';
+import cookieUtils from './cookieUtils';
 
 interface GraphQLResponseError {
   message?: string;
@@ -39,7 +40,8 @@ export const getGraphQLClient = () => {
           hasValue(message, ErrorMessage.UNAUTHENTICATED) ||
           hasValue(message, ErrorMessage.UNAUTHORIZED)
         ) {
-          return Promise.reject(new Error(ErrorMessage.UNAUTHENTICATED));
+          cookieUtils.clearAuthenticated();
+          return Promise.reject();
         }
         handleMutationError({ errors: response.data.errors }, 'graphql-toast');
       }

@@ -4,7 +4,7 @@ option java_multiple_files = true;
 option java_package = "com.leaf.common.grpc";
 option java_outer_classname = "CommonProto";
 
-message SearchRequest {
+message SearchGrpcRequest {
     string searchText = 1;
     int32 page = 2;
     int32 size = 3;
@@ -12,7 +12,7 @@ message SearchRequest {
     string sortField = 5;
 }
 
-message PageResponse {
+message PageGrpcResponse {
     int32 currentPage = 1;
     int32 size = 2;
     int64 total = 3;
@@ -20,14 +20,14 @@ message PageResponse {
     int32 count = 5;
 }
 
-enum Gender {
+enum GenderGrpc {
     GENDER_UNSPECIFIED = 0;
     GENDER_MALE = 1;
     GENDER_FEMALE = 2;
     GENDER_OTHER = 3;
 }
 
-enum PrivacyLevel {
+enum PrivacyLevelGrpc {
     PRIVACY_LEVEL_UNSPECIFIED = 0;
     PRIVACY_LEVEL_PUBLIC = 1;
     PRIVACY_LEVEL_PRIVATE = 2;
@@ -35,7 +35,7 @@ enum PrivacyLevel {
     PRIVACY_LEVEL_FRIENDS_ONLY = 4;
 }
 
-enum RelationshipStatus {
+enum RelationshipStatusGrpc {
     RELATIONSHIP_STATUS_UNSPECIFIED = 0; // Mặc định
     RELATIONSHIP_STATUS_SINGLE = 1;
     RELATIONSHIP_STATUS_IN_A_RELATIONSHIP = 2;
@@ -50,7 +50,7 @@ enum RelationshipStatus {
     RELATIONSHIP_STATUS_CIVIL_PARTNERSHIP = 11;
 }
 
-enum WsType {
+enum WsTypeGrpc {
   WS_TYPE_UNSPECIFIED = 0;
   WS_TYPE_PING = 1;
   WS_TYPE_PONG = 2;

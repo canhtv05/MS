@@ -1,6 +1,6 @@
 package com.leaf.file.domain;
 
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +23,6 @@ public class Video {
     String previewVttUrl;
     Long fileSize;
     String originFileName;
-    String publicId;
     Instant createdAt;
-    ResourceType resourceType;
+    ResourceTypeGrpc resourceType;
 }

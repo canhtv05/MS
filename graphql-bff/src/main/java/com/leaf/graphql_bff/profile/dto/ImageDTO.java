@@ -1,6 +1,6 @@
 package com.leaf.graphql_bff.profile.dto;
 
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
@@ -25,5 +25,5 @@ public class ImageDTO implements Serializable {
     String originFileName;
     String publicId;
     OffsetDateTime createdAt;
-    ResourceType resourceType;
+    ResourceTypeGrpc resourceType;
 }

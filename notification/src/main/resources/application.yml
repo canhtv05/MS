@@ -5,10 +5,10 @@ server:
 
 grpc:
   server:
-    port: 9004
+    port: 2004
   client:
     auth-service:
-      address: static://localhost:9001
+      address: static://localhost:2001
       negotiationType: plaintext
 
 spring:

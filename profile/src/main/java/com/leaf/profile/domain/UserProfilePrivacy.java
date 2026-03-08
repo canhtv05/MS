@@ -1,6 +1,6 @@
 package com.leaf.profile.domain;
 
-import com.leaf.common.grpc.PrivacyLevel;
+import com.leaf.common.grpc.PrivacyLevelGrpc;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,21 +33,21 @@ public class UserProfilePrivacy extends AbstractAuditingNeo4jEntity {
 
     @Builder.Default
     @Property("profile_visibility")
-    PrivacyLevel profileVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+    PrivacyLevelGrpc profileVisibility = PrivacyLevelGrpc.PRIVACY_LEVEL_PUBLIC;
 
     @Builder.Default
     @Property("friends_visibility")
-    PrivacyLevel friendsVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+    PrivacyLevelGrpc friendsVisibility = PrivacyLevelGrpc.PRIVACY_LEVEL_PUBLIC;
 
     @Builder.Default
     @Property("posts_visibility")
-    PrivacyLevel postsVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+    PrivacyLevelGrpc postsVisibility = PrivacyLevelGrpc.PRIVACY_LEVEL_PUBLIC;
 
     @Builder.Default
     @Property("introduce_visibility")
-    PrivacyLevel introduceVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+    PrivacyLevelGrpc introduceVisibility = PrivacyLevelGrpc.PRIVACY_LEVEL_PUBLIC;
 
     @Builder.Default
     @Property("gallery_visibility")
-    PrivacyLevel galleryVisibility = PrivacyLevel.PRIVACY_LEVEL_PUBLIC;
+    PrivacyLevelGrpc galleryVisibility = PrivacyLevelGrpc.PRIVACY_LEVEL_PUBLIC;
 }

@@ -7,22 +7,22 @@ import "google/protobuf/timestamp.proto";
 import "Common.proto";
 
 service AuthGrpcService {
-  rpc refreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
-  rpc verifyEmailToken (VerifyEmailTokenDTO) returns (VerifyEmailTokenDTO);
-  rpc authMe (AuthMeRequest) returns (AuthMeResponse);
+  rpc refreshToken (RefreshTokenGrpcRequest) returns (RefreshTokenGrpcResponse);
+  rpc verifyEmailToken (VerifyEmailTokenGrpcDTO) returns (VerifyEmailTokenGrpcDTO);
+  rpc authMe (AuthMeGrpcRequest) returns (AuthMeGrpcResponse);
 }
 
-message RefreshTokenRequest {
+message RefreshTokenGrpcRequest {
   string refreshToken = 1;
   string channel = 2;
 }
 
-message RefreshTokenResponse {
+message RefreshTokenGrpcResponse {
   string accessToken = 1;
   string refreshToken = 2;
 }
 
-message VerifyEmailTokenDTO {
+message VerifyEmailTokenGrpcDTO {
   string username = 1;
   string fullname = 2;
   string email = 3;
@@ -30,11 +30,11 @@ message VerifyEmailTokenDTO {
   string jti = 5;
 }
 
-message AuthMeRequest {
+message AuthMeGrpcRequest {
   string userId = 1;
 }
 
-message AuthMeResponse {
+message AuthMeGrpcResponse {
   string username = 1;
   string email = 2;
   bool isGlobal = 3;

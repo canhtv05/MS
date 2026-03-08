@@ -2,7 +2,7 @@ package com.leaf.file.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.ResourceTypeGrpc;
 import com.leaf.file.domain.Video;
 import com.leaf.framework.blocking.util.json.InstantToStringSerializer;
 import java.io.Serial;
@@ -29,12 +29,11 @@ public class VideoResponse implements Serializable {
     private String previewVttUrl;
     private Long fileSize;
     private String originFileName;
-    private String publicId;
 
     @JsonSerialize(using = InstantToStringSerializer.class)
     private Instant createdAt;
 
-    private ResourceType resourceType;
+    private ResourceTypeGrpc resourceType;
 
     public static VideoResponse toVideoResponse(Video file) {
         VideoResponse videoResponse = new VideoResponse();
@@ -44,5 +43,15 @@ public class VideoResponse implements Serializable {
         }
         videoResponse.setResourceType(file.getResourceType());
         return videoResponse;
+    }
+
+    public static Video toVideo(VideoResponse videoResponse) {
+        Video video = new Video();
+        BeanUtils.copyProperties(videoResponse, video);
+        if (videoResponse.getCreatedAt() != null) {
+            video.setCreatedAt(videoResponse.getCreatedAt());
+        }
+        video.setResourceType(videoResponse.getResourceType());
+        return video;
     }
 }

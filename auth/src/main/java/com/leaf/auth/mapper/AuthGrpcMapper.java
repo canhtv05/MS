@@ -1,7 +1,7 @@
 package com.leaf.auth.mapper;
 
 import com.leaf.auth.dto.UserProfileDTO;
-import com.leaf.common.grpc.AuthMeResponse;
+import com.leaf.common.grpc.AuthMeGrpcResponse;
 import com.leaf.framework.blocking.util.CommonUtils;
 
 public class AuthGrpcMapper {
@@ -14,8 +14,8 @@ public class AuthGrpcMapper {
         return INSTANCE;
     }
 
-    public AuthMeResponse toAuthMeResponse(UserProfileDTO userProfile) {
-        AuthMeResponse.Builder builder = AuthMeResponse.newBuilder()
+    public AuthMeGrpcResponse toAuthMeGrpcResponse(UserProfileDTO userProfile) {
+        AuthMeGrpcResponse.Builder builder = AuthMeGrpcResponse.newBuilder()
             .setUsername(CommonUtils.getSafeObject(userProfile.getUsername(), String.class, ""))
             .setEmail(CommonUtils.getSafeObject(userProfile.getEmail(), String.class, ""))
             .setIsGlobal(Boolean.TRUE.equals(userProfile.getIsGlobal()))

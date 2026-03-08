@@ -1,7 +1,9 @@
 package com.leaf.file;
 
+import com.leaf.file.config.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
@@ -18,6 +20,7 @@ import org.springframework.context.annotation.FilterType;
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "com\\.leaf\\.framework\\.reactive\\..*")
     }
 )
+@EnableConfigurationProperties(ApplicationProperties.class)
 public class FileApplication {
 
     public static void main(String[] args) {

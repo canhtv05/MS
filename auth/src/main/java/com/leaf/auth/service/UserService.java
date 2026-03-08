@@ -29,7 +29,7 @@ import com.leaf.common.dto.event.UserCreatedEvent;
 import com.leaf.common.dto.event.VerificationEmailEvent;
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.VerifyEmailTokenDTO;
+import com.leaf.common.grpc.VerifyEmailTokenGrpcDTO;
 import com.leaf.framework.blocking.config.cache.RedisCacheService;
 import com.leaf.framework.blocking.security.AuthoritiesConstants;
 import com.leaf.framework.blocking.security.SecurityUtils;
@@ -167,7 +167,7 @@ public class UserService {
     }
 
     @Transactional
-    public VerifyEmailTokenDTO activeUserByUserName(VerifyEmailTokenDTO request) {
+    public VerifyEmailTokenGrpcDTO activeUserByUserName(VerifyEmailTokenGrpcDTO request) {
         if (request.getEmail().contains("+")) {
             throw new ApiException(ErrorMessage.EMAIL_INVALID);
         }
@@ -184,7 +184,7 @@ public class UserService {
             UserCreatedEvent.builder().userId(user.getUsername()).fullName(request.getFullname()).build()
         );
 
-        return VerifyEmailTokenDTO.newBuilder()
+        return VerifyEmailTokenGrpcDTO.newBuilder()
             .setUsername(user.getUsername())
             .setEmail(request.getEmail())
             .setFullname(request.getFullname())

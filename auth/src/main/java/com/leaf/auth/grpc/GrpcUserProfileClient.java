@@ -2,7 +2,7 @@ package com.leaf.auth.grpc;
 
 import com.leaf.common.exception.ApiException;
 import com.leaf.common.exception.ErrorMessage;
-import com.leaf.common.grpc.UserProfileDTO;
+import com.leaf.common.grpc.UserProfileGrpcDTO;
 import com.leaf.common.grpc.UserProfileGrpcServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -14,7 +14,7 @@ public class GrpcUserProfileClient {
     @GrpcClient("profile-service")
     private UserProfileGrpcServiceGrpc.UserProfileGrpcServiceBlockingStub stub;
 
-    public UserProfileDTO createUserProfile(UserProfileDTO req) {
+    public UserProfileGrpcDTO createUserProfile(UserProfileGrpcDTO req) {
         try {
             return stub.createUserProfile(req);
         } catch (StatusRuntimeException e) {

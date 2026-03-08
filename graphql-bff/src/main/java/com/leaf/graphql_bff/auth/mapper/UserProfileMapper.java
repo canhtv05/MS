@@ -1,7 +1,7 @@
 package com.leaf.graphql_bff.auth.mapper;
 
-import com.leaf.common.grpc.AuthMeResponse;
-import com.leaf.common.grpc.UserProfileResponse;
+import com.leaf.common.grpc.AuthMeGrpcResponse;
+import com.leaf.common.grpc.UserProfileGrpcResponse;
 import com.leaf.framework.blocking.util.ConvertProto;
 import com.leaf.graphql_bff.auth.dto.AuthMeDTO;
 import com.leaf.graphql_bff.auth.dto.ProfileDTO;
@@ -15,7 +15,10 @@ public class UserProfileMapper {
         return instance;
     }
 
-    public UserProfileDTO toUserProfileDTO(AuthMeResponse authMeResponse, UserProfileResponse userProfileResponse) {
+    public UserProfileDTO toUserProfileDTO(
+        AuthMeGrpcResponse authMeResponse,
+        UserProfileGrpcResponse userProfileResponse
+    ) {
         if (authMeResponse == null || userProfileResponse == null) {
             return null;
         }
@@ -26,7 +29,7 @@ public class UserProfileMapper {
             .build();
     }
 
-    private AuthMeDTO toAuthMeDTO(AuthMeResponse response) {
+    private AuthMeDTO toAuthMeDTO(AuthMeGrpcResponse response) {
         return AuthMeDTO.builder()
             .username(ConvertProto.nullToEmpty(response.getUsername()))
             .email(ConvertProto.nullToEmpty(response.getEmail()))
@@ -39,7 +42,7 @@ public class UserProfileMapper {
             .build();
     }
 
-    private ProfileDTO toProfileDTO(UserProfileResponse response) {
+    private ProfileDTO toProfileDTO(UserProfileGrpcResponse response) {
         return ProfileDTO.builder()
             .id(ConvertProto.nullToEmpty(response.getId()))
             .userId(ConvertProto.nullToEmpty(response.getUserId()))

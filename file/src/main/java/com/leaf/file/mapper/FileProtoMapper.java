@@ -2,7 +2,11 @@ package com.leaf.file.mapper;
 
 import com.google.protobuf.Timestamp;
 import com.leaf.common.dto.PageResponse;
-import com.leaf.common.grpc.ResourceType;
+import com.leaf.common.grpc.FileGrpcResponse;
+import com.leaf.common.grpc.ImageGrpcResponse;
+import com.leaf.common.grpc.PageGrpcResponse;
+import com.leaf.common.grpc.ResourceTypeGrpc;
+import com.leaf.common.grpc.VideoGrpcResponse;
 import com.leaf.file.dto.FileResponse;
 import com.leaf.file.dto.ImageResponse;
 import com.leaf.file.dto.VideoResponse;
@@ -12,8 +16,8 @@ import java.util.List;
 
 public class FileProtoMapper {
 
-    public static com.leaf.common.grpc.PageResponse toProto(PageResponse page) {
-        return com.leaf.common.grpc.PageResponse.newBuilder()
+    public static PageGrpcResponse toProto(PageResponse page) {
+        return PageGrpcResponse.newBuilder()
             .setCurrentPage(page.getCurrentPage())
             .setSize(page.getSize())
             .setTotal(page.getTotal())
@@ -22,20 +26,12 @@ public class FileProtoMapper {
             .build();
     }
 
-    public static com.leaf.common.grpc.FileResponse toProto(FileResponse response) {
-        List<com.leaf.common.grpc.ImageResponse> images = response
-            .getImages()
-            .stream()
-            .map(FileProtoMapper::mapImage)
-            .toList();
+    public static FileGrpcResponse toProto(FileResponse response) {
+        List<ImageGrpcResponse> images = response.getImages().stream().map(FileProtoMapper::mapImage).toList();
 
-        List<com.leaf.common.grpc.VideoResponse> videos = response
-            .getVideos()
-            .stream()
-            .map(FileProtoMapper::mapVideo)
-            .toList();
+        List<VideoGrpcResponse> videos = response.getVideos().stream().map(FileProtoMapper::mapVideo).toList();
 
-        com.leaf.common.grpc.FileResponse fileResponse = com.leaf.common.grpc.FileResponse.newBuilder()
+        FileGrpcResponse fileResponse = FileGrpcResponse.newBuilder()
             .setOwnerId(response.getOwnerId())
             .setTotalSize(response.getTotalSize())
             .addAllImages(images)
@@ -45,8 +41,8 @@ public class FileProtoMapper {
         return fileResponse;
     }
 
-    public static com.leaf.common.grpc.VideoResponse mapVideo(VideoResponse v) {
-        var builder = com.leaf.common.grpc.VideoResponse.newBuilder()
+    public static VideoGrpcResponse mapVideo(VideoResponse v) {
+        var builder = VideoGrpcResponse.newBuilder()
             .setPlaytimeSeconds(CommonUtils.getSafeObject(v.getPlaytimeSeconds(), Double.class, 0.0))
             .setPlaytimeString(CommonUtils.getSafeObject(v.getPlaytimeString(), String.class, ""))
             .setContentType(CommonUtils.getSafeObject(v.getContentType(), String.class, ""))
@@ -54,7 +50,6 @@ public class FileProtoMapper {
             .setThumbnailUrl(CommonUtils.getSafeObject(v.getThumbnailUrl(), String.class, ""))
             .setFileSize(CommonUtils.getSafeObject(v.getFileSize(), Long.class, 0L))
             .setOriginFileName(CommonUtils.getSafeObject(v.getOriginFileName(), String.class, ""))
-            .setPublicId(CommonUtils.getSafeObject(v.getPublicId(), String.class, ""))
             .setCreatedAt(
                 CommonUtils.getSafeObject(
                     ConvertProto.convertInstantToTimestamp(v.getCreatedAt()),
@@ -65,21 +60,20 @@ public class FileProtoMapper {
             .setResourceType(
                 CommonUtils.getSafeObject(
                     v.getResourceType(),
-                    ResourceType.class,
-                    ResourceType.RESOURCE_TYPE_UNSPECIFIED
+                    ResourceTypeGrpc.class,
+                    ResourceTypeGrpc.RESOURCE_TYPE_UNSPECIFIED
                 )
             );
 
         return builder.build();
     }
 
-    public static com.leaf.common.grpc.ImageResponse mapImage(ImageResponse i) {
-        var builder = com.leaf.common.grpc.ImageResponse.newBuilder()
+    public static ImageGrpcResponse mapImage(ImageResponse i) {
+        var builder = ImageGrpcResponse.newBuilder()
             .setContentType(CommonUtils.getSafeObject(i.getContentType(), String.class, ""))
             .setImageUrl(CommonUtils.getSafeObject(i.getImageUrl(), String.class, ""))
             .setFileSize(CommonUtils.getSafeObject(i.getFileSize(), Long.class, 0L))
             .setOriginFileName(CommonUtils.getSafeObject(i.getOriginFileName(), String.class, ""))
-            .setPublicId(CommonUtils.getSafeObject(i.getPublicId(), String.class, ""))
             .setCreatedAt(
                 CommonUtils.getSafeObject(
                     ConvertProto.convertInstantToTimestamp(i.getCreatedAt()),
@@ -90,8 +84,8 @@ public class FileProtoMapper {
             .setResourceType(
                 CommonUtils.getSafeObject(
                     i.getResourceType(),
-                    ResourceType.class,
-                    ResourceType.RESOURCE_TYPE_UNSPECIFIED
+                    ResourceTypeGrpc.class,
+                    ResourceTypeGrpc.RESOURCE_TYPE_UNSPECIFIED
                 )
             );
 
