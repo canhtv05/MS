@@ -11,7 +11,7 @@ import SwiperDialog from '../../components/SwiperDialog';
 import { useUserProfileStore } from '@/stores/profile';
 import { IImageHistoryDTO } from '@/types/profile';
 import Show from '@/components/Show';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching } from '@tanstack/react-query';
 import { CACHE_KEY } from '@/configs/cache-key';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -35,11 +35,10 @@ const AlbumsContainer = ({ showMoreButton = true }: IAlbumsContainerProps) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const { user } = useUserProfileStore();
-  const queryClient = useQueryClient();
-  const isLoading =
-    queryClient.isFetching({
-      queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.userId),
-    }) > 0 || !user?.userId;
+  const isFetchingCount = useIsFetching({
+    queryKey: CACHE_KEY.PROFILE.QUERY.USER_PROFILE(user?.userId),
+  });
+  const isLoading = isFetchingCount > 0 || !user?.userId;
 
   const list =
     user?.images?.data?.map((item: IImageHistoryDTO) => ({

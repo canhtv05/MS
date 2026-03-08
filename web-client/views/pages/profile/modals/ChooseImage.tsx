@@ -124,7 +124,7 @@ const ChooseImage = ({ onSelect, selectedUrl, isAvatar = false }: ChooseImagePro
 
               return (
                 <button
-                  key={image.createdAt || idx}
+                  key={idx}
                   type="button"
                   className={cn(
                     'relative w-full h-0 pb-[56.25%] rounded-lg overflow-hidden cursor-pointer',

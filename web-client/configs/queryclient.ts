@@ -51,27 +51,13 @@ const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onSuccess(data, query) {
-      if (!isDev) return;
-      logger.log('QueryCache Success:', {
-        queryKey: query.queryKey,
-        hasData: !!data,
-      });
-    },
+    onSuccess() {},
     onError(error, query) {
       if (!isDev) return;
       logger.error('🔴 QueryCache Error:', error);
       logger.log('Query Key:', query.queryKey);
     },
-    onSettled(data, error, query) {
-      if (!isDev) return;
-      logger.log('🏁 QueryCache Settled:', {
-        queryKey: query.queryKey,
-        hasData: !!data,
-        hasError: !!error,
-        state: query.state,
-      });
-    },
+    onSettled() {},
   }),
   mutationCache: new MutationCache({
     onError(error, _variables, _context, mutation) {

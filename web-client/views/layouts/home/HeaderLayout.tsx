@@ -170,7 +170,7 @@ const HeaderLayout = () => {
                     side="bottom"
                     align="end"
                     sideOffset={10}
-                    className="w-[220px] [&_span]:text-foreground/70"
+                    className="w-[220px] z-121 [&_span]:text-foreground/70"
                   >
                     <DropdownMenuArrow />
                     <DropdownMenuLabel className="flex gap-2">
