@@ -26,6 +26,7 @@
     "projectreactor",
     "springframework",
     "subtab",
+    "Tika",
     "webflux"
   ],
   "problems.showCurrentInStatus": false,

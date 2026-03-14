@@ -226,7 +226,7 @@ public class FileService {
         SearchGrpcRequest searchRequest
     ) {
         if (!fileRepository.existsByOwnerId(userId)) {
-            return new SearchResponse<>(List.of(), PageResponse.builder().build());
+            return SearchResponse.empty();
         }
         List<String> typeNames = resourceTypes.stream().map(ResourceTypeGrpc::name).toList();
         List<Integer> typeNumbers = resourceTypes.stream().map(ResourceTypeGrpc::getNumber).toList();

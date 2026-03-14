@@ -12,6 +12,7 @@ import io.minio.http.Method;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,12 +28,13 @@ public class MinioStorageService {
 
     public void putObject(String objectKey, MultipartFile file) {
         try {
+            String contentType = new Tika().detect(file.getInputStream());
             minioClient.putObject(
                 PutObjectArgs.builder()
                     .bucket(applicationProperties.getBucket())
                     .object(objectKey)
                     .stream(file.getInputStream(), file.getSize(), -1)
-                    .contentType(file.getContentType())
+                    .contentType(contentType)
                     .build()
             );
         } catch (Exception e) {

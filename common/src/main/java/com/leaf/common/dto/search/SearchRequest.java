@@ -34,4 +34,20 @@ public record SearchRequest(
         }
         return PageRequest.of(safePage, safeSize);
     }
+
+    public static SearchRequest of(String searchText, Integer page, Integer size, String sortOrder, String sortField) {
+        return new SearchRequest(searchText, page, size, sortOrder, sortField);
+    }
+
+    public static SearchRequest of(Integer page, Integer size) {
+        return new SearchRequest(null, page, size, null, null);
+    }
+
+    public long getSkip() {
+        return (long) (page == null || page < 1 ? 0 : page - 1) * (size == null || size < 1 ? 20 : size);
+    }
+
+    public int getLimit() {
+        return size == null || size < 1 ? 20 : size;
+    }
 }

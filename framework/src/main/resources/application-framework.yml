@@ -8,5 +8,15 @@ application:
     clientName: ${APPLICATION_REDIS_CLIENTNAME:leaf-client}
     address: ${APPLICATION_REDIS_ADDRESS:redis://localhost:6379}
     password: ${APPLICATION_REDIS_PASSWORD:}
-    minimumIdle: ${APPLICATION_REDIS_MINIMUM_IDLE:20}
+    minimumIdle: ${APPLICATION_REDIS_MINIMUM_IDLE:2}
     maxPoolSize: ${APPLICATION_REDIS_MAX_POOL_SIZE:100}
+
+spring:
+  main:
+    lazy-initialization: true
+  jmx:
+    enabled: false
+  data:
+    redis:
+      repositories:
+        enabled: false
