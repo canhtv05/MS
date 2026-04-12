@@ -19,7 +19,7 @@
     "@solar-icons/react-perf": "^2.1.0",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-virtual": "^3.13.21",
-    "axios": "^1.13.6",
+    "axios": "^1.15.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
